@@ -8,6 +8,9 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 COPY app/ ./
 
+# Develop migrations
+RUN python manage.py makemigrations
+
 # Set up database
 RUN python manage.py migrate
 
