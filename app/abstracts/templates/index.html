@@ -1,0 +1,9 @@
+{% if version_list %}
+<ul>
+  {% for v in version_list %}
+  <ul>{{ v.title }}</ul>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No versions here.</p>
+{% endif %}
