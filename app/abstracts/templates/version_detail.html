@@ -1,0 +1,15 @@
+<h1>{{ version.title }}</h1>
+
+<p class="year">{{ version.year }}</p>
+<p>{{ version.type }}</p>
+<p>{{ version.state }}</p>
+<p>{{ version.full_text }}</p>
+
+{% if version.tags %}
+<ul>
+  {% for t in version.tags %}
+  <li>{{ t.tag }}</li>
+  {% endfor %}
+</ul>
+
+{% endif %}
