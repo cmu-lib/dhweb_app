@@ -83,7 +83,7 @@ class Author(models.Model):
 class Authorship(models.Model):
     author_id = models.ForeignKey(Author, on_delete=models.CASCADE)
     version_id = models.ForeignKey(Version, on_delete=models.CASCADE)
-    authorship_order = models.IntegerField(unique=True)
+    authorship_order = models.IntegerField()
 
 class DepartmentMembership(models.Model):
     author_id = models.ForeignKey(Author, on_delete=models.CASCADE)
