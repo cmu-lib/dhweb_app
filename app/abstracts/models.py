@@ -28,7 +28,7 @@ class Version(models.Model):
     year = models.IntegerField()
     state = models.CharField(max_length = 255)
     full_text = models.CharField(max_length = 50000)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ForeignKey(Tag, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.title
