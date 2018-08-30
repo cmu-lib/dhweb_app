@@ -1,4 +1,7 @@
+import datetime
+
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -18,3 +21,6 @@ class Version(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def age(self):
+        return datetime.date.today().year - self.year
