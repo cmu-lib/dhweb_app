@@ -9,7 +9,7 @@ class Work(models.Model):
     work_id = models.IntegerField(primary_key=True)
 
     def __str__(self):
-        return self.work_id
+        return str(self.work_id)
 
 class Version(models.Model):
     work_id = models.ForeignKey(Work, on_delete=models.CASCADE)
