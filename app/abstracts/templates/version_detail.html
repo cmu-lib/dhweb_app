@@ -1,12 +1,20 @@
 <h1>{{ version.title }}</h1>
 
-<p class="year">{{ version.year }}</p>
-<p>{{ version.type }}</p>
-<p>{{ version.state }}</p>
+<p class="year">Year: {{ version.year }}</p>
+<p>Type: {{ version.type }}</p>
+<p>State: {{ version.state }}</p>
+
+<h2>Abstract</h2>
+
 <p>{{ version.full_text }}</p>
 
+<h2>Tags</h2>
+{% if version.tags.all %}
 <ul>
-  {% for t in version__tags.all %}
-  <li>{{ t.tag }}</li>
+  {% for tag in version.tags.all %}
+  <li>{{ tag }}</li>
   {% endfor %}
 </ul>
+{% else %}
+<p>This version has no associated tags</p>
+{% endif %}
