@@ -49,15 +49,12 @@ class Institution(models.Model):
 
 class Gender(models.Model):
     gender = models.CharField(max_length = 100)
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True)
 
     def __str__(self):
         return self.gender
 
 class Author(models.Model):
     author_id = models.IntegerField(primary_key=True)
-    genders = models.ManyToManyField(Gender, related_name='authors')
 
     def __str__(self):
         return str(self.author_id)
@@ -93,6 +90,12 @@ class DepartmentMembership(models.Model):
 
 class InstitutionMembership(models.Model):
     author_id = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='institution_memberships')
-    institution_id = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='author_memberships')
+    institution_id = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='author_memberships')
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+
+class GenderMembership(models.Model):
+    author_id = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author_genders')
+    gender_id = models.ForeignKey(Gender, on_delete=models.CASCADE, related_name='gender_authors')
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
