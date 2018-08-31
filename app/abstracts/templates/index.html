@@ -1,7 +1,8 @@
 {% if version_list %}
+<h1>Version lists</h1>
 <ul>
   {% for v in version_list %}
-  <ul>{{ v.title }}</ul>
+  <ul><a href="{% url 'version_detail' v.id %}">{{ v.title }}</a></ul>
   {% endfor %}
 </ul>
 {% else %}
