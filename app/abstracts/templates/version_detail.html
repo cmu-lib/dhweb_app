@@ -14,7 +14,7 @@
 {% if version.tags.all %}
 <ul>
   {% for tag in version.tags.all %}
-  <li>{{ tag }}</li>
+  <li><a href="{% url 'tag_detail' tag.tag_id %}">{{ tag.title }}</a></li>
   {% endfor %}
 </ul>
 {% else %}
