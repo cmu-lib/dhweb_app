@@ -4,3 +4,6 @@
 __pycache__/
 *.sqlite3
 *.json
+
+# Ignore migration files until we start using the database as source truth
+0*.py
