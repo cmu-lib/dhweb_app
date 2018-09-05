@@ -10,6 +10,13 @@ class DetailView(generic.DetailView):
     model = Tag
     template_name = 'tag_detail.html'
 
+class IndexView(generic.ListView):
+    context_object_name = 'tag_list'
+    template_name = 'tag_list.html'
+
+    def get_queryset(self):
+        return Tag.objects.all()
+
 def index(request):
     version_list = Work.objects.all()[:10]
     context = {'work_list': work_list}
