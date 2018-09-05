@@ -6,8 +6,8 @@
 <h2>Works:</h2>
 {% if tag.versions %}
 <ul>
-{% for version in tag.versions.all %}
-  <li><a href="{% url 'version_detail' version.id %}">{{ version.title }}</a></li>
+{% for work in tag.versions.all %}
+  <li><a href="{% url 'work_detail' work.id %}">{{ work }}</a></li>
 {% endfor %}
 </ul>
 {% else %}
