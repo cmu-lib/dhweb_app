@@ -1,0 +1,7 @@
+<h1>Tags</h1>
+
+<ul>
+{%for tag in tag_list %}
+<li><a href="{% url 'tag_detail' tag.tag_id %}">{{ tag.title }}</a></li>
+{% endfor %}
+</ul>
