@@ -1,0 +1,7 @@
+<h1>Authors</h1>
+
+<ul>
+{% for author in author_list %}
+<li><a href="{% url 'author_detail' author.author_id %}">{{ author.first_names.all.first }} {{ author.last_names.all.first }}</a></li>
+{% endfor %}
+</ul>

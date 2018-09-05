@@ -4,7 +4,7 @@ from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
 
-from .models import Version, Tag, Work
+from .models import Version, Tag, Work, Author
 
 class DetailView(generic.DetailView):
     model = Tag
@@ -23,6 +23,17 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         return Work.objects.all()[:10]
+
+class DetailView(generic.DetailView):
+    model = Author
+    template_name = 'author_detail.html'
+
+class IndexView(generic.ListView):
+    context_object_name = 'author_list'
+    template_name = 'author_list.html'
+
+    def get_queryset(self):
+        return Author.objects.all()[:10]
 
 def work_detail(request, work_id):
     work = get_object_or_404(Work, pk = work_id)

@@ -32,7 +32,7 @@ class Version(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def age(self):
         return datetime.date.today().year - self.year
 
@@ -74,7 +74,7 @@ class LastName(models.Model):
     end_date = models.DateField(null=True)
     author_id = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='last_names')
 
-    def __str__(self):  
+    def __str__(self):
         return self.last_name
 
 class Authorship(models.Model):
