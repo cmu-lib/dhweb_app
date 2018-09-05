@@ -1,5 +1,7 @@
 <h1>{{ version.title }}</h1>
 
+<a href="{% url 'work_detail' version.work_id %}">Navigate to parent work {{ version.work_id }}</a>
+
 <p class="year">Year: {{ version.year }}</p>
 <p>Type: {{ version.type }}</p>
 <p>State: {{ version.state }}</p>
