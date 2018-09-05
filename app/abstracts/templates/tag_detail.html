@@ -1,0 +1,15 @@
+<h1>{{ tag.title }}</h1>
+
+<p>Type: {{ tag.type }}</p>
+<p>Timespan: {{ tag.StartDate }} - {{ tag.EndDate }}</p>
+
+<h2>Works:</h2>
+{% if tag.versions %}
+<ul>
+{% for version in tag.versions.all %}
+  <li><a href="{% url 'version_detail' version.id %}">{{ version.title }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are no abstracts using this tag.</p>
+{% endif %}

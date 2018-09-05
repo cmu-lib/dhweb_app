@@ -2,10 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
+from django.views import generic
 
 from .models import Version, Tag, Work
 
-# Create your views here.
+class DetailView(generic.DetailView):
+    model = Tag
+    template_name = 'tag_detail.html'
+
 def index(request):
     version_list = Version.objects.all()[:10]
     context = {'version_list': version_list}
