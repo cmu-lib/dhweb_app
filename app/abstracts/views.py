@@ -17,10 +17,12 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return Tag.objects.all()
 
-def index(request):
-    version_list = Work.objects.all()[:10]
-    context = {'work_list': work_list}
-    return render(request, 'index.html', context)
+class IndexView(generic.ListView):
+    context_object_name = 'work_list'
+    template_name = 'index.html'
+
+    def get_queryset(self):
+        return Work.objects.all()[:10]
 
 def work_detail(request, work_id):
     work = get_object_or_404(Work, pk = work_id)
