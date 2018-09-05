@@ -1,0 +1,29 @@
+<h1>Work ID {{ work.work_id }}</h1>
+
+<p>Latest title: {{ version_list | first }}</p>
+
+<h1>Versions</h1>
+
+{% for version in version_list %}
+  <hr/>
+  <h2><a href="{% url 'version_detail' version.id %}">{{ version.title }}</a></h2>
+
+  <p class="year">Year: {{ version.year }}</p>
+  <p>Type: {{ version.type }}</p>
+  <p>State: {{ version.state }}</p>
+
+  <h3>Abstract</h3>
+
+  <p>{{ version.full_text }}</p>
+
+  <h3>Tags</h3>
+  {% if version.tags.all %}
+    <ul>
+      {% for tag in version.tags.all %}
+      <li>{{ tag }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>This version has no associated tags</p>
+  {% endif %}
+{% endfor %}
