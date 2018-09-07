@@ -78,7 +78,7 @@ class Authorship(models.Model):
 class DepartmentAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="department_memberships")
     submission = models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name="department_assertions")
-    department=models.CharField(max_length = 100, null = True)
+    department=models.CharField(max_length = 100)
 
         def __str__(self):
         return self.department
