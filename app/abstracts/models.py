@@ -21,7 +21,7 @@ class Work(models.Model):
 class Tag(models.Model):
     title = models.CharField(max_length=100, null=True)
     type = models.CharField(max_length=100, null=True)
-    star_date = models.CharField(max_length=100, null=True)
+    start_date = models.CharField(max_length=100, null=True)
     end_date = models.CharField(max_length=100, null=True)
 
     def __str__(self):
@@ -32,9 +32,9 @@ class Version(models.Model):
     title = models.CharField(max_length=500, null=True)
     type = models.CharField(max_length=255, null=True)
     state = models.CharField(max_length=2, choices=(
-        (ACCEPTED="ac"),
-        (SUBMISSION="su"),
-    )))
+        ("ac", "accpeted"),
+        ("su", "submission"),
+    ))
     full_text = models.CharField(max_length=50000, null=True)
     tags = models.ManyToManyField(Tag, related_name="versions")
 
@@ -62,10 +62,11 @@ class Author(models.Model):
         return str(self.author_id)
 
 class AppellationAssertion(models.Model):
-    first_name = models.CharField(max_length = 100)
-    last_name = models.CharField(max_length = 100)
+    first_name = models.CharField(max_length = 100, null=True)
+    last_name = models.CharField(max_length = 100, null=True)
     author = models.ForeignKey(Author, on_delete = models.CASCADE, related_name='appellations')
-    attributed_by=models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name='appellations')
+    asserted_by = models.ForeignKey(
+        SubmissionEvent, on_delete=models.CASCADE, related_name='appellations')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -77,13 +78,13 @@ class Authorship(models.Model):
 
 class DepartmentAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="department_memberships")
-    submission = models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name="department_assertions")
+    asserted_by = models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name="department_assertions")
     department=models.CharField(max_length = 100)
 
-        def __str__(self):
+    def __str__(self):
         return self.department
 
-class InstitutionMembership(models.Model):
+class InstitutionAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='institution_memberships')
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='member_assertions')
     asserted_by=models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name = 'institution_assertions')
