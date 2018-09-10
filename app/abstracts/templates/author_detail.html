@@ -3,47 +3,46 @@
 {% block content %}
 <h1>{{ author.appellations.all.last.first_name }} {{ author.appellations.all.last.last_name }}</h1>
 
-<h2>Attributes</h2>
+<div class="card">
+  <div class="card-header">Author Info</div>
+  <div class="card-body">
+    <h4>Names</h4>
+    <ul class="list-group list-group">
+      {% for appellation in appellations %}
+      <li class="list-group-item">{{ appellation.first_name }} {{ appellation.last_name }} (Source: {{ appellation.asserted_by }})</li>
+      {% endfor %}
+    </ul>
 
-<h3>Appellations</h3>
+    <h4>Institutions</h4>
 
-<ul>
-  {% for appellation in appellations %}
-  <li>{{ appellation.first_name }} {{ appellation.last_name }} (Source: {{ appellation.asserted_by }})</li>
-  {% endfor %}
-</ul>
+    <ul class="list-group list-group">
+      {% for institution_membership in institution_memberships %}
+      <li class="list-group-item">{{ institution_membership.institution.name }} ({% if institution_membership.institution.city %}{{ institution_membership.institution.city }},{% endif %}{% if institution_membership.institution.country %} {{ institution_membership.institution.country }}{% endif %}) (Source: {{ institution_membership.asserted_by }})</li>
+      {% endfor %}
+    </ul>
 
-<h3>Institutions</h3>
+    <h4>Departments</h4>
+    <ul class="list-group list-group">
+      {% for department_membership in department_memberships %}
+      <li class="list-group-item">{{ department_membership.department }} (Source: {{ department_membership.asserted_by }})</li>
+      {% endfor %}
+    </ul>
+    <h4>Genders</h4>
+    <ul class="list-group list-group">
+      {% for gender_membership in gender_memberships %}
+      <li class="list-group-item">{{ gender_membership.gender }} (Source: {{ gender_membership.asserted_by }})</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
 
-<ul>
-  {% for institution_membership in institution_memberships %}
-  <li>{{ institution_membership.institution.name }} ({% if institution_membership.institution.city %}{{ institution_membership.institution.city }},{% endif %}{% if institution_membership.institution.country %} {{ institution_membership.institution.country }}{% endif %}) (Source: {{ institution_membership.asserted_by }})</li>
-  {% endfor %}
-</ul>
-
-<h3>Departments</h3>
-
-<ul>
-  {% for department_membership in department_memberships %}
-  <li>{{ department_membership.department }} (Source: {{ department_membership.asserted_by }})</li>
-  {% endfor %}
-</ul>
-
-
-<h3>Genders</h3>
-
-<ul>
-  {% for gender_membership in gender_memberships %}
-  <li>{{ gender_membership.gender }} (Source: {{ gender_membership.asserted_by }})</li>
-  {% endfor %}
-</ul>
-
-<h2>Works</h2>
-
-<ul>
-  {% for work in authored_works %}
-  <li><a href="{% url 'work_detail' work.pk %}">{{ work.versions.all | first }}</a></li>
-  {% endfor %}
-</ul>
+<div class="card">
+  <div class="card-header">Works</div>
+  <ul class="list-group list-group-flush">
+    {% for work in authored_works %}
+    <li class="list-group-item"><a href="{% url 'work_detail' work.pk %}">{{ work.versions.all | first }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
 
 {% endblock %}

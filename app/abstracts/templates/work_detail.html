@@ -4,7 +4,9 @@
 
 <h1>{{ work_versions | first }}</h1>
 
-<h2>Authors</h2>
+<p>{{ work.submission.year }} - {{ work.submission.venue }}</p>
+
+<h2>All Authors</h2>
 <ol>
 {% for authorship in work_authorships %}
   <li><a href="{% url 'author_detail' authorship.author %}">{{ authorship.author.appellations.last.first_name }} {{ authorship.author.appellations.last.last_name }}</a></li>
@@ -13,12 +15,13 @@
 
 <h2>Versions</h2>
 
-<div class="accordion" id="accordionExample">
+<div class="accordion" id="workVersionAccordion">
   {% for version in work_versions %}
 
   <div class="card">
     <div class="card-header" id="heading{{ forloop.counter }}">
       <h5 class="mb-0">
+        <span class="badge badge-secondary">{{ version.submission_type }}</span>
         <button class="btn btn-link{% if forloop.first is not True %} collapsed{% endif %}" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="{{ forloop.first | lower }}"
           aria-controls="collapse{{ forloop.counter }}">
         {{ version.title }}
@@ -31,18 +34,14 @@
       </h5>
     </div>
 
-    <div id="collapse{{ forloop.counter }}" class="collapse{% if forloop.first %} show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordionExample">
+    <div id="collapse{{ forloop.counter }}" class="collapse{% if forloop.first %} show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-parent="#workVersionAccordion">
       <div class="card-body">
-        <p>Authors:</p>
+        <h4>Version authors:</h4>
         <ul>
           {% for authorship in version.authorships.all %}
-          <li>{{ authorship.author.appellations.last.first_name }} {{ authorship.author.appellations.last.last_name }}</li>
+          <li><a href="{% url 'author_detail' authorship.author %}">{{ authorship.author.appellations.last.first_name }} {{ authorship.author.appellations.last.last_name }}</a></li>
           {% endfor %}
         </ul>
-
-        <p class="year">Year: {{ version.work.submission.year }}</p>
-        <p>Type: {{ version.type }}</p>
-        <p>State: {{ version.state }}</p>
 
         <h4>Abstract</h4>
 

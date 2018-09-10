@@ -33,7 +33,7 @@ class Tag(models.Model):
 class Version(models.Model):
     work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='versions')
     title = models.CharField(max_length=500, null=True)
-    type = models.CharField(max_length=255, null=True)
+    submission_type = models.CharField(max_length=255, null=True)
     state = models.CharField(max_length=2, choices=(
         ("ac", "accpeted"),
         ("su", "submission"),
