@@ -6,34 +6,43 @@
 <div class="card">
   <div class="card-header">Author Info</div>
   <div class="card-body">
-    <h4>Names</h4>
-    <ul class="list-group list-group">
+    <div class="card-deck">
+    <div class="card">
+      <div class="card-header">Names</div>
+    <ul class="list-group list-group-flush">
       {% for appellation in appellations %}
       <li class="list-group-item">{{ appellation.first_name }} {{ appellation.last_name }} (Source: {{ appellation.asserted_by }})</li>
       {% endfor %}
     </ul>
+    </div>
 
-    <h4>Institutions</h4>
-
-    <ul class="list-group list-group">
+    <div class="card">
+      <div class="card-header">Institutions</div>
+    <ul class="list-group list-group-flush">
       {% for institution_membership in institution_memberships %}
       <li class="list-group-item">{{ institution_membership.institution.name }} ({% if institution_membership.institution.city %}{{ institution_membership.institution.city }},{% endif %}{% if institution_membership.institution.country %} {{ institution_membership.institution.country }}{% endif %}) (Source: {{ institution_membership.asserted_by }})</li>
       {% endfor %}
     </ul>
+    </div>
 
-    <h4>Departments</h4>
-    <ul class="list-group list-group">
+    <div class="card">
+      <div class="card-header">Departments</div>
+    <ul class="list-group list-group-flush">
       {% for department_membership in department_memberships %}
       <li class="list-group-item">{{ department_membership.department }} (Source: {{ department_membership.asserted_by }})</li>
       {% endfor %}
     </ul>
-    <h4>Genders</h4>
-    <ul class="list-group list-group">
+    </div>
+    <div class="card">
+      <div class="card-header">Genders</div>
+    <ul class="list-group list-group-flush">
       {% for gender_membership in gender_memberships %}
       <li class="list-group-item">{{ gender_membership.gender }} (Source: {{ gender_membership.asserted_by }})</li>
       {% endfor %}
     </ul>
   </div>
+</div>
+</div>
 </div>
 
 <div class="card">
