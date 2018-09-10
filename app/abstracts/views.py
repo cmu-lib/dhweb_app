@@ -28,14 +28,34 @@ class WorkView(DetailView):
     model = Work
     template_name = 'work_detail.html'
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        obj = super().get_object()
+        # Add in a QuerySet of all the books
+        context['work_versions'] = obj.versions.all()
+        context['work_authorships'] = obj.versions.first().authorships.order_by("authorship_order")
+        return context
+
 class AuthorView(DetailView):
     model = Author
     template_name = 'author_detail.html'
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        obj = super().get_object()
+        context['authored_works'] = Work.objects.filter(
+            versions__authorships__author=obj).distinct
+        context['appellations'] = obj.appellations.all()
         context['gender_memberships'] = obj.gender_memberships.all()
+        context['department_memberships'] = obj.department_memberships.all()
+        context['institution_memberships'] = obj.institution_memberships.all()
+        return context
+
 class AuthorList(ListView):
     context_object_name = 'author_list'
     template_name = 'author_list.html'
 
     def get_queryset(self):
-        return Author.objects.all()[:10]
+        return Author.objects.all()

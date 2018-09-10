@@ -1,12 +1,26 @@
-<h1>Work ID {{ work.work_id }}</h1>
+<h1>Work ID {{ work.pk }}</h1>
 
-<p>Latest title: {{ work.versions.all | first }}</p>
+<p>Latest title: {{ work_versions | first }}</p>
+
+<h2>Authors</h2>
+<ol>
+{% for authorship in work_authorships %}
+  <li><a href="{% url 'author_detail' authorship.author %}">{{ authorship.author.appellations.last.first_name }} {{ authorship.author.appellations.last.last_name }}</a></li>
+{% endfor %}
+</ol>
 
 <h2>Versions</h2>
 
-{% for version in version_list %}
+{% for version in work_versions %}
   <hr/>
   <h3>{{ version.title }}</h3>
+
+  <p>Authors:</p>
+  <ul>
+    {% for authorship in version.authorships.all %}
+      <li>{{ authorship.author.appellations.last.first_name }} {{ authorship.author.appellations.last.last_name }}</li>
+      {% endfor %}
+  </ul>
 
   <p class="year">Year: {{ version.work.submission.year }}</p>
   <p>Type: {{ version.type }}</p>
