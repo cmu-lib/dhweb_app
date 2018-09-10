@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
 <h1>{{ author.appellations.all.last.first_name }} {{ author.appellations.all.last.last_name }}</h1>
 
 <h2>Attributes</h2>
@@ -42,3 +45,5 @@
   <li><a href="{% url 'work_detail' work.pk %}">{{ work.versions.all | first }}</a></li>
   {% endfor %}
 </ul>
+
+{% endblock %}

@@ -1,6 +1,8 @@
-<h1>Work ID {{ work.pk }}</h1>
+{% extends "base.html" %}
 
-<p>Latest title: {{ work_versions | first }}</p>
+{% block content %}
+
+<h1>{{ work_versions | first }}</h1>
 
 <h2>Authors</h2>
 <ol>
@@ -11,33 +13,55 @@
 
 <h2>Versions</h2>
 
-{% for version in work_versions %}
-  <hr/>
-  <h3>{{ version.title }}</h3>
+<div class="accordion" id="accordionExample">
+  {% for version in work_versions %}
 
-  <p>Authors:</p>
-  <ul>
-    {% for authorship in version.authorships.all %}
-      <li>{{ authorship.author.appellations.last.first_name }} {{ authorship.author.appellations.last.last_name }}</li>
-      {% endfor %}
-  </ul>
+  <div class="card">
+    <div class="card-header" id="heading{{ forloop.counter }}">
+      <h5 class="mb-0">
+        <button class="btn btn-link{% if forloop.first is not True %} collapsed{% endif %}" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="{{ forloop.first | lower }}"
+          aria-controls="collapse{{ forloop.counter }}">
+        {{ version.title }}
+        </button>
+        {% if version.state == "ac" %}
+        <span class="badge badge-primary">Accepted</span>
+        {% else %}
+        <span class="badge badge-secondary">Submitted</span>
+        {% endif %}
+      </h5>
+    </div>
 
-  <p class="year">Year: {{ version.work.submission.year }}</p>
-  <p>Type: {{ version.type }}</p>
-  <p>State: {{ version.state }}</p>
+    <div id="collapse{{ forloop.counter }}" class="collapse{% if forloop.first %} show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-parent="#accordionExample">
+      <div class="card-body">
+        <p>Authors:</p>
+        <ul>
+          {% for authorship in version.authorships.all %}
+          <li>{{ authorship.author.appellations.last.first_name }} {{ authorship.author.appellations.last.last_name }}</li>
+          {% endfor %}
+        </ul>
 
-  <h4>Abstract</h4>
+        <p class="year">Year: {{ version.work.submission.year }}</p>
+        <p>Type: {{ version.type }}</p>
+        <p>State: {{ version.state }}</p>
 
-  <p>{{ version.full_text }}</p>
+        <h4>Abstract</h4>
 
-  <h4>Tags</h4>
-  {% if version.tags.all %}
-    <ul>
-      {% for tag in version.tags.all %}
-      <li><a href="{% url 'tag_detail' tag.pk %}">{{ tag.title }}</a></li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>This version has no associated tags</p>
-  {% endif %}
-{% endfor %}
+        <p>{{ version.full_text }}</p>
+
+        <h4>Tags</h4>
+        {% if version.tags.all %}
+        <ul>
+          {% for tag in version.tags.all %}
+          <li><a href="{% url 'tag_detail' tag.pk %}">{{ tag.title }}</a></li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>This version has no associated tags</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

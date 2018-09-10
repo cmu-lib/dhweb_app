@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 <h1>Authors</h1>
 
 <ul>
@@ -5,3 +9,5 @@
 <li><a href="{% url 'author_detail' author.author_id %}">{{ author.appellations.all.last.first_name }} {{ author.appellations.all.last.last_name }}</a></li>
 {% endfor %}
 </ul>
+
+{% endblock %}

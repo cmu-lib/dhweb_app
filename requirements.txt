@@ -1,3 +1,4 @@
 django==2.1
 django-extensions
 pygraphviz
+django-bootstrap4
