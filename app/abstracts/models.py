@@ -16,7 +16,10 @@ class Work(models.Model):
     submission = models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name = 'works')
 
     def __str__(self):
-        return str(self.work_id)
+        return str(self.pk)
+
+    def __eq__(self, other):
+        return(self.pk == other.pk)
 
 class Tag(models.Model):
     title = models.CharField(max_length=100, null=True)
@@ -44,10 +47,16 @@ class Version(models.Model):
     def age(self):
         return datetime.date.today().year - self.year
 
+    def __eq__(self, other):
+        return(self.pk == other.pk)
+
 class Institution(models.Model):
     name = models.CharField(max_length=100, null=True)
     country = models.CharField(max_length=100, null=True)
     city = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.city}, {self.country})"
 
 class Gender(models.Model):
     gender = models.CharField(max_length = 100)
@@ -90,6 +99,6 @@ class InstitutionAssertion(models.Model):
     asserted_by=models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name = 'institution_assertions')
 
 class GenderAssertion(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author_genders')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='gender_memberships')
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, related_name='gender_authors')
     asserted_by=models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name = 'gender_assertions')
