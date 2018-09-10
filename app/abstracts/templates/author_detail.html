@@ -1,1 +1,44 @@
 <h1>{{ author.appellations.all.last.first_name }} {{ author.appellations.all.last.last_name }}</h1>
+
+<h2>Attributes</h2>
+
+<h3>Appellations</h3>
+
+<ul>
+  {% for appellation in appellations %}
+  <li>{{ appellation.first_name }} {{ appellation.last_name }} (Source: {{ appellation.asserted_by }})</li>
+  {% endfor %}
+</ul>
+
+<h3>Institutions</h3>
+
+<ul>
+  {% for institution_membership in institution_memberships %}
+  <li>{{ institution_membership.institution.name }} ({% if institution_membership.institution.city %}{{ institution_membership.institution.city }},{% endif %}{% if institution_membership.institution.country %} {{ institution_membership.institution.country }}{% endif %}) (Source: {{ institution_membership.asserted_by }})</li>
+  {% endfor %}
+</ul>
+
+<h3>Departments</h3>
+
+<ul>
+  {% for department_membership in department_memberships %}
+  <li>{{ department_membership.department }} (Source: {{ department_membership.asserted_by }})</li>
+  {% endfor %}
+</ul>
+
+
+<h3>Genders</h3>
+
+<ul>
+  {% for gender_membership in gender_memberships %}
+  <li>{{ gender_membership.gender }} (Source: {{ gender_membership.asserted_by }})</li>
+  {% endfor %}
+</ul>
+
+<h2>Works</h2>
+
+<ul>
+  {% for work in authored_works %}
+  <li><a href="{% url 'work_detail' work.pk %}">{{ work.versions.all | first }}</a></li>
+  {% endfor %}
+</ul>

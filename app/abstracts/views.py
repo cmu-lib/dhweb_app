@@ -32,6 +32,7 @@ class AuthorView(DetailView):
     model = Author
     template_name = 'author_detail.html'
 
+        context['gender_memberships'] = obj.gender_memberships.all()
 class AuthorList(ListView):
     context_object_name = 'author_list'
     template_name = 'author_list.html'
