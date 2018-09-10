@@ -37,6 +37,6 @@ class AuthorList(generic.ListView):
 
 def work_detail(request, work_id):
     work = get_object_or_404(Work, pk = work_id)
-    version_list = Version.objects.filter(work_id=work)
+    version_list = work.versions.all()
     context = {'work': work, 'version_list': version_list}
     return render(request, "work_detail.html", context)
