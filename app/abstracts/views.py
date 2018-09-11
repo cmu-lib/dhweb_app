@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
+from django.db.models import Count
 
 from .models import Version, Tag, Work, Author, Conference
 
@@ -22,7 +23,7 @@ class TagList(ListView):
     template_name = 'tag_list.html'
 
     def get_queryset(self):
-        return Tag.objects.order_by("title")
+        return Tag.objects.annotate(num_works=Count('versions__work__distinct')).order_by("title")
 
 class WorkList(ListView):
     context_object_name = 'work_list'
