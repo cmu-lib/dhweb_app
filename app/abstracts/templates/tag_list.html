@@ -1,7 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 <h1>Tags</h1>
 
-<ul>
-{%for tag in tag_list %}
-<li><a href="{% url 'tag_detail' tag.tag_id %}">{{ tag.title }}</a></li>
-{% endfor %}
-</ul>
+<div class="card">
+  <ul class="list-group list-group-flush">
+  {% for tag in tag_list %}
+    <li class="list-group-item"><a href="{% url 'tag_detail' tag.pk %}">{{ tag.title }}</a></li>
+  {% endfor %}
+  </ul>
+</div>
+
+{% endblock %}

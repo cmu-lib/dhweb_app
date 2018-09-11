@@ -22,7 +22,7 @@ class TagList(ListView):
     template_name = 'tag_list.html'
 
     def get_queryset(self):
-        return Tag.objects.all()
+        return Tag.objects.order_by("title")
 
 class WorkList(ListView):
     context_object_name = 'work_list'
