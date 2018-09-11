@@ -4,7 +4,7 @@
 
 <h1>{{ work_versions | first }}</h1>
 
-<p>{{ work.submission.year }} - {{ work.submission.venue }}</p>
+<p><a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }} - {{ work.conference.venue }}</a></p>
 
 <h2>All Authors</h2>
 <ol>
@@ -21,7 +21,7 @@
   <div class="card">
     <div class="card-header" id="heading{{ forloop.counter }}">
       <h5 class="mb-0">
-        <span class="badge badge-secondary">{{ version.submission_type }}</span>
+        <span class="badge badge-secondary">{{ version.conference_type }}</span>
         <button class="btn btn-link{% if forloop.first is not True %} collapsed{% endif %}" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="{{ forloop.first | lower }}"
           aria-controls="collapse{{ forloop.counter }}">
         {{ version.title }}

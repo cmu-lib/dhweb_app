@@ -6,8 +6,8 @@
 
 <div class="card">
   <ul class="list-group list-group-flush">
-    {% for submission in submission_list %}
-    <li class="list-group-item"><a href="{% url 'submission_detail' submission.pk %}">{{ submission }}</a></li>
+    {% for conference in conference_list %}
+    <li class="list-group-item"><a href="{% url 'conference_detail' conference.pk %}">{{ conference }}</a></li>
     {% endfor %}
   </ul>
 </div>
