@@ -12,4 +12,6 @@ urlpatterns = [
     path('conference', views.ConferenceList.as_view(), name = 'conference_list'),
     path('conference/<int:pk>', views.ConferenceView.as_view(),
          name='conference_detail'),
+    path('institution', views.InstitutionList.as_view(), name = 'institution_list'),
+    path('institution/<int:pk>', views.InstitutionView.as_view(), name = 'institution_detail'),
 ]

@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
 from django.db.models import Count
 
-from .models import Version, Tag, Work, Author, Conference
+from .models import Version, Tag, Work, Author, Conference, Institution
 
 class TagView(DetailView):
     model = Tag
@@ -85,3 +85,21 @@ class ConferenceList(ListView):
 
     def get_queryset(self):
         return Conference.objects.order_by("year")
+
+class InstitutionView(DetailView):
+    model = Institution
+    template_name = 'institution_detail.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        obj = super().get_object()
+        context['members'] = obj.member_assertions.all()
+        return(context)
+
+class InstitutionList(ListView):
+    context_object_name = 'institution_list'
+    template_name = 'institution_list.html'
+
+    def get_queryset(self):
+        return Institution.objects.annotate(num_members=Count("member_assertions")).order_by("-num_members")
