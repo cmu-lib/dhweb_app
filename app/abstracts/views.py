@@ -46,11 +46,11 @@ class AuthorView(DetailView):
         context = super().get_context_data(**kwargs)
         obj = super().get_object()
         context['authored_works'] = Work.objects.filter(
-            versions__authorships__author=obj).distinct
-        context['appellations'] = obj.appellations.all()
-        context['gender_memberships'] = obj.gender_memberships.all()
-        context['department_memberships'] = obj.department_memberships.all()
-        context['institution_memberships'] = obj.institution_memberships.all()
+            versions__authorships__author=obj).distinct().order_by("-conference__year")
+        context['appellations'] = obj.appellations.order_by("-asserted_by__work__conference__year")
+        context['gender_memberships'] = obj.gender_memberships.order_by("-asserted_by__work__conference__year")
+        context['department_memberships'] = obj.department_memberships.order_by("-asserted_by__work__conference__year")
+        context['institution_memberships'] = obj.institution_memberships.order_by("-asserted_by__work__conference__year")
         return context
 
 class AuthorList(ListView):
