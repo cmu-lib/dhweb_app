@@ -1,15 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 <h1>{{ tag.title }}</h1>
 
-<p>Type: {{ tag.type }}</p>
-<p>Timespan: {{ tag.StartDate }} - {{ tag.EndDate }}</p>
+<div class="row">
+  <div class="col-sm-8">
+    <div class="card">
+      <div class="card-header">Works</div>
+        {% if tag.versions %}
+        <ul class="list-group list-group-flush">
+          {% for work in tag_works %}
+          <li class="list-group-item"><a href="{% url 'work_detail' work %}">{{ work.versions.all | first }}</a></li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>There are no abstracts using this tag.</p>
+        {% endif %}
+      </div>
+  </div>
 
-<h2>Works:</h2>
-{% if tag.versions %}
-<ul>
-{% for work in tag.versions.all %}
-  <li><a href="{% url 'work_detail' work.id %}">{{ work }}</a></li>
-{% endfor %}
-</ul>
-{% else %}
-<p>There are no abstracts using this tag.</p>
-{% endif %}
+  <div class="col-sm-4">
+    <div class="card">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Type: {{ tag.type }}</li>
+        <li class="list-group-item">Timespan: {{ tag.StartDate }} - {{ tag.EndDate }}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

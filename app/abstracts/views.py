@@ -10,6 +10,13 @@ class TagView(DetailView):
     model = Tag
     template_name = 'tag_detail.html'
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        obj = super().get_object()
+        context['tag_works'] = Work.objects.filter(versions__tags=obj)[:50]
+        return context
+
 class TagList(ListView):
     context_object_name = 'tag_list'
     template_name = 'tag_list.html'
