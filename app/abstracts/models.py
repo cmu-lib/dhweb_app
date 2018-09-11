@@ -5,7 +5,7 @@ from django.utils import timezone
 
 # Create your models here.
 
-class SubmissionEvent(models.Model):
+class Conference(models.Model):
     year = models.IntegerField()
     venue = models.CharField(max_length=100, null=True)
 
@@ -13,7 +13,7 @@ class SubmissionEvent(models.Model):
         return f"{self.year} - {self.venue}"
 
 class Work(models.Model):
-    submission = models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name = 'works')
+    submission = models.ForeignKey(Conference, on_delete = models.CASCADE, related_name = 'works')
 
     def __str__(self):
         return str(self.pk)
@@ -75,7 +75,7 @@ class AppellationAssertion(models.Model):
     last_name = models.CharField(max_length = 100, null=True)
     author = models.ForeignKey(Author, on_delete = models.CASCADE, related_name='appellations')
     asserted_by = models.ForeignKey(
-        SubmissionEvent, on_delete=models.CASCADE, related_name='appellations')
+        Conference, on_delete=models.CASCADE, related_name='appellations')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -87,7 +87,7 @@ class Authorship(models.Model):
 
 class DepartmentAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="department_memberships")
-    asserted_by = models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name="department_assertions")
+    asserted_by = models.ForeignKey(Conference, on_delete = models.CASCADE, related_name="department_assertions")
     department=models.CharField(max_length = 100)
 
     def __str__(self):
@@ -96,9 +96,9 @@ class DepartmentAssertion(models.Model):
 class InstitutionAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='institution_memberships')
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='member_assertions')
-    asserted_by=models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name = 'institution_assertions')
+    asserted_by=models.ForeignKey(Conference, on_delete = models.CASCADE, related_name = 'institution_assertions')
 
 class GenderAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='gender_memberships')
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, related_name='gender_authors')
-    asserted_by=models.ForeignKey(SubmissionEvent, on_delete = models.CASCADE, related_name = 'gender_assertions')
+    asserted_by=models.ForeignKey(Conference, on_delete = models.CASCADE, related_name = 'gender_assertions')
