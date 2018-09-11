@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>ADHO Conferences</h1>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    {% for submission in submission_list %}
+    <li class="list-group-item"><a href="{% url 'submission_detail' submission.pk %}">{{ submission }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% endblock %}

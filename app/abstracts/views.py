@@ -4,7 +4,7 @@ from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
 
-from .models import Version, Tag, Work, Author
+from .models import Version, Tag, Work, Author, SubmissionEvent
 
 class TagView(DetailView):
     model = Tag
@@ -59,3 +59,21 @@ class AuthorList(ListView):
 
     def get_queryset(self):
         return Author.objects.all()
+
+class SubmissionView(DetailView):
+    model = SubmissionEvent
+    template_name = 'submission_detail.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        obj = super().get_object()
+        context['works'] = obj.works.all()
+        return(context)
+
+class SubmissionList(ListView):
+    context_object_name = 'submission_list'
+    template_name = 'submission_list.html'
+
+    def get_queryset(self):
+        return SubmissionEvent.objects.order_by("year")
