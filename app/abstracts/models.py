@@ -13,7 +13,7 @@ class Conference(models.Model):
         return f"{self.year} - {self.venue}"
 
 class Work(models.Model):
-    submission = models.ForeignKey(Conference, on_delete = models.CASCADE, related_name = 'works')
+    conference = models.ForeignKey(Conference, on_delete = models.CASCADE, related_name = 'works')
 
     def __str__(self):
         return str(self.pk)
