@@ -31,7 +31,7 @@
         <div class="card-header">Institutions</div>
         <ul class="list-group list-group-flush">
           {% for institution_membership in institution_memberships %}
-          <li class="list-group-item">{{institution_membership.institution.name }} ({% if institution_membership.institution.city %}{{ institution_membership.institution.city }}, {% endif %}{% if institution_membership.institution.country %}{{ institution_membership.institution.country }}{% endif %}) <a href="{% url 'work_detail' institution_membership.asserted_by.work %}"><span class="badge badge-info">Source</span></a></li></li>
+          <li class="list-group-item"><a href="{% url 'institution_detail' institution_membership.institution.pk %}">{{institution_membership.institution.name }} ({% if institution_membership.institution.city %}{{ institution_membership.institution.city }}, {% endif %}{% if institution_membership.institution.country %}{{ institution_membership.institution.country }}{% endif %})</a> <a href="{% url 'work_detail' institution_membership.asserted_by.work %}"><span class="badge badge-info">Source</span></a></li></li>
           {% endfor %}
         </ul>
       </div>
