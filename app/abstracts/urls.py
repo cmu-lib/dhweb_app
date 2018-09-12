@@ -3,8 +3,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.WorkList.as_view(), name='index'),
-    path('<int:pk>', views.WorkView.as_view(), name = 'work_detail'),
+    path('', views.home_view, name='home_view'),
+    path('works', views.WorkList.as_view(), name='work_list'),
+    path('works/<int:pk>', views.WorkView.as_view(), name = 'work_detail'),
     path('tags', views.TagList.as_view(), name = 'tag_list'),
     path('tags/<int:pk>', views.TagView.as_view(), name = "tag_detail"),
     path('authors', views.AuthorList.as_view(), name = 'author_list'),

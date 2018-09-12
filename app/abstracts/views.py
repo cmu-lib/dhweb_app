@@ -103,3 +103,18 @@ class InstitutionList(ListView):
 
     def get_queryset(self):
         return Institution.objects.annotate(num_members=Count("member_assertions")).order_by("-num_members")
+
+def home_view(request):
+    conference_count = Conference.objects.count()
+    work_count = Work.objects.count()
+    author_count = Author.objects.count()
+    institution_count = Institution.objects.count()
+    country_count = Institution.objects.values("country").distinct().count()
+    context = {
+        'conference_count': conference_count,
+        'work_count': work_count,
+        'author_count': author_count,
+        'institution_count': institution_count,
+        'country_count': country_count,
+        }
+    return render(request, "index.html", context)
