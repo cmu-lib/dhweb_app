@@ -4,6 +4,7 @@ from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
 from django.db.models import Count
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from .models import Version, Tag, Work, Author, Conference, Institution
 
@@ -64,6 +65,7 @@ class AuthorView(DetailView):
 class AuthorList(ListView):
     context_object_name = 'author_list'
     template_name = 'author_list.html'
+    paginate_by = 10
 
     def get_queryset(self):
         return Author.objects.all()

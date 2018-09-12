@@ -4,10 +4,32 @@
 
 <h1>Authors</h1>
 
-<ul>
+<div class="card">
+<ul class="list-group list-group-flush">
 {% for author in author_list %}
-<li><a href="{% url 'author_detail' author.author_id %}">{{ author.appellations.all.last.first_name }} {{ author.appellations.all.last.last_name }}</a></li>
+  <li class="list-group-item"><a href="{% url 'author_detail' author.author_id %}">{{ author.appellations.all.last.first_name }} {{ author.appellations.all.last.last_name }}</a></li>
 {% endfor %}
 </ul>
+</div>
+
+<nav aria-label="author-pagination">
+  <ul class="pagination">
+
+    {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+    {% endif %}
+
+    <li class="page-item"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+
+    {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-item">Next</span></li>
+    {% endif %}
+
+  </ul>
+</nav>
 
 {% endblock %}
