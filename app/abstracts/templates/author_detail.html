@@ -17,11 +17,34 @@
   <div class="col-md-4">
     <div class="row">
       <div class="card">
-        <div class="card-header">Names</div>
+        <div class="card-header">Names<a class="btn btn-primary btn-sm float-right" data-toggle="collapse" href="#new_appellation_collapse" role="button" aria-expanded="false"
+          aria-controls="collapseExample">Add</a></div>
         <ul class="list-group list-group-flush">
           {% for appellation in appellations %}
           <li class="list-group-item">{{ appellation.first_name }} {{ appellation.last_name }} <a href="{% url 'work_detail' appellation.asserted_by.work.pk %}"><span class="badge badge-info">Source</span></a></li>
           {% endfor %}
+          <li class="list-group-item collapse" id="new_appellation_collapse">
+            <form>
+              <div class="form-group">
+                <label for="new_first_name">First Name</label>
+                <input type="text", class="form-control" id="new_first_name" placeholder="Enter a new first name">
+              </div>
+              <div class="form-group">
+                <label for="new_last_name">First Name</label>
+                <input type="text" class="form-control" id="new_last_name" placeholder="Enter a new last name">
+              </div>
+              <div class="form-group">
+                <label for="new_appellation_source">Source document</label>
+                <select multipile type="select" class="custom-select" id="new_appellation_source">
+                  <option selected>Choose source submission</option>
+                  {% for version in authored_versions %}
+                  <option value="{{ version.pk }}">{{ version.pk }}. {{ version.title }} - {{ version.state }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </li>
         </ul>
       </div>
     </div>
