@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
-from django.db.models import Count
+from django.db.models import Count, Max, Min
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from .models import Version, Tag, Work, Author, Conference, Institution
@@ -68,7 +68,7 @@ class AuthorList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Author.objects.order_by("appellations__last_name")
+        return Author.objects.annotate(pref_first_name=Max('appellations__first_name'), pref_last_name=Max('appellations__last_name')).order_by("pref_last_name")
 
 class ConferenceView(DetailView):
     model = Conference
