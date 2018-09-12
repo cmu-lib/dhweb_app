@@ -2,14 +2,14 @@
 
 {% block content %}
 
-<h1>{{ work_versions | first }}</h1>
+<h1>{{ work.pref_title }}</h1>
 
 <p><a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }} - {{ work.conference.venue }}</a></p>
 
 <h2>All Authors</h2>
 <ol>
 {% for authorship in work_authorships %}
-  <li><a href="{% url 'author_detail' authorship.author %}">{{ authorship.author.appellations.last.first_name }} {{ authorship.author.appellations.last.last_name }}</a></li>
+  <li><a href="{% url 'author_detail' authorship.author %}">{{ authorship.author.pref_name }}</a></li>
 {% endfor %}
 </ol>
 
@@ -39,13 +39,17 @@
         <h4>Version authors:</h4>
         <ul>
           {% for authorship in version.authorships.all %}
-          <li><a href="{% url 'author_detail' authorship.author %}">{{ authorship.author.appellations.last.first_name }} {{ authorship.author.appellations.last.last_name }}</a></li>
+          <li><a href="{% url 'author_detail' authorship.author %}">{{ authorship.author.pref_name }}</a></li>
           {% endfor %}
         </ul>
 
         <h4>Abstract</h4>
 
-        <p>{{ version.full_text }}</p>
+        {% if versionl.full_text %}
+          <p>{{ version.full_text }}</p>
+        {% else %}
+          <p>No full text available for this version.</p>
+        {% endif %}
 
         <h4>Tags</h4>
         {% if version.tags.all %}

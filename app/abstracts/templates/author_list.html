@@ -7,7 +7,7 @@
 <div class="card">
 <ul class="list-group list-group-flush">
 {% for author in author_list %}
-  <li class="list-group-item"><a href="{% url 'author_detail' author.author_id %}">{{ author.pref_first_name }} {{ author.pref_last_name }}</a></li>
+  <li class="list-group-item"><a href="{% url 'author_detail' author.author_id %}">{{ author.pref_name }}</a></li>
 {% endfor %}
 </ul>
 </div>

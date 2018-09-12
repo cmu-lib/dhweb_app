@@ -11,7 +11,7 @@
         {% if tag.versions %}
         <ul class="list-group list-group-flush">
           {% for work in tag_works %}
-          <li class="list-group-item"><a href="{% url 'work_detail' work %}">{{ work.versions.all | first }}</a></li>
+          <li class="list-group-item"><a href="{% url 'work_detail' work %}">{{ work.pref_title }}</a></li>
           {% endfor %}
         </ul>
         {% else %}

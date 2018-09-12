@@ -21,6 +21,10 @@ class Work(models.Model):
     def __eq__(self, other):
         return(self.pk == other.pk)
 
+    @property
+    def pref_title(self):
+        return self.versions.all()[0].title
+
 class Tag(models.Model):
     title = models.CharField(max_length=100, null=True)
     type = models.CharField(max_length=100, null=True)
@@ -69,6 +73,21 @@ class Author(models.Model):
 
     def __str__(self):
         return str(self.author_id)
+
+    @property
+    def pref_name(self):
+        return f"{self.pref_first_name} {self.pref_last_name}"
+
+    @property
+    def pref_first_name(self):
+        return self.appellations.all()[0].first_name
+
+    @property
+    def pref_last_name(self):
+        return self.appellations.all()[0].last_name
+
+    class Meta:
+        ordering: ["pref_last_name"]
 
 class AppellationAssertion(models.Model):
     first_name = models.CharField(max_length = 100, null=True)

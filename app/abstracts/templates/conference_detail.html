@@ -6,13 +6,11 @@
 
 <div class="card">
   <div class="card-header">Works</div>
-  <div class="card-body">
-    <ul class="list-group list-group-flush">
-      {% for work in works %}
-      <li class="list-group-item"><a href="{% url 'work_detail' work.pk %}">{{ work.versions.all | first }}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
+  <ul class="list-group list-group-flush">
+    {% for work in works %}
+    <li class="list-group-item"><a href="{% url 'work_detail' work.pk %}">{{ work.versions.all | first }}</a></li>
+    {% endfor %}
+  </ul>
 </div>
 
 {% endblock %}

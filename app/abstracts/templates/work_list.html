@@ -6,7 +6,7 @@
 <h1>Work lists</h1>
 <ul>
   {% for work in work_list %}
-  <li><a href="{% url 'work_detail' work.id %}">{{ work.versions.all.first }}</a></li>
+  <li><a href="{% url 'work_detail' work.id %}">{{ work.pref_title }}</a></li>
   {% endfor %}
 </ul>
 {% else %}

@@ -68,7 +68,7 @@ class AuthorList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Author.objects.annotate(pref_first_name=Max('appellations__first_name'), pref_last_name=Max('appellations__last_name')).order_by("pref_last_name")
+        return Author.objects.all()
 
 class ConferenceView(DetailView):
     model = Conference
@@ -86,7 +86,7 @@ class ConferenceList(ListView):
     template_name = 'conference_list.html'
 
     def get_queryset(self):
-        return Conference.objects.order_by("year")
+        return Conference.objects.order_by("-year")
 
 class InstitutionView(DetailView):
     model = Institution
