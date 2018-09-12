@@ -68,7 +68,7 @@ class AuthorList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Author.objects.all()
+        return Author.objects.order_by("appellations__last_name")
 
 class ConferenceView(DetailView):
     model = Conference
