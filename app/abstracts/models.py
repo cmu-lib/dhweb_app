@@ -80,24 +80,27 @@ class Author(models.Model):
 
     @property
     def pref_first_name(self):
-        return self.appellations.all()[0].first_name
+        return self.appellation_assertions.all()[0].appellation.first_name
 
     @property
     def pref_last_name(self):
-        return self.appellations.all()[0].last_name
+        return self.appellation_assertions.all()[0].appellation.last_name
 
     class Meta:
         ordering: ["pref_last_name"]
 
-class AppellationAssertion(models.Model):
+class Appellation(models.Model):
     first_name = models.CharField(max_length = 100, null=True)
     last_name = models.CharField(max_length = 100, null=True)
-    author = models.ForeignKey(Author, on_delete = models.CASCADE, related_name='appellations')
-    asserted_by = models.ForeignKey(
-        Version, on_delete=models.CASCADE, related_name='appellations')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+class AppellationAssertion(models.Model):
+    appellation = models.ForeignKey(Appellation, on_delete = models.CASCADE, related_name='assertions')
+    author = models.ForeignKey(Author, on_delete = models.CASCADE, related_name='appellation_assertions')
+    asserted_by = models.ForeignKey(
+        Version, on_delete=models.CASCADE, related_name='appellation_assertions')
 
 class Authorship(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='authorships')

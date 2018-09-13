@@ -22,7 +22,11 @@
             aria-controls="collapseExample">Add</a></div>
             <ul class="list-group list-group-flush">
               {% for appellation in appellations %}
-              <li class="list-group-item">{{ appellation.first_name }} {{ appellation.last_name }} <a href="{% url 'work_detail' appellation.asserted_by.work.pk %}"><span class="badge badge-info">Source</span></a></li>
+              <li class="list-group-item">{{ appellation.pk }} {{ appellation.first_name }} {{ appellation.last_name }}
+                {% for assertion in appellation.assertions.all %}
+                <a href="{% url 'work_detail' assertion.asserted_by.work.pk %}"><span class="badge badge-info">{{ assertion.asserted_by.work.pk }}</span></a>
+              {% endfor%}
+            </a></li>
               {% endfor %}
               <li class="list-group-item collapse" id="new_appellation_collapse">
                 <form>
