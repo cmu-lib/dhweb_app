@@ -51,11 +51,34 @@
 
     <div class="row">
       <div class="card">
-        <div class="card-header">Institutions</div>
+        <div class="card-header">Institutions<a class="btn btn-primary btn-sm float-right" data-toggle="collapse" href="#new_institution_collapse" role="button" aria-expanded="false" aria-controls="collapseExample">Add</a></div>
         <ul class="list-group list-group-flush">
           {% for institution_membership in institution_memberships %}
           <li class="list-group-item"><a href="{% url 'institution_detail' institution_membership.institution.pk %}">{{institution_membership.institution.name }} ({% if institution_membership.institution.city %}{{ institution_membership.institution.city }}, {% endif %}{% if institution_membership.institution.country %}{{ institution_membership.institution.country }}{% endif %})</a> <a href="{% url 'work_detail' institution_membership.asserted_by.work.pk %}"><span class="badge badge-info">Source</span></a></li></li>
           {% endfor %}
+          <li class="list-group-item collapse" id="new_institution_collapse">
+            <form>
+              <div class="form-group">
+                <label for="new_institution_source">Institution</label>
+                <select multipile type="select" class="custom-select" id="new_institution_source">
+                  <option selected>Choose institution</option>
+                  {% for institutuion in institutions %}
+                  <option value="{{ institutuion.pk }}">{{ institutuion.pk }}. {{ institutuion.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="new_institution_source">Source document</label>
+                <select multipile type="select" class="custom-select" id="new_institution_source">
+                  <option selected>Choose source submission</option>
+                  {% for version in authored_versions %}
+                  <option value="{{ version.pk }}">{{ version.pk }}. {{ version.title }} - {{ version.state }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </li>
         </ul>
       </div>
     </div>

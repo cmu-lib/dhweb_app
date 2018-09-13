@@ -61,6 +61,7 @@ class AuthorView(DetailView):
         context['department_memberships'] = obj.department_memberships.order_by("-asserted_by__work__conference__year")
         context['institution_memberships'] = obj.institution_memberships.order_by("-asserted_by__work__conference__year")
         context['authored_versions'] = Version.objects.filter(authorships__author=obj).order_by("-work__conference__year")
+        context['institutions'] = Institution.objects.order_by("name")
         return context
 
 class AuthorList(ListView):
