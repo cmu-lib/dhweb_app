@@ -59,8 +59,8 @@
           <li class="list-group-item collapse" id="new_institution_collapse">
             <form>
               <div class="form-group">
-                <label for="new_institution_source">Institution</label>
-                <select multipile type="select" class="custom-select" id="new_institution_source">
+                <label for="new_institution">Institution</label>
+                <select multipile type="select" class="custom-select" id="new_institution">
                   <option selected>Choose institution</option>
                   {% for institutuion in institutions %}
                   <option value="{{ institutuion.pk }}">{{ institutuion.pk }}. {{ institutuion.name }}</option>
@@ -96,11 +96,36 @@
 
     <div class="row">
       <div class="card">
-        <div class="card-header">Genders</div>
+        <div class="card-header">Genders<a class="btn btn-primary btn-sm float-right" data-toggle="collapse" href="#new_gender_collapse" role="button"
+          aria-expanded="false" aria-controls="collapseExample">Add</a></div>
         <ul class="list-group list-group-flush">
           {% for gender_membership in gender_memberships %}
           <li class="list-group-item">{{ gender_membership.gender }} <a href="{% url 'work_detail' gender_membership.asserted_by.work.pk %}"><span class="badge badge-info">Source</span></a></li></li>
           {% endfor %}
+
+          <li class="list-group-item collapse" id="new_gender_collapse">
+            <form>
+              <div class="form-group">
+                <label for="new_gender">Institution</label>
+                <select multipile type="select" class="custom-select" id="new_gender">
+                  <option selected>Choose gender</option>
+                  {% for gender in genders %}
+                  <option value="{{ gender.pk }}">{{ gender.gender }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="new_gender_source">Source document</label>
+                <select multipile type="select" class="custom-select" id="new_gender_source">
+                  <option selected>Choose source submission</option>
+                  {% for version in authored_versions %}
+                  <option value="{{ version.pk }}">{{ version.pk }}. {{ version.title }} - {{ version.state }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </li>
         </ul>
       </div>
     </div>

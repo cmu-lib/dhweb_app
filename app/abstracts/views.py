@@ -6,7 +6,7 @@ from django.views.generic import DetailView, ListView
 from django.db.models import Count, Max, Min
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-from .models import Version, Tag, Work, Author, Conference, Institution
+from .models import Version, Tag, Work, Author, Conference, Institution, Gender
 
 class TagView(DetailView):
     model = Tag
@@ -62,6 +62,7 @@ class AuthorView(DetailView):
         context['institution_memberships'] = obj.institution_memberships.order_by("-asserted_by__work__conference__year")
         context['authored_versions'] = Version.objects.filter(authorships__author=obj).order_by("-work__conference__year")
         context['institutions'] = Institution.objects.order_by("name")
+        context['genders'] = Gender.objects.order_by("?")
         return context
 
 class AuthorList(ListView):
