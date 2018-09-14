@@ -6,7 +6,7 @@ from django.views.generic import DetailView, ListView
 from django.db.models import Count, Max, Min
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-from .models import Version, Tag, Work, Author, Conference, Institution, Gender, Appellation
+from .models import Version, Tag, Work, Author, Conference, Institution, Gender, Appellation, Department
 
 class TagView(DetailView):
     model = Tag
@@ -54,15 +54,25 @@ class AuthorView(DetailView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         obj = super().get_object()
+
         context['authored_works'] = Work.objects.filter(
             versions__authorships__author=obj).distinct().order_by("-conference__year")
+
         context['appellations'] = Appellation.objects.filter(assertions__author=obj).distinct()
+
         context['gender_memberships'] = obj.gender_memberships.order_by("-asserted_by__work__conference__year")
-        context['department_memberships'] = obj.department_memberships.order_by("-asserted_by__work__conference__year")
-        context['institution_memberships'] = obj.institution_memberships.order_by("-asserted_by__work__conference__year")
+
+        context['departments'] = Department.objects.filter(assertions__author=obj).distinct()
+
+        context['institutions'] = Institution.objects.filter(assertions__author=obj).distinct()
+
         context['authored_versions'] = Version.objects.filter(authorships__author=obj).order_by("-work__conference__year")
-        context['institutions'] = Institution.objects.order_by("name")
-        context['genders'] = Gender.objects.order_by("?")
+
+
+        context['institution_choices'] = Institution.objects.order_by("name")
+
+        context['gender_choices'] = Gender.objects.order_by("?")
+
         return context
 
 class AuthorList(ListView):

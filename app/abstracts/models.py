@@ -107,17 +107,21 @@ class Authorship(models.Model):
     version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name='authorships')
     authorship_order = models.IntegerField(default=1)
 
+class Department(models.Model):
+    name = models.CharField(max_length = 100)
+    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='departments')
+
 class DepartmentAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="department_memberships")
     asserted_by = models.ForeignKey(Version, on_delete = models.CASCADE, related_name="department_assertions")
-    department=models.CharField(max_length = 100)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='assertions')
 
     def __str__(self):
         return self.department
 
 class InstitutionAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='institution_memberships')
-    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='member_assertions')
+    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='assertions')
     asserted_by=models.ForeignKey(Version, on_delete = models.CASCADE, related_name = 'institution_assertions')
 
 class GenderAssertion(models.Model):
