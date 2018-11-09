@@ -5,12 +5,34 @@ from django.utils import timezone
 
 # Create your models here.
 
+class ConferenceSeries(models.Model):
+    title = models.CharField(max_length=100, null=False)
+
+    def __str__(self):
+        return str(self.title)
+
 class Conference(models.Model):
     year = models.IntegerField()
     venue = models.CharField(max_length=100, null=True)
+    series = models.ManyToManyField(
+        ConferenceSeries,
+        through='SeriesMembership',
+        through_fields=("conference", "series")
+    )
 
     def __str__(self):
         return f"{self.year} - {self.venue}"
+
+class SeriesMembership(models.Model):
+    series = models.ForeignKey(
+        ConferenceSeries, on_delete=models.CASCADE, related_name='conference_memberships')
+    conference = models.ForeignKey(Conference, on_delete=models.CASCADE,
+                                    related_name='series_memberships')
+    number = models.IntegerField(null=True)
+
+    @property
+    def __str__(self):
+        return f"{self.series.all()[0].title} - {self.number}"
 
 class Work(models.Model):
     conference = models.ForeignKey(Conference, on_delete = models.CASCADE, related_name = 'works')
