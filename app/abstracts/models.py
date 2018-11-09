@@ -72,7 +72,7 @@ class Version(models.Model):
         ("ac", "accpeted"),
         ("su", "submission"),
     ))
-    full_text = models.CharField(max_length=50000, null=True)
+    full_text = models.TextField(max_length=50000, null=True)
     tags = models.ManyToManyField(Tag, related_name="versions")
 
     def __str__(self):
