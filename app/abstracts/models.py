@@ -26,6 +26,7 @@ class Conference(models.Model):
         through_fields=("conference", "series")
     )
     organizers = models.ManyToManyField(Organizer, related_name="conferences_organized")
+    notes = models.TextField(null=True)
 
     def __str__(self):
         return f"{self.year} - {self.venue}"
