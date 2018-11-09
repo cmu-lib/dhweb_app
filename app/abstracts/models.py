@@ -38,7 +38,6 @@ class SeriesMembership(models.Model):
                                     related_name='series_memberships')
     number = models.IntegerField(null=True)
 
-    @property
     def __str__(self):
         return f"{self.series.title} - {self.number} - {self.conference}"
 
@@ -46,7 +45,7 @@ class Work(models.Model):
     conference = models.ForeignKey(Conference, on_delete = models.CASCADE, related_name = 'works')
 
     def __str__(self):
-        return str(self.pk)
+        return f"{self.pk} - {self.versions.all().last().title}"
 
     def __eq__(self, other):
         return(self.pk == other.pk)
@@ -84,9 +83,6 @@ class Version(models.Model):
     def __eq__(self, other):
         return(self.pk == other.pk)
 
-    def __str__(self):
-        return f"{self.name} ({self.city}, {self.country})"
-
 class Gender(models.Model):
     gender = models.CharField(max_length = 100)
 
@@ -98,11 +94,16 @@ class Institution(models.Model):
     country = models.CharField(max_length=100, null=True)
     city = models.CharField(max_length=100, null=True)
 
+    def __str__(self):
+        return f"{self.name} ({self.city}, {self.country})"
+
 class Department(models.Model):
     name = models.CharField(max_length=100)
     institution = models.ForeignKey(
         Institution, on_delete=models.CASCADE, related_name='departments')
 
+    def __str__(self):
+        return f"{self.name} - {self.institution}"
 
 class Appellation(models.Model):
     first_name = models.CharField(max_length=100, null=True)
@@ -145,7 +146,7 @@ class Author(models.Model):
     )
 
     def __str__(self):
-        return str(self.author_id)
+        return f"{self.author_id} - {self.pref_name}"
 
     @property
     def pref_name(self):
@@ -168,10 +169,16 @@ class AppellationAssertion(models.Model):
     asserted_by = models.ForeignKey(
         Version, on_delete=models.CASCADE, related_name='appellation_assertions')
 
+    def __str__(self):
+        return f"{self.appellation}"
+
 class Authorship(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='authorships')
     version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name='authorships')
     authorship_order = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.version} - {self.author} ({self.authorship_order})"
 
 class DepartmentAssertion(models.Model):
     author = models.ForeignKey(
@@ -182,14 +189,20 @@ class DepartmentAssertion(models.Model):
         Department, on_delete=models.CASCADE, related_name='assertions')
 
     def __str__(self):
-        return self.department
+        return f"{self.department} - {self.author}"
 
 class InstitutionAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='institution_memberships')
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='assertions')
     asserted_by=models.ForeignKey(Version, on_delete = models.CASCADE, related_name = 'institution_assertions')
 
+    def __str__(self):
+        return f"{self.institution} - {self.author}"
+
 class GenderAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='gender_memberships')
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, related_name='gender_authors')
     asserted_by=models.ForeignKey(Version, on_delete = models.CASCADE, related_name = 'gender_assertions')
+
+    def __str__(self):
+        return f"{self.gender} - {self.author}"
