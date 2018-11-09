@@ -5,6 +5,12 @@ from django.utils import timezone
 
 # Create your models here.
 
+class Organizer(models.Model):
+    title = models.CharField(max_length=100, null=False)
+
+    def __str__(self):
+        return str(self.title)
+
 class ConferenceSeries(models.Model):
     title = models.CharField(max_length=100, null=False)
 
@@ -19,6 +25,7 @@ class Conference(models.Model):
         through='SeriesMembership',
         through_fields=("conference", "series")
     )
+    organizers = models.ManyToManyField(Organizer, related_name="conferences_organized")
 
     def __str__(self):
         return f"{self.year} - {self.venue}"
