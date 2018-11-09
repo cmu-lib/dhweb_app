@@ -84,11 +84,6 @@ class Version(models.Model):
     def __eq__(self, other):
         return(self.pk == other.pk)
 
-class Institution(models.Model):
-    name = models.CharField(max_length=100, null=True)
-    country = models.CharField(max_length=100, null=True)
-    city = models.CharField(max_length=100, null=True)
-
     def __str__(self):
         return f"{self.name} ({self.city}, {self.country})"
 
@@ -98,8 +93,50 @@ class Gender(models.Model):
     def __str__(self):
         return self.gender
 
+class Institution(models.Model):
+    name = models.CharField(max_length=100, null=True)
+    country = models.CharField(max_length=100, null=True)
+    city = models.CharField(max_length=100, null=True)
+
+class Department(models.Model):
+    name = models.CharField(max_length=100)
+    institution = models.ForeignKey(
+        Institution, on_delete=models.CASCADE, related_name='departments')
+
+
+class Appellation(models.Model):
+    first_name = models.CharField(max_length=100, null=True)
+    last_name = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
 class Author(models.Model):
     author_id = models.IntegerField(primary_key=True)
+    appellations = models.ManyToManyField(
+        Appellation,
+        through="AppellationAssertion",
+        through_fields=("author", "appellation"),
+        related_name="author"
+    )
+    genders = models.ManyToManyField(
+        Gender,
+        through="GenderAssertion",
+        through_fields=("author", "gender"),
+        related_name="members"
+    )
+    institutions = models.ManyToManyField(
+        Institution,
+        through="InstitutionAssertion",
+        through_fields=("author", "institution"),
+        related_name="members"
+    )
+    departments = models.ManyToManyField(
+        Department,
+        through="DepartmentAssertion",
+        through_fields=("author", "department"),
+        related_name="members"
+    )
 
     def __str__(self):
         return str(self.author_id)
@@ -119,13 +156,6 @@ class Author(models.Model):
     class Meta:
         ordering: ["pref_last_name"]
 
-class Appellation(models.Model):
-    first_name = models.CharField(max_length = 100, null=True)
-    last_name = models.CharField(max_length = 100, null=True)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-
 class AppellationAssertion(models.Model):
     appellation = models.ForeignKey(Appellation, on_delete = models.CASCADE, related_name='assertions')
     author = models.ForeignKey(Author, on_delete = models.CASCADE, related_name='appellation_assertions')
@@ -137,14 +167,13 @@ class Authorship(models.Model):
     version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name='authorships')
     authorship_order = models.IntegerField(default=1)
 
-class Department(models.Model):
-    name = models.CharField(max_length = 100)
-    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='departments')
-
 class DepartmentAssertion(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="department_memberships")
-    asserted_by = models.ForeignKey(Version, on_delete = models.CASCADE, related_name="department_assertions")
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='assertions')
+    author = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name="department_memberships")
+    asserted_by = models.ForeignKey(
+        Version, on_delete=models.CASCADE, related_name="department_assertions")
+    department = models.ForeignKey(
+        Department, on_delete=models.CASCADE, related_name='assertions')
 
     def __str__(self):
         return self.department

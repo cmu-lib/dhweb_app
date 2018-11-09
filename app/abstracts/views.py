@@ -68,7 +68,6 @@ class AuthorView(DetailView):
 
         context['authored_versions'] = Version.objects.filter(authorships__author=obj).order_by("-work__conference__year")
 
-
         context['institution_choices'] = Institution.objects.order_by("name")
 
         context['gender_choices'] = Gender.objects.order_by("?")
@@ -109,7 +108,7 @@ class InstitutionView(DetailView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         obj = super().get_object()
-        context['members'] = obj.member_assertions.all()
+        context['members'] = obj.members.distinct()
         return(context)
 
 class InstitutionList(ListView):
@@ -117,7 +116,7 @@ class InstitutionList(ListView):
     template_name = 'institution_list.html'
 
     def get_queryset(self):
-        return Institution.objects.annotate(num_members=Count("member_assertions")).order_by("-num_members")
+        return Institution.objects.annotate(num_members=Count("members", distinct=True)).order_by("-num_members")
 
 def home_view(request):
     conference_count = Conference.objects.count()
