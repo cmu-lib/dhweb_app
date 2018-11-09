@@ -40,7 +40,7 @@ class SeriesMembership(models.Model):
 
     @property
     def __str__(self):
-        return f"{self.series.all()[0].title} - {self.number}"
+        return f"{self.series.title} - {self.number} - {self.conference}"
 
 class Work(models.Model):
     conference = models.ForeignKey(Conference, on_delete = models.CASCADE, related_name = 'works')
