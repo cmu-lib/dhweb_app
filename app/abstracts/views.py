@@ -58,15 +58,15 @@ class AuthorView(DetailView):
         context['authored_works'] = Work.objects.filter(
             versions__authorships__author=obj).distinct().order_by("-conference__year")
 
-        context['appellations'] = Appellation.objects.filter(assertions__author=obj).distinct()
+        context['appellations'] = obj.appellations.distinct()
 
         context['gender_memberships'] = obj.gender_memberships.order_by("-asserted_by__work__conference__year")
 
-        context['departments'] = Department.objects.filter(assertions__author=obj).distinct()
+        context['departments'] = obj.departments.distinct()
 
-        context['institutions'] = Institution.objects.filter(assertions__author=obj).distinct()
+        context['institutions'] = obj.institutions.distinct()
 
-        context['authored_versions'] = Version.objects.filter(authorships__author=obj).order_by("-work__conference__year")
+        context['authored_versions'] = obj.versions.distinct().order_by("-work__conference__year")
 
         context['institution_choices'] = Institution.objects.order_by("name")
 

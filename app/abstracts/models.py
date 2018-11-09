@@ -113,6 +113,12 @@ class Appellation(models.Model):
 
 class Author(models.Model):
     author_id = models.IntegerField(primary_key=True)
+    versions = models.ManyToManyField(
+        Version,
+        through="Authorship",
+        through_fields=("author", "version"),
+        related_name="author"
+    )
     appellations = models.ManyToManyField(
         Appellation,
         through="AppellationAssertion",
