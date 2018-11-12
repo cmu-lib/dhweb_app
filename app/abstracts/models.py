@@ -37,7 +37,7 @@ class SeriesMembership(models.Model):
         ConferenceSeries, on_delete=models.CASCADE, related_name='conference_memberships')
     conference = models.ForeignKey(Conference, on_delete=models.CASCADE,
                                     related_name='series_memberships')
-    number = models.IntegerField(null=True)
+    number = models.IntegerField(unique=True)
 
     def __str__(self):
         return f"{self.series.title} - {self.number} - {self.conference}"
