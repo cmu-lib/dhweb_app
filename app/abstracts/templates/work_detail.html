@@ -8,8 +8,8 @@
 
 <h2>All Authors</h2>
 <ol>
-{% for authorship in work_authorships %}
-  <li><a href="{% url 'author_detail' authorship.author %}">{{ authorship.author.pref_name }}</a></li>
+{% for author in work_authors %}
+  <li><a href="{% url 'author_detail' author.pk %}">{{ author.pref_name }}</a></li>
 {% endfor %}
 </ol>
 
@@ -38,14 +38,14 @@
       <div class="card-body">
         <h4>Version authors:</h4>
         <ul>
-          {% for authorship in version.authorships.all %}
-          <li><a href="{% url 'author_detail' authorship.author %}">{{ authorship.author.pref_name }}</a></li>
+          {% for author in version.authors.all %}
+          <li><a href="{% url 'author_detail' author.pk %}">{{ author.pref_name }}</a></li>
           {% endfor %}
         </ul>
 
         <h4>Abstract</h4>
 
-        {% if versionl.full_text %}
+        {% if version.full_text %}
           <p>{{ version.full_text }}</p>
         {% else %}
           <p>No full text available for this version.</p>

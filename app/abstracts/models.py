@@ -118,13 +118,13 @@ class Author(models.Model):
         Version,
         through="Authorship",
         through_fields=("author", "version"),
-        related_name="author"
+        related_name="authors"
     )
     appellations = models.ManyToManyField(
         Appellation,
         through="AppellationAssertion",
         through_fields=("author", "appellation"),
-        related_name="author"
+        related_name="authors"
     )
     genders = models.ManyToManyField(
         Gender,

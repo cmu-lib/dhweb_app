@@ -43,7 +43,7 @@ class WorkView(DetailView):
         obj = super().get_object()
         # Add in a QuerySet of all the books
         context['work_versions'] = obj.versions.all()
-        context['work_authorships'] = obj.versions.first().authorships.order_by("authorship_order")
+        context['work_authors'] = obj.versions.first().authors.all()
         return context
 
 class AuthorView(DetailView):
@@ -56,7 +56,7 @@ class AuthorView(DetailView):
         obj = super().get_object()
 
         context['authored_works'] = Work.objects.filter(
-            versions__authorships__author=obj).distinct().order_by("-conference__year")
+            versions__authors=obj).distinct().order_by("-conference__year")
 
         context['appellations'] = obj.appellations.distinct()
 
