@@ -9,7 +9,7 @@
       <div class="card-header">Works</div>
       <ul class="list-group list-group-flush">
         {% for work in authored_works %}
-        <li class="list-group-item"><a href="{% url 'work_detail' work %}">{{ work.pref_title }}</a> (<a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }}</a>)</li>
+        <li class="list-group-item"><a href="{% url 'work_detail' work.pk %}">{{ work.pref_title }}</a> (<a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }}</a>)</li>
         {% endfor %}
       </ul>
     </div>
