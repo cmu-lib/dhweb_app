@@ -3,10 +3,14 @@
 {% block content %}
 
 <h1>Conference Series</h1>
+{% if series_list %}
 <ul>
   {% for series in series_list %}
   <li><a href="{% url 'series_detail' series.id %}">{{ series.title }}</a></li>
   {% endfor %}
 </ul>
+{% else %}
+<p>There are no series.</p>
+{% endif %}
 
 {% endblock %}
