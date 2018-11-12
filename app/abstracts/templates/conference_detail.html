@@ -5,6 +5,15 @@
 <h1>{{ conference.year }} - {{ conference.venue }}</h1>
 
 <div class="card">
+  <div class="card-header">Series</div>
+  <ul class="list-group list-group-flush">
+    {% for conferenceseries in conference.series.all %}
+    <li class="list-group-item"><a href="{% url 'series_detail' conferenceseries.pk %}">{{ conferenceseries }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="card">
   <div class="card-header">Works</div>
   <ul class="list-group list-group-flush">
     {% for work in works %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Conference Series</h1>
+<ul>
+  {% for series in series_list %}
+  <li><a href="{% url 'series_detail' series.id %}">{{ series.title }}</a></li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

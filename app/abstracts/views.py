@@ -6,7 +6,7 @@ from django.views.generic import DetailView, ListView
 from django.db.models import Count, Max, Min
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-from .models import Version, Tag, Work, Author, Conference, Institution, Gender, Appellation, Department
+from .models import Version, Tag, Work, Author, Conference, Institution, Gender, Appellation, Department, ConferenceSeries
 
 class TagView(DetailView):
     model = Tag
@@ -99,6 +99,24 @@ class ConferenceList(ListView):
 
     def get_queryset(self):
         return Conference.objects.order_by("-year")
+
+class SeriesList(ListView):
+    context_object_name = 'series_list'
+    template_name = 'series_list.html'
+
+    def get_queryset(self):
+        return ConferenceSeries.objects.order_by("title")
+
+class SeriesView(DetailView):
+    model = ConferenceSeries
+    template_name = 'series_detail.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        obj = super().get_object()
+        context['conferences'] = obj.conferences.order_by("series_memberships__number")
+        return(context)
 
 class InstitutionView(DetailView):
     model = Institution
