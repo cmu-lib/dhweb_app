@@ -23,7 +23,8 @@ class Conference(models.Model):
     series = models.ManyToManyField(
         ConferenceSeries,
         through='SeriesMembership',
-        through_fields=("conference", "series")
+        through_fields=("conference", "series"),
+        related_name="conferences"
     )
     organizers = models.ManyToManyField(Organizer, related_name="conferences_organized")
     notes = models.TextField(null=True)
