@@ -6,10 +6,10 @@ from django.utils import timezone
 # Create your models here.
 
 class Organizer(models.Model):
-    title = models.CharField(max_length=100, null=False)
+    name = models.CharField(max_length=100, null=False)
 
     def __str__(self):
-        return str(self.title)
+        return str(self.name)
 
 class ConferenceSeries(models.Model):
     title = models.CharField(max_length=100, null=False)
