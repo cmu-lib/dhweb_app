@@ -1,0 +1,9 @@
+# Config for coverage.py tests
+[run]
+source =
+  .
+omit =
+  */migrations/*
+  */fixtures/*
+
+plugins = django_coverage_plugin
