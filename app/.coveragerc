@@ -1,7 +1,7 @@
 # Config for coverage.py tests
 [run]
 source =
-  .
+  abstracts
 omit =
   */migrations/*
   */fixtures/*
