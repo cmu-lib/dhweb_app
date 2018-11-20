@@ -100,6 +100,8 @@ class AbstractsTest(TestCase):
     self.assertEqual(response.status_code, 200)
     self.assertContains(response, self.conference1.venue)
     self.assertContains(response, self.conference1.year)
+    self.assertContains(response, reverse(
+      "conference_detail", args=[self.conference1.id]))
     self.assertContains(response, self.series1.notes)
 
   def test_conference_list(self):
@@ -109,6 +111,9 @@ class AbstractsTest(TestCase):
     response = self.client.get(reverse("conference_list"))
     self.assertEqual(response.status_code, 200)
     self.assertContains(response, self.conference1.venue)
+    self.assertContains(response, self.conference1.year)
+    self.assertContains(response, reverse(
+      "conference_detail", args=[self.conference1.id]))
 
   def test_string_representations(self):
     self.assertEqual(str(self.conference1), "1970 - Los Angeles")
