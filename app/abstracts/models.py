@@ -171,8 +171,8 @@ class Author(models.Model):
 class AppellationAssertion(models.Model):
     appellation = models.ForeignKey(Appellation, on_delete = models.CASCADE, related_name='assertions')
     author = models.ForeignKey(Author, on_delete = models.CASCADE, related_name='appellation_assertions')
-    asserted_by = models.ForeignKey(
-        Version, on_delete=models.CASCADE, related_name='appellation_assertions')
+    asserted_by = models.ManyToManyField(
+        Version, related_name='appellation_assertions')
 
     def __str__(self):
         return f"{self.appellation}"
@@ -188,8 +188,8 @@ class Authorship(models.Model):
 class DepartmentAssertion(models.Model):
     author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="department_memberships")
-    asserted_by = models.ForeignKey(
-        Version, on_delete=models.CASCADE, related_name="department_assertions")
+    asserted_by = models.ManyToManyField(
+        Version, related_name="department_assertions")
     department = models.ForeignKey(
         Department, on_delete=models.CASCADE, related_name='assertions')
 
@@ -199,7 +199,8 @@ class DepartmentAssertion(models.Model):
 class InstitutionAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='institution_memberships')
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='assertions')
-    asserted_by=models.ForeignKey(Version, on_delete = models.CASCADE, related_name = 'institution_assertions')
+    asserted_by = models.ManyToManyField(
+        Version, related_name='institution_assertions')
 
     def __str__(self):
         return f"{self.institution} - {self.author}"
@@ -207,7 +208,8 @@ class InstitutionAssertion(models.Model):
 class GenderAssertion(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='gender_memberships')
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, related_name='gender_authors')
-    asserted_by=models.ForeignKey(Version, on_delete = models.CASCADE, related_name = 'gender_assertions')
+    asserted_by = models.ManyToManyField(
+        Version, related_name='gender_assertions')
 
     def __str__(self):
         return f"{self.gender} - {self.author}"
