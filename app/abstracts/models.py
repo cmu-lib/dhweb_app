@@ -13,7 +13,7 @@ class Organizer(models.Model):
 
 class ConferenceSeries(models.Model):
     title = models.CharField(max_length=100)
-    notes = models.TextField(blank=True, null=False)
+    notes = models.TextField(blank=True, null=False, default="")
 
     def __str__(self):
         return str(self.title)
@@ -28,7 +28,7 @@ class Conference(models.Model):
         related_name="conferences"
     )
     organizers = models.ManyToManyField(Organizer, related_name="conferences_organized")
-    notes = models.TextField(blank=True, null=False)
+    notes = models.TextField(blank=True, null=False, default="")
 
     def __str__(self):
         return f"{self.year} - {self.venue}"
@@ -62,8 +62,8 @@ class Work(models.Model):
 class Tag(models.Model):
     title = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
-    start_date = models.CharField(max_length=100, blank=True, null=False)
-    end_date = models.CharField(max_length=100, blank=True, null=False)
+    start_date = models.CharField(max_length=100, blank=True, null=False, default="")
+    end_date = models.CharField(max_length=100, blank=True, null=False, default="")
 
     def __str__(self):
         return self.title
@@ -71,12 +71,12 @@ class Tag(models.Model):
 class Version(models.Model):
     work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name='versions')
     title = models.CharField(max_length=500)
-    submission_type = models.CharField(max_length=255)
+    submission_type = models.CharField(max_length=255, blank=True, null=False, default="")
     state = models.CharField(max_length=2, choices=(
         ("ac", "accpeted"),
         ("su", "submission"),
     ))
-    full_text = models.TextField(max_length=50000, blank=True, null=False)
+    full_text = models.TextField(max_length=50000, blank=True, null=False, default="")
     tags = models.ManyToManyField(Tag, related_name="versions")
 
     def __str__(self):
@@ -96,8 +96,8 @@ class Gender(models.Model):
 
 class Institution(models.Model):
     name = models.CharField(max_length=100)
-    country = models.CharField(max_length=100, blank=True, null=False)
-    city = models.CharField(max_length=100, blank=True, null=False)
+    country = models.CharField(max_length=100, blank=True, null=False, default="")
+    city = models.CharField(max_length=100, blank=True, null=False, default="")
 
     def __str__(self):
         return f"{self.name} ({self.city}, {self.country})"
@@ -111,8 +111,8 @@ class Department(models.Model):
         return f"{self.name} - {self.institution}"
 
 class Appellation(models.Model):
-    first_name = models.CharField(max_length=100, blank=True, null=False)
-    last_name = models.CharField(max_length=100, blank=True, null=False)
+    first_name = models.CharField(max_length=100, blank=True, null=False, default="")
+    last_name = models.CharField(max_length=100, blank=True, null=False, default="")
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
