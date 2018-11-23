@@ -45,9 +45,28 @@ class AuthorAdmin(admin.ModelAdmin):
              DepartmentAssertionInline, InstitutionAssertionInline]
   search_fields = ["appellations__first_name", "appellations__last_name"]
 
-admin.site.register(Organizer)
-admin.site.register(ConferenceSeries)
-admin.site.register(Conference)
+class ConferenceMembershipInline(admin.TabularInline):
+  model = SeriesMembership
+  extra = 0
+
+class ConferenceSeriesAdmin(admin.ModelAdmin):
+  inlines = [ConferenceMembershipInline]
+  search_fields = ["title", "notes"]
+
+class ConferenceAdmin(admin.ModelAdmin):
+  inlines = [ConferenceMembershipInline]
+  search_fields = ["venue"]
+  autocomplete_fields = ["series", "organizers"]
+
+class OrganizationInline(admin.TabularInline):
+  model = Organizer.conferences_organized.through
+
+class OrganizerAdmin(admin.ModelAdmin):
+  search_fields = ["name"]
+
+admin.site.register(Organizer, OrganizerAdmin)
+admin.site.register(ConferenceSeries, ConferenceSeriesAdmin)
+admin.site.register(Conference, ConferenceAdmin)
 admin.site.register(SeriesMembership)
 admin.site.register(Work, WorkAdmin)
 admin.site.register(Tag, TagAdmin)
