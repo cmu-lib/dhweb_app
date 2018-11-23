@@ -53,9 +53,6 @@ class Work(models.Model):
     def __str__(self):
         return f"{self.pk} - {self.versions.all().last().title}"
 
-    def __eq__(self, other):
-        return(self.pk == other.pk)
-
     @property
     def pref_title(self):
         return self.versions.all()[0].title
@@ -78,16 +75,13 @@ class Version(models.Model):
         ("su", "submission"),
     ))
     full_text = models.TextField(max_length=50000, blank=True, null=False, default="")
-    tags = models.ManyToManyField(Tag, related_name="versions")
+    tags = models.ManyToManyField(Tag, related_name="versions", blank=True)
 
     def __str__(self):
         return self.title
 
     def age(self):
         return datetime.date.today().year - self.year
-
-    def __eq__(self, other):
-        return(self.pk == other.pk)
 
 class Gender(models.Model):
     gender = models.CharField(max_length = 100)
@@ -185,6 +179,9 @@ class Authorship(models.Model):
 
     def __str__(self):
         return f"{self.version} - {self.author} ({self.authorship_order})"
+
+    class Meta:
+        unique_together = (("author", "version", "authorship_order"),)
 
 class DepartmentAssertion(models.Model):
     author = models.ForeignKey(

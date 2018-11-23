@@ -2,7 +2,13 @@ from django.contrib import admin
 
 from .models import Organizer, ConferenceSeries, Conference, SeriesMembership, Work, Tag, Version, Institution, Gender, Author, Appellation, AppellationAssertion, Authorship, Department, DepartmentAssertion, InstitutionAssertion, GenderAssertion
 
+class AuthorshipInline(admin.TabularInline):
+  model = Authorship
+  extra = 0
+  autocomplete_fields = ["author", "version"]
+
 class VersionAdmin(admin.ModelAdmin):
+  inlines = [AuthorshipInline]
   autocomplete_fields = ["tags", "work"]
   search_fields = ["title"]
 
@@ -41,7 +47,7 @@ class InstitutionAdmin(admin.ModelAdmin):
   search_fields = ["name", "city", "country"]
 
 class AuthorAdmin(admin.ModelAdmin):
-  inlines = [AppellationAssertionInline,
+  inlines = [AuthorshipInline, AppellationAssertionInline,
              DepartmentAssertionInline, InstitutionAssertionInline]
   search_fields = ["appellations__first_name", "appellations__last_name"]
 
@@ -59,7 +65,7 @@ class OrganizationInline(admin.TabularInline):
 
 class OrganizerAdmin(admin.ModelAdmin):
   search_fields = ["name"]
-  autocomplete_fields = ["conferences_organized"]
+  filter_horizontal = ["conferences_organized"]
 
 class ConferenceAdmin(admin.ModelAdmin):
   inlines = [ConferenceMembershipInline, OrganizationInline]
