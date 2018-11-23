@@ -53,16 +53,17 @@ class ConferenceSeriesAdmin(admin.ModelAdmin):
   inlines = [ConferenceMembershipInline]
   search_fields = ["title", "notes"]
 
-class ConferenceAdmin(admin.ModelAdmin):
-  inlines = [ConferenceMembershipInline]
-  search_fields = ["venue"]
-  autocomplete_fields = ["series", "organizers"]
-
 class OrganizationInline(admin.TabularInline):
-  model = Organizer.conferences_organized.through
+  model = Conference.organizers.through
+  extra = 0
 
 class OrganizerAdmin(admin.ModelAdmin):
   search_fields = ["name"]
+  autocomplete_fields = ["conferences_organized"]
+
+class ConferenceAdmin(admin.ModelAdmin):
+  inlines = [ConferenceMembershipInline, OrganizationInline]
+  search_fields = ["venue"]
 
 admin.site.register(Organizer, OrganizerAdmin)
 admin.site.register(ConferenceSeries, ConferenceSeriesAdmin)

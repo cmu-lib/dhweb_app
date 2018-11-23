@@ -5,12 +5,6 @@ from django.utils import timezone
 
 # Create your models here.
 
-class Organizer(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return str(self.name)
-
 class ConferenceSeries(models.Model):
     title = models.CharField(max_length=100)
     notes = models.TextField(blank=True, null=False, default="")
@@ -27,11 +21,18 @@ class Conference(models.Model):
         through_fields=("conference", "series"),
         related_name="conferences"
     )
-    organizers = models.ManyToManyField(Organizer, related_name="conferences_organized")
     notes = models.TextField(blank=True, null=False, default="")
 
     def __str__(self):
         return f"{self.year} - {self.venue}"
+
+class Organizer(models.Model):
+    name = models.CharField(max_length=100)
+    conferences_organized = models.ManyToManyField(
+        Conference, related_name="organizers")
+
+    def __str__(self):
+        return str(self.name)
 
 class SeriesMembership(models.Model):
     series = models.ForeignKey(
