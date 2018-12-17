@@ -80,6 +80,35 @@ class Tag(models.Model):
         return self.title
 
 
+class Keyword(models.Model):
+    title = models.CharField(max_length=100, unique=True)
+    author_supplied = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Language(models.Model):
+    title = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Discipline(models.Model):
+    title = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Topic(models.Model):
+    title = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.title
+
+
 class Version(models.Model):
     work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name="versions")
     title = models.CharField(max_length=500)
@@ -93,7 +122,12 @@ class Version(models.Model):
     full_text_type = models.CharField(
         max_length=3, choices=(("xml", "XML"), ("txt", "plain text")), default="txt"
     )
-    tags = models.ManyToManyField(Tag, related_name="versions", blank=True)
+    keywords = models.ManyToManyField(Keyword, related_name="versions", blank=True)
+    languages = models.ManyToManyField(Language, related_name="versions", blank=True)
+    disciplines = models.ManyToManyField(
+        Discipline, related_name="versions", blank=True
+    )
+    topics = models.ManyToManyField(Topic, related_name="versions", blank=True)
 
     def __str__(self):
         return self.title
