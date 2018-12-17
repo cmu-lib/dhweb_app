@@ -39,7 +39,7 @@ class SeriesMembership(models.Model):
         ConferenceSeries, on_delete=models.CASCADE, related_name='conference_memberships')
     conference = models.ForeignKey(Conference, on_delete=models.CASCADE,
                                     related_name='series_memberships')
-    number = models.IntegerField()
+    number = models.PositiveSmallIntegerField(blank=True)
 
     class Meta:
         unique_together = (("series", "number"))
@@ -175,7 +175,7 @@ class AppellationAssertion(models.Model):
 class Authorship(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='authorships')
     version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name='authorships')
-    authorship_order = models.IntegerField(default=1)
+    authorship_order = models.PositiveSmallIntegerField(default=1)
 
     def __str__(self):
         return f"{self.version} - {self.author} ({self.authorship_order})"
