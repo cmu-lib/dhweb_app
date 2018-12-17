@@ -75,6 +75,12 @@ class Version(models.Model):
         ("su", "submission"),
     ))
     full_text = models.TextField(max_length=50000, blank=True, null=False, default="")
+    full_text_type = models.CharField(max_length=3, choices=(
+        ("xml", "XML"),
+        ("txt", "plain text"),
+        ),
+        default="txt"
+    )
     tags = models.ManyToManyField(Tag, related_name="versions", blank=True)
 
     def __str__(self):
