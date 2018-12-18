@@ -173,7 +173,7 @@ class Department(models.Model):
     )
 
     def __str__(self):
-        return f"{self.name} - {self.institution}"
+        return f"{self.name} - {self.institution.name}"
 
 
 class Appellation(models.Model):
