@@ -156,7 +156,14 @@ class Institution(models.Model):
     city = models.CharField(max_length=100, blank=True, null=False, default="")
 
     def __str__(self):
-        return f"{self.name} ({self.city}, {self.country})"
+        if not self.city and not self.country:
+            return f"{self.name}"
+        elif not self.city:
+            return f"{self.name} ({self.country})"
+        elif not self.country:
+            return f"{self.name} ({self.city})"
+        else:
+            return f"{self.name} ({self.city}, {self.country})"
 
 
 class Department(models.Model):
