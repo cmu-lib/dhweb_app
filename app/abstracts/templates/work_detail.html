@@ -52,14 +52,49 @@
         {% endif %}
 
         <h4>Tags</h4>
+
+        <h5>Keywords</h5>
         {% if version.keywords.all %}
         <ul>
-          {% for keywords in version.keywords.all %}
-          <li>{{ keywords.title }}</li>
+          {% for keyword in version.keywords.all %}
+          <li>{{ keyword.title }}</li>
           {% endfor %}
         </ul>
         {% else %}
         <p>This version has no associated keywords</p>
+        {% endif %}
+
+        <h5>Language</h5>
+        {% if version.languages.all %}
+        <ul>
+          {% for language in version.languages.all %}
+          <li>{{ language.title }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>This version has no associated languages</p>
+        {% endif %}
+
+        <h5>Topics</h5>
+        {% if version.topics.all %}
+        <ul>
+          {% for topic in version.topics.all %}
+          <li>{{ topic.title }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>This version has no associated topics</p>
+        {% endif %}
+
+        <h5>Disciplines</h5>
+        {% if version.disciplines.all %}
+        <ul>
+          {% for discipline in version.disciplines.all %}
+          <li>{{ discipline.title }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>This version has no associated disciplines</p>
         {% endif %}
       </div>
     </div>
