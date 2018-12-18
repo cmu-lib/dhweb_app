@@ -6,13 +6,11 @@ from .models import (
     Conference,
     SeriesMembership,
     Work,
-    Tag,
     Version,
     Institution,
     Gender,
     Author,
     Appellation,
-    AppellationAssertion,
     Authorship,
     Department,
     DepartmentAssertion,
@@ -29,27 +27,12 @@ class AuthorshipInline(admin.TabularInline):
 
 class VersionAdmin(admin.ModelAdmin):
     inlines = [AuthorshipInline]
-    autocomplete_fields = ["tags", "work"]
+    autocomplete_fields = ["work"]
     search_fields = ["title"]
 
 
 class WorkAdmin(admin.ModelAdmin):
     search_fields = ["versions__title"]
-
-
-class TagAdmin(admin.ModelAdmin):
-    search_fields = ["title"]
-
-
-class AppellationAssertionInline(admin.TabularInline):
-    model = AppellationAssertion
-    extra = 0
-    autocomplete_fields = ["appellation", "asserted_by", "author"]
-
-
-class AppellationAdmin(admin.ModelAdmin):
-    inlines = [AppellationAssertionInline]
-    search_fields = ["first_name", "last_name"]
 
 
 class DepartmentAssertionInline(admin.TabularInline):
@@ -76,12 +59,7 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 
 class AuthorAdmin(admin.ModelAdmin):
-    inlines = [
-        AuthorshipInline,
-        AppellationAssertionInline,
-        DepartmentAssertionInline,
-        InstitutionAssertionInline,
-    ]
+    inlines = [AuthorshipInline, DepartmentAssertionInline, InstitutionAssertionInline]
     search_fields = ["appellations__first_name", "appellations__last_name"]
 
 
@@ -115,13 +93,11 @@ admin.site.register(ConferenceSeries, ConferenceSeriesAdmin)
 admin.site.register(Conference, ConferenceAdmin)
 admin.site.register(SeriesMembership)
 admin.site.register(Work, WorkAdmin)
-admin.site.register(Tag, TagAdmin)
 admin.site.register(Version, VersionAdmin)
 admin.site.register(Institution, InstitutionAdmin)
 admin.site.register(Gender)
 admin.site.register(Author, AuthorAdmin)
-admin.site.register(Appellation, AppellationAdmin)
-admin.site.register(AppellationAssertion)
+admin.site.register(Appellation)
 admin.site.register(Authorship)
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(DepartmentAssertion)

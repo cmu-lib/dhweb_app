@@ -18,38 +18,15 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <div class="card">
-          <div class="card-header">Names<a class="btn btn-primary btn-sm float-right" data-toggle="collapse" href="#new_appellation_collapse"role="button" aria-expanded="false"
-            aria-controls="collapseExample">Add</a></div>
+          <div class="card-header">Names</div>
             <ul class="list-group list-group-flush">
               {% for appellation in appellations %}
-              <li class="list-group-item">{{ appellation.pk }} {{ appellation.first_name }} {{ appellation.last_name }}
-                {% for assertion in appellation.assertions.all %}
-                <a href="{% url 'work_detail' assertion.asserted_by.work.pk %}"><span class="badge badge-info">{{ assertion.asserted_by.work.pk }}</span></a>
-              {% endfor%}
-            </a></li>
-              {% endfor %}
-              <li class="list-group-item collapse" id="new_appellation_collapse">
-                <form>
-                  <div class="form-group">
-                    <label for="new_first_name">First Name</label>
-                    <input type="text", class="form-control" id="new_first_name" placeholder="Enter a new first name">
-                  </div>
-                  <div class="form-group">
-                    <label for="new_last_name">First Name</label>
-                    <input type="text" class="form-control" id="new_last_name" placeholder="Enter a new last name">
-                  </div>
-                  <div class="form-group">
-                    <label for="new_appellation_source">Source document</label>
-                    <select multipile type="select" class="custom-select" id="new_appellation_source">
-                      <option selected>Choose source submission</option>
-                      {% for version in authored_versions %}
-                      <option value="{{ version.pk }}">{{ version.pk }}. {{ version.title }} - {{ version.state }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+              <li class="list-group-item">{{ appellation.pk }} - {{ appellation }}
+                {% for source_work in appellation.source_works %}
+                  <a href="{% url 'work_detail' source_work.pk %}"><span class="badge badge-info">{{ source_work.pk }}</span></a>
+                {% endfor%}
               </li>
+              {% endfor %}
             </ul>
           </div>
         </div>
@@ -58,34 +35,12 @@
       <div class="row mb-3">
         <div class="col-md-12">
           <div class="card">
-            <div class="card-header">Institutions<a class="btn btn-primary btn-sm float-right" data-toggle="collapse" href="#new_institution_collapse" role="button" aria-expanded="false" aria-controls="collapseExample">Add</a></div>
+            <div class="card-header">Institutions</div>
             <ul class="list-group list-group-flush">
               {% for institution in institutions %}
-              <li class="list-group-item"><a href="{% url 'institution_detail' institution.pk %}">{{ institution.pk }} {{institution.name }} ({% if institution.city %}{{ institution.city }}, {% endif %}{% if institution.country %}{{ institution.country }}{% endif %})</a> {% for assertion in institution.assertions.all %}<a href="{% url 'work_detail' assertion.asserted_by.work.pk %}"><span class="badge badge-info">{{ assertion.asserted_by.pk }}</span></a>{% endfor %}</li>
-              {% endfor %}
-              <li class="list-group-item collapse" id="new_institution_collapse">
-                <form>
-                  <div class="form-group">
-                    <label for="new_institution">Institution</label>
-                    <select multipile type="select" class="custom-select" id="new_institution">
-                      <option selected>Choose institution</option>
-                      {% for institutuion in institution_choices %}
-                      <option value="{{ institutuion.pk }}">{{ institutuion.pk }}. {{ institutuion.name }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="new_institution_source">Source document</label>
-                    <select multipile type="select" class="custom-select" id="new_institution_source">
-                      <option selected>Choose source submission</option>
-                      {% for version in authored_versions %}
-                      <option value="{{ version.pk }}">{{ version.pk }}. {{ version.title }} - {{ version.state }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+              <li class="list-group-item"><a href="{% url 'institution_detail' institution.pk %}">{{ institution.pk }} {{institution.name }} ({% if institution.city %}{{ institution.city }}, {% endif %}{% if institution.country %}{{ institution.country }}{% endif %})</a>
               </li>
+              {% endfor %}
             </ul>
           </div>
         </div>
@@ -108,45 +63,16 @@
       <div class="row mb-3">
         <div class="col-md-12">
           <div class="card">
-            <div class="card-header">Genders<a class="btn btn-primary btn-sm float-right" data-toggle="collapse" href="#new_gender_collapse" role="button"
-              aria-expanded="false" aria-controls="collapseExample">Add</a></div>
+            <div class="card-header">Genders</div>
               <ul class="list-group list-group-flush">
                 {% for gender_membership in gender_memberships %}
                 <li class="list-group-item">{{ gender_membership.gender }} <a href="{% url 'work_detail' gender_membership.asserted_by.work.pk %}"><span class="badge badge-info">Source</span></a></li>
                 {% endfor %}
-
-                <li class="list-group-item collapse" id="new_gender_collapse">
-                  <form>
-                    <div class="form-group">
-                      <label for="new_gender">Institution</label>
-                      <select multipile type="select" class="custom-select" id="new_gender">
-                        <option selected>Choose gender</option>
-                        {% for gender in gender_choices %}
-                        <option value="{{ gender.pk }}">{{ gender.gender }}</option>
-                        {% endfor %}
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="new_gender_source">Source document</label>
-                      <select multipile type="select" class="custom-select" id="new_gender_source">
-                        <option selected>Choose source submission</option>
-                        {% for version in authored_versions %}
-                        <option value="{{ version.pk }}">{{ version.pk }}. {{ version.title }} - {{ version.state }}</option>
-                        {% endfor %}
-                      </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </form>
-                </li>
               </ul>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-
-
-
 
     {% endblock %}

@@ -8,7 +8,6 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from .models import (
     Version,
-    Tag,
     Work,
     Author,
     Conference,
@@ -18,28 +17,6 @@ from .models import (
     Department,
     ConferenceSeries,
 )
-
-
-class TagView(DetailView):
-    model = Tag
-    template_name = "tag_detail.html"
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        obj = super().get_object()
-        context["tag_works"] = Work.objects.filter(versions__tags=obj)[:50]
-        return context
-
-
-class TagList(ListView):
-    context_object_name = "tag_list"
-    template_name = "tag_list.html"
-
-    def get_queryset(self):
-        return Tag.objects.annotate(
-            num_works=Count("versions__work__distinct")
-        ).order_by("title")
 
 
 class WorkList(ListView):
@@ -73,17 +50,13 @@ class AuthorView(DetailView):
         context = super().get_context_data(**kwargs)
         obj = super().get_object()
 
-        context["authored_works"] = (
-            Work.objects.filter(versions__authors=obj)
-            .distinct()
-            .order_by("-conference__year")
-        )
+        context["authored_works"] = Work.objects.filter(
+            versions__authors=obj
+        ).distinct()
 
         context["appellations"] = obj.appellations.distinct()
 
-        context["gender_memberships"] = obj.gender_memberships.order_by(
-            "-asserted_by__work__conference__year"
-        )
+        context["genders"] = obj.genders.distinct()
 
         context["departments"] = obj.departments.distinct()
 

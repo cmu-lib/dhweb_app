@@ -52,14 +52,14 @@
         {% endif %}
 
         <h4>Tags</h4>
-        {% if version.tags.all %}
+        {% if version.keywords.all %}
         <ul>
-          {% for tag in version.tags.all %}
-          <li><a href="{% url 'tag_detail' tag.pk %}">{{ tag.title }}</a></li>
+          {% for keywords in version.keywords.all %}
+          <li>{{ keywords.title }}</li>
           {% endfor %}
         </ul>
         {% else %}
-        <p>This version has no associated tags</p>
+        <p>This version has no associated keywords</p>
         {% endif %}
       </div>
     </div>

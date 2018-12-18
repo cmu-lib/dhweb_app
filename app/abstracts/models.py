@@ -165,9 +165,16 @@ class Department(models.Model):
 class Appellation(models.Model):
     first_name = models.CharField(max_length=100, blank=True, null=False, default="")
     last_name = models.CharField(max_length=100, blank=True, null=False, default="")
+    author = models.ForeignKey(
+        "Author", on_delete=models.CASCADE, related_name="appellations"
+    )
+    asserted_by = models.ManyToManyField(Version, related_name="appellation_assertions")
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+    def source_works(self):
+        return Work.objects.filter(versions__appellation_assertions=self).distinct()
 
 
 class Author(models.Model):
@@ -176,12 +183,6 @@ class Author(models.Model):
         Version,
         through="Authorship",
         through_fields=("author", "version"),
-        related_name="authors",
-    )
-    appellations = models.ManyToManyField(
-        Appellation,
-        through="AppellationAssertion",
-        through_fields=("author", "appellation"),
         related_name="authors",
     )
     genders = models.ManyToManyField(
@@ -212,27 +213,14 @@ class Author(models.Model):
 
     @property
     def pref_first_name(self):
-        return self.appellation_assertions.all()[0].appellation.first_name
+        return self.appellations.first().first_name
 
     @property
     def pref_last_name(self):
-        return self.appellation_assertions.all()[0].appellation.last_name
+        return self.appellations.first().last_name
 
     class Meta:
         ordering: ["pref_last_name"]
-
-
-class AppellationAssertion(models.Model):
-    appellation = models.ForeignKey(
-        Appellation, on_delete=models.CASCADE, related_name="assertions"
-    )
-    author = models.ForeignKey(
-        Author, on_delete=models.CASCADE, related_name="appellation_assertions"
-    )
-    asserted_by = models.ManyToManyField(Version, related_name="appellation_assertions")
-
-    def __str__(self):
-        return f"{self.appellation}"
 
 
 class Authorship(models.Model):
@@ -263,6 +251,9 @@ class DepartmentAssertion(models.Model):
     def __str__(self):
         return f"{self.department} - {self.author}"
 
+    def source_works(self):
+        Work.objects.filter(versions__department_assertions=self).distinct()
+
 
 class InstitutionAssertion(models.Model):
     author = models.ForeignKey(
@@ -276,6 +267,9 @@ class InstitutionAssertion(models.Model):
     def __str__(self):
         return f"{self.institution} - {self.author}"
 
+    def source_works(self):
+        Work.objects.filter(versions__institution_assertions=self).distinct()
+
 
 class GenderAssertion(models.Model):
     author = models.ForeignKey(
@@ -288,3 +282,6 @@ class GenderAssertion(models.Model):
 
     def __str__(self):
         return f"{self.gender} - {self.author}"
+
+    def source_works(self):
+        Work.objects.filter(versions__gender_assertions=self).distinct()
