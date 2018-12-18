@@ -16,6 +16,10 @@ from .models import (
     DepartmentAssertion,
     InstitutionAssertion,
     GenderAssertion,
+    Keyword,
+    Language,
+    Topic,
+    Discipline,
 )
 
 
@@ -103,3 +107,7 @@ admin.site.register(Department, DepartmentAdmin)
 admin.site.register(DepartmentAssertion)
 admin.site.register(InstitutionAssertion)
 admin.site.register(GenderAssertion)
+admin.site.register(Keyword)
+admin.site.register(Topic)
+admin.site.register(Language)
+admin.site.register(Discipline)
