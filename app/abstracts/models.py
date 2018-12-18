@@ -26,7 +26,8 @@ class Conference(models.Model):
     notes = models.TextField(blank=True, null=False, default="")
 
     def __str__(self):
-        return f"{self.series} {self.year} - {self.venue}"
+        # series.first() is still kludgy - need a nice method to concatenate series names
+        return f"{self.series.first()} {self.year} - {self.venue}"
 
 
 class Organizer(models.Model):
