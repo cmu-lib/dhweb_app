@@ -206,6 +206,9 @@ class Author(models.Model):
     def pref_last_name(self):
         return self.appellations.first().last_name
 
+    def works(self):
+        return Work.objects.filter(versions__authors=self).distinct()
+
     class Meta:
         ordering: ["pref_last_name"]
 
@@ -239,7 +242,7 @@ class DepartmentAssertion(models.Model):
         return f"{self.department} - {self.author}"
 
     def source_works(self):
-        Work.objects.filter(versions__department_assertions=self).distinct()
+        return Work.objects.filter(versions__department_assertions=self).distinct()
 
 
 class InstitutionAssertion(models.Model):
@@ -255,7 +258,7 @@ class InstitutionAssertion(models.Model):
         return f"{self.institution} - {self.author}"
 
     def source_works(self):
-        Work.objects.filter(versions__institution_assertions=self).distinct()
+        return Work.objects.filter(versions__institution_assertions=self).distinct()
 
 
 class GenderAssertion(models.Model):
@@ -271,4 +274,4 @@ class GenderAssertion(models.Model):
         return f"{self.gender} - {self.author}"
 
     def source_works(self):
-        Work.objects.filter(versions__gender_assertions=self).distinct()
+        return Work.objects.filter(versions__gender_assertions=self).distinct()
