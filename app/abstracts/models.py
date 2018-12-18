@@ -63,21 +63,11 @@ class Work(models.Model):
     )
 
     def __str__(self):
-        return f"{self.pk} - {self.versions.all().last().title}"
+        return f"{self.pk} - {self.pref_title}"
 
     @property
     def pref_title(self):
-        return self.versions.all()[0].title
-
-
-class Tag(models.Model):
-    title = models.CharField(max_length=100)
-    type = models.CharField(max_length=100)
-    start_date = models.CharField(max_length=100, blank=True, null=False, default="")
-    end_date = models.CharField(max_length=100, blank=True, null=False, default="")
-
-    def __str__(self):
-        return self.title
+        return self.versions.last().title
 
 
 class Keyword(models.Model):
