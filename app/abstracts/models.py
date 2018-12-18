@@ -122,9 +122,6 @@ class Version(models.Model):
     def __str__(self):
         return self.title
 
-    def age(self):
-        return datetime.date.today().year - self.year
-
 
 class Gender(models.Model):
     gender = models.CharField(max_length=100)
