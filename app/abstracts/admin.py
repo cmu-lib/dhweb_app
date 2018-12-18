@@ -29,6 +29,12 @@ class AuthorshipInline(admin.TabularInline):
     autocomplete_fields = ["author", "version"]
 
 
+class AppellationInline(admin.TabularInline):
+    model = Appellation
+    extra = 0
+    autocomplete_fields = ["author", "asserted_by"]
+
+
 class VersionAdmin(admin.ModelAdmin):
     inlines = [AuthorshipInline]
     autocomplete_fields = ["work"]
@@ -63,7 +69,12 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 
 class AuthorAdmin(admin.ModelAdmin):
-    inlines = [AuthorshipInline, DepartmentAssertionInline, InstitutionAssertionInline]
+    inlines = [
+        AppellationInline,
+        AuthorshipInline,
+        DepartmentAssertionInline,
+        InstitutionAssertionInline,
+    ]
     search_fields = ["appellations__first_name", "appellations__last_name"]
 
 
