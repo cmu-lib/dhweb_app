@@ -9,7 +9,7 @@
     <div class="card">
       <div class="card-header">Members</div>
         <ul class="list-group list-group-flush">
-          {% for member in members %}
+          {% for member in institution.members.all %}
           <li class="list-group-item"><a href="{% url 'author_detail' member.pk %}">{{ member.pref_name }}</a></li>
           {% endfor %}
         </ul>

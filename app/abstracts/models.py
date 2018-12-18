@@ -70,6 +70,13 @@ class Work(models.Model):
     def pref_title(self):
         return self.versions.last().title
 
+    def authors(self):
+        return Author.objects.filter(versions__work=self).distinct()
+
+    @property
+    def submissions(self):
+        return self.versions.distinct()
+
 
 class Keyword(models.Model):
     title = models.CharField(max_length=100, unique=True)
@@ -78,12 +85,18 @@ class Keyword(models.Model):
     def __str__(self):
         return self.title
 
+    def works(self):
+        return Work.objects.filter(versions__keywords=self).distinct()
+
 
 class Language(models.Model):
     title = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.title
+
+    def works(self):
+        return Work.objects.filter(versions__languages=self).distinct()
 
 
 class Discipline(models.Model):
@@ -92,12 +105,18 @@ class Discipline(models.Model):
     def __str__(self):
         return self.title
 
+    def works(self):
+        return Work.objects.filter(versions__disciplines=self).distinct()
+
 
 class Topic(models.Model):
     title = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.title
+
+    def works(self):
+        return Work.objects.filter(versions__topics=self).distinct()
 
 
 class Version(models.Model):

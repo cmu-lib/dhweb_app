@@ -31,46 +31,10 @@ class WorkView(DetailView):
     model = Work
     template_name = "work_detail.html"
 
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        obj = super().get_object()
-        # Add in a QuerySet of all the books
-        context["work_versions"] = obj.versions.all()
-        context["work_authors"] = obj.versions.first().authors.all()
-        return context
-
 
 class AuthorView(DetailView):
     model = Author
     template_name = "author_detail.html"
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        obj = super().get_object()
-
-        context["authored_works"] = Work.objects.filter(
-            versions__authors=obj
-        ).distinct()
-
-        context["appellations"] = obj.appellations.distinct()
-
-        context["genders"] = obj.genders.distinct()
-
-        context["departments"] = obj.departments.distinct()
-
-        context["institutions"] = obj.institutions.distinct()
-
-        context["authored_versions"] = obj.versions.distinct().order_by(
-            "-work__conference__year"
-        )
-
-        context["institution_choices"] = Institution.objects.order_by("name")
-
-        context["gender_choices"] = Gender.objects.order_by("?")
-
-        return context
 
 
 class AuthorList(ListView):
@@ -87,13 +51,6 @@ class AuthorList(ListView):
 class ConferenceView(DetailView):
     model = Conference
     template_name = "conference_detail.html"
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        obj = super().get_object()
-        context["works"] = obj.works.all()
-        return context
 
 
 class ConferenceList(ListView):
@@ -116,24 +73,10 @@ class SeriesView(DetailView):
     model = ConferenceSeries
     template_name = "series_detail.html"
 
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        obj = super().get_object()
-        context["conferences"] = obj.conferences.order_by("series_memberships__number")
-        return context
-
 
 class InstitutionView(DetailView):
     model = Institution
     template_name = "institution_detail.html"
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        obj = super().get_object()
-        context["members"] = obj.members.distinct()
-        return context
 
 
 class InstitutionList(ListView):

@@ -8,7 +8,7 @@
 
 <h2>All Authors</h2>
 <ol>
-{% for author in work_authors %}
+{% for author in work.authors %}
   <li><a href="{% url 'author_detail' author.pk %}">{{ author.pref_name }}</a></li>
 {% endfor %}
 </ol>
@@ -16,7 +16,7 @@
 <h2>Versions</h2>
 
 <div class="accordion" id="workVersionAccordion">
-  {% for version in work_versions %}
+  {% for version in work.versions.all %}
 
   <div class="card">
     <div class="card-header" id="heading{{ forloop.counter }}">

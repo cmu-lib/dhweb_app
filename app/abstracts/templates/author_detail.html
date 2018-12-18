@@ -8,7 +8,7 @@
     <div class="card">
       <div class="card-header">Works</div>
       <ul class="list-group list-group-flush">
-        {% for work in authored_works %}
+        {% for work in author.works.all %}
         <li class="list-group-item"><a href="{% url 'work_detail' work.pk %}">{{ work.pref_title }}</a> (<a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }}</a>)</li>
         {% endfor %}
       </ul>
@@ -20,7 +20,7 @@
         <div class="card">
           <div class="card-header">Names</div>
             <ul class="list-group list-group-flush">
-              {% for appellation in appellations %}
+              {% for appellation in author.appellations.all %}
               <li class="list-group-item">{{ appellation.pk }} - {{ appellation }}
                 {% for source_work in appellation.source_works %}
                   <a href="{% url 'work_detail' source_work.pk %}"><span class="badge badge-info">{{ source_work.pk }}</span></a>
@@ -37,7 +37,7 @@
           <div class="card">
             <div class="card-header">Institutions</div>
             <ul class="list-group list-group-flush">
-              {% for institution in institutions %}
+              {% for institution in author.institutions.all %}
               <li class="list-group-item"><a href="{% url 'institution_detail' institution.pk %}">{{ institution.pk }} {{institution.name }} ({% if institution.city %}{{ institution.city }}, {% endif %}{% if institution.country %}{{ institution.country }}{% endif %})</a>
               </li>
               {% endfor %}
@@ -52,7 +52,7 @@
           <div class="card">
             <div class="card-header">Departments</div>
             <ul class="list-group list-group-flush">
-              {% for department in departments %}
+              {% for department in author.departments.all %}
               <li class="list-group-item">{{ department.name }}</li>
               {% endfor %}
             </ul>
@@ -65,8 +65,8 @@
           <div class="card">
             <div class="card-header">Genders</div>
               <ul class="list-group list-group-flush">
-                {% for gender_membership in gender_memberships %}
-                <li class="list-group-item">{{ gender_membership.gender }} <a href="{% url 'work_detail' gender_membership.asserted_by.work.pk %}"><span class="badge badge-info">Source</span></a></li>
+                {% for gender in author.genders.all %}
+                  <li class="list-group-item">{{ gender }} {% for memb in author.gender_memberships.all %}{% if memb.gender == gender %}{% for source in memb.source_works %}<a href="{% url 'work_detail' source.pk %}"><span class="badge badge-info">{{ source.pk }}</span></a>{% endfor %}{% endif %}{% endfor %}</li>
                 {% endfor %}
               </ul>
             </div>
