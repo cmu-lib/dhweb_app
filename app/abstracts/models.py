@@ -192,7 +192,6 @@ class Appellation(models.Model):
 
 
 class Author(models.Model):
-    author_id = models.IntegerField(primary_key=True)
     versions = models.ManyToManyField(
         Version,
         through="Authorship",
@@ -219,7 +218,7 @@ class Author(models.Model):
     )
 
     def __str__(self):
-        return f"{self.author_id} - {self.pref_name}"
+        return f"{self.pk} - {self.pref_name}"
 
     @property
     def pref_name(self):
