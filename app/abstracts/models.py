@@ -139,8 +139,15 @@ class Version(models.Model):
     )
     topics = models.ManyToManyField(Topic, related_name="versions", blank=True)
 
+    @property
+    def display_title(self):
+        if len(self.title) > 75:
+            return self.title[:75] + "..."
+        else:
+            return self.title
+
     def __str__(self):
-        return self.title
+        return self.display_title
 
 
 class Gender(models.Model):
