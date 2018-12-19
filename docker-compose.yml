@@ -5,11 +5,10 @@ services:
   dh-postgres:
     image: postgres:11
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - dh_web_testing:/var/lib/postgresql/data
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     env_file: .env
-
 
   start_dependencies:
     image: dadarek/wait-for-dependencies
@@ -19,22 +18,17 @@ services:
 
   dh-web:
     build: .
-    command: python app/src/manage.py runserver 0.0.0.0:8000
+    restart: always
+    command: "bash -c 'python manage.py migrate && gunicorn dhweb.wsgi -b 0.0.0.0:8000'"
     volumes:
       - .:/vol/dh
     ports:
       - "8000:8000"
-    # depends_on:
-    #   - "start_dependences"
-    env_file: .env
-
-  dh-nginx:
-    image: nginx
-    restart: always
-    ports:
-      - "4000:4000"
-    volumes:
-      - /www/static
     links:
-      - dh-web:dh-web
+      - "dh-postgres:dh-postgres"
     env_file: .env
+    depends_on:
+      - start_dependencies
+
+volumes:
+  dh_web_testing:
