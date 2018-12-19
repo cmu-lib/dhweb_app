@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+
+  dh-postgres:
+    image: postgres:11
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    env_file: .env
+
+
+  start_dependencies:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+     - "dh-postgres"
+    command: "dh-postgres:${POSTGRES_PORT}"
+
+  dh-web:
+    build: .
+    command: python app/src/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/vol/dh
+    ports:
+      - "8000:8000"
+    # depends_on:
+    #   - "start_dependences"
+    env_file: .env
+
+  dh-nginx:
+    image: nginx
+    restart: always
+    ports:
+      - "4000:4000"
+    volumes:
+      - /www/static
+    links:
+      - dh-web:dh-web
+    env_file: .env

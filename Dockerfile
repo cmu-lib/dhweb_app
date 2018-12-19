@@ -1,12 +1,5 @@
 FROM python:3.6
-
-RUN apt-get update \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /usr/src/app
-COPY requirements.txt ./
+ADD . /vol/dh
+WORKDIR /vol/dh
+RUN apt-get update
 RUN pip install -r requirements.txt
-
-EXPOSE 8000
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-CMD "bash"
