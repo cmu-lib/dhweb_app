@@ -197,6 +197,13 @@ class Appellation(models.Model):
     def source_works(self):
         return Work.objects.filter(versions__appellation_assertions=self).distinct()
 
+    def add_source_work(self, work):
+        """
+        At a low level, attributes are asserted by Versions. However, in most cases when adding new assertions, we'll want to simply supply a single Work and then have the assertions made by all of the Work's constituent Versions.
+        """
+        assoc_versions = work.versions.all()
+        self.asserted_by.set(assoc_versions)
+
 
 class Author(models.Model):
     versions = models.ManyToManyField(
@@ -277,6 +284,13 @@ class DepartmentAssertion(models.Model):
     def source_works(self):
         return Work.objects.filter(versions__department_assertions=self).distinct()
 
+    def add_source_work(self, work):
+        """
+        At a low level, attributes are asserted by Versions. However, in most cases when adding new assertions, we'll want to simply supply a single Work and then have the assertions made by all of the Work's constituent Versions.
+        """
+        assoc_versions = work.versions.all()
+        self.asserted_by.set(assoc_versions)
+
 
 class InstitutionAssertion(models.Model):
     author = models.ForeignKey(
@@ -293,6 +307,13 @@ class InstitutionAssertion(models.Model):
     def source_works(self):
         return Work.objects.filter(versions__institution_assertions=self).distinct()
 
+    def add_source_work(self, work):
+        """
+        At a low level, attributes are asserted by Versions. However, in most cases when adding new assertions, we'll want to simply supply a single Work and then have the assertions made by all of the Work's constituent Versions.
+        """
+        assoc_versions = work.versions.all()
+        self.asserted_by.set(assoc_versions)
+
 
 class GenderAssertion(models.Model):
     author = models.ForeignKey(
@@ -308,3 +329,10 @@ class GenderAssertion(models.Model):
 
     def source_works(self):
         return Work.objects.filter(versions__gender_assertions=self).distinct()
+
+    def add_source_work(self, work):
+        """
+        At a low level, attributes are asserted by Versions. However, in most cases when adding new assertions, we'll want to simply supply a single Work and then have the assertions made by all of the Work's constituent Versions.
+        """
+        assoc_versions = work.versions.all()
+        self.asserted_by.set(assoc_versions)
