@@ -38,7 +38,7 @@ class AppellationInline(admin.TabularInline):
 class VersionAdmin(admin.ModelAdmin):
     inlines = [AuthorshipInline]
     autocomplete_fields = ["work"]
-    search_fields = ["title"]
+    search_fields = ["title", "authors__appellations__last_name"]
 
 
 class WorkAdmin(admin.ModelAdmin):
