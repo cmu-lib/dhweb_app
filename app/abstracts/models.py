@@ -147,7 +147,7 @@ class Version(models.Model):
             return self.title
 
     def __str__(self):
-        return self.display_title
+        return f"({self.state}) {self.display_title}"
 
 
 class Gender(models.Model):
