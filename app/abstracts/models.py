@@ -276,7 +276,7 @@ class Author(models.Model):
 
         appellation_latest_years = [a.latest_year() for a in all_appellations]
         return all_appellations[
-            appellation_latest_years.index(max(appellation_latest_years))[0]
+            appellation_latest_years.index(max(appellation_latest_years))
         ]
 
     def works(self):
