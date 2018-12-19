@@ -158,7 +158,7 @@ class Gender(models.Model):
 
 
 class Institution(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=500)
     country = models.CharField(max_length=100, blank=True, null=False, default="")
     city = models.CharField(max_length=100, blank=True, null=False, default="")
 
@@ -174,7 +174,7 @@ class Institution(models.Model):
 
 
 class Department(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=500)
     institution = models.ForeignKey(
         Institution, on_delete=models.CASCADE, related_name="departments"
     )
