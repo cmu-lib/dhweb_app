@@ -207,6 +207,20 @@ class Appellation(models.Model):
         assoc_versions = work.versions.all()
         self.asserted_by.set(assoc_versions)
 
+    def years_asserted(self):
+        years = (
+            Conference.objects.filter(works__versions__appellation_assertions=self)
+            .distinct()
+            .values_list("year", flat=True)
+        )
+        return years
+
+    def latest_year(self):
+        return max(self.years_asserted())
+
+    def eariest_year(self):
+        return min(self.years_asserted())
+
 
 class Author(models.Model):
     versions = models.ManyToManyField(
@@ -243,11 +257,27 @@ class Author(models.Model):
 
     @property
     def pref_first_name(self):
-        return self.appellations.first().first_name
+        return self.most_recent_appellation().first_name
 
     @property
     def pref_last_name(self):
-        return self.appellations.first().last_name
+        return self.most_recent_appellation().last_name
+
+    def most_recent_appellation(self):
+        """
+        Calculate the most recent appellation by querying the latest year each
+        appellation was asserted, then taking the most recent of those
+        appellations.
+        """
+        all_appellations = self.appellations.all()
+
+        if len(all_appellations) == 1:
+            return all_appellations[0]
+
+        appellation_latest_years = [a.latest_year() for a in all_appellations]
+        return all_appellations[
+            appellation_latest_years.index(max(appellation_latest_years))[0]
+        ]
 
     def works(self):
         return Work.objects.filter(versions__authors=self).distinct()
