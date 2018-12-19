@@ -191,6 +191,9 @@ class Appellation(models.Model):
     )
     asserted_by = models.ManyToManyField(Version, related_name="appellation_assertions")
 
+    class Meta:
+        unique_together = ("author", "first_name", "last_name")
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -278,6 +281,9 @@ class DepartmentAssertion(models.Model):
         Department, on_delete=models.CASCADE, related_name="assertions"
     )
 
+    class Meta:
+        unique_together = ("author", "department")
+
     def __str__(self):
         return f"{self.department} - {self.author}"
 
@@ -301,6 +307,9 @@ class InstitutionAssertion(models.Model):
     )
     asserted_by = models.ManyToManyField(Version, related_name="institution_assertions")
 
+    class Meta:
+        unique_together = ("author", "institution")
+
     def __str__(self):
         return f"{self.institution} - {self.author}"
 
@@ -323,6 +332,9 @@ class GenderAssertion(models.Model):
         Gender, on_delete=models.CASCADE, related_name="gender_authors"
     )
     asserted_by = models.ManyToManyField(Version, related_name="gender_assertions")
+
+    class Meta:
+        unique_together = ("author", "gender")
 
     def __str__(self):
         return f"{self.gender} - {self.author}"
