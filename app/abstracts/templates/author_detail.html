@@ -21,7 +21,7 @@
           <div class="card-header">Names</div>
             <ul class="list-group list-group-flush">
               {% for appellation in author.appellations.all %}
-              <li class="list-group-item">{{ appellation.pk }} - {{ appellation }}
+              <li class="list-group-item">{{ appellation }}
                 {% for source_work in appellation.source_works %}
                   <a href="{% url 'work_detail' source_work.pk %}"><span class="badge badge-info">{{ source_work.pk }}</span></a>
                 {% endfor%}
@@ -37,8 +37,11 @@
           <div class="card">
             <div class="card-header">Institutions</div>
             <ul class="list-group list-group-flush">
-              {% for institution in author.institutions.all %}
-              <li class="list-group-item"><a href="{% url 'institution_detail' institution.pk %}">{{ institution.pk }} {{institution.name }} ({% if institution.city %}{{ institution.city }}, {% endif %}{% if institution.country %}{{ institution.country }}{% endif %})</a>
+              {% for institution in author.institution_memberships.all %}
+              <li class="list-group-item"><a href="{% url 'institution_detail' institution.institution.pk %}">{{ institution.institution }}</a>
+                {% for source_work in institution.source_works %}
+                  <a href="{% url 'work_detail' source_work.pk %}"><span class="badge badge-info">{{ source_work.pk }}</span></a>
+                {% endfor%}
               </li>
               {% endfor %}
             </ul>
@@ -52,8 +55,11 @@
           <div class="card">
             <div class="card-header">Departments</div>
             <ul class="list-group list-group-flush">
-              {% for department in author.departments.all %}
-              <li class="list-group-item">{{ department }}</li>
+              {% for department in author.department_memberships.all %}
+              <li class="list-group-item">{{ department.department }}
+                  {% for source in department.source_works %}<a href="{% url 'work_detail' source.pk %}"><span class="badge badge-info">{{ source.pk }}</span></a>
+                {% endfor %}
+              </li>
               {% endfor %}
             </ul>
           </div>
@@ -65,8 +71,12 @@
           <div class="card">
             <div class="card-header">Genders</div>
               <ul class="list-group list-group-flush">
-                {% for gender in author.genders.all %}
-                  <li class="list-group-item">{{ gender }} {% for memb in author.gender_memberships.all %}{% if memb.gender == gender %}{% for source in memb.source_works %}<a href="{% url 'work_detail' source.pk %}"><span class="badge badge-info">{{ source.pk }}</span></a>{% endfor %}{% endif %}{% endfor %}</li>
+                {% for gender in author.gender_memberships.all %}
+                  <li class="list-group-item">{{ gender.gender }}
+                    {% for source in gender.source_works %}
+                      <a href="{% url 'work_detail' source.pk %}"><span class="badge badge-info">{{ source.pk }}</span></a>
+                    {% endfor %}
+                  </li>
                 {% endfor %}
               </ul>
             </div>
