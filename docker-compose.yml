@@ -37,7 +37,7 @@ services:
     volumes:
       - dh_static_files:/vol/static_files
     ports:
-      - "80:80"
+      - "4000:4000"
     links:
       - "dh-web:dh-web"
     depends_on:
