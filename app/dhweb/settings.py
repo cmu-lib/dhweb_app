@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("DH_SECRET")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "dc-vm2-rhel.andrew.cmu.edu"]
 
 
 # Application definition
