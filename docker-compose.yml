@@ -22,6 +22,7 @@ services:
     command: "bash -c 'python manage.py migrate && gunicorn dhweb.wsgi -b 0.0.0.0:8000'"
     volumes:
       - .:/vol/dh
+      - dh_static_files:/vol/static_files
     ports:
       - "8000:8000"
     links:
@@ -30,5 +31,19 @@ services:
     depends_on:
       - start_dependencies
 
+  dh-nginx:
+    build: nginx
+    restart: always
+    volumes:
+      - dh_static_files:/vol/static_files
+    ports:
+      - "80:80"
+    links:
+      - "dh-web:dh-web"
+    depends_on:
+      - start_dependencies
+      - dh-web
+
 volumes:
   dh_web_testing:
+  dh_static_files:
