@@ -231,7 +231,7 @@ class Authorship(models.Model):
         return f"{self.author} - {self.work}"
 
     class Meta:
-        unique_together = (("author", "work", "authorship_order"),)
+        unique_together = (("work", "authorship_order"), ("author", "work"))
 
 
 class Appellation(models.Model):
