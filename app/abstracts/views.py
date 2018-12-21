@@ -89,11 +89,23 @@ class InstitutionList(ListView):
 
 
 def home_view(request):
-    conference_count = Conference.objects.count()
-    work_count = Work.objects.count()
-    author_count = Author.objects.count()
-    institution_count = Institution.objects.count()
-    country_count = Institution.objects.values("country").distinct().count()
+    public_works = Work.objects.filter(state="ac").distinct()
+
+    conference_count = (
+        Conference.objects.filter(works__in=public_works).distinct().count()
+    )
+
+    work_count = public_works.count()
+    author_count = Author.objects.filter(works__in=public_works).distinct().count()
+
+    public_institutions = Institution.objects.filter(
+        members__works__in=public_works
+    ).distinct()
+    institution_count = public_institutions.count()
+    country_count = (
+        public_institutions.values_list("country", flat=True).distinct().count()
+    )
+
     context = {
         "conference_count": conference_count,
         "work_count": work_count,
@@ -101,4 +113,5 @@ def home_view(request):
         "institution_count": institution_count,
         "country_count": country_count,
     }
+
     return render(request, "index.html", context)
