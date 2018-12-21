@@ -188,7 +188,7 @@ class Author(models.Model):
     )
 
     def __str__(self):
-        return f"{self.pk}"
+        return f"{self.pref_name}"
 
     @property
     def pref_name(self):
@@ -196,11 +196,11 @@ class Author(models.Model):
 
     @property
     def pref_first_name(self):
-        return self.most_recent_appellation().first_name
+        return self.most_recent_appellation.first_name
 
     @property
     def pref_last_name(self):
-        return self.most_recent_appellation().last_name
+        return self.most_recent_appellation.last_name
 
     @property
     def most_recent_appellation(self):
@@ -209,7 +209,7 @@ class Author(models.Model):
         appellation was asserted, then taking the most recent of those
         appellations.
         """
-        all_appellations = self.appellations.filter(asserted_by__work__state="ac")
+        all_appellations = self.appellations.all()
 
         if len(all_appellations) == 1:
             return all_appellations[0]
@@ -228,7 +228,7 @@ class Authorship(models.Model):
     authorship_order = models.PositiveSmallIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.work} - {self.author} ({self.authorship_order})"
+        return f"{self.author} - {self.work}"
 
     class Meta:
         unique_together = (("author", "work", "authorship_order"),)
