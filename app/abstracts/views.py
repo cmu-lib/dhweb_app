@@ -7,7 +7,6 @@ from django.db.models import Count, Max, Min
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from .models import (
-    Version,
     Work,
     Author,
     Conference,
