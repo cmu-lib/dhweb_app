@@ -58,35 +58,12 @@ class SeriesMembership(models.Model):
         return f"{self.series.title} - {self.number} - {self.conference}"
 
 
-class Work(models.Model):
-    conference = models.ForeignKey(
-        Conference, on_delete=models.CASCADE, related_name="works"
-    )
-
-    def __str__(self):
-        return f"{self.pk} - {self.pref_title}"
-
-    @property
-    def pref_title(self):
-        return self.versions.last().title
-
-    def authors(self):
-        return Author.objects.filter(versions__work=self).distinct()
-
-    @property
-    def submissions(self):
-        return self.versions.distinct()
-
-
 class Keyword(models.Model):
     title = models.CharField(max_length=100, unique=True)
     author_supplied = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
-
-    def works(self):
-        return Work.objects.filter(versions__keywords=self).distinct()
 
 
 class Language(models.Model):
@@ -95,18 +72,12 @@ class Language(models.Model):
     def __str__(self):
         return self.title
 
-    def works(self):
-        return Work.objects.filter(versions__languages=self).distinct()
-
 
 class Discipline(models.Model):
     title = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.title
-
-    def works(self):
-        return Work.objects.filter(versions__disciplines=self).distinct()
 
 
 class Topic(models.Model):
@@ -115,12 +86,11 @@ class Topic(models.Model):
     def __str__(self):
         return self.title
 
-    def works(self):
-        return Work.objects.filter(versions__topics=self).distinct()
 
-
-class Version(models.Model):
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name="versions")
+class Work(models.Model):
+    conference = models.ForeignKey(
+        Conference, on_delete=models.PROTECT, related_name="works"
+    )
     title = models.CharField(max_length=500)
     submission_type = models.CharField(
         max_length=255, blank=True, null=False, default=""
@@ -138,6 +108,14 @@ class Version(models.Model):
         Discipline, related_name="versions", blank=True
     )
     topics = models.ManyToManyField(Topic, related_name="versions", blank=True)
+    published_version = models.ForeignKey(
+        "self",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="unpublished_versions",
+        limit_choices_to={"state": "ac"},
+    )
 
     @property
     def display_title(self):
@@ -183,50 +161,11 @@ class Department(models.Model):
         return f"{self.name} - {self.institution.name}"
 
 
-class Appellation(models.Model):
-    first_name = models.CharField(max_length=100, blank=True, null=False, default="")
-    last_name = models.CharField(max_length=100, blank=True, null=False, default="")
-    author = models.ForeignKey(
-        "Author", on_delete=models.CASCADE, related_name="appellations"
-    )
-    asserted_by = models.ManyToManyField(Version, related_name="appellation_assertions")
-
-    class Meta:
-        unique_together = ("author", "first_name", "last_name")
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-
-    def source_works(self):
-        return Work.objects.filter(versions__appellation_assertions=self).distinct()
-
-    def add_source_work(self, work):
-        """
-        At a low level, attributes are asserted by Versions. However, in most cases when adding new assertions, we'll want to simply supply a single Work and then have the assertions made by all of the Work's constituent Versions.
-        """
-        assoc_versions = work.versions.all()
-        self.asserted_by.set(assoc_versions)
-
-    def years_asserted(self):
-        years = (
-            Conference.objects.filter(works__versions__appellation_assertions=self)
-            .distinct()
-            .values_list("year", flat=True)
-        )
-        return years
-
-    def latest_year(self):
-        return max(self.years_asserted())
-
-    def eariest_year(self):
-        return min(self.years_asserted())
-
-
 class Author(models.Model):
-    versions = models.ManyToManyField(
-        Version,
+    works = models.ManyToManyField(
+        Work,
         through="Authorship",
-        through_fields=("author", "version"),
+        through_fields=("author", "work"),
         related_name="authors",
     )
     genders = models.ManyToManyField(
@@ -249,7 +188,7 @@ class Author(models.Model):
     )
 
     def __str__(self):
-        return f"{self.pk} - {self.pref_name}"
+        return f"{self.pk}"
 
     @property
     def pref_name(self):
@@ -263,13 +202,14 @@ class Author(models.Model):
     def pref_last_name(self):
         return self.most_recent_appellation().last_name
 
+    @property
     def most_recent_appellation(self):
         """
         Calculate the most recent appellation by querying the latest year each
         appellation was asserted, then taking the most recent of those
         appellations.
         """
-        all_appellations = self.appellations.all()
+        all_appellations = self.appellations.filter(asserted_by__work__state="ac")
 
         if len(all_appellations) == 1:
             return all_appellations[0]
@@ -279,34 +219,66 @@ class Author(models.Model):
             appellation_latest_years.index(max(appellation_latest_years))
         ]
 
-    def works(self):
-        return Work.objects.filter(versions__authors=self).distinct()
-
-    class Meta:
-        ordering: ["pref_last_name"]
-
 
 class Authorship(models.Model):
     author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="authorships"
     )
-    version = models.ForeignKey(
-        Version, on_delete=models.CASCADE, related_name="authorships"
-    )
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name="authorships")
     authorship_order = models.PositiveSmallIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.version} - {self.author} ({self.authorship_order})"
+        return f"{self.work} - {self.author} ({self.authorship_order})"
 
     class Meta:
-        unique_together = (("author", "version", "authorship_order"),)
+        unique_together = (("author", "work", "authorship_order"),)
+
+
+class Appellation(models.Model):
+    first_name = models.CharField(max_length=100, blank=True, null=False, default="")
+    last_name = models.CharField(max_length=100, blank=True, null=False, default="")
+    author = models.ForeignKey(
+        "Author", on_delete=models.CASCADE, related_name="appellations"
+    )
+    asserted_by = models.ManyToManyField(
+        Authorship, related_name="appellation_assertions"
+    )
+
+    class Meta:
+        unique_together = ("author", "first_name", "last_name")
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+    @property
+    def source_works(self):
+        return Work.objects.filter(authorships__appellation_assertions=self).distinct()
+
+    @property
+    def years_asserted(self):
+        years = (
+            Conference.objects.filter(works__authorships__appellation_assertions=self)
+            .distinct()
+            .values_list("year", flat=True)
+        )
+        return years
+
+    @property
+    def latest_year(self):
+        return max(self.years_asserted())
+
+    @property
+    def eariest_year(self):
+        return min(self.years_asserted())
 
 
 class DepartmentAssertion(models.Model):
     author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="department_memberships"
     )
-    asserted_by = models.ManyToManyField(Version, related_name="department_assertions")
+    asserted_by = models.ManyToManyField(
+        Authorship, related_name="department_assertions"
+    )
     department = models.ForeignKey(
         Department, on_delete=models.CASCADE, related_name="assertions"
     )
@@ -317,15 +289,9 @@ class DepartmentAssertion(models.Model):
     def __str__(self):
         return f"{self.department} - {self.author}"
 
+    @property
     def source_works(self):
-        return Work.objects.filter(versions__department_assertions=self).distinct()
-
-    def add_source_work(self, work):
-        """
-        At a low level, attributes are asserted by Versions. However, in most cases when adding new assertions, we'll want to simply supply a single Work and then have the assertions made by all of the Work's constituent Versions.
-        """
-        assoc_versions = work.versions.all()
-        self.asserted_by.set(assoc_versions)
+        return Work.objects.filter(authorships__department_assertions=self).distinct()
 
 
 class InstitutionAssertion(models.Model):
@@ -335,7 +301,9 @@ class InstitutionAssertion(models.Model):
     institution = models.ForeignKey(
         Institution, on_delete=models.CASCADE, related_name="assertions"
     )
-    asserted_by = models.ManyToManyField(Version, related_name="institution_assertions")
+    asserted_by = models.ManyToManyField(
+        Authorship, related_name="institution_assertions"
+    )
 
     class Meta:
         unique_together = ("author", "institution")
@@ -343,15 +311,9 @@ class InstitutionAssertion(models.Model):
     def __str__(self):
         return f"{self.institution} - {self.author}"
 
+    @property
     def source_works(self):
-        return Work.objects.filter(versions__institution_assertions=self).distinct()
-
-    def add_source_work(self, work):
-        """
-        At a low level, attributes are asserted by Versions. However, in most cases when adding new assertions, we'll want to simply supply a single Work and then have the assertions made by all of the Work's constituent Versions.
-        """
-        assoc_versions = work.versions.all()
-        self.asserted_by.set(assoc_versions)
+        return Work.objects.filter(authorships__institution_assertions=self)
 
 
 class GenderAssertion(models.Model):
@@ -361,7 +323,7 @@ class GenderAssertion(models.Model):
     gender = models.ForeignKey(
         Gender, on_delete=models.CASCADE, related_name="gender_authors"
     )
-    asserted_by = models.ManyToManyField(Version, related_name="gender_assertions")
+    asserted_by = models.ManyToManyField(Authorship, related_name="gender_assertions")
 
     class Meta:
         unique_together = ("author", "gender")
@@ -369,12 +331,6 @@ class GenderAssertion(models.Model):
     def __str__(self):
         return f"{self.gender} - {self.author}"
 
+    @property
     def source_works(self):
-        return Work.objects.filter(versions__gender_assertions=self).distinct()
-
-    def add_source_work(self, work):
-        """
-        At a low level, attributes are asserted by Versions. However, in most cases when adding new assertions, we'll want to simply supply a single Work and then have the assertions made by all of the Work's constituent Versions.
-        """
-        assoc_versions = work.versions.all()
-        self.asserted_by.set(assoc_versions)
+        return Work.objects.filter(authorships__appellation_assertions=self)
