@@ -33,7 +33,7 @@ class Conference(models.Model):
 class Organizer(models.Model):
     name = models.CharField(max_length=100)
     conferences_organized = models.ManyToManyField(
-        Conference, related_name="organizers"
+        Conference, related_name="organizers", blank=True
     )
 
     def __str__(self):
