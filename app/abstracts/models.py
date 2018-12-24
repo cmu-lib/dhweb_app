@@ -261,10 +261,14 @@ class Authorship(models.Model):
     )
     work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name="authorships")
     authorship_order = models.PositiveSmallIntegerField(default=1)
-    departments = models.ManyToManyField(Department, related_name="asserted_by")
+    departments = models.ManyToManyField(
+        Department, related_name="asserted_by", blank=True
+    )
     appellations = models.ManyToManyField(Appellation, related_name="asserted_by")
-    institutions = models.ManyToManyField(Institution, related_name="asserted_by")
-    genders = models.ManyToManyField(Gender, related_name="asserted_by")
+    institutions = models.ManyToManyField(
+        Institution, related_name="asserted_by", blank=True
+    )
+    genders = models.ManyToManyField(Gender, related_name="asserted_by", blank=True)
 
     def __str__(self):
         return f"{self.author} - {self.work}"
