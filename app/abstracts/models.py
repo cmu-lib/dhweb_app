@@ -235,15 +235,15 @@ class Appellation(models.Model):
 
     @property
     def source_works(self):
-        return Work.objects.filter(authorships__appellation_assertions=self).distinct()
+        return Work.objects.filter(authorships__appellations=self).distinct()
+
+    @property
+    def source_conferences(self):
+        return Conference.objects.filter(works__in=self.source_works).distinct()
 
     @property
     def years_asserted(self):
-        years = (
-            Conference.objects.filter(works__authorships__appellation_assertions=self)
-            .distinct()
-            .values_list("year", flat=True)
-        )
+        years = self.source_conferences.values_list("year", flat=True)
         return years
 
     @property
