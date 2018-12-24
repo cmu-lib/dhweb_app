@@ -57,11 +57,18 @@ class AuthorshipInline(admin.TabularInline):
 
 class AppellationAdmin(admin.ModelAdmin):
     search_fields = ["first_name", "last_name"]
+    autocomplete_fields = ["author"]
 
 
 class WorkAdmin(admin.ModelAdmin):
     inlines = [AuthorshipInline]
-    autocomplete_fields = ["published_version"]
+    autocomplete_fields = [
+        "published_version",
+        "keywords",
+        "languages",
+        "topics",
+        "disciplines",
+    ]
     search_fields = ["title", "authorships__appellations__last_name"]
     list_filter = ["state", "submission_type", "conference"]
     list_display = ["title", "conference", "state", "submission_type"]
@@ -116,7 +123,8 @@ admin.site.register(Gender, GenderAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Appellation, AppellationAdmin)
 admin.site.register(Department, DepartmentAdmin)
+
 admin.site.register(Keyword, KeywordAdmin)
-admin.site.register(Topic)
-admin.site.register(Language)
-admin.site.register(Discipline)
+admin.site.register(Topic, KeywordAdmin)
+admin.site.register(Language, KeywordAdmin)
+admin.site.register(Discipline, KeywordAdmin)
