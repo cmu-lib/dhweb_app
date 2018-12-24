@@ -23,7 +23,7 @@ class WorkList(ListView):
     template_name = "index.html"
 
     def get_queryset(self):
-        return Work.objects.all()[:10]
+        return Work.objects.filter(state="ac")[:10]
 
 
 class WorkView(DetailView):
@@ -35,6 +35,31 @@ class AuthorView(DetailView):
     model = Author
     template_name = "author_detail.html"
 
+    def public_appellations(self):
+        return self.appellation_assertions.filter(
+            asserted_by__work__state="ac"
+        ).distinct()
+
+    def public_institutions(self):
+        return self.institution_assertions.filter(
+            asserted_by__work__state="ac"
+        ).distinct()
+
+    def public_departments(self):
+        return self.department_assertions.filter(
+            asserted_by__work__state="ac"
+        ).distinct()
+
+    def public_affilliations(self):
+        return self.public_institutions().union(
+            Institution.objects.filter(departments__in=self.public_departments())
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["appellation_assertions"] = self.public_appellations()
+        return context
+
 
 class AuthorList(ListView):
     context_object_name = "author_list"
@@ -42,9 +67,15 @@ class AuthorList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Author.objects.annotate(
-            last_name=Max("appellations__last_name")
-        ).order_by("last_name")
+        """
+        Only return authors who have at least one public work
+        """
+        return (
+            Author.objects.filter(works__state="ac")
+            .distinct()
+            .annotate(last_name=Max("appellations__last_name"))
+            .order_by("last_name")
+        )
 
 
 class ConferenceView(DetailView):
@@ -83,9 +114,14 @@ class InstitutionList(ListView):
     template_name = "institution_list.html"
 
     def get_queryset(self):
-        return Institution.objects.annotate(
-            num_members=Count("members", distinct=True)
-        ).order_by("-num_members")
+        """
+        Only show those instutitons that are cited in at least one public work
+        """
+        return (
+            Institution.objects.filter(members__works__state="ac")
+            .annotate(num_members=Count("members", distinct=True))
+            .order_by("-num_members")
+        )
 
 
 def home_view(request):
@@ -107,11 +143,13 @@ def home_view(request):
     )
 
     context = {
-        "conference_count": conference_count,
-        "work_count": work_count,
-        "author_count": author_count,
-        "institution_count": institution_count,
-        "country_count": country_count,
+        "site": {
+            "conference_count": conference_count,
+            "work_count": work_count,
+            "author_count": author_count,
+            "institution_count": institution_count,
+            "country_count": country_count,
+        }
     }
 
     return render(request, "index.html", context)
