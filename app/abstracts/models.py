@@ -186,11 +186,11 @@ class Author(models.Model):
         return Department.objects.filter(asserted_by__in=self.public_authorhips)
 
     @property
-    def appellations(self):
-        return Appellation.objects.filter(asserted_by__in=self.public_authorhips)
+    def all_appellations(self):
+        return Appellation.objects.filter(author=self)
 
     def __str__(self):
-        return f"{self.pk}"
+        return f"{self.pk} - {self.pref_name}"
 
     @property
     def pref_name(self):
@@ -211,15 +211,13 @@ class Author(models.Model):
         appellation was asserted, then taking the most recent of those
         appellations.
         """
-        all_appellations = self.appellations.all()
+        every_app = self.all_appellations.all()
 
-        if len(all_appellations) == 1:
-            return all_appellations[0]
+        if len(every_app) == 1:
+            return every_app[0]
 
-        appellation_latest_years = [a.latest_year for a in all_appellations]
-        return all_appellations[
-            appellation_latest_years.index(max(appellation_latest_years))
-        ]
+        appellation_latest_years = [a.latest_year for a in every_app]
+        return every_app[appellation_latest_years.index(max(appellation_latest_years))]
 
 
 class Appellation(models.Model):
