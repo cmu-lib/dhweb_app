@@ -170,24 +170,28 @@ class Author(models.Model):
     )
 
     @property
-    def public_authorhips(self):
+    def all_authorships(self):
+        return self.authorships.all()
+
+    @property
+    def public_authorships(self):
         self.authorships.filter(work__state="ac")
 
     @property
     def genders(self):
-        Gender.objects.filter(asserted_by__in=self.public_authorhips)
+        Gender.objects.filter(asserted_by__in=self.public_authorships)
 
     @property
     def institutions(self):
-        return Institution.objects.filter(asserted_by__in=self.public_authorhips)
+        return Institution.objects.filter(asserted_by__in=self.public_authorships)
 
     @property
     def departments(self):
-        return Department.objects.filter(asserted_by__in=self.public_authorhips)
+        return Department.objects.filter(asserted_by__in=self.public_authorships)
 
     @property
     def all_appellations(self):
-        return Appellation.objects.filter(author=self)
+        return Appellation.objects.filter(asserted_by__in=self.all_authorships)
 
     def __str__(self):
         return f"{self.pk} - {self.pref_name}"
@@ -211,7 +215,7 @@ class Author(models.Model):
         appellation was asserted, then taking the most recent of those
         appellations.
         """
-        every_app = self.all_appellations.all()
+        every_app = self.all_appellations
 
         if len(every_app) == 1:
             return every_app[0]
