@@ -12,9 +12,6 @@ from .models import (
     Author,
     Authorship,
     Department,
-    DepartmentAssertion,
-    InstitutionAssertion,
-    GenderAssertion,
     Keyword,
     Language,
     Topic,
@@ -22,63 +19,65 @@ from .models import (
 )
 
 
+class KeywordAdmin(admin.ModelAdmin):
+    search_fields = ["title"]
+
+
+class GenderAdmin(admin.ModelAdmin):
+    search_fields = ["gender"]
+
+
+class InstitutuionAdmin(admin.ModelAdmin):
+    search_fields = ["name", "city", "country"]
+
+
+class DepartmentAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    autocomplete_fields = ["institution"]
+
+
 class AuthorshipAdmin(admin.ModelAdmin):
-    search_fields = ["author__last_name", "work__title"]
+    search_fields = ["author__appellations__last_name", "work__title"]
+    list_filter = ("work__state",)
 
 
 class AuthorshipInline(admin.TabularInline):
     model = Authorship
     extra = 0
-    autocomplete_fields = ["author", "work"]
+    autocomplete_fields = [
+        "author",
+        "work",
+        "genders",
+        "institutions",
+        "departments",
+        "appellations",
+    ]
+    list_filter = ("work__state",)
 
 
 class AppellationAdmin(admin.ModelAdmin):
     search_fields = ["first_name", "last_name"]
 
 
-class AppellationInline(admin.TabularInline):
-    model = Appellation
-    extra = 0
-    autocomplete_fields = ["author", "asserted_by"]
-
-
 class WorkAdmin(admin.ModelAdmin):
     inlines = [AuthorshipInline]
     autocomplete_fields = ["published_version"]
-    search_fields = ["title", "authors__appellations__last_name"]
-
-
-class DepartmentAssertionInline(admin.TabularInline):
-    model = DepartmentAssertion
-    extra = 0
-    autocomplete_fields = ["department", "asserted_by", "author"]
-
-
-class DepartmentAdmin(admin.ModelAdmin):
-    inlines = [DepartmentAssertionInline]
-    search_fields = ["name"]
-    autocomplete_fields = ["institution"]
-
-
-class InstitutionAssertionInline(admin.TabularInline):
-    model = InstitutionAssertion
-    extra = 0
-    autocomplete_fields = ["institution", "asserted_by", "author"]
+    search_fields = ["title", "authorships__appellations__last_name"]
+    list_filter = ["state", "submission_type", "conference"]
+    list_display = ["title", "conference", "state", "submission_type"]
 
 
 class InstitutionAdmin(admin.ModelAdmin):
-    inlines = [InstitutionAssertionInline]
     search_fields = ["name", "city", "country"]
 
 
 class AuthorAdmin(admin.ModelAdmin):
-    inlines = [
-        AppellationInline,
-        AuthorshipInline,
-        DepartmentAssertionInline,
-        InstitutionAssertionInline,
+    inlines = [AuthorshipInline]
+    search_fields = [
+        "authorships__appellations__first_name",
+        "authorships__appellations__last_name",
     ]
-    search_fields = ["appellations__first_name", "appellations__last_name"]
+    list_filter = ["works__state"]
 
 
 class ConferenceMembershipInline(admin.TabularInline):
@@ -90,7 +89,7 @@ class ConferenceSeriesAdmin(admin.ModelAdmin):
     inlines = [ConferenceMembershipInline]
 
 
-class OrganizationInline(admin.TabularInline):
+class OrganizerInline(admin.TabularInline):
     model = Conference.organizers.through
     extra = 0
 
@@ -101,8 +100,9 @@ class OrganizerAdmin(admin.ModelAdmin):
 
 
 class ConferenceAdmin(admin.ModelAdmin):
-    inlines = [ConferenceMembershipInline, OrganizationInline]
+    inlines = [ConferenceMembershipInline, OrganizerInline]
     search_fields = ["venue"]
+    autocomplete = ["organizer"]
 
 
 admin.site.register(Authorship, AuthorshipAdmin)
@@ -112,14 +112,11 @@ admin.site.register(Conference, ConferenceAdmin)
 admin.site.register(SeriesMembership)
 admin.site.register(Work, WorkAdmin)
 admin.site.register(Institution, InstitutionAdmin)
-admin.site.register(Gender)
+admin.site.register(Gender, GenderAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Appellation, AppellationAdmin)
 admin.site.register(Department, DepartmentAdmin)
-admin.site.register(DepartmentAssertion)
-admin.site.register(InstitutionAssertion)
-admin.site.register(GenderAssertion)
-admin.site.register(Keyword)
+admin.site.register(Keyword, KeywordAdmin)
 admin.site.register(Topic)
 admin.site.register(Language)
 admin.site.register(Discipline)

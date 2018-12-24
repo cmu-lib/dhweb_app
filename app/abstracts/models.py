@@ -168,27 +168,29 @@ class Author(models.Model):
         through_fields=("author", "work"),
         related_name="authors",
     )
-    genders = models.ManyToManyField(
-        Gender,
-        through="GenderAssertion",
-        through_fields=("author", "gender"),
-        related_name="members",
-    )
-    institutions = models.ManyToManyField(
-        Institution,
-        through="InstitutionAssertion",
-        through_fields=("author", "institution"),
-        related_name="members",
-    )
-    departments = models.ManyToManyField(
-        Department,
-        through="DepartmentAssertion",
-        through_fields=("author", "department"),
-        related_name="members",
-    )
+
+    @property
+    def public_authorhips(self):
+        self.authorships.filter(work__state="ac")
+
+    @property
+    def genders(self):
+        Gender.objects.filter(asserted_by__in=self.public_authorhips)
+
+    @property
+    def institutions(self):
+        return Institution.objects.filter(asserted_by__in=self.public_authorhips)
+
+    @property
+    def departments(self):
+        return Department.objects.filter(asserted_by__in=self.public_authorhips)
+
+    @property
+    def appellations(self):
+        return Appellation.objects.filter(asserted_by__in=self.public_authorhips)
 
     def __str__(self):
-        return f"{self.pref_name}"
+        return f"{self.pk}"
 
     @property
     def pref_name(self):
@@ -214,35 +216,16 @@ class Author(models.Model):
         if len(all_appellations) == 1:
             return all_appellations[0]
 
-        appellation_latest_years = [a.latest_year() for a in all_appellations]
+        appellation_latest_years = [a.latest_year for a in all_appellations]
         return all_appellations[
             appellation_latest_years.index(max(appellation_latest_years))
         ]
 
 
-class Authorship(models.Model):
-    author = models.ForeignKey(
-        Author, on_delete=models.CASCADE, related_name="authorships"
-    )
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name="authorships")
-    authorship_order = models.PositiveSmallIntegerField(default=1)
-
-    def __str__(self):
-        return f"{self.author} - {self.work}"
-
-    class Meta:
-        unique_together = (("work", "authorship_order"), ("author", "work"))
-
-
 class Appellation(models.Model):
     first_name = models.CharField(max_length=100, blank=True, null=False, default="")
     last_name = models.CharField(max_length=100, blank=True, null=False, default="")
-    author = models.ForeignKey(
-        "Author", on_delete=models.CASCADE, related_name="appellations"
-    )
-    asserted_by = models.ManyToManyField(
-        Authorship, related_name="appellation_assertions"
-    )
+    author = models.ForeignKey("Author", on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ("author", "first_name", "last_name")
@@ -265,72 +248,27 @@ class Appellation(models.Model):
 
     @property
     def latest_year(self):
-        return max(self.years_asserted())
+        return max(self.years_asserted)
 
     @property
     def eariest_year(self):
-        return min(self.years_asserted())
+        return min(self.years_asserted)
 
 
-class DepartmentAssertion(models.Model):
+class Authorship(models.Model):
     author = models.ForeignKey(
-        Author, on_delete=models.CASCADE, related_name="department_memberships"
+        Author, on_delete=models.CASCADE, related_name="authorships"
     )
-    asserted_by = models.ManyToManyField(
-        Authorship, related_name="department_assertions"
-    )
-    department = models.ForeignKey(
-        Department, on_delete=models.CASCADE, related_name="assertions"
-    )
-
-    class Meta:
-        unique_together = ("author", "department")
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name="authorships")
+    authorship_order = models.PositiveSmallIntegerField(default=1)
+    departments = models.ManyToManyField(Department, related_name="asserted_by")
+    appellations = models.ManyToManyField(Appellation, related_name="asserted_by")
+    institutions = models.ManyToManyField(Institution, related_name="asserted_by")
+    genders = models.ManyToManyField(Gender, related_name="asserted_by")
 
     def __str__(self):
-        return f"{self.department} - {self.author}"
-
-    @property
-    def source_works(self):
-        return Work.objects.filter(authorships__department_assertions=self).distinct()
-
-
-class InstitutionAssertion(models.Model):
-    author = models.ForeignKey(
-        Author, on_delete=models.CASCADE, related_name="institution_memberships"
-    )
-    institution = models.ForeignKey(
-        Institution, on_delete=models.CASCADE, related_name="assertions"
-    )
-    asserted_by = models.ManyToManyField(
-        Authorship, related_name="institution_assertions"
-    )
+        return f"{self.author} - {self.work}"
 
     class Meta:
-        unique_together = ("author", "institution")
+        unique_together = (("work", "authorship_order"), ("author", "work"))
 
-    def __str__(self):
-        return f"{self.institution} - {self.author}"
-
-    @property
-    def source_works(self):
-        return Work.objects.filter(authorships__institution_assertions=self)
-
-
-class GenderAssertion(models.Model):
-    author = models.ForeignKey(
-        Author, on_delete=models.CASCADE, related_name="gender_memberships"
-    )
-    gender = models.ForeignKey(
-        Gender, on_delete=models.CASCADE, related_name="gender_authors"
-    )
-    asserted_by = models.ManyToManyField(Authorship, related_name="gender_assertions")
-
-    class Meta:
-        unique_together = ("author", "gender")
-
-    def __str__(self):
-        return f"{self.gender} - {self.author}"
-
-    @property
-    def source_works(self):
-        return Work.objects.filter(authorships__appellation_assertions=self)
