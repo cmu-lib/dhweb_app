@@ -132,10 +132,12 @@ def home_view(request):
     )
 
     work_count = public_works.count()
-    author_count = Author.objects.filter(works__in=public_works).distinct().count()
+    author_count = (
+        Author.objects.filter(authorships__work__in=public_works).distinct().count()
+    )
 
     public_institutions = Institution.objects.filter(
-        members__works__in=public_works
+        asserted_by__work__in=public_works
     ).distinct()
     institution_count = public_institutions.count()
     country_count = (
