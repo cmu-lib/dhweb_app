@@ -175,11 +175,11 @@ class Author(models.Model):
 
     @property
     def public_authorships(self):
-        self.authorships.filter(work__state="ac")
+        return self.authorships.filter(work__state="ac").distinct()
 
     @property
     def genders(self):
-        Gender.objects.filter(asserted_by__in=self.public_authorships)
+        return Gender.objects.filter(asserted_by__in=self.public_authorships)
 
     @property
     def institutions(self):
