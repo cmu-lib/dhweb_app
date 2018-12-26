@@ -66,23 +66,6 @@
         </div>
       </div>
 
-      <div class="row mb-3">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">Genders</div>
-              <ul class="list-group list-group-flush">
-                {% for gender in author.gender_memberships.all %}
-                  <li class="list-group-item">{{ gender.gender }}
-                    {% for source in gender.source_works %}
-                      <a href="{% url 'work_detail' source.pk %}"><span class="badge badge-info">{{ source.pk }}</span></a>
-                    {% endfor %}
-                  </li>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     {% endblock %}
