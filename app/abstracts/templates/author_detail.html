@@ -8,8 +8,8 @@
     <div class="card">
       <div class="card-header">Works</div>
       <ul class="list-group list-group-flush">
-        {% for work in author.works.all %}
-        <li class="list-group-item"><a href="{% url 'work_detail' work.pk %}">{{ work.pref_title }}</a> (<a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }}</a>)</li>
+        {% for work in public_works %}
+        <li class="list-group-item"><a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a> (<a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }}</a>)</li>
         {% endfor %}
       </ul>
     </div>
@@ -20,11 +20,15 @@
         <div class="card">
           <div class="card-header">Names</div>
             <ul class="list-group list-group-flush">
-              {% for appellation in author.appellations.all %}
-              <li class="list-group-item">{{ appellation }}
-                {% for source_work in appellation.source_works %}
-                  <a href="{% url 'work_detail' source_work.pk %}"><span class="badge badge-info">{{ source_work.pk }}</span></a>
-                {% endfor%}
+              {% regroup appellation_assertions by appellations__id as apps %}
+              {% for appellation in apps %}
+              <li class="list-group-item">
+                {% for appellation_assignment in appellation.list %}
+                  {% if forloop.first %}
+                  {{ appellation_assignment.appellations__first_name }} {{ appellation_assignment.appellations__last_name }}
+                  {% endif %}
+                  <a href="{% url 'work_detail' appellation_assignment.work %}"><span class="badge badge-info">{{ appellation_assignment.work__conference__year }}</span></a>
+                {% endfor %}
               </li>
               {% endfor %}
             </ul>
@@ -35,29 +39,25 @@
       <div class="row mb-3">
         <div class="col-md-12">
           <div class="card">
-            <div class="card-header">Institutions</div>
+            <div class="card-header">Affiliations</div>
             <ul class="list-group list-group-flush">
-              {% for institution in author.institution_memberships.all %}
-              <li class="list-group-item"><a href="{% url 'institution_detail' institution.institution.pk %}">{{ institution.institution }}</a>
-                {% for source_work in institution.source_works %}
-                  <a href="{% url 'work_detail' source_work.pk %}"><span class="badge badge-info">{{ source_work.pk }}</span></a>
-                {% endfor%}
-              </li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-      </div>
+              {% regroup affiliation_assertions by institution as affs %}
+              {{ affs }}
+              {% for affiliation in affs %}
+              <li class="list-group-item">
+              {% for affiliation_assignment in affiliation.list %}
+              {% if forloop.first %}
+              <a href="{% url 'institution_detail' affiliation_assignment.institution_pk %}">{{ affiliation_assignment.institution }}</a>
+              {% endif %}
+                  <a href="{% url 'work_detail' affiliation_assignment.work %}"><span class="badge badge-info">{{ affiliation_assignment.year }}</span></a>
 
-
-      <div class="row mb-3">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">Departments</div>
-            <ul class="list-group list-group-flush">
-              {% for department in author.department_memberships.all %}
-              <li class="list-group-item">{{ department.department }}
-                  {% for source in department.source_works %}<a href="{% url 'work_detail' source.pk %}"><span class="badge badge-info">{{ source.pk }}</span></a>
+                {% if forloop.first %}
+                {% if affiliation_assignment.department %}
+                <ul>
+                <li>{{ affiliation_assignment.department }}</li>
+                </ul>
+                {% endif %}
+                {% endif %}
                 {% endfor %}
               </li>
               {% endfor %}

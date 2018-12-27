@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
 from django.db.models import Count, Max, Min
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models.functions import Coalesce
 
 from .models import (
     Work,
@@ -35,29 +36,58 @@ class AuthorView(DetailView):
     model = Author
     template_name = "author_detail.html"
 
-    def public_appellations(self):
-        return self.appellation_assertions.filter(
-            asserted_by__work__state="ac"
-        ).distinct()
+    # def public_works(self):
+    #     return (
 
-    def public_institutions(self):
-        return self.institution_assertions.filter(
-            asserted_by__work__state="ac"
-        ).distinct()
+    #     )
 
-    def public_departments(self):
-        return self.department_assertions.filter(
-            asserted_by__work__state="ac"
-        ).distinct()
-
-    def public_affilliations(self):
-        return self.public_institutions().union(
-            Institution.objects.filter(departments__in=self.public_departments())
-        )
+    # Construct a defaultdict from the initial query so that it's easy to
+    # iterate over idfferent values for an assertion, and then page through
+    # each of those values' source Works.
+    # def public_appellation_assertions(self):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["appellation_assertions"] = self.public_appellations()
+        obj = self.object
+
+        obj_authorships = obj.public_authorships
+
+        # public_works = (
+        #     Work.objects.filter(authorships__in=obj_authorships)
+        #     .distinct()
+        #     .order_by("conference__year")
+        # )
+
+        appellation_assertions = obj_authorships.order_by(
+            "appellations__last_name"
+        ).values(
+            "appellations__id",
+            "appellations__first_name",
+            "appellations__last_name",
+            "work",
+            "work__conference__year",
+        )
+
+        affiliation_assertions = obj_authorships.values(
+            "work",
+            year=Coalesce("work__conference__year", None),
+            institution=Coalesce(
+                "institutions__name", "departments__institution__name"
+            ),
+            institution_pk=Coalesce("institutions", "departments__institution"),
+            department=Coalesce("departments__name", None),
+            department_pk=Coalesce("departments__pk", None),
+        )
+
+        public_works = (
+            Work.objects.filter(authorships__in=obj_authorships)
+            .distinct()
+            .order_by("-conference__year")
+        )
+
+        context["appellation_assertions"] = appellation_assertions
+        context["public_works"] = public_works
+        context["affiliation_assertions"] = affiliation_assertions
         return context
 
 
