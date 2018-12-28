@@ -57,38 +57,57 @@ class AuthorView(DetailView):
         #     .distinct()
         #     .order_by("conference__year")
         # )
-
-        appellation_assertions = obj_authorships.order_by(
-            "appellations__last_name"
-        ).values(
-            "appellations__id",
-            "appellations__first_name",
-            "appellations__last_name",
-            "work",
-            "work__conference__year",
-        )
-
-        affiliation_assertions = obj_authorships.order_by(
-            "institutions__name", "departments__name"
-        ).values(
-            "work",
-            year=Coalesce("work__conference__year", None),
-            institution=Coalesce(
-                "departments__institution__name", "institutions__name"
-            ),
-            institution_pk=Coalesce("departments__institution", "institutions"),
-            department=Coalesce("departments__name", None),
-            department_pk=Coalesce("departments__pk", None),
-        )
-
         public_works = (
             Work.objects.filter(authorships__in=obj_authorships)
             .distinct()
             .order_by("-conference__year")
         )
 
-        context["appellation_assertions"] = appellation_assertions
+        appellation_assertions = [
+            {
+                "appellation": a,
+                "works": public_works.filter(
+                    authorships__in=obj_authorships.filter(appellations=a)
+                ),
+            }
+            for a in Appellation.objects.filter(asserted_by__in=obj_authorships)
+            .distinct()
+            .order_by("last_name")
+        ]
+
+        all_departments = Department.objects.filter(asserted_by__in=obj_authorships)
+
+        all_institutions = Institution.objects.filter(
+            asserted_by__in=obj_authorships
+        ).union(Institution.objects.filter(departments__in=all_departments))
+
+        affiliation_assertions = [
+            {
+                "institution": i,
+                "departments": [
+                    {
+                        "department": d,
+                        "works": public_works.filter(
+                            authorships__in=obj_authorships.filter(departments=d)
+                        ).distinct(),
+                    }
+                    for d in all_departments.filter(institution=i).distinct()
+                ],
+                "works": public_works.filter(
+                    authorships__in=obj_authorships.filter(institutions=i)
+                ).union(
+                    public_works.filter(
+                        authorships__in=obj_authorships.filter(
+                            departments__institution=i
+                        )
+                    )
+                ),
+            }
+            for i in all_institutions
+        ]
+
         context["public_works"] = public_works
+        context["appellation_assertions"] = appellation_assertions
         context["affiliation_assertions"] = affiliation_assertions
         return context
 
