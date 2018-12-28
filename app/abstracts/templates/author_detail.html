@@ -18,7 +18,7 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <div class="card">
-          <div class="card-header">Names</div>
+          <div class="card-header">All Names</div>
             <ul class="list-group list-group-flush">
               {% regroup appellation_assertions by appellations__id as apps %}
               {% for appellation in apps %}
@@ -39,27 +39,21 @@
       <div class="row mb-3">
         <div class="col-md-12">
           <div class="card">
-            <div class="card-header">Affiliations</div>
+            <div class="card-header">All Affiliations</div>
             <ul class="list-group list-group-flush">
               {% regroup affiliation_assertions by institution as affs %}
-              {{ affs }}
               {% for affiliation in affs %}
               <li class="list-group-item">
-              {% for affiliation_assignment in affiliation.list %}
-              {% if forloop.first %}
-              <a href="{% url 'institution_detail' affiliation_assignment.institution_pk %}">{{ affiliation_assignment.institution }}</a>
-              {% endif %}
-                  <a href="{% url 'work_detail' affiliation_assignment.work %}"><span class="badge badge-info">{{ affiliation_assignment.year }}</span></a>
-
-                {% if forloop.first %}
-                {% if affiliation_assignment.department %}
+              <a href="{% url 'institution_detail' affiliation.list.0.institution_pk %}">{{ affiliation.list.0.institution }}</a>
+              {% regroup affiliation.list by department as regrouped_departments %}
+                {% comment %} Only display department lists if there are departments to list {% endcomment %}
+                {% if regrouped_departments.0.list.0.department %}
                 <ul>
-                <li>{{ affiliation_assignment.department }}</li>
+                  {% for dept in regrouped_departments %}
+                  <li>{{ dept.list.0.department }}</li>
+                  {% endfor %}
                 </ul>
                 {% endif %}
-                {% endif %}
-                {% endfor %}
-              </li>
               {% endfor %}
             </ul>
           </div>

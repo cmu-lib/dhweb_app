@@ -68,13 +68,15 @@ class AuthorView(DetailView):
             "work__conference__year",
         )
 
-        affiliation_assertions = obj_authorships.values(
+        affiliation_assertions = obj_authorships.order_by(
+            "institutions__name", "departments__name"
+        ).values(
             "work",
             year=Coalesce("work__conference__year", None),
             institution=Coalesce(
-                "institutions__name", "departments__institution__name"
+                "departments__institution__name", "institutions__name"
             ),
-            institution_pk=Coalesce("institutions", "departments__institution"),
+            institution_pk=Coalesce("departments__institution", "institutions"),
             department=Coalesce("departments__name", None),
             department_pk=Coalesce("departments__pk", None),
         )
