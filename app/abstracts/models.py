@@ -158,7 +158,7 @@ class Department(models.Model):
     )
 
     def __str__(self):
-        return f"{self.name} - {self.institution.name}"
+        return f"{self.name} - {self.institution}"
 
 
 class Author(models.Model):
