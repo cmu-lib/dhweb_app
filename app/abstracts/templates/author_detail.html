@@ -20,14 +20,11 @@
         <div class="card">
           <div class="card-header">All Names</div>
             <ul class="list-group list-group-flush">
-              {% regroup appellation_assertions by appellations__id as apps %}
-              {% for appellation in apps %}
+              {% for appellation in appellation_assertions %}
               <li class="list-group-item">
-                {% for appellation_assignment in appellation.list %}
-                  {% if forloop.first %}
-                  {{ appellation_assignment.appellations__first_name }} {{ appellation_assignment.appellations__last_name }}
-                  {% endif %}
-                  <a href="{% url 'work_detail' appellation_assignment.work %}"><span class="badge badge-info">{{ appellation_assignment.work__conference__year }}</span></a>
+                {{ appellation.appellation }}
+                {% for work in appellation.works %}
+                  <a href="{% url 'work_detail' work.pk %}"><span class="badge badge-info">{{ work.conference.year }}</span></a>
                 {% endfor %}
               </li>
               {% endfor %}
@@ -41,16 +38,18 @@
           <div class="card">
             <div class="card-header">All Affiliations</div>
             <ul class="list-group list-group-flush">
-              {% regroup affiliation_assertions by institution as affs %}
-              {% for affiliation in affs %}
+              {% for affiliation in affiliation_assertions %}
               <li class="list-group-item">
-              <a href="{% url 'institution_detail' affiliation.list.0.institution_pk %}">{{ affiliation.list.0.institution }}</a>
-              {% regroup affiliation.list by department as regrouped_departments %}
-                {% comment %} Only display department lists if there are departments to list {% endcomment %}
-                {% if regrouped_departments.0.list.0.department %}
+              <a href="{% url 'institution_detail' affiliation.institution.pk %}">{{ affiliation.institution }}</a>
+                {% for work in affiliation.works %}
+                <a href="{% url 'work_detail' work.pk %}"><span class="badge badge-info">{{ work.conference.year }}</span></a>
+                {% endfor %}
+                {% if affiliation.departments %}
                 <ul>
-                  {% for dept in regrouped_departments %}
-                  <li>{{ dept.list.0.department }}</li>
+                  {% for department in affiliation.departments %}
+                  <li>{{ department.department.name }}{% for work in department.works %}
+                <a href="{% url 'work_detail' work.pk %}"><span class="badge badge-info">{{ work.conference.year }}</span></a>
+                {% endfor %}</li>
                   {% endfor %}
                 </ul>
                 {% endif %}
