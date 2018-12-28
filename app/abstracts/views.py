@@ -31,6 +31,13 @@ class WorkView(DetailView):
     model = Work
     template_name = "work_detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = self.object
+
+        context["authorships"] = obj.authorships.order_by("authorship_order")
+        return context
+
 
 class AuthorView(DetailView):
     model = Author
