@@ -1,0 +1,10 @@
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <a href="{% url 'author_detail' authorship.author.pk %}"><h5 class="card-title">{{ forloop.counter }}. {{ authorship.appellations.first }}</h5></a>
+    <h6 class="card-subtitle mb-2 text-muted">{% if authorship.departments.count > 0 %}{{ authorship.departments.all | join:"," }}{% else %}{{ authorship.institutions.first }}{% endif %}</h6>
+    {% comment %} <p class="card-text">{{ author.notes }}</p> {% endcomment %}
+  </div>
+  {% comment %} <div class="card-footer text-muted">
+    <a href="{% url 'author_detail' authorship.author.pk %}" class="card-link">Read more</a>
+  </div> {% endcomment %}
+</div>

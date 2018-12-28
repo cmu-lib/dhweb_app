@@ -2,104 +2,97 @@
 
 {% block content %}
 
-<h1>{{ work.pref_title }}</h1>
+<h1>{{ work.title }}</h1>
 
-<p><a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }} - {{ work.conference.venue }}</a></p>
-
-<h2>All Authors</h2>
-<ol>
-{% for author in work.authors %}
-  <li><a href="{% url 'author_detail' author.pk %}">{{ author.pref_name }}</a></li>
-{% endfor %}
-</ol>
-
-<h2>Versions</h2>
-
-<div class="accordion" id="workVersionAccordion">
-  {% for version in work.versions.all %}
-
-  <div class="card">
-    <div class="card-header" id="heading{{ forloop.counter }}">
-      <h5 class="mb-0">
-        <span class="badge badge-secondary">{{ version.conference_type }}</span>
-        <button class="btn btn-link{% if forloop.first is not True %} collapsed{% endif %}" type="button" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}" aria-expanded="{{ forloop.first | lower }}"
-          aria-controls="collapse{{ forloop.counter }}">
-        {{ version.title }}
-        </button>
-        {% if version.state == "ac" %}
-        <span class="badge badge-primary">Accepted</span>
-        {% else %}
-        <span class="badge badge-secondary">Submitted</span>
-        {% endif %}
-      </h5>
+<div class="row">
+  <div class="col-md-8">
+    <div class="card-columns">
+      {% for authorship in authorships.all %}
+      {% include "authorship_card.html" with authorship=authorship %}
+      {% endfor %}
     </div>
 
-    <div id="collapse{{ forloop.counter }}" class="collapse{% if forloop.first %} show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-parent="#workVersionAccordion">
+    <div class="card">
+      <div class="card-header">Abstract</div>
       <div class="card-body">
-        <h4>Version authors:</h4>
-        <ul>
-          {% for author in version.authors.all %}
-          <li><a href="{% url 'author_detail' author.pk %}">{{ author.pref_name }}</a></li>
-          {% endfor %}
-        </ul>
-
-        <h4>Abstract</h4>
-
-        {% if version.full_text %}
-          <p>{{ version.full_text }}</p>
-        {% else %}
-          <p>No full text available for this version.</p>
-        {% endif %}
-
-        <h4>Tags</h4>
-
-        <h5>Keywords</h5>
-        {% if version.keywords.all %}
-        <ul>
-          {% for keyword in version.keywords.all %}
-          <li>{{ keyword.title }}</li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <p>This version has no associated keywords</p>
-        {% endif %}
-
-        <h5>Language</h5>
-        {% if version.languages.all %}
-        <ul>
-          {% for language in version.languages.all %}
-          <li>{{ language.title }}</li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <p>This version has no associated languages</p>
-        {% endif %}
-
-        <h5>Topics</h5>
-        {% if version.topics.all %}
-        <ul>
-          {% for topic in version.topics.all %}
-          <li>{{ topic.title }}</li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <p>This version has no associated topics</p>
-        {% endif %}
-
-        <h5>Disciplines</h5>
-        {% if version.disciplines.all %}
-        <ul>
-          {% for discipline in version.disciplines.all %}
-          <li>{{ discipline.title }}</li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <p>This version has no associated disciplines</p>
-        {% endif %}
+          {% if work.full_text %}
+            <p>{{ work.full_text }}</p>
+          {% else %}
+            <div class="alert alert-warning">No abstract available for this work.</div>
+          {% endif %}
       </div>
     </div>
   </div>
-  {% endfor %}
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <p><a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }} - {{ work.conference.venue }}</a></p>
+        {% if work.state == "su" %}
+          <div class="alert alert-warning">This is a submitted version!
+          {% if work.published_version %}
+            <a href="{% url 'work_detail' work.published_version.pk%}">See {{ work.published_version.conference.year }} accepted version</a>
+          {% endif %}
+          </div>
+        {% endif %}
+        {% with num_versions=work.unpublished_versions.count%}
+          {% if num_versions > 0 %}
+            <div class="alert alert-info">
+          See submitted version{{ num_versions | pluralize }}:
+          {% for up in work.unpublished_versions.all %}
+            <a class="badge badge-primary" href="{% url 'work_detail' up.pk %}">{{ up.conference.year }}</a>
+          {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+      </div>
+    </div>
+
+  <div class="card">
+    <div class="card-header">Tags</div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Keywords:
+          {% if work.keywords.all %}
+            {% for keyword in work.keywords.all %}
+              <span class="badge badge-info">{{ keyword.title }}</span>
+            {% endfor %}
+          {% else %}
+          None
+          {% endif %}
+        </li>
+        <li class="list-group-item">Language:
+          {% if work.languages.all %}
+            {% for language in work.languages.all %}
+              <span class="badge badge-info">{{ language.title }}</span>
+            {% endfor %}
+          {% else %}
+          None
+          {% endif %}
+        </li>
+        <li class="list-group-item">Topics:
+          {% if work.topics.all %}
+            {% for topic in work.topics.all %}
+              <span class="badge badge-info">{{ topic.title }}</span>
+            {% endfor %}
+          {% else %}
+          None
+          {% endif %}
+        </li>
+        <li class="list-group-item">Disciplines:
+          {% if work.disciplines.all %}
+            {% for discipline in work.disciplines.all %}
+              <span class="badge badge-info">{{ discipline.title }}</span>
+            {% endfor %}
+          {% else %}
+          None
+          {% endif %}
+        </li>
+      </ul>
+  </div>
+
+  </div>
 </div>
+
+
 
 {% endblock %}
