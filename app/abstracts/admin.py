@@ -38,12 +38,6 @@ class DepartmentAdmin(admin.ModelAdmin):
 
 class AuthorshipAdmin(admin.ModelAdmin):
     search_fields = ["author__appellations__last_name", "work__title"]
-    list_filter = ("work__state",)
-
-
-class AuthorshipInline(admin.TabularInline):
-    model = Authorship
-    extra = 0
     autocomplete_fields = [
         "author",
         "work",
@@ -55,9 +49,22 @@ class AuthorshipInline(admin.TabularInline):
     list_filter = ("work__state",)
 
 
+class AuthorshipInline(admin.StackedInline):
+    model = Authorship
+    extra = 0
+    autocomplete_fields = [
+        "author",
+        "work",
+        "genders",
+        "institutions",
+        "departments",
+        "appellations",
+    ]
+    show_change_link = True
+
+
 class AppellationAdmin(admin.ModelAdmin):
     search_fields = ["first_name", "last_name"]
-    autocomplete_fields = ["author"]
 
 
 class WorkAdmin(admin.ModelAdmin):
@@ -72,6 +79,7 @@ class WorkAdmin(admin.ModelAdmin):
     search_fields = ["title", "authorships__appellations__last_name"]
     list_filter = ["state", "submission_type", "conference"]
     list_display = ["title", "conference", "state", "submission_type"]
+    radio_fields = {"state": admin.HORIZONTAL}
 
 
 class InstitutionAdmin(admin.ModelAdmin):
