@@ -136,10 +136,23 @@ class Gender(models.Model):
         return self.gender
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=500, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Institution(models.Model):
     name = models.CharField(max_length=500)
-    country = models.CharField(max_length=100, blank=True, null=False, default="")
     city = models.CharField(max_length=100, blank=True, null=False, default="")
+    country = models.ForeignKey(
+        Country,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="institutions",
+    )
 
     def __str__(self):
         if not self.city and not self.country:
@@ -152,10 +165,10 @@ class Institution(models.Model):
             return f"{self.name} ({self.city}, {self.country})"
 
 
-class Department(models.Model):
-    name = models.CharField(max_length=500)
+class Affiliation(models.Model):
+    department = models.CharField(max_length=500, blank=True, null=False)
     institution = models.ForeignKey(
-        Institution, on_delete=models.CASCADE, related_name="departments"
+        Institution, on_delete=models.CASCADE, related_name="affiliations"
     )
 
     def __str__(self):
@@ -185,10 +198,6 @@ class Author(models.Model):
     @property
     def institutions(self):
         return Institution.objects.filter(asserted_by__in=self.public_authorships)
-
-    @property
-    def departments(self):
-        return Department.objects.filter(asserted_by__in=self.public_authorships)
 
     @property
     def all_appellations(self):
@@ -264,12 +273,9 @@ class Authorship(models.Model):
     )
     work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name="authorships")
     authorship_order = models.PositiveSmallIntegerField(default=1)
-    departments = models.ManyToManyField(
-        Department, related_name="asserted_by", blank=True
-    )
     appellations = models.ManyToManyField(Appellation, related_name="asserted_by")
-    institutions = models.ManyToManyField(
-        Institution, related_name="asserted_by", blank=True
+    affiliations = models.ManyToManyField(
+        Affiliation, related_name="asserted_by", blank=True
     )
     genders = models.ManyToManyField(Gender, related_name="asserted_by", blank=True)
 

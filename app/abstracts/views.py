@@ -14,7 +14,7 @@ from .models import (
     Institution,
     Gender,
     Appellation,
-    Department,
+    Affiliation,
     ConferenceSeries,
 )
 
