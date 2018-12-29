@@ -9,7 +9,10 @@
       <div class="card-header">Works</div>
       <ul class="list-group list-group-flush">
         {% for work in public_works %}
-        <li class="list-group-item"><a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a> (<a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }}</a>)</li>
+        <li class="list-group-item">
+        <p><a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a></p>
+        <small>Accepted in <a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference }}</a></small>
+        </li>
         {% endfor %}
       </ul>
     </div>
@@ -22,10 +25,10 @@
             <ul class="list-group list-group-flush">
               {% for appellation in appellation_assertions %}
               <li class="list-group-item">
-                {{ appellation.appellation }}
-                {% for work in appellation.works %}
-                  <a href="{% url 'work_detail' work.pk %}"><span class="badge badge-info">{{ work.conference.year }}</span></a>
-                {% endfor %}
+                <p>{{ appellation.appellation }}</p>
+                <small>Given in {% for work in appellation.works %}
+                  <a href="{% url 'work_detail' work.pk %}">{{ work.conference.year }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}</small>
               </li>
               {% endfor %}
             </ul>
@@ -40,19 +43,17 @@
             <ul class="list-group list-group-flush">
               {% for affiliation in affiliation_assertions %}
               <li class="list-group-item">
-              <a href="{% url 'institution_detail' affiliation.institution.pk %}">{{ affiliation.institution }}</a>
-                {% for work in affiliation.works %}
-                <a href="{% url 'work_detail' work.pk %}"><span class="badge badge-info">{{ work.conference.year }}</span></a>
-                {% endfor %}
+              <p><a href="{% url 'institution_detail' affiliation.institution.pk %}">{{ affiliation.institution }}</a></p>
                 {% if affiliation.departments %}
                 <ul>
                   {% for department in affiliation.departments %}
-                  <li>{{ department.department.name }}{% for work in department.works %}
-                <a href="{% url 'work_detail' work.pk %}"><span class="badge badge-info">{{ work.conference.year }}</span></a>
-                {% endfor %}</li>
+                  <li>{{ department.name }}</li>
                   {% endfor %}
                 </ul>
                 {% endif %}
+                <small>Given in {% for work in affiliation.works %}
+                <a href="{% url 'work_detail' work.pk %}">{{ work.conference.year }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}</small>
               {% endfor %}
             </ul>
           </div>

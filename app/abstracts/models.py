@@ -252,6 +252,10 @@ class Appellation(models.Model):
     def eariest_year(self):
         return min(self.years_asserted)
 
+    @property
+    def is_unused(self):
+        return self.asserted_by.count() == 0
+
 
 class Authorship(models.Model):
     author = models.ForeignKey(
