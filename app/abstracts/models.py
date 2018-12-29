@@ -166,10 +166,13 @@ class Institution(models.Model):
 
 
 class Affiliation(models.Model):
-    department = models.CharField(max_length=500, blank=True, null=False)
+    department = models.CharField(max_length=500, blank=True, null=False, default="")
     institution = models.ForeignKey(
         Institution, on_delete=models.CASCADE, related_name="affiliations"
     )
+
+    class Meta:
+        unique_together = (("department", "institution"),)
 
     def __str__(self):
         return f"{self.name} - {self.institution}"
