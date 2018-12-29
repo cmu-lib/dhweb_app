@@ -11,7 +11,7 @@
         {% for work in public_works %}
         <li class="list-group-item">
         <p><a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a></p>
-        <small>Accepted in <a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference }}</a></small>
+        <small class="text-muted">Accepted in <a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference }}</a></small>
         </li>
         {% endfor %}
       </ul>
@@ -26,7 +26,7 @@
               {% for appellation in appellation_assertions %}
               <li class="list-group-item">
                 <p>{{ appellation.appellation }}</p>
-                <small>Given in {% for work in appellation.works %}
+                <small class="text-muted">Given in {% for work in appellation.works %}
                   <a href="{% url 'work_detail' work.pk %}">{{ work.conference.year }}</a>{% if not forloop.last %}, {% endif %}
                 {% endfor %}</small>
               </li>
@@ -51,7 +51,7 @@
                   {% endfor %}
                 </ul>
                 {% endif %}
-                <small>Given in {% for work in affiliation.works %}
+                <small class="text-muted">Given in {% for work in affiliation.works %}
                 <a href="{% url 'work_detail' work.pk %}">{{ work.conference.year }}</a>{% if not forloop.last %}, {% endif %}
                 {% endfor %}</small>
               {% endfor %}
