@@ -11,7 +11,6 @@ from .models import (
     Appellation,
     Author,
     Authorship,
-    Department,
     Keyword,
     Language,
     Topic,
@@ -31,35 +30,16 @@ class InstitutuionAdmin(admin.ModelAdmin):
     search_fields = ["name", "city", "country"]
 
 
-class DepartmentAdmin(admin.ModelAdmin):
-    search_fields = ["name"]
-    autocomplete_fields = ["institution"]
-
-
 class AuthorshipAdmin(admin.ModelAdmin):
     search_fields = ["author__appellations__last_name", "work__title"]
-    autocomplete_fields = [
-        "author",
-        "work",
-        "genders",
-        "institutions",
-        "departments",
-        "appellations",
-    ]
+    autocomplete_fields = ["author", "work", "genders", "appellations"]
     list_filter = ("work__state",)
 
 
 class AuthorshipInline(admin.StackedInline):
     model = Authorship
     extra = 0
-    autocomplete_fields = [
-        "author",
-        "work",
-        "genders",
-        "institutions",
-        "departments",
-        "appellations",
-    ]
+    autocomplete_fields = ["author", "work", "genders", "appellations"]
     show_change_link = True
 
 
@@ -130,7 +110,6 @@ admin.site.register(Institution, InstitutionAdmin)
 admin.site.register(Gender, GenderAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Appellation, AppellationAdmin)
-admin.site.register(Department, DepartmentAdmin)
 
 admin.site.register(Keyword, KeywordAdmin)
 admin.site.register(Topic, KeywordAdmin)
