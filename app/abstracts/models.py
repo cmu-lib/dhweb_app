@@ -129,7 +129,34 @@ class Work(models.Model):
         return f"({self.state}) {self.display_title}"
 
 
-class Gender(models.Model):
+class Attribute(models.Model):
+    class Meta:
+        abstract = True
+
+    def years_asserted(self, author):
+        return (
+            self.asserted_by.filter(author=author)
+            .values_list("work__conference__year", flat=True)
+            .distinct()
+        )
+
+    def latest_year(self, author):
+        return max(self.years_asserted(author))
+
+    @property
+    def is_unused(self):
+        return self.asserted_by.count() == 0
+
+
+class Appellation(Attribute):
+    first_name = models.CharField(max_length=100, blank=True, null=False, default="")
+    last_name = models.CharField(max_length=100, blank=True, null=False, default="")
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+
+class Gender(Attribute):
     gender = models.CharField(max_length=100)
 
     def __str__(self):
@@ -165,7 +192,7 @@ class Institution(models.Model):
             return f"{self.name} ({self.city}, {self.country})"
 
 
-class Affiliation(models.Model):
+class Affiliation(Attribute):
     department = models.CharField(max_length=500, blank=True, null=False, default="")
     institution = models.ForeignKey(
         Institution, on_delete=models.CASCADE, related_name="affiliations"
@@ -189,6 +216,9 @@ class Author(models.Model):
         related_name="authors",
     )
 
+    def __str__(self):
+        return f"{self.pk} - {self.pref_name}"
+
     @property
     def all_authorships(self):
         return self.authorships.all()
@@ -196,21 +226,6 @@ class Author(models.Model):
     @property
     def public_authorships(self):
         return self.authorships.filter(work__state="ac").distinct()
-
-    @property
-    def genders(self):
-        return Gender.objects.filter(asserted_by__in=self.public_authorships)
-
-    @property
-    def institutions(self):
-        return Institution.objects.filter(asserted_by__in=self.public_authorships)
-
-    @property
-    def all_appellations(self):
-        return Appellation.objects.filter(asserted_by__in=self.all_authorships)
-
-    def __str__(self):
-        return f"{self.pk} - {self.pref_name}"
 
     @property
     def pref_name(self):
@@ -224,53 +239,34 @@ class Author(models.Model):
     def pref_last_name(self):
         return self.most_recent_appellation.last_name
 
-    @property
-    def most_recent_appellation(self):
+    def most_recent_attribute(self, attr):
         """
         Calculate the most recent appellation by querying the latest year each
         appellation was asserted, then taking the most recent of those
         appellations.
         """
-        every_app = self.all_appellations
+        every_attr = attr.objects.filter(asserted_by__in=self.public_authorships)
 
-        if len(every_app) == 1:
-            return every_app[0]
+        if len(every_attr) == 0:
+            every_attr = attr.objects.filter(asserted_by__in=self.all_authorships)
 
-        appellation_latest_years = [a.latest_year for a in every_app]
-        return every_app[appellation_latest_years.index(max(appellation_latest_years))]
+        if len(every_attr) == 1:
+            return every_attr[0]
 
-
-class Appellation(models.Model):
-    first_name = models.CharField(max_length=100, blank=True, null=False, default="")
-    last_name = models.CharField(max_length=100, blank=True, null=False, default="")
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        attr_latest_years = [a.latest_year(author=self) for a in every_attr]
+        return every_attr[attr_latest_years.index(max(attr_latest_years))]
 
     @property
-    def source_works(self):
-        return Work.objects.filter(authorships__appellations=self).distinct()
+    def most_recent_appellation(self):
+        return self.most_recent_attribute(Appellation)
 
     @property
-    def source_conferences(self):
-        return Conference.objects.filter(works__in=self.source_works).distinct()
+    def most_recent_gender(self):
+        return self.most_recent_attribute(Gender)
 
     @property
-    def years_asserted(self):
-        years = self.source_conferences.values_list("year", flat=True)
-        return years
-
-    @property
-    def latest_year(self):
-        return max(self.years_asserted)
-
-    @property
-    def eariest_year(self):
-        return min(self.years_asserted)
-
-    @property
-    def is_unused(self):
-        return self.asserted_by.count() == 0
+    def most_recent_affiliation(self):
+        return self.most_recent_attribute(Affiliation)
 
 
 class Authorship(models.Model):
