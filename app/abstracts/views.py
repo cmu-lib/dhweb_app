@@ -44,16 +44,6 @@ class AuthorView(DetailView):
     model = Author
     template_name = "author_detail.html"
 
-    # def public_works(self):
-    #     return (
-
-    #     )
-
-    # Construct a defaultdict from the initial query so that it's easy to
-    # iterate over idfferent values for an assertion, and then page through
-    # each of those values' source Works.
-    # def public_appellation_assertions(self):
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         obj = self.object
