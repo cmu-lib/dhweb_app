@@ -19,7 +19,7 @@
       <div class="card-header">Abstract</div>
       <div class="card-body">
           {% if work.full_text %}
-            <p>{{ work.full_text }}</p>
+            <p>{{ work.full_text | linebreaks }}</p>
           {% else %}
             <div class="alert alert-warning">No abstract available for this work.</div>
           {% endif %}
