@@ -16,6 +16,7 @@ from .models import (
     Appellation,
     Affiliation,
     ConferenceSeries,
+    Country,
 )
 
 
@@ -173,7 +174,7 @@ def home_view(request):
     ).distinct()
     institution_count = public_institutions.count()
     country_count = (
-        Country.object.filter(institutions__in=public_institutions).distinct().count()
+        Country.objects.filter(institutions__in=public_institutions).distinct().count()
     )
 
     context = {
