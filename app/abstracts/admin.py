@@ -15,6 +15,8 @@ from .models import (
     Language,
     Topic,
     Discipline,
+    Affiliation,
+    Country,
 )
 
 
@@ -26,21 +28,36 @@ class GenderAdmin(admin.ModelAdmin):
     search_fields = ["gender"]
 
 
+class CountryAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+
+
 class InstitutuionAdmin(admin.ModelAdmin):
-    search_fields = ["name", "city", "country"]
+    search_fields = ["name", "city", "country__name"]
 
 
 class AuthorshipAdmin(admin.ModelAdmin):
     search_fields = ["author__appellations__last_name", "work__title"]
-    autocomplete_fields = ["author", "work", "genders", "appellations"]
+    autocomplete_fields = ["author", "work", "genders", "appellations", "affiliations"]
     list_filter = ("work__state",)
 
 
 class AuthorshipInline(admin.StackedInline):
     model = Authorship
     extra = 0
-    autocomplete_fields = ["author", "work", "genders", "appellations"]
+    autocomplete_fields = ["author", "work", "genders", "appellations", "affiliations"]
     show_change_link = True
+
+
+class AffiliationAdmin(admin.ModelAdmin):
+    search_fields = ["department", "institution__name"]
+    autocomplete_fields = ["institution"]
+
+
+class AffiliationInline(admin.StackedInline):
+    model = Affiliation
+    extra = 0
+    autocomplete_fields = ["institution"]
 
 
 class AppellationAdmin(admin.ModelAdmin):
@@ -63,7 +80,7 @@ class WorkAdmin(admin.ModelAdmin):
 
 
 class InstitutionAdmin(admin.ModelAdmin):
-    search_fields = ["name", "city", "country"]
+    search_fields = ["name", "city", "country__name"]
 
 
 class AuthorAdmin(admin.ModelAdmin):
@@ -110,8 +127,9 @@ admin.site.register(Institution, InstitutionAdmin)
 admin.site.register(Gender, GenderAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Appellation, AppellationAdmin)
-
+admin.site.register(Affiliation, AffiliationAdmin)
 admin.site.register(Keyword, KeywordAdmin)
 admin.site.register(Topic, KeywordAdmin)
 admin.site.register(Language, KeywordAdmin)
 admin.site.register(Discipline, KeywordAdmin)
+admin.site.register(Country, CountryAdmin)
