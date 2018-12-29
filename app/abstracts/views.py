@@ -65,6 +65,13 @@ class AuthorView(DetailView):
             .order_by("-conference__year")
         )
 
+        split_works = [
+            {"series": c, "works": public_works.filter(conference__series=c).distinct()}
+            for c in ConferenceSeries.objects.filter(
+                conferences__works__in=public_works
+            ).distinct()
+        ]
+
         appellation_assertions = [
             {
                 "appellation": a,
@@ -100,7 +107,7 @@ class AuthorView(DetailView):
             for i in all_institutions
         ]
 
-        context["public_works"] = public_works
+        context["split_works"] = split_works
         context["appellation_assertions"] = appellation_assertions
         context["affiliation_assertions"] = affiliation_assertions
         return context
