@@ -24,6 +24,7 @@ class Conference(models.Model):
         related_name="conferences",
     )
     notes = models.TextField(blank=True, null=False, default="")
+    url = models.URLField(blank=True)
 
     def __str__(self):
         # series.first() is still kludgy - need a nice method to concatenate series names
@@ -35,6 +36,7 @@ class Organizer(models.Model):
     conferences_organized = models.ManyToManyField(
         Conference, related_name="organizers", blank=True
     )
+    notes = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
@@ -200,6 +202,7 @@ class Affiliation(Attribute):
 
     class Meta:
         unique_together = (("department", "institution"),)
+        ordering = ["institution", "department"]
 
     def __str__(self):
         if self.department == "":
