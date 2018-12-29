@@ -5,6 +5,6 @@
 {% endif %}
 {% endwith %}
 </h6>
-{% with departments=authorship.departments.all|join:", " institutions=authorship.institutions.all|join:", "%}
-<p class="mb-1 text-muted">{% firstof departments institutions "No affiliation given" %}</p>
+{% with institutions=authorship.affiliations.all|join:", "%}
+<p class="mb-1 text-muted">{% firstof institutions "No affiliation given" %}</p>
 {% endwith %}
