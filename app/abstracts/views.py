@@ -75,27 +75,21 @@ class AuthorView(DetailView):
             .order_by("last_name")
         ]
 
-        all_departments = Department.objects.filter(asserted_by__in=obj_authorships)
-
-        all_institutions = Institution.objects.filter(
-            asserted_by__in=obj_authorships
-        ).union(Institution.objects.filter(departments__in=all_departments))
+        all_affiliations = Affiliation.objects.filter(asserted_by__in=obj_authorships)
 
         affiliation_assertions = [
             {
                 "institution": i,
-                "departments": all_departments.filter(institution=i).distinct(),
-                "works": public_works.filter(
-                    authorships__in=obj_authorships.filter(institutions=i)
-                ).union(
-                    public_works.filter(
-                        authorships__in=obj_authorships.filter(
-                            departments__institution=i
-                        )
-                    )
-                ),
+                "departments": all_affiliations.filter(institution=i)
+                .values_list("department", flat=True)
+                .distinct(),
+                "works": Work.objects.filter(
+                    authorships__in=obj_authorships.filter(affiliations__institution=i)
+                ).distinct(),
             }
-            for i in all_institutions
+            for i in Institution.objects.filter(
+                affiliations__in=all_affiliations
+            ).distinct()
         ]
 
         context["split_works"] = split_works
@@ -180,11 +174,11 @@ def home_view(request):
     )
 
     public_institutions = Institution.objects.filter(
-        asserted_by__work__in=public_works
+        affiliations__asserted_by__work__in=public_works
     ).distinct()
     institution_count = public_institutions.count()
     country_count = (
-        public_institutions.values_list("country", flat=True).distinct().count()
+        Country.object.filter(institutions__in=public_institutions).distinct().count()
     )
 
     context = {

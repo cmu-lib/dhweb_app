@@ -175,7 +175,10 @@ class Affiliation(models.Model):
         unique_together = (("department", "institution"),)
 
     def __str__(self):
-        return f"{self.name} - {self.institution}"
+        if self.department == "":
+            return f"(no department) {self.institution}"
+        else:
+            return f"{self.department} - {self.institution}"
 
 
 class Author(models.Model):

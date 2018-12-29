@@ -44,10 +44,10 @@
               {% for affiliation in affiliation_assertions %}
               <li class="list-group-item">
               <p><a href="{% url 'institution_detail' affiliation.institution.pk %}">{{ affiliation.institution }}</a></p>
-                {% if affiliation.departments %}
+                {% if affiliation.departments.0 != '' %}
                 <ul>
                   {% for department in affiliation.departments %}
-                  <li>{{ department.name }}</li>
+                  <li>{{ department }}</li>
                   {% endfor %}
                 </ul>
                 {% endif %}
