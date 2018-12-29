@@ -1,6 +1,10 @@
-<div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <a href="{% url 'author_detail' authorship.author.pk %}"><h5 class="card-title">{{ forloop.counter }}. {{ authorship.appellations.first }}</h5></a>
-    <h6 class="card-subtitle mb-2 text-muted">{% if authorship.departments.count > 0 %}{{ authorship.departments.all | join:"," }}{% else %}{{ authorship.institutions.first }}{% endif %}</h6>
-  </div>
-</div>
+<h6 class="mb-1">
+<a href="{% url 'author_detail' authorship.author.pk %}">{{ forloop.counter }}. {{ authorship.appellations.first }}</a>
+{% with this_app=authorship.appellations.first pref_app=authorship.author.most_recent_appellation %}
+{% if this_app != pref_app %}<span class="badge badge-warning">most recent name is different</span>
+{% endif %}
+{% endwith %}
+</h6>
+{% with departments=authorship.departments.all|join:", " institutions=authorship.institutions.all|join:", "%}
+<p class="mb-1 text-muted">{% firstof departments institutions "No affiliation given" %}</p>
+{% endwith %}

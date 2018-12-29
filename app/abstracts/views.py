@@ -59,11 +59,6 @@ class AuthorView(DetailView):
 
         obj_authorships = obj.public_authorships
 
-        # public_works = (
-        #     Work.objects.filter(authorships__in=obj_authorships)
-        #     .distinct()
-        #     .order_by("conference__year")
-        # )
         public_works = (
             Work.objects.filter(authorships__in=obj_authorships)
             .distinct()
@@ -91,15 +86,7 @@ class AuthorView(DetailView):
         affiliation_assertions = [
             {
                 "institution": i,
-                "departments": [
-                    {
-                        "department": d,
-                        "works": public_works.filter(
-                            authorships__in=obj_authorships.filter(departments=d)
-                        ).distinct(),
-                    }
-                    for d in all_departments.filter(institution=i).distinct()
-                ],
+                "departments": all_departments.filter(institution=i).distinct(),
                 "works": public_works.filter(
                     authorships__in=obj_authorships.filter(institutions=i)
                 ).union(

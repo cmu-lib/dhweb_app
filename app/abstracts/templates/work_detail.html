@@ -6,11 +6,14 @@
 
 <div class="row">
   <div class="col-md-8">
-    <div class="card-columns">
-      {% for authorship in authorships.all %}
-      {% include "authorship_card.html" with authorship=authorship %}
-      {% endfor %}
-    </div>
+    <div class="card">
+      <div class="card-header">Authorship</div>
+        <ol class="list-group list-group-flush">
+          {% for authorship in authorships.all %}
+          <li class="list-group-item">{% include "authorship_card.html" with authorship=authorship %}</li>
+          {% endfor %}
+        </ol>
+      </div>
 
     <div class="card">
       <div class="card-header">Abstract</div>
@@ -26,12 +29,13 @@
 
   <div class="col-md-4">
     <div class="card">
+      <div class="card-header">Conference Info</div>
       <div class="card-body">
-        <p><a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference.year }} - {{ work.conference.venue }}</a></p>
+        <p><a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference }}</a></p>
         {% if work.state == "su" %}
-          <div class="alert alert-warning">This is a submitted version!
+          <div class="alert alert-warning"><p>This is a submitted version, and may not reflect the final, accepted paper.</p>
           {% if work.published_version %}
-            <a href="{% url 'work_detail' work.published_version.pk%}">See {{ work.published_version.conference.year }} accepted version</a>
+            <p><a href="{% url 'work_detail' work.published_version.pk%}">See {{ work.published_version.conference.year }} accepted version</a></p>
           {% endif %}
           </div>
         {% endif %}
