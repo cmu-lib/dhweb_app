@@ -107,12 +107,7 @@ class AuthorList(ListView):
         """
         Only return authors who have at least one public work
         """
-        return (
-            Author.objects.filter(works__state="ac")
-            .distinct()
-            .annotate(last_name=Max("appellations__last_name"))
-            .order_by("last_name")
-        )
+        return Author.objects.filter(works__state="ac").distinct()
 
 
 class ConferenceView(DetailView):
