@@ -21,10 +21,11 @@ from .models import (
 
 class WorkList(ListView):
     context_object_name = "work_list"
-    template_name = "index.html"
+    template_name = "work_list.html"
+    paginate_by = 10
 
     def get_queryset(self):
-        return Work.objects.filter(state="ac")[:10]
+        return Work.objects.filter(state="ac").order_by("title")
 
 
 class WorkView(DetailView):

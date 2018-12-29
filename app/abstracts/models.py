@@ -53,6 +53,7 @@ class SeriesMembership(models.Model):
 
     class Meta:
         unique_together = ("series", "number")
+        ordering = ["number"]
 
     def __str__(self):
         return f"{self.series.title} - {self.number} - {self.conference}"
@@ -277,4 +278,5 @@ class Authorship(models.Model):
 
     class Meta:
         unique_together = (("work", "authorship_order"), ("author", "work"))
+        ordering = ["authorship_order"]
 
