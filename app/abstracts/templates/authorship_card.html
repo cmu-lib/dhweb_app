@@ -1,10 +1,10 @@
 <h6 class="mb-1">
 <a href="{% url 'author_detail' authorship.author.pk %}">{{ forloop.counter }}. {{ authorship.appellations.first }}</a>
 {% with this_app=authorship.appellations.first pref_app=authorship.author.most_recent_appellation %}
-{% if this_app != pref_app %}<span class="badge badge-warning">most recent name is different</span>
-{% endif %}
+{% if this_app != pref_app %}<span class="badge badge-warning">most recent name is different</span>{% endif %}
 {% endwith %}
 </h6>
-{% with institutions=authorship.affiliations.all|join:", "%}
-<p class="mb-1 text-muted">{% firstof institutions "No affiliation given" %}</p>
+{% with affs=authorship.affiliations.all|join:", " this_aff=authorship.affiliations.first %}
+<p class="mb-1 text-muted">{% firstof affs "No affiliation given" %}
+{% if this_aff != authorship.author.most_recent_affiliation %}<span class="badge badge-warning">most recent affiliation is different</span></p>{% endif %}
 {% endwith %}
