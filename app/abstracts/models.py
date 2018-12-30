@@ -62,33 +62,30 @@ class SeriesMembership(models.Model):
         return f"{self.series.title} - {self.number} - {self.conference}"
 
 
-class Keyword(models.Model):
+class Tag(models.Model):
     title = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        abstract = True
+
+
+class Keyword(Tag):
     author_supplied = models.BooleanField(default=True)
 
-    def __str__(self):
-        return self.title
+
+class Language(Tag):
+    pass
 
 
-class Language(models.Model):
-    title = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.title
+class Discipline(Tag):
+    pass
 
 
-class Discipline(models.Model):
-    title = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.title
-
-
-class Topic(models.Model):
-    title = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.title
+class Topic(Tag):
+    pass
 
 
 class Work(models.Model):
