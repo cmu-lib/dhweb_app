@@ -70,6 +70,7 @@ class Tag(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ["title"]
 
 
 class Keyword(Tag):
