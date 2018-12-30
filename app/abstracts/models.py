@@ -103,12 +103,10 @@ class Work(models.Model):
     full_text_type = models.CharField(
         max_length=3, choices=(("xml", "XML"), ("txt", "plain text")), default="txt"
     )
-    keywords = models.ManyToManyField(Keyword, related_name="versions", blank=True)
-    languages = models.ManyToManyField(Language, related_name="versions", blank=True)
-    disciplines = models.ManyToManyField(
-        Discipline, related_name="versions", blank=True
-    )
-    topics = models.ManyToManyField(Topic, related_name="versions", blank=True)
+    keywords = models.ManyToManyField(Keyword, related_name="works", blank=True)
+    languages = models.ManyToManyField(Language, related_name="works", blank=True)
+    disciplines = models.ManyToManyField(Discipline, related_name="works", blank=True)
+    topics = models.ManyToManyField(Topic, related_name="works", blank=True)
     published_version = models.ForeignKey(
         "self",
         blank=True,
