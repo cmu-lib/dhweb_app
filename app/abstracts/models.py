@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.db.models import Max
 from django.utils import timezone
 
 # Create your models here.
@@ -135,16 +136,6 @@ class Attribute(models.Model):
     class Meta:
         abstract = True
 
-    def years_asserted(self, author):
-        return (
-            self.asserted_by.filter(author=author)
-            .values_list("work__conference__year", flat=True)
-            .distinct()
-        )
-
-    def latest_year(self, author):
-        return max(self.years_asserted(author))
-
     @property
     def is_unused(self):
         return self.asserted_by.count() == 0
@@ -244,20 +235,19 @@ class Author(models.Model):
 
     def most_recent_attribute(self, attr):
         """
-        Calculate the most recent appellation by querying the latest year each
-        appellation was asserted, then taking the most recent of those
-        appellations.
+        Calculate the most recent attribute by annotating attributes based on
+        the latest year of th eoncference in which they were asserted
         """
-        every_attr = attr.objects.filter(asserted_by__in=self.public_authorships)
-
+        every_attr = attr.objects.filter(asserted_by__in=self.public_authorships).all()
         if len(every_attr) == 0:
-            every_attr = attr.objects.filter(asserted_by__in=self.all_authorships)
+            every_attr = attr.objects.filter(asserted_by__in=self.all_authorships).all()
 
         if len(every_attr) == 1:
             return every_attr[0]
 
-        attr_latest_years = [a.latest_year(author=self) for a in every_attr]
-        return every_attr[attr_latest_years.index(max(attr_latest_years))]
+        return every_attr.annotate(
+            maxyear=Max("asserted_by__work__conference__year")
+        ).order_by("-maxyear")[0]
 
     @property
     def most_recent_appellation(self):
