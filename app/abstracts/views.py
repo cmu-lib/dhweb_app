@@ -17,6 +17,7 @@ from .models import (
     Affiliation,
     ConferenceSeries,
     Country,
+    Topic,
 )
 
 
@@ -26,7 +27,22 @@ class WorkList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Work.objects.filter(state="ac").order_by("title")
+        result_set = Work.objects.filter(state="ac").order_by("title")
+
+        raw_query_year = self.request.GET.get("year", "")
+        if raw_query_year != "":
+            query_year = int(float(raw_query_year))
+            result_set = result_set.filter(conference__year=query_year)
+
+        return result_set
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_conferences"] = Conference.objects.filter(
+            works__state="ac"
+        ).distinct()
+        context["search_topics"] = Topic.objects.filter(works__state="ac").distinct()
+        return context
 
 
 class WorkView(DetailView):
