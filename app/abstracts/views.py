@@ -31,20 +31,31 @@ class WorkList(ListView):
     def get_queryset(self):
         base_result_set = Work.objects.filter(state="ac").order_by("title")
 
-        raw_query_conference = self.request.GET.get("conference", "")
-        raw_query_institution = self.request.GET.get("institution", "")
+        filter_form = self.request.GET
 
         result_set = base_result_set
 
-        if raw_query_conference != "":
-            query_conference = int(float(raw_query_conference))
-            result_set = result_set.filter(conference__pk=query_conference)
+        if "conference" in filter_form:
+            conference_res = filter_form["conference"]
+            if conference_res != "":
+                result_set = result_set.filter(conference__pk=conference_res)
 
-        if raw_query_institution != "":
-            query_institution = int(float(raw_query_institution))
-            result_set = result_set.filter(
-                authorships__affiliations__institution=query_institution
-            )
+        if "institution" in filter_form:
+            institution_res = filter_form["institution"]
+            if institution_res != "":
+                result_set = result_set.filter(
+                    authorships__affiliations__institution=institution_res
+                )
+
+        if "keyword" in filter_form:
+            keyword_res = filter_form["keyword"]
+            if keyword_res != "":
+                result_set = result_set.filter(keywords__pk=keyword_res)
+
+        if "topic" in filter_form:
+            topic_res = filter_form["topic"]
+            if topic_res != "":
+                result_set = result_set.filter(topics__pk=topic_res)
 
         return result_set.distinct()
 
