@@ -233,21 +233,33 @@ class Author(models.Model):
     def pref_last_name(self):
         return self.most_recent_appellation.last_name
 
-    def most_recent_attribute(self, attr):
+    def most_recent_attributes(self, attr):
         """
         Calculate the most recent attribute by annotating attributes based on
         the latest year of th eoncference in which they were asserted
         """
-        every_attr = attr.objects.filter(asserted_by__in=self.public_authorships).all()
+        every_attr = attr.objects.filter(
+            asserted_by__in=self.public_authorships
+        ).distinct()
+
         if len(every_attr) == 0:
-            every_attr = attr.objects.filter(asserted_by__in=self.all_authorships).all()
+            every_attr = attr.objects.filter(
+                asserted_by__in=self.all_authorships
+            ).distinct()
 
         if len(every_attr) == 1:
-            return every_attr[0]
+            return every_attr
 
-        return every_attr.annotate(
+        ranked_dates = every_attr.annotate(
             maxyear=Max("asserted_by__work__conference__year")
-        ).order_by("-maxyear")[0]
+        ).order_by("-maxyear")
+
+        most_recent_year = max(ranked_dates.values_list("maxyear", flat=True))
+
+        return ranked_dates.filter(maxyear=most_recent_year)
+
+    def most_recent_attribute(self, attr):
+        return self.most_recent_attributes(attr).first()
 
     @property
     def most_recent_appellation(self):
@@ -260,6 +272,18 @@ class Author(models.Model):
     @property
     def most_recent_affiliation(self):
         return self.most_recent_attribute(Affiliation)
+
+    @property
+    def most_recent_appellations(self):
+        return self.most_recent_attributes(Appellation)
+
+    @property
+    def most_recent_genders(self):
+        return self.most_recent_attributes(Gender)
+
+    @property
+    def most_recent_affiliations(self):
+        return self.most_recent_attributes(Affiliation)
 
 
 class Authorship(models.Model):
