@@ -20,6 +20,8 @@ from .models import (
     Topic,
 )
 
+from .forms import WorkFilter
+
 
 class WorkList(ListView):
     context_object_name = "work_list"
@@ -27,21 +29,28 @@ class WorkList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        result_set = Work.objects.filter(state="ac").order_by("title")
+        base_result_set = Work.objects.filter(state="ac").order_by("title")
 
-        raw_query_year = self.request.GET.get("year", "")
-        if raw_query_year != "":
-            query_year = int(float(raw_query_year))
-            result_set = result_set.filter(conference__year=query_year)
+        raw_query_conference = self.request.GET.get("conference", "")
+        raw_query_institution = self.request.GET.get("institution", "")
 
-        return result_set
+        result_set = base_result_set
+
+        if raw_query_conference != "":
+            query_conference = int(float(raw_query_conference))
+            result_set = result_set.filter(conference__pk=query_conference)
+
+        if raw_query_institution != "":
+            query_institution = int(float(raw_query_institution))
+            result_set = result_set.filter(
+                authorships__affiliations__institution=query_institution
+            )
+
+        return result_set.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["search_conferences"] = Conference.objects.filter(
-            works__state="ac"
-        ).distinct()
-        context["search_topics"] = Topic.objects.filter(works__state="ac").distinct()
+        context["work_filter_form"] = WorkFilter(data=self.request.GET)
         return context
 
 
