@@ -19,7 +19,11 @@
       <div class="card-header">Abstract</div>
       <div class="card-body">
           {% if work.full_text %}
-            <p>{{ work.full_text | linebreaks }}</p>
+            {% if work.full_text_type == "txt" %}
+              <p>{{ work.full_text | linebreaks }}</p>
+            {% elif work.full_text_type == "xml" %}
+              {{ work.full_text | safe }}
+            {% endif %}
           {% else %}
             <div class="alert alert-warning">No abstract available for this work.</div>
           {% endif %}
