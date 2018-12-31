@@ -12,6 +12,10 @@ class ConferenceSeries(models.Model):
     abbreviation = models.CharField(max_length=7, blank=True, unique=True)
     notes = models.TextField(blank=True, null=False, default="")
 
+    @property
+    def all_organizers(self):
+        return Organizer.objects.filter(conferences_organized__series=self).distinct()
+
     def __str__(self):
         if self.abbreviation:
             return self.abbreviation
@@ -31,6 +35,16 @@ class Conference(models.Model):
     )
     notes = models.TextField(blank=True, null=False, default="")
     url = models.URLField(blank=True)
+
+    class Meta:
+        ordering: ["-year"]
+
+    @property
+    def public_works(self):
+        return self.works.filter(state="ac")
+
+    def public_authors(self):
+        return Author.objects.filter(authorships__work__in=self.public_works).count()
 
     def __str__(self):
         if self.venue_abbreviation:
@@ -69,7 +83,7 @@ class SeriesMembership(models.Model):
 
     class Meta:
         unique_together = ("series", "number")
-        ordering = ["number"]
+        ordering = ["-conference__year"]
 
     def __str__(self):
         return f"{self.series.title} - {self.number} - {self.conference}"
