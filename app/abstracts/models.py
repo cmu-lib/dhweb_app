@@ -44,7 +44,11 @@ class Conference(models.Model):
         return self.works.filter(state="ac")
 
     def public_authors(self):
-        return Author.objects.filter(authorships__work__in=self.public_works).count()
+        return (
+            Author.objects.filter(authorships__work__in=self.public_works)
+            .distinct()
+            .count()
+        )
 
     def __str__(self):
         if self.venue_abbreviation:

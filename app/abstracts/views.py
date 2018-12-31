@@ -7,6 +7,7 @@ from django.db.models import Count, Max, Min
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector
+from django.urls import reverse
 
 from .models import (
     Work,
@@ -93,7 +94,9 @@ class WorkView(DetailView):
         context = super().get_context_data(**kwargs)
         obj = self.object
 
+        work_admin_page = reverse("admin:abstracts_work_change", args=(obj.pk,))
         context["authorships"] = obj.authorships.order_by("authorship_order")
+        context["work_admin_page"] = work_admin_page
         return context
 
 
@@ -149,9 +152,12 @@ class AuthorView(DetailView):
             ).distinct()
         ]
 
+        author_admin_page = reverse("admin:abstracts_author_change", args=(obj.pk,))
+
         context["split_works"] = split_works
         context["appellation_assertions"] = appellation_assertions
         context["affiliation_assertions"] = affiliation_assertions
+        context["author_admin_page"] = author_admin_page
         return context
 
 
