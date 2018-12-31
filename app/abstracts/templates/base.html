@@ -41,6 +41,16 @@
       <li class="nav-item">
         <a class="nav-link" href="/admin">Administration</a>
       </li>
+      {% if work_admin_page %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ work_admin_page }}">Edit this work</a>
+      <li>
+      {% endif %}
+      {% if author_admin_page %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ author_admin_page }}">Edit this author</a>
+      <li>
+      {% endif %}
     </ul>
   </div>
 </nav>
