@@ -1,0 +1,11 @@
+<div class="d-flex justify-content-between">
+<h5 class="mb-1">{{ conference.year }} - {{ conference.venue }}</h5>
+<small class="text-muted">{% for membership in conference.series_memberships.all %}{{ membership.series }} {{ membership.number }}{% if not forloop.last %}, {% endif %}{% endfor %}</small>
+</div>
+<p>{{ conference.public_works.count }} works by {{ conference.public_authors}} authors</p>
+{% if conference.notes or conference.url %}
+<hr>
+<p>Conference details:</p>
+{% if conference.notes %}<p>{{ conference.notes }}</p>{% endif %}
+{% if conference.url %}<p>Conference website: <a href="{{ conference.url }}">{{ conference.url }}</a></p>{% endif %}
+{% endif %}

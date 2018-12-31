@@ -112,7 +112,7 @@ class AuthorView(DetailView):
         context["split_works"] = split_works
         context["appellation_assertions"] = appellation_assertions
         context["affiliation_assertions"] = affiliation_assertions
-        return context
+        return (context,)
 
 
 class AuthorList(ListView):
@@ -127,30 +127,12 @@ class AuthorList(ListView):
         return Author.objects.filter(works__state="ac").distinct()
 
 
-class ConferenceView(DetailView):
-    model = Conference
-    template_name = "conference_detail.html"
-
-
 class ConferenceList(ListView):
     context_object_name = "conference_list"
     template_name = "conference_list.html"
 
     def get_queryset(self):
-        return Conference.objects.order_by("-year")
-
-
-class SeriesList(ListView):
-    context_object_name = "series_list"
-    template_name = "series_list.html"
-
-    def get_queryset(self):
         return ConferenceSeries.objects.order_by("title")
-
-
-class SeriesView(DetailView):
-    model = ConferenceSeries
-    template_name = "series_detail.html"
 
 
 class InstitutionView(DetailView):

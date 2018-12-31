@@ -2,15 +2,27 @@
 
 {% block content %}
 
-<h1>Conference Series</h1>
-{% if series_list %}
-<ul>
-  {% for series in series_list %}
-  <li><a href="{% url 'series_detail' series.id %}">{{ series.title }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>There are no series.</p>
-{% endif %}
+{% for series in conference_list %}
+<div class="row">
+<div class="card">
+  <div class="card-header">
+    <h2 name="{{ series.abbreviation }}">{{ series.title }}</h2>
+    {% if series.notes %}
+      <p>{{ series.notes }}</p>
+    {% endif %}
+    <hr>
+    <p>Organizers:</p>
+    {% for organizer in series.all_organizers %}
+    <p><strong>{{ organizer.name }}</strong>{% if organizer.name %}: {{ organizer.notes }}{% endif %}</p>
+    {% endfor %}
+  </div>
+  <ul class="list-group list-group-flush">
+    {% for conference in series.conferences.all %}
+    <li class="list-group-item">{% include "conference_card.html" with conference=conference %}</li>
+    {% endfor %}
+  </ul>
+</div>
+</div>
+{% endfor %}
 
 {% endblock %}
