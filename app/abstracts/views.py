@@ -6,6 +6,7 @@ from django.views.generic import DetailView, ListView
 from django.db.models import Count, Max, Min
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
+from django.contrib.postgres.search import SearchVector
 
 from .models import (
     Work,
@@ -66,6 +67,13 @@ class WorkList(ListView):
             full_text_available_res = filter_form["full_text_available"]
             if full_text_available_res == "on":
                 result_set = result_set.exclude(full_text="")
+
+        if "text" in filter_form:
+            text_res = filter_form["text"]
+            if text_res != "":
+                result_set = result_set.annotate(
+                    search=SearchVector("title", "full_text")
+                ).filter(search=text_res)
 
         return result_set.distinct()
 
