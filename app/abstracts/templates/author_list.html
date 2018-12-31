@@ -2,34 +2,35 @@
 
 {% block content %}
 
+{% load crispy_forms_tags %}
+
 <h1>Authors</h1>
 
-<div class="card">
-<ul class="list-group list-group-flush">
-{% for author in author_list %}
-  <li class="list-group-item">{% include 'author_card.html' with author=author %}</li>
-{% endfor %}
-</ul>
+<p>Displaying {{ filtered_authors_count }} out of {{ available_authors_count }} authors.</p>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <ul class="list-group list-group-flush">
+      {% for author in author_list %}
+        <li class="list-group-item">{% include 'author_card.html' with author=author %}</li>
+      {% endfor %}
+      </ul>
+    </div>
+    {% include "paginator.html" %}
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">Options</div>
+      <form action="{% url 'author_list' %}" method="get">
+        {{ author_filter_form|crispy }}
+        <div class="form-group">
+        <button type="submit" class="btn btn-primary mb-2">Filter</button>
+        <a class="btn btn-secondary mb-2" href="{% url 'author_list' %}" role="button">Reset</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-<nav aria-label="author-pagination">
-  <ul class="pagination">
-
-    {% if page_obj.has_previous %}
-      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-    {% else %}
-      <li class="page-item disabled"><span class="page-link">Previous</span></li>
-    {% endif %}
-
-    <li class="page-item"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
-
-    {% if page_obj.has_next %}
-      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-      {% else %}
-      <li class="page-item disabled"><span class="page-item">Next</span></li>
-    {% endif %}
-
-  </ul>
-</nav>
 
 {% endblock %}

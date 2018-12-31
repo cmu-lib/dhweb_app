@@ -20,7 +20,7 @@ from .models import (
     Topic,
 )
 
-from .forms import WorkFilter
+from .forms import WorkFilter, AuthorFilter
 
 
 class WorkList(ListView):
@@ -153,10 +153,36 @@ class AuthorList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        """
-        Only return authors who have at least one public work
-        """
-        return Author.objects.filter(works__state="ac").distinct()
+        base_result_set = Author.objects.filter(works__state="ac").distinct()
+
+        filter_form = self.request.GET
+
+        result_set = base_result_set
+
+        if "institution" in filter_form:
+            institution_res = filter_form["institution"]
+            if institution_res != "":
+                result_set = result_set.filter(
+                    authorships__affiliations__institution__pk=institution_res
+                )
+
+        if "country" in filter_form:
+            country_res = filter_form["country"]
+            if country_res != "":
+                result_set = result_set.filter(
+                    authorships__affiliations__institution__country__pk=country_res
+                )
+
+        return result_set.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["author_filter_form"] = AuthorFilter(data=self.request.GET)
+        context["available_authors_count"] = Author.objects.filter(
+            works__state="ac"
+        ).count()
+        context["filtered_authors_count"] = self.get_queryset().count()
+        return context
 
 
 class ConferenceList(ListView):
@@ -165,26 +191,6 @@ class ConferenceList(ListView):
 
     def get_queryset(self):
         return ConferenceSeries.objects.order_by("title")
-
-
-class InstitutionView(DetailView):
-    model = Institution
-    template_name = "institution_detail.html"
-
-
-class InstitutionList(ListView):
-    context_object_name = "institution_list"
-    template_name = "institution_list.html"
-
-    def get_queryset(self):
-        """
-        Only show those instutitons that are cited in at least one public work
-        """
-        return (
-            Institution.objects.filter(members__works__state="ac")
-            .annotate(num_members=Count("members", distinct=True))
-            .order_by("-num_members")
-        )
 
 
 def home_view(request):

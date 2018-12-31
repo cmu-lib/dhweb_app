@@ -9,6 +9,7 @@ from .models import (
     Keyword,
     Work,
     WorkType,
+    Country,
 )
 
 
@@ -35,3 +36,22 @@ class WorkFilter(forms.Form):
         queryset=Topic.objects.filter(works__state="ac").distinct(), required=False
     )
     full_text_available = forms.BooleanField(required=False)
+
+
+class AuthorFilter(forms.Form):
+    institution = (
+        forms.ModelChoiceField(
+            queryset=Institution.objects.filter(
+                affiliations__asserted_by__work__state="ac"
+            ).distinct(),
+            required=False,
+            help_text="Authors who were once affiliated with this institution",
+        ),
+    )
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.filter(
+            institutions__affiliations__asserted_by__work__state="ac"
+        ).distinct(),
+        required=False,
+        help_text="Authors who were once affiliated with an institution in this country",
+    )

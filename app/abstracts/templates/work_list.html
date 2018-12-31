@@ -22,7 +22,6 @@
   <div class="col-md-4">
     <div class="card">
       <div class="card-header">Options</div>
-      <div class="card-body">
         <form action="{% url 'work_list' %}" method="get">
           {{ work_filter_form|crispy }}
           <div class="form-group">
@@ -30,7 +29,6 @@
           <a class="btn btn-secondary mb-2" href="{% url 'work_list' %}" role="button">Reset</a>
           </div>
         </form>
-      </div>
     </div>
   </div>
 </div>
