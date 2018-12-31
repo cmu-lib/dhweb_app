@@ -39,14 +39,12 @@ class WorkFilter(forms.Form):
 
 
 class AuthorFilter(forms.Form):
-    institution = (
-        forms.ModelChoiceField(
-            queryset=Institution.objects.filter(
-                affiliations__asserted_by__work__state="ac"
-            ).distinct(),
-            required=False,
-            help_text="Authors who were once affiliated with this institution",
-        ),
+    institution = forms.ModelChoiceField(
+        queryset=Institution.objects.filter(
+            affiliations__asserted_by__work__state="ac"
+        ).distinct(),
+        required=False,
+        help_text="Authors who were once affiliated with this institution",
     )
     country = forms.ModelChoiceField(
         queryset=Country.objects.filter(
