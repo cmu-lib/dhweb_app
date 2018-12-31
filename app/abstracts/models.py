@@ -9,15 +9,20 @@ from django.utils import timezone
 
 class ConferenceSeries(models.Model):
     title = models.CharField(max_length=100)
+    abbreviation = models.CharField(max_length=7, blank=True)
     notes = models.TextField(blank=True, null=False, default="")
 
     def __str__(self):
-        return str(self.title)
+        if self.abbreviation:
+            return self.abbreviation
+        else:
+            return self.title
 
 
 class Conference(models.Model):
     year = models.IntegerField()
     venue = models.CharField(max_length=100)
+    venue_abbreviation = models.CharField(max_length=25, blank=True)
     series = models.ManyToManyField(
         ConferenceSeries,
         through="SeriesMembership",
@@ -28,19 +33,27 @@ class Conference(models.Model):
     url = models.URLField(blank=True)
 
     def __str__(self):
+        if self.venue_abbreviation:
+            display = self.venue_abbreviation
+        else:
+            display = self.venue
         # series.first() is still kludgy - need a nice method to concatenate series names
-        return f"{self.series.first()} {self.year} - {self.venue}"
+        return f"{self.series.first()} {self.year} - {display}"
 
 
 class Organizer(models.Model):
     name = models.CharField(max_length=100)
+    abbreviation = models.CharField(max_length=7, blank=True)
     conferences_organized = models.ManyToManyField(
         Conference, related_name="organizers", blank=True
     )
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return self.name
+        if self.abbreviation:
+            return self.abbreviation
+        else:
+            return self.name
 
 
 class SeriesMembership(models.Model):
