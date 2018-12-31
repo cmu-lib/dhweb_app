@@ -178,9 +178,9 @@ class AuthorList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["author_filter_form"] = AuthorFilter(data=self.request.GET)
-        context["available_authors_count"] = Author.objects.filter(
-            works__state="ac"
-        ).count()
+        context["available_authors_count"] = (
+            Author.objects.filter(works__state="ac").distinct().count()
+        )
         context["filtered_authors_count"] = self.get_queryset().count()
         return context
 
