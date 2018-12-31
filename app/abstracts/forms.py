@@ -1,12 +1,21 @@
 from django import forms
 
-from .models import Author, Authorship, Conference, Institution, Topic, Keyword, Work
+from .models import (
+    Author,
+    Authorship,
+    Conference,
+    Institution,
+    Topic,
+    Keyword,
+    Work,
+    WorkType,
+)
 
 
 class WorkFilter(forms.Form):
-    # submission_type = forms.ChoiceField(
-    #     choices=Work.objects.values_list("submission_type").distinct()
-    # )
+    work_type = forms.ModelChoiceField(
+        queryset=WorkType.objects.filter(works__state="ac").distinct(), required=False
+    )
     conference = forms.ModelChoiceField(
         queryset=Conference.objects.filter(works__state="ac").distinct(),
         required=False,

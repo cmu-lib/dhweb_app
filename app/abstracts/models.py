@@ -116,13 +116,23 @@ class Topic(Tag):
     pass
 
 
+class WorkType(models.Model):
+    title = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ["title"]
+
+
 class Work(models.Model):
     conference = models.ForeignKey(
         Conference, on_delete=models.PROTECT, related_name="works"
     )
     title = models.CharField(max_length=500)
-    submission_type = models.CharField(
-        max_length=255, blank=True, null=False, default=""
+    work_type = models.ForeignKey(
+        WorkType, blank=True, null=True, on_delete=models.SET_NULL, related_name="works"
     )
     state = models.CharField(
         max_length=2, choices=(("ac", "accpeted"), ("su", "submission"))
