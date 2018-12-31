@@ -25,3 +25,4 @@ class WorkFilter(forms.Form):
     topic = forms.ModelChoiceField(
         queryset=Topic.objects.filter(works__state="ac").distinct(), required=False
     )
+    full_text_available = forms.BooleanField(required=False)
