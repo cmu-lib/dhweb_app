@@ -22,12 +22,14 @@
   <div class="col-md-4">
     <div class="card">
       <div class="card-header">Options</div>
-      <form action="{% url 'author_list' %}" method="get">
-        {{ author_filter_form|crispy }}
-        <div class="form-group">
-        <button type="submit" class="btn btn-primary mb-2">Filter</button>
-        <a class="btn btn-secondary mb-2" href="{% url 'author_list' %}" role="button">Reset</a>
-        </div>
+      <div class="card-body">
+        <form action="{% url 'author_list' %}" method="get">
+          {{ author_filter_form|crispy }}
+          <div class="form-group">
+          <button type="submit" class="btn btn-primary mb-2">Filter</button>
+          <a class="btn btn-secondary mb-2" href="{% url 'author_list' %}" role="button">Reset</a>
+          </div>
+        </form>
       </div>
     </div>
   </div>
