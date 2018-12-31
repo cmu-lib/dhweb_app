@@ -1,7 +1,15 @@
 <div class="d-flex justify-content-between">
-<h6 class="mb-1"><a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a></h6>
+<h6 class="mb-1">
+<a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a></h6>
 <small class="text-muted">{{ work.submission_type }}</small>
 </div>
 <p>{% for authorship in work.authorships.all %}<a href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.author.pref_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+{% if work.keywords.exists %}<p><small>Keywords: {% for kw in work.keywords.all %}<span class="badge badge-secondary">{{ kw }}</span>
+{% endfor %}</small></p>{% endif %}
+{% if work.topics.exists %}<p><small>Topics: {% for t in work.topics.all %}<span class="badge badge-secondary">{{ t }}</span>
+{% endfor %}</small></p>{% endif %}
+
+<div class="d-flex justify-content-between">
 <small class="text-muted">Presented at <a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference }}</a></small>
-{% if work.full_text %}<p><span class="badge badge-primary">Full Text Available</span></p>{% endif %}
+{% if work.full_text %}<span class="badge badge-success">Full Text Available</span>{% endif %}
+</div>
