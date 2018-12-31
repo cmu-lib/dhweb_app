@@ -2,6 +2,7 @@
 
 {% block content %}
 
+{% load crispy_forms_tags %}
 
 <h1>Works</h1>
 
@@ -19,7 +20,7 @@
       <div class="card-header">Options</div>
       <div class="card-body">
         <form action="{% url 'work_list' %}" method="get">
-          {% csrf_token %}
+          {{ work_filter_form|crispy }}
           <div class="alert alert-danger">Placeholder! Not working yet.</div>
           <button type="submit" class="btn btn-primary mb-2">Filter</button>
         </form>
