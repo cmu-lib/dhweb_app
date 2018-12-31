@@ -58,7 +58,7 @@
         <li class="list-group-item">Keywords:
           {% if work.keywords.all %}
             {% for keyword in work.keywords.all %}
-              <span class="badge badge-info">{{ keyword.title }}</span>
+              <a class="badge badge-info" href="{% url 'work_list' %}?keyword={{ keyword.pk }}">{{ keyword.title }}</a>
             {% endfor %}
           {% else %}
           None
@@ -76,7 +76,7 @@
         <li class="list-group-item">Topics:
           {% if work.topics.all %}
             {% for topic in work.topics.all %}
-              <span class="badge badge-info">{{ topic.title }}</span>
+              <a class="badge badge-info" href="{% url 'work_list' %}?topic={{ topic.pk }}">{{ topic.title }}</a>
             {% endfor %}
           {% else %}
           None
