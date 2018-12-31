@@ -35,6 +35,11 @@ class WorkList(ListView):
 
         result_set = base_result_set
 
+        if "work_type" in filter_form:
+            work_type_res = filter_form["work_type"]
+            if work_type_res != "":
+                result_set = result_set.filter(work_type__pk=work_type_res)
+
         if "conference" in filter_form:
             conference_res = filter_form["conference"]
             if conference_res != "":

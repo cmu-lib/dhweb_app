@@ -17,6 +17,7 @@ from .models import (
     Discipline,
     Affiliation,
     Country,
+    WorkType,
 )
 
 
@@ -74,8 +75,8 @@ class WorkAdmin(admin.ModelAdmin):
         "disciplines",
     ]
     search_fields = ["title", "authorships__appellations__last_name"]
-    list_filter = ["state", "submission_type", "conference"]
-    list_display = ["title", "conference", "state", "submission_type"]
+    list_filter = ["state", "work_type", "conference"]
+    list_display = ["title", "conference", "state", "work_type"]
     radio_fields = {"state": admin.HORIZONTAL}
 
 
@@ -133,3 +134,4 @@ admin.site.register(Topic, KeywordAdmin)
 admin.site.register(Language, KeywordAdmin)
 admin.site.register(Discipline, KeywordAdmin)
 admin.site.register(Country, CountryAdmin)
+admin.site.register(WorkType)
