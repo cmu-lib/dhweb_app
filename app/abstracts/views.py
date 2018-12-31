@@ -57,6 +57,11 @@ class WorkList(ListView):
             if topic_res != "":
                 result_set = result_set.filter(topics__pk=topic_res)
 
+        if "full_text_available" in filter_form:
+            full_text_available_res = filter_form["full_text_available"]
+            if full_text_available_res == "on":
+                result_set = result_set.exclude(full_text="")
+
         return result_set.distinct()
 
     def get_context_data(self, **kwargs):
