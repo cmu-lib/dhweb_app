@@ -15,7 +15,7 @@
       <li class="list-group-item">{% include "work_card.html" with work=work %}</li>
       {% endfor %}
     </ul>
-    {% if filtered_works_count > 10 %}
+    {% if page_obj.paginator.num_pages > 1 %}
     {% include "paginator.html" %}
     {% endif %}
   </div>
