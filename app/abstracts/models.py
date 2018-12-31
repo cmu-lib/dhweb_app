@@ -247,6 +247,9 @@ class Author(models.Model):
                 asserted_by__in=self.all_authorships
             ).distinct()
 
+        if len(every_attr) == 0:
+            return attr.objects.none()
+
         if len(every_attr) == 1:
             return every_attr
 
@@ -300,6 +303,22 @@ class Authorship(models.Model):
 
     def __str__(self):
         return f"{self.author} - {self.work}"
+
+    @property
+    def has_outdated_appellations(self):
+        pref_attrs = set(
+            self.author.most_recent_appellations.values_list("pk", flat=True)
+        )
+        given_attrs = set(self.appellations.values_list("pk", flat=True))
+        return not given_attrs.issubset(pref_attrs)
+
+    @property
+    def has_outdated_affiliations(self):
+        pref_attrs = set(
+            self.author.most_recent_affiliations.values_list("pk", flat=True)
+        )
+        given_attrs = set(self.affiliations.values_list("pk", flat=True))
+        return not given_attrs.issubset(pref_attrs)
 
     class Meta:
         unique_together = (("work", "authorship_order"), ("author", "work"))
