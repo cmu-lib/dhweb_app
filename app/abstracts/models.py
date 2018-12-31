@@ -9,7 +9,7 @@ from django.utils import timezone
 
 class ConferenceSeries(models.Model):
     title = models.CharField(max_length=100)
-    abbreviation = models.CharField(max_length=7, blank=True)
+    abbreviation = models.CharField(max_length=7, blank=True, unique=True)
     notes = models.TextField(blank=True, null=False, default="")
 
     def __str__(self):
@@ -43,7 +43,7 @@ class Conference(models.Model):
 
 class Organizer(models.Model):
     name = models.CharField(max_length=100)
-    abbreviation = models.CharField(max_length=7, blank=True)
+    abbreviation = models.CharField(max_length=7, blank=True, unique=True)
     conferences_organized = models.ManyToManyField(
         Conference, related_name="organizers", blank=True
     )
