@@ -218,6 +218,10 @@ class Author(models.Model):
         return self.authorships.filter(work__state="ac").distinct()
 
     @property
+    def public_works(self):
+        return Work.objects.filter(authorships__in=self.public_authorships).distinct()
+
+    @property
     def pref_name(self):
         return f"{self.pref_first_name} {self.pref_last_name}"
 
