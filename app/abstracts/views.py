@@ -29,7 +29,7 @@ class WorkList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        base_result_set = Work.objects.filter(state="ac").order_by("title")
+        base_result_set = Work.objects.filter(state="ac").order_by("title").distinct()
 
         filter_form = self.request.GET
 
@@ -62,6 +62,8 @@ class WorkList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["work_filter_form"] = WorkFilter(data=self.request.GET)
+        context["available_works_count"] = Work.objects.filter(state="ac").count()
+        context["filtered_works_count"] = self.get_queryset().count()
         return context
 
 
