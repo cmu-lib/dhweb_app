@@ -31,7 +31,7 @@
     <div class="card">
       <div class="card-header">Conference Info</div>
       <div class="card-body">
-        <p><a href="{% url 'conference_detail' work.conference.pk %}">{{ work.conference }}</a></p>
+        {% include "conference_card.html" with conference=work.conference %}
         {% if work.state == "su" %}
           <div class="alert alert-warning"><p>This is a submitted version, and may not reflect the final, accepted paper.</p>
           {% if work.published_version %}
