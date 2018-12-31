@@ -112,7 +112,7 @@ class AuthorView(DetailView):
         context["split_works"] = split_works
         context["appellation_assertions"] = appellation_assertions
         context["affiliation_assertions"] = affiliation_assertions
-        return (context,)
+        return context
 
 
 class AuthorList(ListView):
