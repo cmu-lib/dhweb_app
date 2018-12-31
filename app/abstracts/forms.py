@@ -14,6 +14,7 @@ from .models import (
 
 
 class WorkFilter(forms.Form):
+    text = forms.CharField(max_length=100, strip=True, required=False)
     work_type = forms.ModelChoiceField(
         queryset=WorkType.objects.filter(works__state="ac").distinct(), required=False
     )
