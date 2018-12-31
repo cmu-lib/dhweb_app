@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between">
 <h6 class="mb-1">
 <a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a></h6>
-<small class="text-muted">{{ work.work_type }}</small>
+<small class="text-muted"><a href="{% url 'work_list' %}?work_type={{ work.work_type.pk }}">{{ work.work_type }}</a></small>
 </div>
 <p>{% for authorship in work.authorships.all %}<a href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.author.pref_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 {% if work.keywords.exists %}<p><small>Keywords: {% for kw in work.keywords.all %}<a class="badge badge-secondary" href="{% url 'work_list' %}?keyword={{ kw.pk }}">{{ kw }}</a>
