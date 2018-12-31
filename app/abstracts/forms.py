@@ -19,9 +19,9 @@ class WorkFilter(forms.Form):
         required=False,
         help_text="Works submitted with at least one author belonging to that institution.",
     )
-    keywords = forms.ModelChoiceField(
+    keyword = forms.ModelChoiceField(
         queryset=Keyword.objects.filter(works__state="ac").distinct(), required=False
     )
-    topics = forms.ModelChoiceField(
+    topic = forms.ModelChoiceField(
         queryset=Topic.objects.filter(works__state="ac").distinct(), required=False
     )

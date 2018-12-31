@@ -21,8 +21,10 @@
       <div class="card-body">
         <form action="{% url 'work_list' %}" method="get">
           {{ work_filter_form|crispy }}
-          <div class="alert alert-danger">Placeholder! Not working yet.</div>
+          <div class="form-group">
           <button type="submit" class="btn btn-primary mb-2">Filter</button>
+          <a class="btn btn-secondary mb-2" href="{% url 'work_list' %}" role="button">Reset</a>
+          </div>
         </form>
       </div>
     </div>
