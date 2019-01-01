@@ -40,6 +40,7 @@ class WorkFilter(forms.Form):
 
 
 class AuthorFilter(forms.Form):
+    name = forms.CharField(max_length=100, strip=True, required=False)
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.filter(
             affiliations__asserted_by__work__state="ac"

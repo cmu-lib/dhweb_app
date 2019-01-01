@@ -187,6 +187,19 @@ class AuthorList(ListView):
                     authorships__affiliations__institution__country__pk=country_res
                 )
 
+        if "name" in filter_form:
+            name_res = filter_form["name"]
+            if name_res != "":
+                result_set = (
+                    result_set.annotate(
+                        search=SearchVector(
+                            "appellations__first_name", "appellations__last_name"
+                        )
+                    )
+                    .filter(search=name_res)
+                    .distinct()
+                )
+
         return result_set.distinct()
 
     def get_context_data(self, **kwargs):
