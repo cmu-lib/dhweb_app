@@ -127,7 +127,7 @@ class AuthorView(DetailView):
             {
                 "appellation": a,
                 "works": public_works.filter(
-                    authorships__in=obj_authorships.filter(appellations=a)
+                    authorships__in=obj_authorships.filter(appellation=a)
                 ),
             }
             for a in Appellation.objects.filter(asserted_by__in=obj_authorships)
