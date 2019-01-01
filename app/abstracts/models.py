@@ -246,9 +246,15 @@ class Author(models.Model):
         through_fields=("author", "work"),
         related_name="authors",
     )
+    appellations = models.ManyToManyField(
+        Appellation,
+        through="Authorship",
+        through_fields=("author", "appellation"),
+        related_name="authors",
+    )
 
     class Meta:
-        ordering = ["authorships__appellations__last_name"]
+        ordering = ["appellations__last_name"]
 
     def __str__(self):
         return f"{self.pk} - {self.pref_name}"
@@ -339,7 +345,9 @@ class Authorship(models.Model):
     )
     work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name="authorships")
     authorship_order = models.PositiveSmallIntegerField(default=1)
-    appellations = models.ManyToManyField(Appellation, related_name="asserted_by")
+    appellation = models.ForeignKey(
+        Appellation, on_delete=models.CASCADE, related_name="asserted_by"
+    )
     affiliations = models.ManyToManyField(
         Affiliation, related_name="asserted_by", blank=True
     )
@@ -349,12 +357,10 @@ class Authorship(models.Model):
         return f"{self.author} - {self.work}"
 
     @property
-    def has_outdated_appellations(self):
-        pref_attrs = set(
-            self.author.most_recent_appellations.values_list("pk", flat=True)
-        )
-        given_attrs = set(self.appellations.values_list("pk", flat=True))
-        return not given_attrs.issubset(pref_attrs)
+    def has_outdated_(self):
+        pref_attrs = self.author.most_recent_appellations.values_list("pk", flat=True)
+        given_attrs = self.appellation.values_list("pk", flat=True)
+        return not given_attrs in pref_attrs
 
     @property
     def has_outdated_affiliations(self):
