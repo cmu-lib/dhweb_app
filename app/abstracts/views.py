@@ -73,9 +73,7 @@ class WorkList(ListView):
         if "text" in filter_form:
             text_res = filter_form["text"]
             if text_res != "":
-                result_set = result_set.annotate(
-                    search=SearchVector("title", "full_text")
-                ).filter(search=text_res)
+                result_set = result_set.filter(search_text=text_res)
 
         return result_set.distinct()
 
@@ -191,15 +189,9 @@ class AuthorList(ListView):
         if "name" in filter_form:
             name_res = filter_form["name"]
             if name_res != "":
-                result_set = (
-                    result_set.annotate(
-                        search=SearchVector(
-                            "appellations__first_name", "appellations__last_name"
-                        )
-                    )
-                    .filter(search=name_res)
-                    .distinct()
-                )
+                result_set = result_set.filter(
+                    appellations__search_text=name_res
+                ).distinct()
 
         return result_set.distinct()
 
