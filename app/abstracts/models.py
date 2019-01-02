@@ -270,15 +270,7 @@ class Author(models.Model):
 
     @property
     def pref_name(self):
-        return f"{self.pref_first_name} {self.pref_last_name}"
-
-    @property
-    def pref_first_name(self):
-        return self.most_recent_appellation.first_name
-
-    @property
-    def pref_last_name(self):
-        return self.most_recent_appellation.last_name
+        return f"{self.most_recent_appellation}"
 
     def most_recent_attributes(self, attr):
         """
