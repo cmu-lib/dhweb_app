@@ -267,9 +267,8 @@ def author_merge_view(request, author_id):
 
         target_author = Author.objects.get(pk=target_id)
         changing_authorships = author.authorships.distinct()
-        for a in changing_authorships:
-            a.author = target_author
-            a.save()
+
+        changing_authorships.update(author=target_author)
 
         author.delete()
 
