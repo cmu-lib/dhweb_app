@@ -29,7 +29,9 @@
             <ul class="list-group list-group-flush">
               {% for appellation in appellation_assertions %}
               <li class="list-group-item">
-                <p>{{ appellation.appellation }}</p>
+                <div class="d-flex justify-content-between">
+                <p>{{ appellation.appellation }}</p><small class="text-muted">App ID: {{ appellation.appellation.pk }}</small>
+                </div>
                 <small class="text-muted">Given in {% for work in appellation.works %}
                   <a href="{% url 'work_detail' work.pk %}">{{ work.conference.year }}</a>{% if not forloop.last %}, {% endif %}
                 {% endfor %}</small>
