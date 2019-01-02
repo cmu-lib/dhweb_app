@@ -58,8 +58,7 @@ class AuthorFilter(forms.Form):
 
 
 class AuthorMergeForm(forms.Form):
-    into = forms.ModelChoiceField(
-        queryset=Author.objects.filter(appellations__first_name="Matthew").distinct(),
+    into = forms.IntegerField(
         required=True,
         help_text="Pick the author that will be used to replace the one you are merging.",
     )
