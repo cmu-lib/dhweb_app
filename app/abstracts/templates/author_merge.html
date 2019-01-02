@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="row">
+<div class="col-md-6">
+<p>You're about to merge this author:</p>
+<p>
+<div class="card"><div class="card-body">
+  {% include "author_card.html" with author=merging %}
+  </div>
+</div>
+</p>
+<p>This will reassign the following works and their authorships, including all appellations and affiliations:</p>
+{% for work in merging.works.all %}
+<p>
+<div class="card">
+  <div class="card-body">
+  {% include "work_card.html" with work=work%}
+  {% for authorship in work.authorships.all %}
+    {% if authorship.author.pk == merging.pk %}
+    <p><div class="card">
+      <div class="card-body">
+      {% include "authorship_card.html" with authorship=authorship %}
+      </div>
+    </div></p>
+    {% endif %}
+  {% endfor %}
+  </div>
+</div>
+<p>
+{% endfor %}
+</div>
+<div class="col-md-6">
+<p>Choose the author to reassign all these works and appellations to:<p>
+
+<form action="{% url 'author_merge' merging.pk %}" method="post">
+{% csrf_token %}
+{{ author_merge_form | crispy }}
+<div class="alert alert-danger">This action cannot be undone!</div>
+<button type="submit" class="btn btn-primary mb-2">Merge</button>
+</form>
+</div>
+</div>
+
+{% endblock %}
