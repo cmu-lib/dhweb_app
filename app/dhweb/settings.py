@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "bootstrap4",
     "crispy_forms",
+    "import_export",
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"

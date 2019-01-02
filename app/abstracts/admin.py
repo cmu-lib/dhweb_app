@@ -132,3 +132,14 @@ admin.site.register(Language, KeywordAdmin)
 admin.site.register(Discipline, KeywordAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(WorkType)
+
+# CSV exporting
+
+from import_export import resources
+
+
+class WorkResource(resources.ModelResource):
+    class Meta:
+        model = Work
+        fields = ("id", "topics__title")
+
