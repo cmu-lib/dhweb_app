@@ -10,7 +10,7 @@ from abstracts.models import Work, Appellation
 
 
 class Command(BaseCommand):
-    help = "Reindexes the text SearchVectors for appropriate models"
+    help = "Repopulates the SearchVector fields for models that need full-text search."
 
     def handle(self, *args, **kwargs):
 
