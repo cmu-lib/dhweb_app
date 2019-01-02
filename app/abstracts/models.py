@@ -194,6 +194,7 @@ class Appellation(Attribute):
 
     class Meta:
         indexes = [GinIndex(fields=["search_text"], name="appellation_idx")]
+        unique_together = (("first_name", "last_name"),)
 
 
 class Gender(Attribute):
