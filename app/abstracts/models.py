@@ -356,9 +356,9 @@ class Authorship(models.Model):
         return f"{self.author} - {self.work}"
 
     @property
-    def has_outdated_(self):
+    def has_outdated_appellation(self):
         pref_attrs = self.author.most_recent_appellations.values_list("pk", flat=True)
-        given_attrs = self.appellation.values_list("pk", flat=True)
+        given_attrs = self.appellation.pk
         return not given_attrs in pref_attrs
 
     @property
