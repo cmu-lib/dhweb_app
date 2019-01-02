@@ -283,6 +283,6 @@ def author_merge_view(request, author_id):
 
         messages.success(
             request,
-            f"Author {oid} has been merged into {target_atuhor}, and the old author entry has been deleted.",
+            f"Author {oid} has been merged into {target_author}, and the old author entry has been deleted.",
         )
         return redirect("author_detail", pk=target_author.pk)
