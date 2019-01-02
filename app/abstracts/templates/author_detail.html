@@ -18,9 +18,13 @@
     {% endfor %}
   </div>
   <div class="col-md-4">
-    <div class="row mb-3">
-      <div class="col-md-12">
-        <div class="card">
+        <div class="card m-2">
+        <div class="card-header">Administration</div>
+        <div class="card-body">
+        <a href="{% url 'author_merge' author.pk %}" class="btn btn-warning" role="button">Merge</a>
+        </div>
+        </div>
+        <div class="card m-2">
           <div class="card-header">All Names</div>
             <ul class="list-group list-group-flush">
               {% for appellation in appellation_assertions %}
@@ -35,10 +39,7 @@
           </div>
         </div>
       </div>
-
-      <div class="row mb-3">
-        <div class="col-md-12">
-          <div class="card">
+          <div class="card m-2">
             <div class="card-header">All Affiliations</div>
             <ul class="list-group list-group-flush">
               {% for affiliation in affiliation_assertions %}

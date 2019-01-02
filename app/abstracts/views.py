@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DetailView, ListView
 from django.db.models import Count, Max, Min
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -22,7 +22,7 @@ from .models import (
     Topic,
 )
 
-from .forms import WorkFilter, AuthorFilter
+from .forms import WorkFilter, AuthorFilter, AuthorMergeForm
 
 
 class WorkList(ListView):
@@ -251,3 +251,33 @@ def home_view(request):
     }
 
     return render(request, "index.html", context)
+
+
+def author_merge_view(request, author_id):
+
+    author = Author.objects.get(pk=author_id)
+
+    if request.method == "GET":
+        """
+        Initial load of the merge form displays all the authorships of the current author that will be affected
+        """
+        context = {"merging": author, "author_merge_form": AuthorMergeForm}
+
+        return render(request, "author_merge.html", context)
+
+    elif request.method == "POST":
+        """
+        Posting the new author id causes all of the old author's authorships to be reassigned.
+        """
+
+        target_id = request.POST["into"]
+
+        target_author = Author.objects.get(pk=target_id)
+        changing_authorships = author.authorships.distinct()
+        for a in changing_authorships:
+            a.author = target_author
+            a.save()
+
+        author.delete()
+
+        return redirect("author_detail", pk=target_author.pk)

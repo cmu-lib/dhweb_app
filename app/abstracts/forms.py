@@ -55,3 +55,12 @@ class AuthorFilter(forms.Form):
         required=False,
         help_text="Authors who were once affiliated with an institution in this country",
     )
+
+
+class AuthorMergeForm(forms.Form):
+    into = forms.ModelChoiceField(
+        queryset=Author.objects.filter(appellations__first_name="Matthew").distinct(),
+        required=True,
+        help_text="Pick the author that will be used to replace the one you are merging.",
+    )
+
