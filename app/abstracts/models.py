@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import Max
 from django.utils import timezone
 from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVector, SearchVectorField
 
 # Create your models here.
 
@@ -158,6 +159,7 @@ class Work(models.Model):
         related_name="unpublished_versions",
         limit_choices_to={"state": "ac"},
     )
+    search_text = SearchVectorField(null=True, editable=False)
 
     @property
     def display_title(self):
@@ -170,7 +172,7 @@ class Work(models.Model):
         return f"({self.state}) {self.display_title}"
 
     class Meta:
-        indexes = [GinIndex(fields=["full_text"], name="full_text_idx")]
+        indexes = [GinIndex(fields=["search_text"], name="full_text_idx")]
 
 
 class Attribute(models.Model):
@@ -185,9 +187,13 @@ class Attribute(models.Model):
 class Appellation(Attribute):
     first_name = models.CharField(max_length=100, blank=True, null=False, default="")
     last_name = models.CharField(max_length=100, blank=True, null=False, default="")
+    search_text = SearchVectorField(null=True, editable=False)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+    class Meta:
+        indexes = [GinIndex(fields=["search_text"], name="appellation_idx")]
 
 
 class Gender(Attribute):
