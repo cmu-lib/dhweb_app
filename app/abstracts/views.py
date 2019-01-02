@@ -8,6 +8,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector
 from django.urls import reverse
+from django.contrib import messages
 
 from .models import (
     Work,
@@ -262,7 +263,6 @@ def author_merge_view(request, author_id):
         Initial load of the merge form displays all the authorships of the current author that will be affected
         """
         context = {"merging": author, "author_merge_form": AuthorMergeForm}
-
         return render(request, "author_merge.html", context)
 
     elif request.method == "POST":
@@ -271,6 +271,7 @@ def author_merge_view(request, author_id):
         """
 
         target_id = request.POST["into"]
+        oid = author.pk
 
         target_author = Author.objects.get(pk=target_id)
         changing_authorships = author.authorships.distinct()
@@ -280,4 +281,8 @@ def author_merge_view(request, author_id):
 
         author.delete()
 
+        messages.success(
+            request,
+            f"Author {oid} has been merged into {target_atuhor}, and the old author entry has been deleted.",
+        )
         return redirect("author_detail", pk=target_author.pk)
