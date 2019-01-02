@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 from django.db.models import Max
 from django.utils import timezone
+from django.contrib.postgres.indexes import GinIndex
 
 # Create your models here.
 
@@ -167,6 +168,9 @@ class Work(models.Model):
 
     def __str__(self):
         return f"({self.state}) {self.display_title}"
+
+    class Meta:
+        indexes = [GinIndex(fields=["full_text"], name="full_text_idx")]
 
 
 class Attribute(models.Model):
