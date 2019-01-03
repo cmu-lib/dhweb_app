@@ -10,7 +10,7 @@ from django.contrib.postgres.search import SearchVector
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from dal.autocomplete import Select2QuerySetView
 
 from .models import (
     Work,
@@ -22,10 +22,52 @@ from .models import (
     Affiliation,
     ConferenceSeries,
     Country,
+    Keyword,
     Topic,
+    Country,
 )
 
 from .forms import WorkFilter, AuthorFilter, AuthorMergeForm
+
+
+class InstitutionAutocomplete(Select2QuerySetView):
+    def get_queryset(self):
+        qs = Institution.objects.all().order_by("name")
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+
+class KeywordAutocomplete(Select2QuerySetView):
+    def get_queryset(self):
+        qs = Keyword.objects.all().order_by("title")
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+
+class TopicAutocomplete(Select2QuerySetView):
+    def get_queryset(self):
+        qs = Topic.objects.all().order_by("title")
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+
+class CountryAutocomplete(Select2QuerySetView):
+    def get_queryset(self):
+        qs = Country.objects.all().order_by("name")
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
 
 
 class WorkList(ListView):

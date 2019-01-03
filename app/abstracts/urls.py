@@ -11,4 +11,24 @@ urlpatterns = [
     path("authors/merge/<int:author_id>", views.author_merge_view, name="author_merge"),
     path("conferences", views.ConferenceList.as_view(), name="conference_list"),
     path("downloads", views.download_data, name="download_data"),
+    path(
+        "institution-autocomplete",
+        views.InstitutionAutocomplete.as_view(),
+        name="institution-autocomplete",
+    ),
+    path(
+        "topic-autocomplete",
+        views.TopicAutocomplete.as_view(),
+        name="topic-autocomplete",
+    ),
+    path(
+        "keyword-autocomplete",
+        views.KeywordAutocomplete.as_view(),
+        name="keyword-autocomplete",
+    ),
+    path(
+        "country-autocomplete",
+        views.CountryAutocomplete.as_view(),
+        name="country-autocomplete",
+    ),
 ]

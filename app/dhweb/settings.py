@@ -32,6 +32,8 @@ ALLOWED_HOSTS = ["localhost", "***REMOVED***"]
 
 INSTALLED_APPS = [
     "abstracts.apps.AbstractsConfig",
+    "dal",
+    "dal_select2",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
