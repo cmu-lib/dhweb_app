@@ -7,13 +7,13 @@
 <div class="card m-2">
   <div class="card-header">
     <h2 name="{{ series.abbreviation }}">{{ series.title }}</h2>
-    {% if series.notes %}
-      <p>{{ series.notes }}</p>
+    {% if series.notes  %}
+      <p>{{ series.notes | safe }}</p>
     {% endif %}
     <hr>
     <p>Organizers:</p>
     {% for organizer in series.all_organizers %}
-    <p><strong>{{ organizer.name }}</strong>{% if organizer.name %}: {{ organizer.notes }}{% endif %}</p>
+    <p><strong>{{ organizer.name }}</strong>{% if organizer.name %}: {{ organizer.notes | safe }}{% endif %}{% if organizer.url %} (Website: <a href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</p>
     {% endfor %}
   </div>
   <ul class="list-group list-group-flush">
