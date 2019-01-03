@@ -223,7 +223,10 @@ def home_view(request):
     public_works = Work.objects.filter(state="ac").distinct()
 
     conference_count = (
-        Conference.objects.filter(works__in=public_works).distinct().count()
+        Conference.objects.filter(works__in=public_works)
+        .values_list("year")
+        .distinct()
+        .count()
     )
 
     work_count = public_works.count()
