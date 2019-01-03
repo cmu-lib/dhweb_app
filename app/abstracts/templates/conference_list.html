@@ -12,12 +12,13 @@
     {% endif %}
     <hr>
     <p>Organizers:</p>
+    <ul>
     {% for organizer in series.all_organizers %}
-    <p><strong>{{ organizer.name }}</strong>{% if organizer.name %}: {{ organizer.notes | safe }}{% endif %}{% if organizer.url %} (Website: <a href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</p>
+    <li><strong>{{ organizer.name }}</strong>{% if organizer.name %}: {{ organizer.notes | safe }}{% endif %}{% if organizer.url %} (Website: <a href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</li>
     {% endfor %}
   </div>
   <ul class="list-group list-group-flush">
-    {% for conference in series.conferences.all %}
+    {% for conference in series.conferences.all|dictsort:"year" %}
     <li class="list-group-item">{% include "conference_card.html" with conference=conference %}</li>
     {% endfor %}
   </ul>
