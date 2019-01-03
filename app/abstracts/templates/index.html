@@ -2,6 +2,16 @@
 
 {% block content %}
 
-Browse {{ site.conference_count }} years of conferences, covering {{ site.work_count }} papers published by {{ site.author_count }} different authors hailing from {{ site.institution_count }} organizations and {{ site.country_count }} countries.
+{% load humanize %}
+
+<div class=jumbotron>
+  <h1 class="display-4">Browse {{ site.work_count | intcomma }} digital humanities conference abstracts</h1>
+  <p class="lead">Covering {{ site.conference_count | intcomma }} years of conferences, with {{ site.author_count | intcomma }} different authors hailing from {{ site.institution_count | intcomma }} institutions and {{ site.country_count | intcomma }} countries.</p>
+  <hr class="my-4">
+  <p>Browse by:</p>
+  <a class="btn btn-primary btn-lg" href="{% url 'work_list' %}">Abstracts</a>
+  <a class="btn btn-primary btn-lg" href="{% url 'author_list' %}">Authors</a>
+  <a class="btn btn-primary btn-lg" href="{% url 'conference_list' %}">Conferences</a>
+</div>
 
 {% endblock %}
