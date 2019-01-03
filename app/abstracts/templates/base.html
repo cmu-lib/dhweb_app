@@ -55,6 +55,9 @@
       <div class="alert m-2 alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
     {% endfor %}
   {% endif %}
+
+  <div class="alert alert-danger">This is an alpha site for demonstration purposes only. Data, layout, and functionality are subject to change or removal at any time.</div>
+
   {% block content %}
   {% endblock %}
 </div>
