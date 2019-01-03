@@ -10,4 +10,5 @@ urlpatterns = [
     path("authors/<int:pk>", views.AuthorView.as_view(), name="author_detail"),
     path("authors/merge/<int:author_id>", views.author_merge_view, name="author_merge"),
     path("conferences", views.ConferenceList.as_view(), name="conference_list"),
+    path("downloads", views.download_data, name="download_data"),
 ]

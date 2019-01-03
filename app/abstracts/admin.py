@@ -214,3 +214,62 @@ class WorkResource(resources.ModelResource):
             "topics_field",
             "published_version",
         ]
+
+
+class AuthorshipResource(resources.ModelResource):
+    id_field = Field(attribute="id", column_name="authorship_id")
+    work_id_field = Field(attribute="work__pk", column_name="work_id")
+    author_field = Field(attribute="author__pk", column_name="author_id")
+    author_first_name_field = Field(
+        attribute="appellation__first_name", column_name="author_first_name"
+    )
+    author_last_name_field = Field(
+        attribute="appellation__last_name", column_name="author_last_name"
+    )
+    author_first_name_field = Field(
+        attribute="appellation__first_name", column_name="author_first_name"
+    )
+    authorship_order_field = Field(
+        attribute="authorship_order", column_name="authorship_order"
+    )
+    affiliations_field = Field(
+        attribute="affiliations",
+        column_name="affiliations",
+        widget=ManyToManyWidget(model=Affiliation, separator=";"),
+    )
+    genders_field = Field(
+        attribute="genders",
+        column_name="genders",
+        widget=ManyToManyWidget(model=Gender, separator=";", field="gender"),
+    )
+
+    class Meta:
+        model = Authorship
+        fields = [
+            "id_field",
+            "work_id_field",
+            "author_field",
+            "author_first_name_field",
+            "author_last_name_field",
+            "authorship_order_field",
+            "affiliations_field",
+            "genders_field",
+        ]
+
+
+class AffiliationResource(resources.ModelResource):
+    id_field = Field(attribute="id", column_name="affiliation_id")
+    departments_field = Field(attribute="department", column_name="department")
+    institutions_field = Field(attribute="institution__name", column_name="institution")
+    city_field = Field(attribute="institution__city", column_name="city")
+    country_field = Field(attribute="institution__country__name", column_name="country")
+
+    class Meta:
+        model = Affiliation
+        fields = [
+            "id_field",
+            "departments_field",
+            "institutions_field",
+            "city_field",
+            "country_field",
+        ]
