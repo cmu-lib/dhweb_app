@@ -97,7 +97,7 @@ class SeriesMembership(models.Model):
 
 
 class Tag(models.Model):
-    title = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=100, unique=True, db_index=True)
 
     def __str__(self):
         return self.title
@@ -208,7 +208,7 @@ class Gender(Attribute):
 
 
 class Country(models.Model):
-    name = models.CharField(max_length=500, unique=True)
+    name = models.CharField(max_length=500, unique=True, db_index=True)
 
     def __str__(self):
         return self.name
