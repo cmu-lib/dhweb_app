@@ -9,6 +9,8 @@ from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 
 from .models import (
     Work,
@@ -246,6 +248,7 @@ def home_view(request):
     return render(request, "index.html", context)
 
 
+@login_required
 def author_merge_view(request, author_id):
 
     author = Author.objects.get(pk=author_id)
