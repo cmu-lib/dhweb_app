@@ -32,6 +32,8 @@ ALLOWED_HOSTS = ["localhost", "dc-vm2-rhel.andrew.cmu.edu"]
 
 INSTALLED_APPS = [
     "abstracts.apps.AbstractsConfig",
+    "dal",
+    "dal_select2",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

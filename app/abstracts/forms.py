@@ -1,4 +1,6 @@
 from django import forms
+from dal.autocomplete import ModelSelect2
+
 
 from .models import (
     Author,
@@ -27,14 +29,19 @@ class WorkFilter(forms.Form):
         queryset=Institution.objects.filter(
             affiliations__asserted_by__work__state="ac"
         ).distinct(),
+        widget=ModelSelect2(url="institution-autocomplete"),
         required=False,
         help_text="Works submitted with at least one author belonging to that institution.",
     )
     keyword = forms.ModelChoiceField(
-        queryset=Keyword.objects.filter(works__state="ac").distinct(), required=False
+        queryset=Keyword.objects.filter(works__state="ac").distinct(),
+        required=False,
+        widget=ModelSelect2(url="keyword-autocomplete"),
     )
     topic = forms.ModelChoiceField(
-        queryset=Topic.objects.filter(works__state="ac").distinct(), required=False
+        queryset=Topic.objects.filter(works__state="ac").distinct(),
+        required=False,
+        widget=ModelSelect2(url="topic-autocomplete"),
     )
     full_text_available = forms.BooleanField(required=False)
 
@@ -46,6 +53,7 @@ class AuthorFilter(forms.Form):
             affiliations__asserted_by__work__state="ac"
         ).distinct(),
         required=False,
+        widget=ModelSelect2(url="institution-autocomplete"),
         help_text="Authors who were once affiliated with this institution",
     )
     country = forms.ModelChoiceField(
@@ -54,6 +62,7 @@ class AuthorFilter(forms.Form):
         ).distinct(),
         required=False,
         help_text="Authors who were once affiliated with an institution in this country",
+        widget=ModelSelect2(url="country-autocomplete"),
     )
 
 

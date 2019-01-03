@@ -2,6 +2,7 @@
 
 {% block content %}
 
+{% load static %}
 {% load crispy_forms_tags %}
 
 <h1>Authors</h1>
@@ -25,6 +26,7 @@
       <div class="card-header">Options</div>
       <div class="card-body">
         <form action="{% url 'author_list' %}" method="get">
+          {{ author_filter_form.media }}
           {{ author_filter_form|crispy }}
           <div class="form-group">
           <button type="submit" class="btn btn-primary mb-2">Filter</button>

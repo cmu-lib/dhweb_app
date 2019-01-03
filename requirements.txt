@@ -6,3 +6,4 @@ psycopg2-binary
 gunicorn
 django-crispy-forms
 django-import-export
+django-autocomplete-light
