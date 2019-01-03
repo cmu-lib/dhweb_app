@@ -17,7 +17,7 @@
   {% for file in downloads %}
   <li class="list-group-item">
   {% with path="downloads/"|add:file %}
-  <a href="{% static file %}">{{ file }}</a>
+  <a href="{% static path %}">{{ file }}</a>
   </li>
   {% endwith %}
   {% endfor %}
