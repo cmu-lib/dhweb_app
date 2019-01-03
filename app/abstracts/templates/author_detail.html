@@ -5,7 +5,6 @@
 
 <div class="row">
   <div class="col-md-8">
-  <h2>Works</h2>
     {% for series in split_works %}
     <div class="card m-2">
       <div class="card-header">{{ series.series }}</div>
@@ -22,6 +21,7 @@
         <div class="card-header">Administration</div>
         <div class="card-body">
         <a href="{% url 'author_merge' author.pk %}" class="btn btn-warning" role="button">Merge</a>
+        <a class="btn btn-primary" role="button" href="{{ author_admin_page }}">Edit this author</a>
         </div>
         </div>
         <div class="card m-2">

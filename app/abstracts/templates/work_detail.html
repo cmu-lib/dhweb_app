@@ -16,7 +16,7 @@
       </div>
 
     <div class="card m-2">
-      <div class="card-header">Abstract</div>
+      <div class="card-header d-flex justify-content-between">Abstract{% if work.full_text %}<small class="text-muted">.{{ work.full_text_type }}</small>{% endif %}</div>
       <div class="card-body">
           {% if work.full_text %}
             {% if work.full_text_type == "txt" %}
@@ -32,6 +32,12 @@
   </div>
 
   <div class="col-md-4">
+    <div class="card m-2">
+      <div class="card-header">Administration</div>
+      <div class="card-body">
+        <a class="btn btn-primary" role="button" href="{{ work_admin_page }}">Edit this work</a>
+      </div>
+    </div>
     <div class="card m-2">
       <div class="card-header">Conference Info</div>
       <div class="card-body">
