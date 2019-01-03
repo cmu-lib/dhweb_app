@@ -6,18 +6,19 @@
 
 <h1>Authors</h1>
 
-<p>Displaying {{ filtered_authors_count }} out of {{ available_authors_count }} authors.</p>
-
 <div class="row">
   <div class="col-md-8">
     <div class="card m-2">
+      <div class="card-header">Results: Displaying {{ filtered_authors_count }} out of {{ available_authors_count }} authors</div>
       <ul class="list-group list-group-flush">
       {% for author in author_list %}
         <li class="list-group-item">{% include 'author_card.html' with author=author %}</li>
       {% endfor %}
       </ul>
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="card-footer align-items-center">{% include "paginator.html" %}</div>
+      {% endif %}
     </div>
-    {% include "paginator.html" %}
   </div>
   <div class="col-md-4">
     <div class="card m-2">
