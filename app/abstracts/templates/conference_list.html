@@ -2,28 +2,44 @@
 
 {% block content %}
 
-{% for series in conference_list %}
 <div class="row">
-<div class="card m-2">
-  <div class="card-header">
-    <h2 name="{{ series.abbreviation }}">{{ series.title }}</h2>
-    {% if series.notes  %}
-      <p>{{ series.notes | safe }}</p>
-    {% endif %}
-    <hr>
-    <p>Organizers:</p>
-    <ul>
-    {% for organizer in series.all_organizers %}
-    <li><strong>{{ organizer.name }}</strong>{% if organizer.name %}: {{ organizer.notes | safe }}{% endif %}{% if organizer.url %} (Website: <a href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</li>
-    {% endfor %}
-  </div>
-  <ul class="list-group list-group-flush">
-    {% for conference in series.conferences.all|dictsort:"year" %}
-    <li class="list-group-item">{% include "conference_card.html" with conference=conference %}</li>
+<div class="col-md-3">
+  <div class="card m-2">
+    <div class="card-header">Conference Series</div>
+    <ul class="list-group list-group-flush">
+    {% for series in conference_list %}
+    <li class="list-group-item"><a href="#{{ series.abbreviation }}">{{ series.title }}</a></li>
     {% endfor %}
   </ul>
+  </div>
 </div>
+<div class="col-md-9">
+  {% for series in conference_list %}
+  <div class="card m-2">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+      <h2 id="{{ series.abbreviation }}">{{ series.title }}</h2>
+      {% if not forloop.first %}<a href="#"><small>back to top</small></a>{% endif %}
+      </div>
+      {% if series.notes  %}
+        <p>{{ series.notes | safe }}</p>
+      {% endif %}
+      <hr>
+      <p>Organizers:</p>
+      <ul>
+      {% for organizer in series.all_organizers %}
+      <li><strong>{{ organizer.name }}</strong>{% if organizer.name %}: {{ organizer.notes | safe }}{% endif %}{% if organizer.url %} (Website: <a href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</li>
+      {% endfor %}
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for conference in series.conferences.all|dictsort:"year" %}
+      <li class="list-group-item">{% include "conference_card.html" with conference=conference %}</li>
+      {% endfor %}
+    </ul>
 </div>
 {% endfor %}
+
+</div>
+</div>
 
 {% endblock %}
