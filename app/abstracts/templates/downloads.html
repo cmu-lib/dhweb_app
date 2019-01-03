@@ -3,6 +3,8 @@
 {% block content %}
 {% load static %}
 
+<h1>Data Downloads</h1>
+
 <p>The data that powers this site can be downloaded in three CSV files: Works, Authorships, and Affiliations. Although the underlying models are relatively complex, these three tables offer a good balance by representing all the data we have without requiring too many table joins to navigate.</p>
 
 <p><strong>works.csv</strong> has one row per Work, containing columns that specify the conference, year, series, and organizers, the title and full text when available, as well as the tags associated with the Work. Multiple tags are delimited with a `;` within each field.</p>
@@ -13,14 +15,17 @@
 
 <p>The data in its full verbosity can also be downloaded as a <a href="https://docs.djangoproject.com/en/2.1/topics/serialization/#serialization-formats-json">Django fixture serialized to JSON</a>.</p>
 
-<ul class="list-group">
-  {% for file in downloads %}
-  <li class="list-group-item">
-  {% with path="downloads/"|add:file %}
-  <a href="{% static path %}">{{ file }}</a>
-  </li>
-  {% endwith %}
-  {% endfor %}
-</ul>
+<div class="card my-2">
+  <div class="card-header">Files</div>
+  <ul class="list-group list-group-flush">
+    {% for file in downloads %}
+    <li class="list-group-item">
+      {% with path="downloads/"|add:file %}
+      <a href="{% static path %}">{{ file }}</a>
+      {% endwith %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 
 {% endblock %}
