@@ -277,3 +277,12 @@ def author_merge_view(request, author_id):
             f"Author {oid} has been merged into {target_author}, and the old author entry has been deleted.",
         )
         return redirect("author_detail", pk=target_author.pk)
+
+
+def download_data(request):
+
+    context = {
+        "downloads": ["works.csv", "authorships.csv", "affiliations.csv", "full.json"]
+    }
+
+    return render(request, "downloads.html", context)
