@@ -3,7 +3,7 @@
 <a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a></h6>
 <small class="text-muted"><a href="{% url 'work_list' %}?work_type={{ work.work_type.pk }}">{{ work.work_type }}</a></small>
 </div>
-<p>{% for authorship in work.authorships.all %}<a href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.author.pref_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+<p>{% for authorship in work.authorships.all %}<a href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.appellation.first_name }} {{ authorship.appellation.last_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 {% if work.keywords.exists %}<p><small>Keywords: {% for kw in work.keywords.all %}<a class="badge badge-secondary" href="{% url 'work_list' %}?keyword={{ kw.pk }}">{{ kw }}</a>
 {% endfor %}</small></p>{% endif %}
 {% if work.topics.exists %}<p><small>Topics: {% for t in work.topics.all %}<a class="badge badge-secondary" href="{% url 'work_list' %}?topic={{ t.pk }}">{{ t }}</a>
