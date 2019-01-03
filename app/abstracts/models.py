@@ -68,6 +68,7 @@ class Organizer(models.Model):
         Conference, related_name="organizers", blank=True
     )
     notes = models.TextField(blank=True)
+    url = models.URLField(blank=True, max_length=100)
 
     def __str__(self):
         if self.abbreviation:
