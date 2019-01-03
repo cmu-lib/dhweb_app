@@ -136,10 +136,81 @@ admin.site.register(WorkType)
 # CSV exporting
 
 from import_export import resources
+from import_export.fields import Field
+from import_export.widgets import ManyToManyWidget
 
 
 class WorkResource(resources.ModelResource):
+    id_field = Field(attribute="id", column_name="work_id")
+    conference_venue_field = Field(
+        attribute="conference__venue", column_name="conference_venue"
+    )
+    conference_year_field = Field(
+        attribute="conference__year", column_name="conference_year"
+    )
+    conference_organizers_field = Field(
+        attribute="conference__organizers",
+        column_name="conference_organizers",
+        widget=ManyToManyWidget(model=Organizer, separator=";", field="name"),
+    )
+    conference_series_field = Field(
+        attribute="conference__series",
+        column_name="conference_series",
+        widget=ManyToManyWidget(model=ConferenceSeries, separator=";", field="title"),
+    )
+    conference_series_number_field = Field(
+        attribute="conference__series_memberships",
+        column_name="conference_series_number",
+        widget=ManyToManyWidget(model=SeriesMembership, separator=";", field="number"),
+    )
+    title_field = Field(attribute="title", column_name="work_title")
+    work_type_field = Field(attribute="work_type__title", column_name="work_type")
+    work_state_field = Field(attribute="state", column_name="work_state")
+    full_text_field = Field(attribute="full_text", column_name="work_full_text")
+    full_text_type_field = Field(
+        attribute="full_text_type", column_name="work_full_text_type"
+    )
+    keywords_field = Field(
+        attribute="keywords",
+        column_name="keywords",
+        widget=ManyToManyWidget(model=Keyword, separator=";", field="title"),
+    )
+    languages_field = Field(
+        attribute="languages",
+        column_name="languages",
+        widget=ManyToManyWidget(model=Language, separator=";", field="title"),
+    )
+    disciplines_field = Field(
+        attribute="disciplines",
+        column_name="disciplines",
+        widget=ManyToManyWidget(model=Discipline, separator=";", field="title"),
+    )
+    topics_field = Field(
+        attribute="topics",
+        column_name="topics",
+        widget=ManyToManyWidget(model=Topic, separator=";", field="title"),
+    )
+    published_version = Field(
+        attribute="published_version__pk", column_name="published_verison"
+    )
+
     class Meta:
         model = Work
-        fields = ("id", "topics__title")
-
+        fields = [
+            "id_field",
+            "onference_venue_field",
+            "conference_year_field",
+            "conference_organizers_field",
+            "conference_series_field",
+            "conference_series_number_field",
+            "title_field",
+            "work_type_field",
+            "work_state_field",
+            "full_text_field",
+            "full_text_type_field",
+            "keywords_field",
+            "languages_field",
+            "disciplines_field",
+            "topics_field",
+            "published_version",
+        ]
