@@ -10,7 +10,7 @@
 
 <div class="row">
   <div class="col-md-8">
-    <div class="card">
+    <div class="card m-2">
       <ul class="list-group list-group-flush">
       {% for author in author_list %}
         <li class="list-group-item">{% include 'author_card.html' with author=author %}</li>
@@ -20,7 +20,7 @@
     {% include "paginator.html" %}
   </div>
   <div class="col-md-4">
-    <div class="card">
+    <div class="card m-2">
       <div class="card-header">Options</div>
       <div class="card-body">
         <form action="{% url 'author_list' %}" method="get">

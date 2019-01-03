@@ -8,7 +8,7 @@
 <div class="col-md-6">
 <p>You're about to merge this author:</p>
 <p>
-<div class="card"><div class="card-body">
+<div class="card m-2"><div class="card-body">
   {% include "author_card.html" with author=merging %}
   </div>
 </div>
@@ -16,12 +16,12 @@
 <p>This will reassign the following works and their authorships, including all appellations and affiliations:</p>
 {% for work in merging.works.all %}
 <p>
-<div class="card">
+<div class="card m-2">
   <div class="card-body">
   {% include "work_card.html" with work=work%}
   {% for authorship in work.authorships.all %}
     {% if authorship.author.pk == merging.pk %}
-    <p><div class="card">
+    <p><div class="card m-2">
       <div class="card-body">
       {% include "authorship_card.html" with authorship=authorship %}
       </div>
