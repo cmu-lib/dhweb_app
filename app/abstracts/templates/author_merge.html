@@ -2,6 +2,7 @@
 
 {% block content %}
 
+{% load static %}
 {% load crispy_forms_tags %}
 
 <div class="row">
@@ -38,6 +39,7 @@
 
 <form action="{% url 'author_merge' merging.pk %}" method="post">
 {% csrf_token %}
+{{ author_merge_form.media }}
 {{ author_merge_form | crispy }}
 <div class="alert alert-danger">This action cannot be undone!</div>
 <button type="submit" class="btn btn-primary mb-2">Merge</button>

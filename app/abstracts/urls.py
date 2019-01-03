@@ -31,4 +31,9 @@ urlpatterns = [
         views.CountryAutocomplete.as_view(),
         name="country-autocomplete",
     ),
+    path(
+        "author-autocomplete",
+        views.AuthorAutocomplete.as_view(),
+        name="author-autocomplete",
+    ),
 ]
