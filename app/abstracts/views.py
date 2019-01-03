@@ -35,7 +35,7 @@ class InstitutionAutocomplete(Select2QuerySetView):
         qs = Institution.objects.all().order_by("name")
 
         if self.q:
-            qs = qs.filter(name__istartswith=self.q)
+            qs = qs.filter(name__icontains=self.q)
 
         return qs
 
@@ -45,7 +45,7 @@ class KeywordAutocomplete(Select2QuerySetView):
         qs = Keyword.objects.all().order_by("title")
 
         if self.q:
-            qs = qs.filter(name__istartswith=self.q)
+            qs = qs.filter(title__icontains=self.q)
 
         return qs
 
@@ -55,7 +55,7 @@ class TopicAutocomplete(Select2QuerySetView):
         qs = Topic.objects.all().order_by("title")
 
         if self.q:
-            qs = qs.filter(name__istartswith=self.q)
+            qs = qs.filter(title__icontains=self.q)
 
         return qs
 
@@ -65,7 +65,17 @@ class CountryAutocomplete(Select2QuerySetView):
         qs = Country.objects.all().order_by("name")
 
         if self.q:
-            qs = qs.filter(name__istartswith=self.q)
+            qs = qs.filter(title__icontains=self.q)
+
+        return qs
+
+
+class AuthorAutocomplete(Select2QuerySetView):
+    def get_queryset(self):
+        qs = Author.objects.all()
+
+        if self.q:
+            qs = qs.filter(appellations__search_text=self.q).distinct()
 
         return qs
 
