@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = "Dump CSVs of all Works to /static"
+    help = "Dump CSVs of all data as well as a JSON-seriazlied fixture of all models to /static, then runs collectstatic"
 
     def handle(self, *args, **options):
         management.call_command("export_works_csv")
