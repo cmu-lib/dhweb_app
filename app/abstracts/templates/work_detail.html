@@ -6,7 +6,7 @@
 
 <div class="row">
   <div class="col-md-8">
-    <div class="card">
+    <div class="card m-2">
       <div class="card-header">Authorship</div>
         <ol class="list-group list-group-flush">
           {% for authorship in authorships.all %}
@@ -15,7 +15,7 @@
         </ol>
       </div>
 
-    <div class="card">
+    <div class="card m-2">
       <div class="card-header">Abstract</div>
       <div class="card-body">
           {% if work.full_text %}
@@ -32,7 +32,7 @@
   </div>
 
   <div class="col-md-4">
-    <div class="card">
+    <div class="card m-2">
       <div class="card-header">Conference Info</div>
       <div class="card-body">
         {% include "conference_card.html" with conference=work.conference %}
@@ -56,7 +56,7 @@
       </div>
     </div>
 
-  <div class="card">
+  <div class="card m-2">
     <div class="card-header">Tags</div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">Keywords:
