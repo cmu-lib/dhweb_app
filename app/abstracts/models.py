@@ -186,7 +186,9 @@ class Attribute(models.Model):
 
 class Appellation(Attribute):
     first_name = models.CharField(max_length=100, blank=True, null=False, default="")
-    last_name = models.CharField(max_length=100, blank=True, null=False, default="")
+    last_name = models.CharField(
+        max_length=100, blank=True, null=False, default="", db_index=True
+    )
     search_text = SearchVectorField(null=True, editable=False)
 
     def __str__(self):
