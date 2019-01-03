@@ -1,7 +1,7 @@
 {% load query_filters %}
 
 <nav aria-label="author-pagination">
-  <ul class="pagination justify-content-center">
+  <ul class="pagination justify-content-center my-2">
 
     {% if page_obj.has_previous %}
       <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' page_obj.previous_page_number %}">Previous</a></li>
