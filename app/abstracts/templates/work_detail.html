@@ -22,7 +22,7 @@
     <div class="card m-2">
       <div class="card-header d-flex justify-content-between">Abstract{% if work.full_text %}<small class="text-muted">.{{ work.full_text_type }}</small>{% endif %}</div>
       <div class="card-body">
-          {% if work.full_text %}
+          {% if work.full_text and user.is_authenticated %}
             {% if work.full_text_type == "txt" %}
               <p>{{ work.full_text | linebreaks }}</p>
             {% elif work.full_text_type == "xml" %}

@@ -43,7 +43,6 @@ class WorkFilter(forms.Form):
         required=False,
         widget=ModelSelect2(url="topic-autocomplete"),
     )
-    full_text_available = forms.BooleanField(required=False)
 
 
 class AuthorFilter(forms.Form):

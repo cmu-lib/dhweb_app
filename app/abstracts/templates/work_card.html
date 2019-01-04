@@ -13,5 +13,5 @@
 
 <div class="d-flex justify-content-between">
   <small class="text-muted">Presented at <a href="{% url 'work_list' %}?conference={{ work.conference.pk }}">{{ work.conference }}</a></small>
-  {% if work.full_text %}<span class="badge badge-success">Full Text Available</span>{% endif %}
+  {% if work.full_text and user.is_authenticated %}<span class="badge badge-success">Full Text Available</span>{% endif %}
 </div>
