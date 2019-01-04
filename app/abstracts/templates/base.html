@@ -37,9 +37,11 @@
           <a class="dropdown-item" href="{% url 'author_list' %}">Authors</a>
         </div>
       </li>
+      {% if user.is_authenticated %}
       <li class="nav-item">
         <a class="nav-link" href="{% url 'download_data' %}">Downloads</a>
       </li>
+      {% if user.is_authenticated %}
       </ul>
       <ul class="ml-auto navbar-nav">
       <li class="nav-item">
