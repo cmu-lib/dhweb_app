@@ -10,7 +10,7 @@ from django.contrib.postgres.search import SearchVector, SearchVectorField
 
 
 class ConferenceSeries(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, unique=True)
     abbreviation = models.CharField(max_length=7, blank=True, unique=True)
     notes = models.TextField(blank=True, null=False, default="")
 
@@ -62,7 +62,7 @@ class Conference(models.Model):
 
 
 class Organizer(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     abbreviation = models.CharField(max_length=7, blank=True, unique=True)
     conferences_organized = models.ManyToManyField(
         Conference, related_name="organizers", blank=True
