@@ -47,6 +47,11 @@
       <li class="nav-item">
         <a class="nav-link" href="/admin">Administration{% if not user.is_authenticated %} (login required){% endif %}</a>
       </li>
+      {% if user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/logout/?next=/">Log Out</a>
+      </li>
+      {% endif %}
     </ul>
   </div>
 </nav>
