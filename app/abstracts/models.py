@@ -39,7 +39,7 @@ class Conference(models.Model):
     url = models.URLField(blank=True)
 
     class Meta:
-        ordering: ["-year"]
+        ordering = ["-year"]
 
     @property
     def public_works(self):
