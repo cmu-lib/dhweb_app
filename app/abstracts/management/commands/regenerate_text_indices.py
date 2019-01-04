@@ -6,7 +6,7 @@ periodically, so it is included here as a management command.
 
 from django.core.management.base import BaseCommand
 from django.contrib.postgres.search import SearchVector
-from abstracts.models import Work, Appellation
+from abstracts.models import Work, Appellation, Institution
 
 
 class Command(BaseCommand):
@@ -20,5 +20,9 @@ class Command(BaseCommand):
 
         print("Updating index for Works...", end="", flush=True)
         Work.objects.update(search_text=SearchVector("title", "full_text"))
+        print("done.")
+
+        print("Updating index for Institutions...", end="", flush=True)
+        Institution.objects.update(search_text=SearchVector("name", "city"))
         print("done.")
 

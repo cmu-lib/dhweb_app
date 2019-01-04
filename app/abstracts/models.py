@@ -215,7 +215,7 @@ class Country(models.Model):
 
 
 class Institution(models.Model):
-    name = models.CharField(max_length=500, db_index=True)
+    name = models.CharField(max_length=500)
     city = models.CharField(max_length=100, blank=True, null=False, default="")
     country = models.ForeignKey(
         Country,
@@ -224,6 +224,10 @@ class Institution(models.Model):
         null=True,
         related_name="institutions",
     )
+    search_text = SearchVectorField(null=True, editable=False)
+
+    class Meta:
+        indexes = [GinIndex(fields=["search_text"])]
 
     def __str__(self):
         if not self.city and not self.country:
