@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DetailView, ListView
-from django.db.models import Count, Max, Min
+from django.db.models import Count, Max, Min, Q
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector
@@ -35,7 +35,9 @@ class InstitutionAutocomplete(Select2QuerySetView):
         qs = Institution.objects.all().order_by("name")
 
         if self.q:
-            qs = qs.filter(name__icontains=self.q)
+            qs = qs.filter(
+                Q(search_text=self.q) | Q(country__name__icontains=self.q)
+            ).distinct()
 
         return qs
 
