@@ -343,6 +343,7 @@ def author_merge_view(request, author_id):
         return redirect("author_detail", pk=target_author.pk)
 
 
+@login_required
 def download_data(request):
 
     context = {
