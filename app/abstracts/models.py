@@ -215,7 +215,7 @@ class Country(models.Model):
 
 
 class Institution(models.Model):
-    name = models.CharField(max_length=500)
+    name = models.CharField(max_length=500, unique=True)
     city = models.CharField(max_length=100, blank=True, null=False, default="")
     country = models.ForeignKey(
         Country,
