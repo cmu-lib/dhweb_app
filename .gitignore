@@ -11,3 +11,4 @@ db/
 
 .coverage
 htmlcov/
+xml/
