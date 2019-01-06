@@ -181,8 +181,10 @@ class Command(BaseCommand):
                             ustrip = particle
                             particle = particle.strip()
 
-                            if Institution.objects.filter(name=particle).exists()
-                                institution = Institution.objects.filter(name=particle).first()
+                            if Institution.objects.filter(name=particle).exists():
+                                institution = Institution.objects.filter(
+                                    name=particle
+                                ).first()
                                 split_affiliation.remove(ustrip)
                                 break
 
@@ -208,7 +210,7 @@ class Command(BaseCommand):
                             target_institution = institution
 
                         target_affiliation = Affiliation.objects.get_or_create(
-                            department="", institution=target_institution
+                            department=affiliation, institution=target_institution
                         )
                         object_status(self, target_affiliation, attempt)
                         target_affiliation = target_affiliation[0]
