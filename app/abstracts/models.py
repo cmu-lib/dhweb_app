@@ -133,6 +133,16 @@ class WorkType(models.Model):
         ordering = ["title"]
 
 
+class License(models.Model):
+    title = models.CharField(max_length=100, unique=True)
+    full_text = models.TextField(max_length=100_000)
+    display_abbreviation = models.CharField(max_length=50, unique=True)
+    url = models.URLField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+
 class Work(models.Model):
     conference = models.ForeignKey(
         Conference, on_delete=models.CASCADE, related_name="works"
@@ -161,6 +171,9 @@ class Work(models.Model):
         limit_choices_to={"state": "ac"},
     )
     search_text = SearchVectorField(null=True, editable=False)
+    full_text_license = models.ForeignKey(
+        License, blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     @property
     def display_title(self):
@@ -228,7 +241,7 @@ class Institution(models.Model):
 
     class Meta:
         indexes = [GinIndex(fields=["search_text"])]
-        unique_together = (("name", "country"),)
+        # unique_together = (("name", "country"),)
 
     def __str__(self):
         if not self.city and not self.country:
