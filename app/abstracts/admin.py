@@ -18,6 +18,9 @@ from .models import (
     Affiliation,
     Country,
     WorkType,
+    FileImport,
+    FileImportMessgaes,
+    FileImportTries,
 )
 
 
@@ -81,6 +84,7 @@ class WorkAdmin(admin.ModelAdmin):
 
 
 class InstitutionAdmin(admin.ModelAdmin):
+    list_display = ["pk", "name", "city", "country"]
     search_fields = ["name", "city", "country__name"]
 
 
@@ -115,6 +119,11 @@ class ConferenceAdmin(admin.ModelAdmin):
     autocomplete = ["organizer"]
 
 
+class FileImportMessagesAdmin(admin.ModelAdmin):
+    list_display = ["attempt", "message", "addition_type", "warning"]
+    list_filter = ["attempt__conference", "addition_type", "warning"]
+
+
 admin.site.register(Authorship, AuthorshipAdmin)
 admin.site.register(Organizer, OrganizerAdmin)
 admin.site.register(ConferenceSeries, ConferenceSeriesAdmin)
@@ -132,6 +141,9 @@ admin.site.register(Language, KeywordAdmin)
 admin.site.register(Discipline, KeywordAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(WorkType)
+admin.site.register(FileImport)
+admin.site.register(FileImportTries)
+admin.site.register(FileImportMessgaes, FileImportMessagesAdmin)
 
 # CSV exporting
 

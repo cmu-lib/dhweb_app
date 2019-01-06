@@ -135,7 +135,7 @@ class WorkType(models.Model):
 
 class Work(models.Model):
     conference = models.ForeignKey(
-        Conference, on_delete=models.PROTECT, related_name="works"
+        Conference, on_delete=models.CASCADE, related_name="works"
     )
     title = models.CharField(max_length=500)
     work_type = models.ForeignKey(
@@ -215,7 +215,7 @@ class Country(models.Model):
 
 
 class Institution(models.Model):
-    name = models.CharField(max_length=500, unique=True)
+    name = models.CharField(max_length=500)
     city = models.CharField(max_length=100, blank=True, null=False, default="")
     country = models.ForeignKey(
         Country,
@@ -228,6 +228,7 @@ class Institution(models.Model):
 
     class Meta:
         indexes = [GinIndex(fields=["search_text"])]
+        unique_together = (("name", "country"),)
 
     def __str__(self):
         if not self.city and not self.country:
@@ -381,3 +382,32 @@ class Authorship(models.Model):
         unique_together = (("work", "authorship_order"), ("author", "work"))
         ordering = ["authorship_order"]
 
+
+class FileImport(models.Model):
+    path = models.CharField(max_length=200, unique=True)
+
+    def __str__(self):
+        return self.path
+
+
+class FileImportTries(models.Model):
+    started = models.DateTimeField(auto_now_add=True)
+    file_name = models.ForeignKey(FileImport, on_delete=models.CASCADE)
+    conference = models.ForeignKey(Conference, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.file_name} - {self.started}"
+
+
+class FileImportMessgaes(models.Model):
+    attempt = models.ForeignKey(FileImportTries, on_delete=models.CASCADE)
+    message = models.CharField(max_length=1000)
+    addition_type = models.CharField(
+        choices=(("mat", "matched existing"), ("new", "newly created"), ("non", "NA")),
+        max_length=3,
+        default="non",
+    )
+    warning = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.message
