@@ -273,8 +273,8 @@ class Institution(models.Model):
         related_name="institutions",
     )
 
-    # class Meta:
-    # unique_together = (("name", "country"),)
+    class Meta:
+        unique_together = (("name", "country"),)
 
     def __str__(self):
         if not self.city and not self.country:
