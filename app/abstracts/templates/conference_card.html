@@ -5,6 +5,6 @@
 <p>{{ conference.public_works.count }} works by {{ conference.public_authors }} authors</p>
 {% if conference.notes or conference.url %}
 <hr>
-{% if conference.notes %}<p>{{ conference.notes }}</p>{% endif %}
+{% if conference.notes %}<p>{{ conference.notes | safe }}</p>{% endif %}
 {% if conference.url %}<p>Conference website: <a href="{{ conference.url }}">{{ conference.url }}</a></p>{% endif %}
 {% endif %}
