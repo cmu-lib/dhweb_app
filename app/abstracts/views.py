@@ -36,7 +36,8 @@ class InstitutionAutocomplete(Select2QuerySetView):
 
         if self.q:
             qs = qs.filter(
-                Q(search_text=self.q) | Q(country__name__icontains=self.q)
+                Q(name__icontains=self.q) | Q(country__name__icontains=self.q),
+                affiliations__asserted_by__work__state="ac",
             ).distinct()
 
         return qs
@@ -47,7 +48,7 @@ class KeywordAutocomplete(Select2QuerySetView):
         qs = Keyword.objects.all().order_by("title")
 
         if self.q:
-            qs = qs.filter(title__icontains=self.q)
+            qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
 
         return qs
 
@@ -57,7 +58,7 @@ class TopicAutocomplete(Select2QuerySetView):
         qs = Topic.objects.all().order_by("title")
 
         if self.q:
-            qs = qs.filter(title__icontains=self.q)
+            qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
 
         return qs
 
@@ -67,7 +68,10 @@ class CountryAutocomplete(Select2QuerySetView):
         qs = Country.objects.all().order_by("name")
 
         if self.q:
-            qs = qs.filter(title__icontains=self.q)
+            qs = qs.filter(
+                institutions__affiliations__asserted_by__work__state="ac",
+                title__icontains=self.q,
+            ).distinct()
 
         return qs
 
@@ -77,7 +81,11 @@ class AuthorAutocomplete(Select2QuerySetView):
         qs = Author.objects.all()
 
         if self.q:
-            qs = qs.filter(appellations__search_text=self.q).distinct()
+            qs = qs.filter(
+                Q(appellations__first_name__icontains=self.q)
+                | Q(appellations__last_name__icontains=self.q),
+                affiliations__asserted_by__work__state="ac",
+            ).distinct()
 
         return qs
 

@@ -14,15 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
 
-        print("Updating index for Appellations...", end="", flush=True)
-        Appellation.objects.update(search_text=SearchVector("first_name", "last_name"))
-        print("done.")
-
         print("Updating index for Works...", end="", flush=True)
         Work.objects.update(search_text=SearchVector("title", "full_text"))
-        print("done.")
-
-        print("Updating index for Institutions...", end="", flush=True)
-        Institution.objects.update(search_text=SearchVector("name", "city"))
         print("done.")
 

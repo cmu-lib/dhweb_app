@@ -203,17 +203,17 @@ class Attribute(models.Model):
 
 
 class Appellation(Attribute):
-    first_name = models.CharField(max_length=100, blank=True, null=False, default="")
+    first_name = models.CharField(
+        max_length=100, blank=True, null=False, default="", db_index=True
+    )
     last_name = models.CharField(
         max_length=100, blank=True, null=False, default="", db_index=True
     )
-    search_text = SearchVectorField(null=True, editable=False)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
     class Meta:
-        indexes = [GinIndex(fields=["search_text"], name="appellation_idx")]
         unique_together = (("first_name", "last_name"),)
 
 
@@ -241,11 +241,9 @@ class Institution(models.Model):
         null=True,
         related_name="institutions",
     )
-    search_text = SearchVectorField(null=True, editable=False)
 
-    class Meta:
-        indexes = [GinIndex(fields=["search_text"])]
-        # unique_together = (("name", "country"),)
+    # class Meta:
+    # unique_together = (("name", "country"),)
 
     def __str__(self):
         if not self.city and not self.country:
