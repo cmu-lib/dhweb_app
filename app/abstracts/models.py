@@ -408,6 +408,11 @@ class Author(models.Model):
     def most_recent_affiliations(self):
         return self.most_recent_attributes(Affiliation)
 
+    def merge(self, target):
+        merges = Authorship.objects.filter(author=self).update(target=author)
+        merges.append(self.delete)
+        return merges
+
 
 class Authorship(models.Model):
     author = models.ForeignKey(
