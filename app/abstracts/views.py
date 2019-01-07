@@ -338,11 +338,7 @@ def author_merge_view(request, author_id):
         oid = author.pk
 
         target_author = Author.objects.get(pk=target_id)
-        changing_authorships = author.authorships.distinct()
-
-        changing_authorships.update(author=target_author)
-
-        author.delete()
+        author.merge(target_author)
 
         messages.success(
             request,
