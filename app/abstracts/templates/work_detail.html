@@ -32,6 +32,17 @@
             <div class="alert alert-warning">No abstract available for this work.</div>
           {% endif %}
       </div>
+      {% if work.full_text and user.is_authenticated %}
+      {% with license=work.full_text_license %}
+      <div class="card-footer">
+        {% if license %}
+          This full text is licensed <a href="{{ license.url }}"><abbr title="{{ license.title }}">{{ license.display_abbreviation }}</a>
+        {% else %}
+          The license for this full text is unknown.
+        {% endif %}
+      {% endwith %}
+      </div>
+      {% endif %}
     </div>
   </div>
 
