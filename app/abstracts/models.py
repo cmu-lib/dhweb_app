@@ -110,6 +110,12 @@ class Tag(models.Model):
     def __str__(self):
         return self.title
 
+    def merge(self, target):
+        [target.works.add(w) for w in self.works.all()]
+        # Add the target tag to all the works with the origin tag
+        # remove the origin tag
+        return self.delete()
+
     class Meta:
         abstract = True
         ordering = ["title"]
@@ -230,6 +236,23 @@ class Country(models.Model):
     def __str__(self):
         return self.name
 
+    def merge(self, target):
+        affected_institutions = Institution.objects.filter(country=self)
+
+        # If changing one of those affected countries to the new one would create an Institution that already exists, then merge that institution into the existing one
+
+        merges = []
+        for inst in affected_institutions:
+            if Institution.objects.filter(name=inst.name, country=target).exists():
+                merges.append(inst.merge(target))
+            # Otherwise just reassign the country
+            else:
+                inst.country = target
+                inst.save()
+
+        merges.append(self.delete())
+        return merges
+
 
 class Institution(models.Model):
     name = models.CharField(max_length=500)
@@ -254,6 +277,30 @@ class Institution(models.Model):
             return f"{self.name} ({self.city})"
         else:
             return f"{self.name} ({self.city}, {self.country})"
+
+    def merge(self, target):
+        affected_affiliations = Affiliation.objects.filter(institution=self)
+
+        # If changing one of those affect afiliations to the new institution would create an affiliation that already exists, then reassign those authorships to the already-existing affiliation
+        merges = []
+        for aff in affected_affiliations:
+            if Affilation.objects.filter(name=aff.name, institution=target).exists():
+                replacement_aff = Affiliation.objects.get(
+                    name=aff.name, institution=target
+                )
+                merges.append(
+                    Authorship.objects.filter(affiliation=aff).update(
+                        affiliation=replacement_aff
+                    )
+                )
+                # Otherwise, we can just reassign the institution
+            else:
+                aff.institution = target
+                aff.save()
+
+        # Finally, delete the old institution
+        merges.append(self.delete())
+        return merges
 
 
 class Affiliation(Attribute):
