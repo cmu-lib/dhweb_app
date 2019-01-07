@@ -28,12 +28,14 @@
       <p>Organizers:</p>
       <ul>
       {% for organizer in series.all_organizers %}
-      <li><strong>{{ organizer.name }}</strong>{% if organizer.name %}: {{ organizer.notes | safe }}{% endif %}{% if organizer.url %} (Website: <a href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</li>
+      <li><strong>{{ organizer.name }}</strong>{% if organizer.name %}{% if organizer.notes %}: {{ organizer.notes | safe }}{% endif %}{% endif %}{% if organizer.url %} (Website: <a href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</li>
       {% endfor %}
     </div>
     <ul class="list-group list-group-flush">
       {% for conference in series.conferences.all|dictsort:"year" %}
+      {% if conference.public_works.count > 0 %}
       <li class="list-group-item">{% include "conference_card.html" with conference=conference %}</li>
+      {% endif %}
       {% endfor %}
     </ul>
 </div>
