@@ -69,7 +69,7 @@ class Command(BaseCommand):
         target_conference = Conference.objects.get(pk=options["default_conference"])
 
         print(options)
-        all_files = glob(f"{options['filepath'][0]}/**/*.xml")
+        all_files = glob(f"{options['filepath'][0]}/**/*.xml", recursive=True)
         print(all_files)
         for f in all_files:
             # Get or create filename and start new attempt record
@@ -181,34 +181,46 @@ class Command(BaseCommand):
                             ustrip = particle
                             particle = particle.strip()
 
-                            if Institution.objects.filter(name=particle).exists():
+                            if (
+                                institution is None
+                                and Institution.objects.filter(name=particle).exists()
+                            ):
                                 institution = Institution.objects.filter(
                                     name=particle
                                 ).first()
                                 split_affiliation.remove(ustrip)
-                                break
+                                object_status(self, (institution, False), attempt)
 
-                            if Country.objects.filter(name=particle).exists():
+                            if (
+                                country is None
+                                and Country.objects.filter(name=particle).exists()
+                            ):
                                 country = Country.objects.get(name=particle)
+                                object_status(self, (country, False), attempt)
                                 split_affiliation.remove(ustrip)
-                                break
 
+                        # After clearing out matching institution and/or country texts, reassemble the affiliation statement.
                         affiliation = ", ".join(split_affiliation)
 
                         if institution is None:
+                            # If no institution was matched, create one
                             if country is not None:
+                                # If a country was matched, attach it to the new institution
                                 target_institution = Institution.objects.get_or_create(
                                     name=affiliation, country=country
                                 )
                             else:
+                                #  otherwise leave the country blank
                                 target_institution = Institution.objects.get_or_create(
                                     name=affiliation, country=None
                                 )
                             object_status(self, target_institution, attempt)
                             target_institution = target_institution[0]
                         else:
+                            # If we matched an institutuion, go ahead and use it
                             target_institution = institution
 
+                        # finally, create or retreive the affiliation statement by attaching the non-institutuion, non-country text as the department, and point to the matched-or-created institution
                         target_affiliation = Affiliation.objects.get_or_create(
                             department=affiliation, institution=target_institution
                         )
