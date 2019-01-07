@@ -254,7 +254,8 @@ class AuthorList(ListView):
             name_res = filter_form["name"]
             if name_res != "":
                 result_set = result_set.filter(
-                    appellations__search_text=name_res
+                    Q(appellations__first_name__icontains=name_res)
+                    | Q(appellations__last_name__icontains=name_res)
                 ).distinct()
 
         return result_set.distinct()
