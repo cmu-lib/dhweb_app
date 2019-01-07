@@ -1,41 +1,28 @@
-{% extends "base.html" %}
+{% extends "list.html" %}
 
-{% block content %}
+{% block results_title %}Author search results{% endblock %}
 
 {% load static %}
 {% load crispy_forms_tags %}
 
 <h1>Authors</h1>
 
-<div class="row">
-  <div class="col-md-8">
-    <div class="card m-2">
-      <div class="card-header">Results: Displaying {{ filtered_authors_count }} out of {{ available_authors_count }} authors</div>
-      <ul class="list-group list-group-flush">
-      {% for author in author_list %}
-        <li class="list-group-item">{% include 'author_card.html' with author=author %}</li>
-      {% endfor %}
-      </ul>
-      {% if page_obj.paginator.num_pages > 1 %}
-      <div class="card-footer align-items-center">{% include "paginator.html" %}</div>
-      {% endif %}
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card m-2">
-      <div class="card-header">Options</div>
-      <div class="card-body">
-        <form action="{% url 'author_list' %}" method="get">
-          {{ author_filter_form.media }}
-          {{ author_filter_form|crispy }}
-          <div class="form-group">
-          <button type="submit" class="btn btn-primary mb-2">Filter</button>
-          <a class="btn btn-secondary mb-2" href="{% url 'author_list' %}" role="button">Reset</a>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+{% block results %}
+<div class="card-header">Results: Displaying {{ filtered_authors_count }} out of {{ available_authors_count }} authors</div>
+<ul class="list-group list-group-flush">
+{% for author in author_list %}
+  <li class="list-group-item">{% include 'author_card.html' with author=author %}</li>
+{% endfor %}
+</ul>
+{% endblock %}
 
+{% block filter %}
+<form action="{% url 'author_list' %}" method="get">
+  {{ author_filter_form.media }}
+  {{ author_filter_form|crispy }}
+  <div class="form-group">
+  <button type="submit" class="btn btn-primary mb-2">Filter</button>
+  <a class="btn btn-secondary mb-2" href="{% url 'author_list' %}" role="button">Reset</a>
+  </div>
+</form>
 {% endblock %}
