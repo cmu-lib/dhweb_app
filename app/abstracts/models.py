@@ -9,6 +9,14 @@ from django.contrib.postgres.search import SearchVector, SearchVectorField
 # Create your models here.
 
 
+class TextIndexedModel(models.Model):
+    search_text = SearchVectorField(null=True, editable=False)
+
+    class Meta:
+        abstract = True
+        indexes = [GinIndex(fields=["search_text"])]
+
+
 class ConferenceSeries(models.Model):
     title = models.CharField(max_length=100, unique=True)
     abbreviation = models.CharField(max_length=7, blank=True, unique=True)
@@ -143,7 +151,7 @@ class License(models.Model):
         return self.title
 
 
-class Work(models.Model):
+class Work(TextIndexedModel):
     conference = models.ForeignKey(
         Conference, on_delete=models.CASCADE, related_name="works"
     )
@@ -170,7 +178,6 @@ class Work(models.Model):
         related_name="unpublished_versions",
         limit_choices_to={"state": "ac"},
     )
-    search_text = SearchVectorField(null=True, editable=False)
     full_text_license = models.ForeignKey(
         License, blank=True, null=True, on_delete=models.SET_NULL
     )
@@ -184,9 +191,6 @@ class Work(models.Model):
 
     def __str__(self):
         return f"({self.state}) {self.display_title}"
-
-    class Meta:
-        indexes = [GinIndex(fields=["search_text"], name="full_text_idx")]
 
 
 class Attribute(models.Model):
