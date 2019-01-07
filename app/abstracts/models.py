@@ -292,9 +292,11 @@ class Institution(models.Model):
         # If changing one of those affect afiliations to the new institution would create an affiliation that already exists, then reassign those authorships to the already-existing affiliation
         merges = []
         for aff in affected_affiliations:
-            if Affilation.objects.filter(name=aff.name, institution=target).exists():
+            if Affiliation.objects.filter(
+                department=aff.department, institution=target
+            ).exists():
                 replacement_aff = Affiliation.objects.get(
-                    name=aff.name, institution=target
+                    department=aff.department, institution=target
                 )
                 merges.append(
                     Authorship.objects.filter(affiliation=aff).update(
