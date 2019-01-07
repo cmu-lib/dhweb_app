@@ -219,6 +219,14 @@ class Appellation(Attribute):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    def merge(self, target):
+        merges = []
+        merges.append(
+            Authorship.objects.filter(appellation=self).update(appellation=target)
+        )
+        merges.append(self.delete())
+        return merges
+
     class Meta:
         unique_together = (("first_name", "last_name"),)
 
