@@ -417,8 +417,9 @@ class Author(models.Model):
         return self.most_recent_attributes(Affiliation)
 
     def merge(self, target):
-        merges = Authorship.objects.filter(author=self).update(target=author)
-        merges.append(self.delete)
+        merges = []
+        merges.append(Authorship.objects.filter(author=self).update(author=target))
+        merges.append(self.delete())
         return merges
 
 
