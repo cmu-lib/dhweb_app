@@ -274,11 +274,9 @@ class ConferenceList(ListView):
     template_name = "conference_list.html"
 
     def get_queryset(self):
-        return (
-            ConferenceSeries.objects.order_by("title")
-            .distinct()
-            .prefetch_related("conferences")
-        )
+        return ConferenceSeries.objects.filter(
+            conferences__works__state="ac"
+        ).distinct()
 
 
 def home_view(request):
