@@ -84,7 +84,7 @@ class AuthorAutocomplete(Select2QuerySetView):
             qs = qs.filter(
                 Q(appellations__first_name__icontains=self.q)
                 | Q(appellations__last_name__icontains=self.q),
-                affiliations__asserted_by__work__state="ac",
+                works__state="ac",
             ).distinct()
 
         return qs
