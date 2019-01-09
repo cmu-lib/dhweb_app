@@ -22,6 +22,8 @@ from .models import (
     FileImportMessgaes,
     FileImportTries,
     License,
+    Nation,
+    NationLabel,
 )
 
 
@@ -145,6 +147,8 @@ admin.site.register(WorkType)
 admin.site.register(FileImport)
 admin.site.register(FileImportTries)
 admin.site.register(License)
+admin.site.register(Nation)
+admin.site.register(NationLabel)
 admin.site.register(FileImportMessgaes, FileImportMessagesAdmin)
 
 # CSV exporting
