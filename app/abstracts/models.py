@@ -262,6 +262,28 @@ class Country(models.Model):
         return merges
 
 
+class Nation(models.Model):
+    tgn_id = models.URLField(unique=True)
+    pref_name = models.OneToOneField(
+        "NationLabel",
+        related_name="preferred_reference_to",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return self.pref_name
+
+
+class NationLabel(models.Model):
+    name = models.CharField(max_length=300, db_index=True)
+    nation = models.ForeignKey(Nation, on_delete=models.CASCADE, related_name="names")
+
+    def __str__(self):
+        return self.name
+
+
 class Institution(models.Model):
     name = models.CharField(max_length=500)
     city = models.CharField(max_length=100, blank=True, null=False, default="")
