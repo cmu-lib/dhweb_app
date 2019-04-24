@@ -1,5 +1,4 @@
 django==2.1
-django-bootstrap4
 coverage>=4.4
 django_coverage_plugin
 psycopg2-binary

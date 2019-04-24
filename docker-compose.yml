@@ -6,8 +6,8 @@ services:
     image: postgres:11
     volumes:
       - dh_web_testing:/var/lib/postgresql/data
-    ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    expose:
+      - "${POSTGRES_PORT}"
     env_file: .env
 
   start_dependencies:
@@ -23,8 +23,9 @@ services:
     volumes:
       - .:/vol/dh
       - dh_static_files:/vol/static_files
-    ports:
-      - "8000:8000"
+      - ~/Development/dh_abstracts/data:/vol/data
+    expose:
+      - 8000
     links:
       - "dh-postgres:dh-postgres"
     env_file: .env
