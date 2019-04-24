@@ -7,4 +7,4 @@ attach:
 db:
 	docker-compose exec dh-postgres psql -U dh
 restart:
-	docker-compose restart dh-web gpi-nginx
+	docker-compose restart dh-web dh-nginx
