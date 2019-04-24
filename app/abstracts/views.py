@@ -70,7 +70,7 @@ class CountryAutocomplete(Select2QuerySetView):
         if self.q:
             qs = qs.filter(
                 institutions__affiliations__asserted_by__work__state="ac",
-                title__icontains=self.q,
+                name__icontains=self.q,
             ).distinct()
 
         return qs

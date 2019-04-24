@@ -1,22 +1,23 @@
+{% load static %}
+
 <!doctype html>
 <html lang="en">
 
 <head>
 
   <link rel="shortcut icon" href="/static/favicon.ico" />
-  {# Load the tag library #}
-  {% load bootstrap4 %}
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  {# Load CSS and JavaScript #}
-  {% bootstrap_css %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <script src="{% static 'js/jquery-3.4.0.slim.min.js'%}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
 
   <title>DH Abstracts</title>
 </head>
 
 <body>
-  {% bootstrap_javascript jquery='full' %}
 
   {% comment %} Header {% endcomment %}
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
