@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
-    "bootstrap4",
     "crispy_forms",
     "import_export",
     "django.contrib.humanize",
