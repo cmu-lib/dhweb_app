@@ -23,6 +23,7 @@ services:
     volumes:
       - .:/vol/dh
       - dh_static_files:/vol/static_files
+      - ~/Development/dh_abstracts/data:/vol/data
     expose:
       - 8000
     links:
