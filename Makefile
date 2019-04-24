@@ -8,3 +8,5 @@ db:
 	docker-compose exec dh-postgres psql -U dh
 restart:
 	docker-compose restart dh-web dh-nginx
+rebuild:
+	docker-compose build --no-cache dh-web
