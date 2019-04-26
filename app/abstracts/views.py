@@ -24,7 +24,7 @@ from .models import (
     Country,
     Keyword,
     Topic,
-    Country,
+    CountryLabel,
 )
 
 from .forms import WorkFilter, AuthorFilter, AuthorMergeForm
@@ -36,7 +36,7 @@ class InstitutionAutocomplete(Select2QuerySetView):
 
         if self.q:
             qs = qs.filter(
-                Q(name__icontains=self.q) | Q(country__name__icontains=self.q),
+                Q(name__icontains=self.q) | Q(country__names__name__icontains=self.q),
                 affiliations__asserted_by__work__state="ac",
             ).distinct()
 
@@ -70,7 +70,7 @@ class CountryAutocomplete(Select2QuerySetView):
         if self.q:
             qs = qs.filter(
                 institutions__affiliations__asserted_by__work__state="ac",
-                name__icontains=self.q,
+                names__icontains=self.q,
             ).distinct()
 
         return qs
