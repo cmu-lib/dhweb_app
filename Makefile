@@ -15,4 +15,4 @@ wipe: stop
 	docker-compose exec dh-postgres psql -U dh -d postgres -c 'CREATE DATABASE dh;'
 	$(MAKE) restart
 reload: wipe
-	docker-compose exec dh-web python manage.py loaddata /vol/data/json/bkp.json
+	docker-compose exec dh-web python manage.py loaddata /vol/data/json/dh.json
