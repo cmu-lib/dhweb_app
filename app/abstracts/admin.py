@@ -39,7 +39,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 
 class InstitutuionAdmin(admin.ModelAdmin):
-    search_fields = ["name", "city", "country__name"]
+    search_fields = ["name", "city", "country__names__name"]
 
 
 class AuthorshipAdmin(admin.ModelAdmin):
@@ -87,7 +87,7 @@ class WorkAdmin(admin.ModelAdmin):
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ["pk", "name", "city", "country"]
-    search_fields = ["name", "city", "country__name"]
+    search_fields = ["name", "city", "country__names__name"]
 
 
 class AuthorAdmin(admin.ModelAdmin):
@@ -278,7 +278,7 @@ class AffiliationResource(resources.ModelResource):
     departments_field = Field(attribute="department", column_name="department")
     institutions_field = Field(attribute="institution__name", column_name="institution")
     city_field = Field(attribute="institution__city", column_name="city")
-    country_field = Field(attribute="institution__country__name", column_name="country")
+    country_field = Field(attribute="institution__country__names__name", column_name="country")
 
     class Meta:
         model = Affiliation
