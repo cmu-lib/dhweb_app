@@ -1,5 +1,5 @@
 # DH Conferences CRUD App
 
-A toy web CRUD app for reading and eventually updating the DH Conferences abstracts database.
+CRUD app for editing, searching, and browsing historical DH conference abstracts.
 
-Copyright dSHARP Lab at Carnegie Mellon University
+Development lead: [Matthew Lincoln](https://matthewlincoln.net)
