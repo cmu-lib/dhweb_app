@@ -262,6 +262,7 @@ class Country(models.Model):
         merges.append(self.delete())
         return merges
 
+
 class CountryLabel(models.Model):
     name = models.CharField(max_length=300, db_index=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name="names")
