@@ -13,3 +13,4 @@ class Command(BaseCommand):
         models.Country.objects.filter(institutions__isnull=True).delete()
         models.Keyword.objects.filter(works__isnull=True).delete()
         models.Topic.objects.filter(works__isnull=True).delete()
+        models.Appellation.objects.filter(asserted_by__isnull=True).delete()
