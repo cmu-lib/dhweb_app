@@ -27,7 +27,7 @@ from abstracts.models import (
 )
 
 
-class EmptyHomeViewTest(TestCase):
+class EmptyListViewTest(TestCase):
     """
     Test pages when the database is empty
     """

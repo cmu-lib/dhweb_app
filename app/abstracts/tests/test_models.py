@@ -54,3 +54,34 @@ class OrganizerModelTest(TestCase):
         with self.assertRaises(IntegrityError):
             Organizer.objects.create(name="Bar", abbreviation="TeCo")
 
+
+class ConferenceSeriesModelTest(TestCase):
+    """
+    Test the ConferenceSeries model definition
+    """
+
+    @classmethod
+    def setUpTestData(self):
+        ConferenceSeries.objects.create(
+            title="Tesco Conference Series", abbreviation="TECOS"
+        )
+
+    def test_series_str(self):
+        tecos = ConferenceSeries.objects.get(abbreviation="TECOS")
+        self.assertEquals("TECOS", str(tecos))
+
+    def test_abbreviation_limit(self):
+        with self.assertRaises(DataError):
+            ConferenceSeries.objects.create(
+                title="Foo", abbreviation="Too long to be an abbreviation"
+            )
+
+    def test_unique_title(self):
+        with self.assertRaises(IntegrityError):
+            ConferenceSeries.objects.create(
+                title="Tesco Conference Series", abbreviation="Buzz"
+            )
+
+    def test_unique_abbreviation(self):
+        with self.assertRaises(IntegrityError):
+            ConferenceSeries.objects.create(title="Bar", abbreviation="TECOS")

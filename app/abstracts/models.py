@@ -19,7 +19,7 @@ class TextIndexedModel(models.Model):
 
 class ConferenceSeries(models.Model):
     title = models.CharField(max_length=100, unique=True)
-    abbreviation = models.CharField(max_length=7, blank=True, unique=True)
+    abbreviation = models.CharField(max_length=7, unique=True)
     notes = models.TextField(blank=True, null=False, default="")
 
     @property
@@ -27,10 +27,7 @@ class ConferenceSeries(models.Model):
         return Organizer.objects.filter(conferences_organized__series=self).distinct()
 
     def __str__(self):
-        if self.abbreviation:
-            return self.abbreviation
-        else:
-            return self.title
+        return self.abbreviation
 
 
 class Conference(models.Model):
