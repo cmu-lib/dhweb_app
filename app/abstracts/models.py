@@ -71,7 +71,7 @@ class Conference(models.Model):
 
 class Organizer(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    abbreviation = models.CharField(max_length=7, blank=True, unique=True)
+    abbreviation = models.CharField(max_length=7, unique=True)
     conferences_organized = models.ManyToManyField(
         Conference, related_name="organizers", blank=True
     )
@@ -79,10 +79,7 @@ class Organizer(models.Model):
     url = models.URLField(blank=True, max_length=100)
 
     def __str__(self):
-        if self.abbreviation:
-            return self.abbreviation
-        else:
-            return self.name
+        return self.abbreviation
 
 
 class SeriesMembership(models.Model):

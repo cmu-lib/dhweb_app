@@ -16,3 +16,9 @@ wipe: stop
 	$(MAKE) restart
 reload: wipe
 	docker-compose exec dh-web python manage.py loaddata /vol/data/json/dh.json
+dumptest:
+	docker-compose exec dh-web python manage.py dumpdata --indent 2 -e admin.logentry -e auth.permission -e contenttypes -e sessions -o abstracts/fixtures/test.json
+loadtest: wipe
+	docker-compose exec dh-web python manage.py loaddata abstracts/fixtures/test.json
+test:
+	docker-compose exec dh-web python manage.py test
