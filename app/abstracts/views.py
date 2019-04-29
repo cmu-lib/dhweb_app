@@ -90,6 +90,16 @@ class AuthorAutocomplete(Select2QuerySetView):
         return qs
 
 
+class WorkAutocomplete(Select2QuerySetView):
+    def get_queryset(self):
+        qs = Work.objects.all()
+
+        if self.q:
+            qs = qs.filter(title__icontains=self.q).all()
+
+        return qs
+
+
 class WorkList(ListView):
     context_object_name = "work_list"
     template_name = "work_list.html"
