@@ -21,4 +21,5 @@ dumptest:
 loadtest: wipe
 	docker-compose exec dh-web python manage.py loaddata abstracts/fixtures/test.json
 test:
-	docker-compose exec dh-web python manage.py test
+	docker-compose exec dh-web coverage run manage.py test
+	docker-compose exec dh-web coverage html
