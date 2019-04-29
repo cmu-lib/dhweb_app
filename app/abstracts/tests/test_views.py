@@ -122,3 +122,53 @@ class AuthorDetailViewTest(TestCase):
         self.assertEqual(
             len(author_detail_response.context["affiliation_assertions"]), 2
         )
+
+
+class WorkListViewTest(TestCase):
+    """
+    Test Work list page
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        author_list_response = self.client.get(reverse("author_list"))
+        self.assertEqual(author_list_response.status_code, 200)
+
+    def test_length(self):
+        work_list_response = self.client.get(reverse("work_list"))
+        self.assertEqual(
+            len(
+                set(
+                    work_list_response.context["work_list"].values_list("pk", flat=True)
+                )
+            ),
+            2,
+        )
+
+    def test_query_filtered_count(self):
+        work_list_response = self.client.get(reverse("work_list"))
+        self.assertIsInstance(work_list_response.context["filtered_works_count"], int)
+
+    def test_query_total_count(self):
+        work_list_response = self.client.get(reverse("work_list"))
+        self.assertIsInstance(work_list_response.context["available_works_count"], int)
+
+    def test_form(self):
+        work_list_response = self.client.get(reverse("work_list"))
+        self.assertIsInstance(
+            work_list_response.context["work_filter_form"], WorkFilter
+        )
+
+    def test_unique_set(self):
+        work_list_response = self.client.get(reverse("work_list"))
+        self.assertEqual(
+            len(set(work_list_response.context["work_list"])),
+            work_list_response.context["filtered_works_count"],
+        )
+
+    def test_only_accepted(self):
+        work_list_response = self.client.get(reverse("work_list"))
+        for work in work_list_response.context["work_list"]:
+            self.assertEqual(work.state, "ac")
+
