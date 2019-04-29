@@ -85,3 +85,60 @@ class ConferenceSeriesModelTest(TestCase):
     def test_unique_abbreviation(self):
         with self.assertRaises(IntegrityError):
             ConferenceSeries.objects.create(title="Bar", abbreviation="TECOS")
+
+
+class SeriesMembershipModelTest(TestCase):
+    """
+    Test the Conference model definition
+    """
+
+    @classmethod
+    def setUpTestData(self):
+        cs = ConferenceSeries.objects.create(
+            title="Tesco Conference Series", abbreviation="TECOS"
+        )
+        org = Organizer.objects.create(name="Tesco", abbreviation="TeCo")
+        Conference.objects.create(
+            year=2000, venue="New York", venue_abbreviation="NYC", series=cs
+        )
+
+
+class ConferenceModelTest(TestCase):
+    """
+    Test the Conference model definition
+    """
+
+    @classmethod
+    def setUpTestData(self):
+        cs = ConferenceSeries.objects.create(
+            title="Tesco Conference Series", abbreviation="TECOS"
+        )
+        org = Organizer.objects.create(name="Tesco", abbreviation="TeCo")
+        abbr_con = Conference.objects.create(
+            year=2000, venue="New York", venue_abbreviation="NYC"
+        )
+        no_abbr_con = Conference.objects.create(year=2001, venue="Oregon")
+        SeriesMembership.objects.create(series=cs, conference=abbr_con, number=1)
+        SeriesMembership.objects.create(series=cs, conference=no_abbr_con, number=2)
+
+    def test_conference_str_abbr(self):
+        abbr_con = Conference.objects.get(pk=1)
+        self.assertEquals(
+            f"{abbr_con.series.first()} {abbr_con.year} - {abbr_con.venue_abbreviation}",
+            str(abbr_con),
+        )
+
+    def test_conference_str_no_abbr(self):
+        no_abbr_con = Conference.objects.get(pk=2)
+        self.assertEquals(
+            f"{no_abbr_con.series.first()} {no_abbr_con.year} - {no_abbr_con.venue}",
+            str(no_abbr_con),
+        )
+
+    def test_conference_default_ordering(self):
+        """
+        Conferences are returned in reverse chronological order
+        """
+        cons = Conference.objects.all()
+        self.assertGreater(cons.first().year, cons.last().year)
+
