@@ -214,3 +214,23 @@ class WorkDetailViewTest(TestCase):
     def test_authorships_unique(self):
         work_detail_response = self.client.get(reverse("work_detail", kwargs={"pk": 1}))
         self.assertTrue(is_list_unique(work_detail_response.context["authorships"]))
+
+
+class ConferenceListViewTest(TestCase):
+    """
+    Test Conference list view
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        conference_list_response = self.client.get(reverse("conference_list"))
+        self.assertEqual(conference_list_response.status_code, 200)
+
+    def test_hide_unaccepted_conferences(self):
+        conference_list_response = self.client.get(reverse("conference_list"))
+        self.assertNotIn(
+            ConferenceSeries.objects.get(pk=2),
+            conference_list_response.context["conference_list"],
+        )
+
