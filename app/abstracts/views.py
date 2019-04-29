@@ -100,6 +100,18 @@ class WorkAutocomplete(Select2QuerySetView):
         return qs
 
 
+class AppellationAutocomplete(Select2QuerySetView):
+    def get_queryset(self):
+        qs = Appellation.objects.all()
+
+        if self.q:
+            qs = qs.filter(
+                Q(first_name__icontains=self.q) | Q(last_name__icontains=self.q)
+            ).all()
+
+        return qs
+
+
 class WorkList(ListView):
     context_object_name = "work_list"
     template_name = "work_list.html"
