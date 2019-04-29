@@ -234,3 +234,59 @@ class ConferenceListViewTest(TestCase):
             conference_list_response.context["conference_list"],
         )
 
+
+class InstitutionAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        institution_ac_response = self.client.get(reverse("institution-autocomplete"))
+        self.assertEqual(institution_ac_response.status_code, 200)
+
+
+class TopicAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        topic_ac_response = self.client.get(reverse("topic-autocomplete"))
+        self.assertEqual(topic_ac_response.status_code, 200)
+
+
+class KeywordAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        keyword_ac_response = self.client.get(reverse("keyword-autocomplete"))
+        self.assertEqual(keyword_ac_response.status_code, 200)
+
+
+class CountryAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        country_ac_response = self.client.get(reverse("country-autocomplete"))
+        self.assertEqual(country_ac_response.status_code, 200)
+
+
+class AuthorAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        author_ac_response = self.client.get(reverse("author-autocomplete"))
+        self.assertEqual(author_ac_response.status_code, 200)
+
+
+class WorkAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        work_ac_response = self.client.get(reverse("work-autocomplete"))
+        self.assertEqual(work_ac_response.status_code, 200)
+
+
+class AppellationAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        appellation_ac_response = self.client.get(reverse("appellation-autocomplete"))
+        self.assertEqual(appellation_ac_response.status_code, 200)
+

@@ -7,10 +7,11 @@ from django.db.models import Count, Max, Min, Q
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from dal.autocomplete import Select2QuerySetView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from .models import (
     Work,
@@ -27,12 +28,12 @@ from .models import (
     CountryLabel,
 )
 
-from .forms import WorkFilter, AuthorFilter, AuthorMergeForm
+from .forms import WorkFilter, AuthorFilter, AuthorMergeForm, WorkForm
 
 
 class InstitutionAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Institution.objects.all().order_by("name")
+        qs = Institution.objects.all()
 
         if self.q:
             qs = qs.filter(
@@ -45,7 +46,7 @@ class InstitutionAutocomplete(Select2QuerySetView):
 
 class KeywordAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Keyword.objects.all().order_by("title")
+        qs = Keyword.objects.all()
 
         if self.q:
             qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
@@ -55,7 +56,7 @@ class KeywordAutocomplete(Select2QuerySetView):
 
 class TopicAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Topic.objects.all().order_by("title")
+        qs = Topic.objects.all()
 
         if self.q:
             qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
@@ -65,12 +66,12 @@ class TopicAutocomplete(Select2QuerySetView):
 
 class CountryAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Country.objects.all().order_by("name")
+        qs = Country.objects.all()
 
         if self.q:
             qs = qs.filter(
                 institutions__affiliations__asserted_by__work__state="ac",
-                names__icontains=self.q,
+                names__name__icontains=self.q,
             ).distinct()
 
         return qs
@@ -376,3 +377,9 @@ def download_data(request):
     }
 
     return render(request, "downloads.html", context)
+
+
+class WorkEdit(UpdateView):
+    model = Work
+    form_class = WorkForm
+    template_name = "work_edit.html"
