@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("DH_SECRET")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "***REMOVED***"]
+ALLOWED_HOSTS = ["localhost"]
 
 
 # Application definition
