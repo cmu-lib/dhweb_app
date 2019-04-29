@@ -2,6 +2,8 @@ all:
 	docker-compose up
 stop:
 	docker-compose stop dh-web
+down:
+	docker-compose down
 attach:
 	docker-compose exec dh-web bash
 db:
