@@ -195,3 +195,22 @@ class WorkListViewTest(TestCase):
         for work in work_list_response.context["work_list"]:
             self.assertEqual(work.state, "ac")
 
+
+class WorkDetailViewTest(TestCase):
+    """
+    Test Work detail view
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        work_detail_response = self.client.get(reverse("work_detail", kwargs={"pk": 1}))
+        self.assertEqual(work_detail_response.status_code, 200)
+
+    def test_is_work(self):
+        work_detail_response = self.client.get(reverse("work_detail", kwargs={"pk": 1}))
+        self.assertIsInstance(work_detail_response.context["work"], Work)
+
+    def test_authorships_unique(self):
+        work_detail_response = self.client.get(reverse("work_detail", kwargs={"pk": 1}))
+        self.assertTrue(is_list_unique(work_detail_response.context["authorships"]))
