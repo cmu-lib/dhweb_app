@@ -192,6 +192,9 @@ class Work(TextIndexedModel):
     def __str__(self):
         return f"({self.state}) {self.display_title}"
 
+    class Meta(TextIndexedModel.Meta):
+        ordering = ["title"]
+
 
 class Attribute(models.Model):
     class Meta:
@@ -223,6 +226,7 @@ class Appellation(Attribute):
 
     class Meta:
         unique_together = (("first_name", "last_name"),)
+        ordering = ["last_name", "first_name"]
 
 
 class Gender(Attribute):
@@ -256,6 +260,9 @@ class Country(models.Model):
         merges.append(self.delete())
         return merges
 
+    class Meta:
+        ordering = ["pref_name"]
+
 
 class CountryLabel(models.Model):
     name = models.CharField(max_length=300, db_index=True)
@@ -278,6 +285,7 @@ class Institution(models.Model):
 
     class Meta:
         unique_together = (("name", "country"),)
+        ordering = ["name"]
 
     def __str__(self):
         if not self.city and not self.country:
