@@ -422,8 +422,16 @@ class Author(models.Model):
         return self.most_recent_attributes(Affiliation)
 
     def merge(self, target):
+        """
+        Reassign all of an author's authorships to a target author. This effectivley merges one Author instance into another.
+        """
         merges = []
-        merges.append(Authorship.objects.filter(author=self).update(author=target))
+        merges.append(
+            Authorship.objects.filter(author=self)
+            # Don't double-assign the target author to a work if they already
+            # have an uathorship for it
+            .exclude(work__authorships__author=target).update(author=target)
+        )
         merges.append(self.delete())
         return merges
 
