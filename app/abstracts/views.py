@@ -256,9 +256,9 @@ class AuthorList(ListView):
                 result_set = result_set.filter(
                     Q(appellations__first_name__icontains=name_res)
                     | Q(appellations__last_name__icontains=name_res)
-                ).distinct()
+                )
 
-        return result_set.order_by("appellations__last_name").distinct()
+        return result_set.order_by("appellations").distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
