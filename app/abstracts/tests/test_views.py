@@ -26,6 +26,8 @@ from abstracts.models import (
     License,
 )
 
+from abstracts.forms import WorkFilter
+
 
 class EmptyListViewTest(TestCase):
     """
@@ -56,11 +58,11 @@ class AuthorListViewTest(TestCase):
 
     fixtures = ["test.json"]
 
-    def test_author_list_render(self):
+    def test_render(self):
         author_list_response = self.client.get(reverse("author_list"))
         self.assertEqual(author_list_response.status_code, 200)
 
-    def test_author_list_length(self):
+    def test_length(self):
         author_list_response = self.client.get(reverse("author_list"))
         self.assertEqual(
             len(
@@ -73,11 +75,11 @@ class AuthorListViewTest(TestCase):
             2,
         )
 
-    def test_author_list_query_filtered_count(self):
+    def test_query_filtered_count(self):
         author_list_response = self.client.get(reverse("author_list"))
         self.assertEqual(author_list_response.context["filtered_authors_count"], 2)
 
-    def test_author_list_query_total_count(self):
+    def test_query_total_count(self):
         author_list_response = self.client.get(reverse("author_list"))
         self.assertEqual(author_list_response.context["available_authors_count"], 2)
 
@@ -89,25 +91,25 @@ class AuthorDetailViewTest(TestCase):
 
     fixtures = ["test.json"]
 
-    def test_author_detail(self):
+    def test_render(self):
         author_detail_response = self.client.get(
             reverse("author_detail", kwargs={"pk": 1})
         )
         self.assertEqual(author_detail_response.status_code, 200)
 
-    def test_author_detail_series(self):
+    def test_series(self):
         author_detail_response = self.client.get(
             reverse("author_detail", kwargs={"pk": 1})
         )
         self.assertEqual(len(author_detail_response.context["split_works"]), 1)
 
-    def test_author_detail_works(self):
+    def test_works(self):
         author_detail_response = self.client.get(
             reverse("author_detail", kwargs={"pk": 1})
         )
         self.assertEqual(len(set(author_detail_response.context["split_works"][0])), 2)
 
-    def test_author_detail_appellations(self):
+    def test_appellations(self):
         author_detail_response = self.client.get(
             reverse("author_detail", kwargs={"pk": 1})
         )
@@ -115,7 +117,7 @@ class AuthorDetailViewTest(TestCase):
             len(author_detail_response.context["appellation_assertions"]), 2
         )
 
-    def test_author_detail_affiliations(self):
+    def test_affiliations(self):
         author_detail_response = self.client.get(
             reverse("author_detail", kwargs={"pk": 1})
         )
