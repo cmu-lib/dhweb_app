@@ -40,4 +40,9 @@ urlpatterns = [
     path(
         "work-autocomplete", views.WorkAutocomplete.as_view(), name="work-autocomplete"
     ),
+    path(
+        "appellation-autocomplete",
+        views.AppellationAutocomplete.as_view(),
+        name="appellation-autocomplete",
+    ),
 ]
