@@ -38,11 +38,53 @@ urlpatterns = [
         name="author-autocomplete",
     ),
     path(
-        "work-autocomplete", views.WorkAutocomplete.as_view(), name="work-autocomplete"
+        "unrestricted-keyword-autocomplete",
+        views.UnrestrictedKeywordAutocomplete.as_view(),
+        name="unrestricted-keyword-autocomplete",
     ),
     path(
-        "appellation-autocomplete",
-        views.AppellationAutocomplete.as_view(),
-        name="appellation-autocomplete",
+        "unrestricted-language-autocomplete",
+        views.UnrestrictedLanguageAutocomplete.as_view(),
+        name="unrestricted-language-autocomplete",
+    ),
+    path(
+        "unrestricted-discipline-autocomplete",
+        views.UnrestrictedDisciplineAutocomplete.as_view(),
+        name="unrestricted-discipline-autocomplete",
+    ),
+    path(
+        "unrestricted-topic-autocomplete",
+        views.UnrestrictedTopicAutocomplete.as_view(),
+        name="unrestricted-topic-autocomplete",
+    ),
+    path(
+        "unrestricted-country-autocomplete",
+        views.UnrestrictedCountryAutocomplete.as_view(),
+        name="unrestricted-country-autocomplete",
+    ),
+    path(
+        "unrestricted-appellation-autocomplete",
+        views.UnrestrictedAppellationAutocomplete.as_view(),
+        name="unrestricted-appellation-autocomplete",
+    ),
+    path(
+        "unrestricted-work-autocomplete",
+        views.UnrestrictedWorkAutocomplete.as_view(),
+        name="unrestricted-work-autocomplete",
+    ),
+    path(
+        "unrestricted-institution-autocomplete",
+        views.UnrestrictedInstitutionAutocomplete.as_view(),
+        name="unrestricted-institution-autocomplete",
+    ),
+    path(
+        "unrestricted-affiliation-autocomplete",
+        views.UnrestrictedAffiliationAutocomplete.as_view(),
+        name="unrestricted-affiliation-autocomplete",
+    ),
+    path(
+        "unrestricted-author-autocomplete",
+        views.UnrestrictedAuthorAutocomplete.as_view(),
+        name="unrestricted-author-autocomplete",
     ),
 ]
