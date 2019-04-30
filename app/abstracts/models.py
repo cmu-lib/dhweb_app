@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 from django.db.models import Max
 from django.utils import timezone
+from django.urls import reverse
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 
@@ -181,6 +182,9 @@ class Work(TextIndexedModel):
     full_text_license = models.ForeignKey(
         License, blank=True, null=True, on_delete=models.SET_NULL
     )
+
+    def get_absolute_url(self):
+        return reverse("work_detail", kwargs={"pk": self.pk})
 
     @property
     def display_title(self):
