@@ -9,6 +9,8 @@ from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from dal.autocomplete import Select2QuerySetView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -25,6 +27,8 @@ from .models import (
     Country,
     Keyword,
     Topic,
+    Discipline,
+    Language,
     CountryLabel,
 )
 
@@ -91,7 +95,9 @@ class AuthorAutocomplete(Select2QuerySetView):
         return qs
 
 
-class WorkAutocomplete(Select2QuerySetView):
+class UnrestrictedWorkAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
     def get_queryset(self):
         qs = Work.objects.all()
 
@@ -101,7 +107,9 @@ class WorkAutocomplete(Select2QuerySetView):
         return qs
 
 
-class AppellationAutocomplete(Select2QuerySetView):
+class UnrestrictedAppellationAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
     def get_queryset(self):
         qs = Appellation.objects.all()
 
@@ -109,6 +117,107 @@ class AppellationAutocomplete(Select2QuerySetView):
             qs = qs.filter(
                 Q(first_name__icontains=self.q) | Q(last_name__icontains=self.q)
             ).all()
+
+        return qs
+
+
+class UnrestrictedKeywordAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
+    def get_queryset(self):
+        qs = Keyword.objects.all()
+
+        if self.q:
+            qs = qs.filter(title__icontains=self.q).all()
+
+        return qs
+
+
+class UnrestrictedLanguageAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
+    def get_queryset(self):
+        qs = Language.objects.all()
+
+        if self.q:
+            qs = qs.filter(title__icontains=self.q).all()
+
+        return qs
+
+
+class UnrestrictedTopicAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
+    def get_queryset(self):
+        qs = Topic.objects.all()
+
+        if self.q:
+            qs = qs.filter(title__icontains=self.q).all()
+
+        return qs
+
+
+class UnrestrictedDisciplineAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
+    def get_queryset(self):
+        qs = Discipline.objects.all()
+
+        if self.q:
+            qs = qs.filter(title__icontains=self.q).all()
+
+        return qs
+
+
+class UnrestrictedCountryAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
+    def get_queryset(self):
+        qs = Country.objects.all()
+
+        if self.q:
+            qs = qs.filter(names__name__icontains=self.q).distinct()
+
+        return qs
+
+
+class UnrestrictedInstitutionAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
+    def get_queryset(self):
+        qs = Institution.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q).all()
+
+        return qs
+
+
+class UnrestrictedAffiliationAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
+    def get_queryset(self):
+        qs = Affiliation.objects.all()
+
+        if self.q:
+            qs = qs.filter(
+                Q(department__icontains=self.q) | Q(institution__name__icontains=self.q)
+            ).distinct()
+
+        return qs
+
+
+class UnrestrictedAuthorAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
+    def get_queryset(self):
+        qs = Author.objects.all()
+
+        if self.q:
+            qs = qs.filter(
+                Q(appellations__last_name__icontains=self.q)
+                | Q(appellations__first_name__icontains=self.q)
+            ).distinct()
 
         return qs
 
@@ -379,7 +488,8 @@ def download_data(request):
     return render(request, "downloads.html", context)
 
 
-class WorkEdit(UpdateView):
+class WorkEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Work
     form_class = WorkForm
     template_name = "work_edit.html"
+    success_message = "%(title)s was updated successfully"
