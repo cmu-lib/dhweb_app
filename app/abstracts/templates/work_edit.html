@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if work.state == "su" and not user.is_authenticated %}
+<div class="alert alert-warning">You must <a href="/admin/login/?next=/works/{{ work.pk }}">log in</a> to view submitted
+  versions.</div>
+{% else %}
+
+<div class="card m-2">
+  <div class="card-header">
+    Editing "{{ work.title }}"
+  </div>
+  <div class="card-body">
+    {% load static %}
+    {% load crispy_forms_tags %}
+    <form method="post">
+      {% csrf_token %}
+      {{ form.media }}
+      {{ form|crispy }}
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+        <a class="btn btn-secondary mb-2" href="{% url 'work_detail' work.pk %}" role="button">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

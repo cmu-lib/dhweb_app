@@ -1,5 +1,5 @@
 from django import forms
-from dal.autocomplete import ModelSelect2
+from dal.autocomplete import ModelSelect2, ModelSelect2Multiple
 
 
 from .models import (
@@ -43,6 +43,50 @@ class WorkFilter(forms.Form):
         required=False,
         widget=ModelSelect2(url="topic-autocomplete"),
     )
+
+
+class AuthorshipForm(forms.ModelForm):
+    work = forms.ModelChoiceField(
+        queryset=Work.objects.distinct(),
+        required=True,
+        widget=ModelSelect2(url="work-autocomplete"),
+    )
+    author = (
+        forms.ModelChoiceField(
+            queryset=Author.objects.distinct(),
+            required=True,
+            widget=ModelSelect2(url="author-autocomplete"),
+        ),
+    )
+    authorship_order = forms.IntegerField(min_value=0)
+
+    class Meta:
+        model = Authorship
+        fields = ["work", "author", "authorship_order"]
+
+
+class WorkForm(forms.ModelForm):
+    keywords = forms.ModelMultipleChoiceField(
+        queryset=Keyword.objects.distinct(),
+        required=False,
+        widget=ModelSelect2Multiple(url="keyword-autocomplete"),
+    )
+
+    class Meta:
+        model = Work
+        fields = [
+            "conference",
+            "title",
+            "work_type",
+            "state",
+            "full_text",
+            "full_text_type",
+            "keywords",
+            "languages",
+            "disciplines",
+            "topics",
+            "full_text_license",
+        ]
 
 
 class AuthorFilter(forms.Form):

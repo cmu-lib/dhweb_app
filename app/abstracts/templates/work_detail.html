@@ -50,7 +50,7 @@
     <div class="card m-2">
       <div class="card-header">Administration</div>
       <div class="card-body">
-        <a class="btn btn-primary" role="button" href="{{ work_admin_page }}">Edit this work</a>
+        <a class="btn btn-primary" role="button" href="{% url 'work_edit' work.pk %}">Edit this work</a>
       </div>
     </div>
     <div class="card m-2">
