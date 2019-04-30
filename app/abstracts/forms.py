@@ -12,6 +12,8 @@ from .models import (
     Work,
     WorkType,
     Country,
+    Language,
+    Discipline,
 )
 
 
@@ -67,9 +69,33 @@ class AuthorshipForm(forms.ModelForm):
 
 class WorkForm(forms.ModelForm):
     keywords = forms.ModelMultipleChoiceField(
-        queryset=Keyword.objects.distinct(),
+        queryset=Keyword.objects.all(),
         required=False,
-        widget=ModelSelect2Multiple(url="keyword-autocomplete"),
+        widget=ModelSelect2Multiple(url="unrestricted-keyword-autocomplete"),
+    )
+
+    topics = forms.ModelMultipleChoiceField(
+        queryset=Topic.objects.all(),
+        required=False,
+        widget=ModelSelect2Multiple(url="unrestricted-topic-autocomplete"),
+    )
+
+    languages = forms.ModelMultipleChoiceField(
+        queryset=Language.objects.all(),
+        required=False,
+        widget=ModelSelect2Multiple(url="unrestricted-language-autocomplete"),
+    )
+
+    disciplines = forms.ModelMultipleChoiceField(
+        queryset=Discipline.objects.all(),
+        required=False,
+        widget=ModelSelect2Multiple(url="unrestricted-discipline-autocomplete"),
+    )
+
+    published_version = forms.ModelChoiceField(
+        queryset=Work.objects.filter(state="ac"),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-work-autocomplete"),
     )
 
     class Meta:
@@ -81,11 +107,11 @@ class WorkForm(forms.ModelForm):
             "state",
             "full_text",
             "full_text_type",
+            "full_text_license",
             "keywords",
             "languages",
             "disciplines",
             "topics",
-            "full_text_license",
         ]
 
 
