@@ -253,7 +253,7 @@ class AuthorList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        base_result_set = Author.objects.filter(works__state="ac").distinct()
+        base_result_set = Author.objects.filter(works__state="ac")
 
         filter_form = self.request.GET
 
@@ -281,7 +281,7 @@ class AuthorList(ListView):
                     | Q(appellations__last_name__icontains=name_res)
                 )
 
-        return result_set.order_by("appellations").distinct()
+        return result_set.order_by("id").distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -358,6 +358,9 @@ class Author(models.Model):
     def __str__(self):
         return f"{self.pk} - {self.pref_name}"
 
+    class Meta:
+        ordering = ["id"]
+
     @property
     def all_authorships(self):
         return self.authorships.all()
