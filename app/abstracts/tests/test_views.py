@@ -304,6 +304,18 @@ class UnrestrictedAppellationAutocompleteTest(TestCase):
         ]
         self.assertTrue(is_list_unique(result_vals))
 
+    def test_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_appellation_ac_response = self.client.get(
+            reverse("unrestricted-appellation-autocomplete"), data={"q": "franklin"}
+        )
+        self.assertRegex(str(auth_appellation_ac_response.content), "Franklin")
+        result_vals = [
+            res["id"]
+            for res in json.loads(auth_appellation_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
 
 class UnrestrictedWorkAutocompleteTest(TestCase):
     fixtures = ["test.json"]
@@ -324,6 +336,17 @@ class UnrestrictedWorkAutocompleteTest(TestCase):
         auth_work_ac_response = self.client.get(
             reverse("unrestricted-work-autocomplete")
         )
+        result_vals = [
+            res["id"] for res in json.loads(auth_work_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_work_ac_response = self.client.get(
+            reverse("unrestricted-work-autocomplete"), data={"q": "foo"}
+        )
+        self.assertRegex(str(auth_work_ac_response.content), "Foo")
         result_vals = [
             res["id"] for res in json.loads(auth_work_ac_response.content)["results"]
         ]
@@ -356,6 +379,17 @@ class UnrestrictedKeywordAutocompleteTest(TestCase):
         ]
         self.assertTrue(is_list_unique(result_vals))
 
+    def test_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_keyword_ac_response = self.client.get(
+            reverse("unrestricted-keyword-autocomplete"), data={"q": "lat"}
+        )
+        self.assertRegex(str(auth_keyword_ac_response.content), "Latin")
+        result_vals = [
+            res["id"] for res in json.loads(auth_keyword_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
 
 class UnrestrictedLanguageAutocompleteTest(TestCase):
     fixtures = ["test.json"]
@@ -378,6 +412,18 @@ class UnrestrictedLanguageAutocompleteTest(TestCase):
         auth_language_ac_response = self.client.get(
             reverse("unrestricted-language-autocomplete")
         )
+        result_vals = [
+            res["id"]
+            for res in json.loads(auth_language_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_unqiue(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_language_ac_response = self.client.get(
+            reverse("unrestricted-language-autocomplete"), data={"q": "dut"}
+        )
+        self.assertRegex(str(auth_language_ac_response.content), "Dutch")
         result_vals = [
             res["id"]
             for res in json.loads(auth_language_ac_response.content)["results"]
@@ -412,6 +458,18 @@ class UnrestrictedDisciplineAutocompleteTest(TestCase):
         ]
         self.assertTrue(is_list_unique(result_vals))
 
+    def test_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_discipline_ac_response = self.client.get(
+            reverse("unrestricted-discipline-autocomplete"), data={"q": "art"}
+        )
+        self.assertRegex(str(auth_discipline_ac_response.content), "Art")
+        result_vals = [
+            res["id"]
+            for res in json.loads(auth_discipline_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
 
 class UnrestrictedTopicAutocompleteTest(TestCase):
     fixtures = ["test.json"]
@@ -432,6 +490,17 @@ class UnrestrictedTopicAutocompleteTest(TestCase):
         auth_topic_ac_response = self.client.get(
             reverse("unrestricted-topic-autocomplete")
         )
+        result_vals = [
+            res["id"] for res in json.loads(auth_topic_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_topic_ac_response = self.client.get(
+            reverse("unrestricted-topic-autocomplete"), data={"q": "comic"}
+        )
+        self.assertRegex(str(auth_topic_ac_response.content), "Webcomics")
         result_vals = [
             res["id"] for res in json.loads(auth_topic_ac_response.content)["results"]
         ]
@@ -464,6 +533,17 @@ class UnrestrictedAuthorAutocompleteTest(TestCase):
         ]
         self.assertTrue(is_list_unique(result_vals))
 
+    def test_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_author_ac_response = self.client.get(
+            reverse("unrestricted-author-autocomplete"), data={"q": "frank"}
+        )
+        self.assertRegex(str(auth_author_ac_response.content), "Rosalind")
+        result_vals = [
+            res["id"] for res in json.loads(auth_author_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
 
 class UnrestrictedAffiliationAutocompleteTest(TestCase):
     fixtures = ["test.json"]
@@ -486,6 +566,18 @@ class UnrestrictedAffiliationAutocompleteTest(TestCase):
         auth_affiliation_ac_response = self.client.get(
             reverse("unrestricted-affiliation-autocomplete")
         )
+        result_vals = [
+            res["id"]
+            for res in json.loads(auth_affiliation_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_affiliation_ac_response = self.client.get(
+            reverse("unrestricted-affiliation-autocomplete"), data={"q": "libr"}
+        )
+        self.assertRegex(str(auth_affiliation_ac_response.content), "Stanford")
         result_vals = [
             res["id"]
             for res in json.loads(auth_affiliation_ac_response.content)["results"]
@@ -520,6 +612,18 @@ class UnrestrictedInstitutionAutocompleteTest(TestCase):
         ]
         self.assertTrue(is_list_unique(result_vals))
 
+    def test_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_institution_ac_response = self.client.get(
+            reverse("unrestricted-institution-autocomplete"), data={"q": "wood"}
+        )
+        self.assertRegex(str(auth_institution_ac_response.json()), "Wood")
+        result_vals = [
+            res["id"]
+            for res in json.loads(auth_institution_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
 
 class UnrestrictedCountryAutocompleteTest(TestCase):
     fixtures = ["test.json"]
@@ -542,6 +646,17 @@ class UnrestrictedCountryAutocompleteTest(TestCase):
         auth_country_ac_response = self.client.get(
             reverse("unrestricted-country-autocomplete")
         )
+        result_vals = [
+            res["id"] for res in json.loads(auth_country_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_country_ac_response = self.client.get(
+            reverse("unrestricted-country-autocomplete"), data={"q": "uni"}
+        )
+        self.assertRegex(str(auth_country_ac_response.json()), "United")
         result_vals = [
             res["id"] for res in json.loads(auth_country_ac_response.content)["results"]
         ]

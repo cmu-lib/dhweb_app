@@ -176,7 +176,9 @@ class UnrestrictedCountryAutocomplete(LoginRequiredMixin, Select2QuerySetView):
         qs = Country.objects.all()
 
         if self.q:
-            qs = qs.filter(names__name__icontains=self.q).distinct()
+            qs = qs.filter(
+                Q(pref_name__icontains=self.q) | Q(names__name__icontains=self.q)
+            ).distinct()
 
         return qs
 
