@@ -14,6 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from dal.autocomplete import Select2QuerySetView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.db import transaction
 
 from .models import (
     Work,
@@ -480,6 +481,7 @@ def home_view(request):
 
 
 @login_required
+@transaction.atomic
 def author_merge_view(request, author_id):
 
     author = Author.objects.get(pk=author_id)
