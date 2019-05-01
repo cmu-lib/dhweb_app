@@ -1,4 +1,4 @@
-django==2.1
+django==2.2
 coverage>=4.4
 django_coverage_plugin
 psycopg2-binary
@@ -7,3 +7,4 @@ django-crispy-forms
 django-import-export
 django-autocomplete-light
 parsel
+django-debug-toolbar

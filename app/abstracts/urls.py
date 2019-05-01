@@ -1,8 +1,9 @@
-from django.urls import path
-
+from django.urls import include, path
+import debug_toolbar
 from . import views
 
 urlpatterns = [
+    path("__debug__/", include(debug_toolbar.urls)),
     path("", views.home_view, name="home_view"),
     path("works", views.WorkList.as_view(), name="work_list"),
     path("works/<int:pk>", views.WorkView.as_view(), name="work_detail"),
