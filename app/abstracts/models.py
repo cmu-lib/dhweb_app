@@ -4,6 +4,8 @@ from django.db import models
 from django.db.models import Max
 from django.utils import timezone
 from django.urls import reverse
+from django.contrib.sites.models import Site
+from django.contrib.redirects.models import Redirect
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 
@@ -436,6 +438,9 @@ class Author(models.Model):
     def most_recent_affiliations(self):
         return self.most_recent_attributes(Affiliation)
 
+    def get_absolute_url(self):
+        return reverse("author_detail", kwargs={"pk": self.pk})
+
     def merge(self, target):
         """
         Reassign all of an author's authorships to a target author. This effectivley merges one Author instance into another.
@@ -447,6 +452,15 @@ class Author(models.Model):
             # have an uathorship for it
             .exclude(work__authorships__author=target).update(author=target)
         )
+
+        # Register a redirect
+        Redirect.objects.create(
+            site=Site.objects.get_current(),
+            old_path=self.get_absolute_url(),
+            new_path=target.get_absolute_url(),
+        )
+
+        # Delete self
         merges.append(self.delete())
         return merges
 
