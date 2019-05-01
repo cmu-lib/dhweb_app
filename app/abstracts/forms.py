@@ -45,6 +45,16 @@ class WorkFilter(forms.Form):
         required=False,
         widget=ModelSelect2(url="topic-autocomplete"),
     )
+    language = forms.ModelChoiceField(
+        queryset=Language.objects.filter(works__state="ac").distinct(),
+        required=False,
+        widget=ModelSelect2(url="language-autocomplete"),
+    )
+    discipline = forms.ModelChoiceField(
+        queryset=Discipline.objects.filter(works__state="ac").distinct(),
+        required=False,
+        widget=ModelSelect2(url="discipline-autocomplete"),
+    )
 
 
 class AuthorshipForm(forms.ModelForm):
