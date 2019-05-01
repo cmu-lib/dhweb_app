@@ -1,5 +1,7 @@
 all:
 	docker-compose up
+detached:
+	docker-compose up -d
 stop:
 	docker-compose stop dh-web
 down:
