@@ -244,6 +244,23 @@ class InstitutionAutocompleteTest(TestCase):
         institution_ac_response = self.client.get(reverse("institution-autocomplete"))
         self.assertEqual(institution_ac_response.status_code, 200)
 
+    def test_unique(self):
+        institution_ac_response = self.client.get(reverse("institution-autocomplete"))
+        result_vals = [
+            res["id"] for res in json.loads(institution_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_q(self):
+        institution_ac_response = self.client.get(
+            reverse("institution-autocomplete"), data={"q": "wood"}
+        )
+        self.assertRegex(str(institution_ac_response.content), "Wood")
+        result_vals = [
+            res["id"] for res in json.loads(institution_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
 
 class TopicAutocompleteTest(TestCase):
     fixtures = ["test.json"]
@@ -251,6 +268,23 @@ class TopicAutocompleteTest(TestCase):
     def test_render(self):
         topic_ac_response = self.client.get(reverse("topic-autocomplete"))
         self.assertEqual(topic_ac_response.status_code, 200)
+
+    def test_unique(self):
+        topic_ac_response = self.client.get(reverse("topic-autocomplete"))
+        result_vals = [
+            res["id"] for res in json.loads(topic_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_q(self):
+        topic_ac_response = self.client.get(
+            reverse("topic-autocomplete"), data={"q": "com"}
+        )
+        self.assertRegex(str(topic_ac_response.content), "Webcomics")
+        result_vals = [
+            res["id"] for res in json.loads(topic_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
 
 
 class KeywordAutocompleteTest(TestCase):
@@ -260,6 +294,74 @@ class KeywordAutocompleteTest(TestCase):
         keyword_ac_response = self.client.get(reverse("keyword-autocomplete"))
         self.assertEqual(keyword_ac_response.status_code, 200)
 
+    def test_unique(self):
+        keyword_ac_response = self.client.get(reverse("keyword-autocomplete"))
+        self.assertRegex(str(keyword_ac_response.content), "Latin")
+        result_vals = [
+            res["id"] for res in json.loads(keyword_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_q(self):
+        keyword_ac_response = self.client.get(
+            reverse("keyword-autocomplete"), data={"q": "lat"}
+        )
+        self.assertRegex(str(keyword_ac_response.content), "Latin")
+        result_vals = [
+            res["id"] for res in json.loads(keyword_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+
+class LanguageAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        language_ac_response = self.client.get(reverse("language-autocomplete"))
+        self.assertEqual(language_ac_response.status_code, 200)
+
+    def test_unique(self):
+        language_ac_response = self.client.get(reverse("language-autocomplete"))
+        result_vals = [
+            res["id"] for res in json.loads(language_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_q(self):
+        language_ac_response = self.client.get(
+            reverse("language-autocomplete"), data={"q": "dut"}
+        )
+        self.assertRegex(str(language_ac_response.content), "Dutch")
+        result_vals = [
+            res["id"] for res in json.loads(language_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+
+class DisciplineAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        discipline_ac_response = self.client.get(reverse("discipline-autocomplete"))
+        self.assertEqual(discipline_ac_response.status_code, 200)
+
+    def test_unique(self):
+        discipline_ac_response = self.client.get(reverse("discipline-autocomplete"))
+        result_vals = [
+            res["id"] for res in json.loads(discipline_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_q(self):
+        discipline_ac_response = self.client.get(
+            reverse("discipline-autocomplete"), data={"q": "art"}
+        )
+        self.assertRegex(str(discipline_ac_response.content), "Art")
+        result_vals = [
+            res["id"] for res in json.loads(discipline_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
 
 class CountryAutocompleteTest(TestCase):
     fixtures = ["test.json"]
@@ -268,6 +370,16 @@ class CountryAutocompleteTest(TestCase):
         country_ac_response = self.client.get(reverse("country-autocomplete"))
         self.assertEqual(country_ac_response.status_code, 200)
 
+    def test_q(self):
+        country_ac_response = self.client.get(
+            reverse("country-autocomplete"), data={"q": "uni"}
+        )
+        self.assertRegex(str(country_ac_response.json()), "United")
+        result_vals = [
+            res["id"] for res in json.loads(country_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
 
 class AuthorAutocompleteTest(TestCase):
     fixtures = ["test.json"]
@@ -275,6 +387,16 @@ class AuthorAutocompleteTest(TestCase):
     def test_render(self):
         author_ac_response = self.client.get(reverse("author-autocomplete"))
         self.assertEqual(author_ac_response.status_code, 200)
+
+    def test_q(self):
+        author_ac_response = self.client.get(
+            reverse("author-autocomplete"), data={"q": "frank"}
+        )
+        self.assertRegex(str(author_ac_response.content), "Rosalind")
+        result_vals = [
+            res["id"] for res in json.loads(author_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
 
 
 class UnrestrictedAppellationAutocompleteTest(TestCase):

@@ -68,6 +68,26 @@ class TopicAutocomplete(Select2QuerySetView):
         return qs
 
 
+class LanguageAutocomplete(Select2QuerySetView):
+    def get_queryset(self):
+        qs = Language.objects.all()
+
+        if self.q:
+            qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
+
+        return qs
+
+
+class DisciplineAutocomplete(Select2QuerySetView):
+    def get_queryset(self):
+        qs = Discipline.objects.all()
+
+        if self.q:
+            qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
+
+        return qs
+
+
 class CountryAutocomplete(Select2QuerySetView):
     def get_queryset(self):
         qs = Country.objects.all()

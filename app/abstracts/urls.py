@@ -28,6 +28,16 @@ urlpatterns = [
         name="keyword-autocomplete",
     ),
     path(
+        "language-autocomplete",
+        views.LanguageAutocomplete.as_view(),
+        name="language-autocomplete",
+    ),
+    path(
+        "discipline-autocomplete",
+        views.DisciplineAutocomplete.as_view(),
+        name="discipline-autocomplete",
+    ),
+    path(
         "country-autocomplete",
         views.CountryAutocomplete.as_view(),
         name="country-autocomplete",
