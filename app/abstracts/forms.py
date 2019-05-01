@@ -148,7 +148,7 @@ class AuthorFilter(forms.Form):
 class AuthorMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Author.objects.all(),
-        widget=ModelSelect2(url="author-autocomplete"),
+        widget=ModelSelect2(url="unrestricted-author-autocomplete"),
         required=True,
         help_text="Select the author that will be used to replace the one you are merging.",
     )

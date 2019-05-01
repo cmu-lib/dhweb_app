@@ -496,17 +496,27 @@ def author_merge_view(request, author_id):
         Posting the new author id causes all of the old author's authorships to be reassigned.
         """
 
-        target_id = request.POST["into"]
-        oid = author.pk
+        target_id = int(request.POST["into"])
 
-        target_author = Author.objects.get(pk=target_id)
-        author.merge(target_author)
+        if author_id == target_id:
+            """
+            If the user chooses the existing author, don't merge, but instead error out.
+            """
+            messages.error(
+                request,
+                f"You cannot merge an author into themselves. Please select a different author.",
+            )
+            return redirect("author_merge", author_id=author_id)
+        else:
+            target_author = Author.objects.get(pk=target_id)
+            old_author_string = str(author)
+            author.merge(target_author)
 
-        messages.success(
-            request,
-            f"Author {oid} has been merged into {target_author}, and the old author entry has been deleted.",
-        )
-        return redirect("author_detail", pk=target_author.pk)
+            messages.success(
+                request,
+                f"Author {old_author_string} has been merged into {target_author}, and the old author entry has been deleted.",
+            )
+            return redirect("author_detail", pk=target_author.pk)
 
 
 @login_required
