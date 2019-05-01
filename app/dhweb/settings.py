@@ -136,9 +136,3 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = "/vol/static_files"
-
-# Using pygraphviz to create ERDs of models
-
-GRAPH_MODELS = {"all_applications": True, "group_models": True}
-
-LOGIN_URL = "/admin/login"
