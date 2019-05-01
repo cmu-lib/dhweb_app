@@ -37,12 +37,13 @@ from .forms import WorkFilter, AuthorFilter, AuthorMergeForm, WorkForm
 
 class InstitutionAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Institution.objects.all()
+        qs = Institution.objects.filter(
+            affiliations__asserted_by__work__state="ac"
+        ).distinct()
 
         if self.q:
             qs = qs.filter(
-                Q(name__icontains=self.q) | Q(country__names__name__icontains=self.q),
-                affiliations__asserted_by__work__state="ac",
+                Q(name__icontains=self.q) | Q(country__names__name__icontains=self.q)
             ).distinct()
 
         return qs
@@ -50,7 +51,7 @@ class InstitutionAutocomplete(Select2QuerySetView):
 
 class KeywordAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Keyword.objects.all()
+        qs = Keyword.objects.filter(works__state="ac").distinct()
 
         if self.q:
             qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
@@ -60,56 +61,54 @@ class KeywordAutocomplete(Select2QuerySetView):
 
 class TopicAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Topic.objects.all()
+        qs = Topic.objects.filter(works__state="ac").distinct()
 
         if self.q:
-            qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
+            qs = qs.filter(title__icontains=self.q).distinct()
 
         return qs
 
 
 class LanguageAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Language.objects.all()
+        qs = Language.objects.filter(works__state="ac").distinct()
 
         if self.q:
-            qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
+            qs = qs.filter(title__icontains=self.q).distinct()
 
         return qs
 
 
 class DisciplineAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Discipline.objects.all()
+        qs = Discipline.objects.filter(works__state="ac").distinct()
 
         if self.q:
-            qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
+            qs = qs.filter(title__icontains=self.q).distinct()
 
         return qs
 
 
 class CountryAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Country.objects.all()
+        qs = Country.objects.filter(
+            institutions__affiliations__asserted_by__work__state="ac"
+        ).distinct()
 
         if self.q:
-            qs = qs.filter(
-                institutions__affiliations__asserted_by__work__state="ac",
-                names__name__icontains=self.q,
-            ).distinct()
+            qs = qs.filter(names__name__icontains=self.q).distinct()
 
         return qs
 
 
 class AuthorAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Author.objects.all()
+        qs = Author.objects.filter(works__state="ac").distinct()
 
         if self.q:
             qs = qs.filter(
                 Q(appellations__first_name__icontains=self.q)
-                | Q(appellations__last_name__icontains=self.q),
-                works__state="ac",
+                | Q(appellations__last_name__icontains=self.q)
             ).distinct()
 
         return qs

@@ -49,6 +49,17 @@ class InstitutionAutocompleteTest(TestCase):
         ]
         self.assertTrue(is_list_unique(result_vals))
 
+    def test_public(self):
+        institution_ac_response = self.client.get(reverse("institution-autocomplete"))
+        private_institutions = (
+            Institution.objects.exclude(affiliations__asserted_by__work__state="ac")
+            .distinct()
+            .values_list("id", flat=True)
+        )
+
+        for res in json.loads(institution_ac_response.content)["results"]:
+            self.assertNotIn(int(res["id"]), private_institutions)
+
     def test_q(self):
         institution_ac_response = self.client.get(
             reverse("institution-autocomplete"), data={"q": "wood"}
@@ -73,6 +84,17 @@ class TopicAutocompleteTest(TestCase):
             res["id"] for res in json.loads(topic_ac_response.content)["results"]
         ]
         self.assertTrue(is_list_unique(result_vals))
+
+    def test_public(self):
+        topic_ac_response = self.client.get(reverse("topic-autocomplete"))
+        private_topics = (
+            Topic.objects.exclude(works__state="ac")
+            .distinct()
+            .values_list("id", flat=True)
+        )
+
+        for res in json.loads(topic_ac_response.content)["results"]:
+            self.assertNotIn(int(res["id"]), private_topics)
 
     def test_q(self):
         topic_ac_response = self.client.get(
@@ -100,6 +122,17 @@ class KeywordAutocompleteTest(TestCase):
         ]
         self.assertTrue(is_list_unique(result_vals))
 
+    def test_public(self):
+        keyword_ac_response = self.client.get(reverse("keyword-autocomplete"))
+        private_keyword = (
+            Keyword.objects.exclude(works__state="ac")
+            .distinct()
+            .values_list("id", flat=True)
+        )
+
+        for res in json.loads(keyword_ac_response.content)["results"]:
+            self.assertNotIn(int(res["id"]), private_keyword)
+
     def test_q(self):
         keyword_ac_response = self.client.get(
             reverse("keyword-autocomplete"), data={"q": "lat"}
@@ -124,6 +157,17 @@ class LanguageAutocompleteTest(TestCase):
             res["id"] for res in json.loads(language_ac_response.content)["results"]
         ]
         self.assertTrue(is_list_unique(result_vals))
+
+    def test_public(self):
+        language_ac_response = self.client.get(reverse("language-autocomplete"))
+        private_language = (
+            Language.objects.exclude(works__state="ac")
+            .distinct()
+            .values_list("id", flat=True)
+        )
+
+        for res in json.loads(language_ac_response.content)["results"]:
+            self.assertNotIn(int(res["id"]), private_language)
 
     def test_q(self):
         language_ac_response = self.client.get(
@@ -150,6 +194,17 @@ class DisciplineAutocompleteTest(TestCase):
         ]
         self.assertTrue(is_list_unique(result_vals))
 
+    def test_public(self):
+        discipline_ac_response = self.client.get(reverse("discipline-autocomplete"))
+        private_discipline = (
+            Discipline.objects.exclude(works__state="ac")
+            .distinct()
+            .values_list("id", flat=True)
+        )
+
+        for res in json.loads(discipline_ac_response.content)["results"]:
+            self.assertNotIn(int(res["id"]), private_discipline)
+
     def test_q(self):
         discipline_ac_response = self.client.get(
             reverse("discipline-autocomplete"), data={"q": "art"}
@@ -168,6 +223,24 @@ class CountryAutocompleteTest(TestCase):
         country_ac_response = self.client.get(reverse("country-autocomplete"))
         self.assertEqual(country_ac_response.status_code, 200)
 
+    def test_unique(self):
+        country_ac_response = self.client.get(reverse("country-autocomplete"))
+        result_vals = [
+            res["id"] for res in json.loads(country_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_public(self):
+        country_ac_response = self.client.get(reverse("country-autocomplete"))
+        private_country = (
+            Country.objects.exclude(institutions__affiliations__asserted_by__work__state="ac")
+            .distinct()
+            .values_list("id", flat=True)
+        )
+
+        for res in json.loads(country_ac_response.content)["results"]:
+            self.assertNotIn(int(res["id"]), private_country)
+
     def test_q(self):
         country_ac_response = self.client.get(
             reverse("country-autocomplete"), data={"q": "uni"}
@@ -185,6 +258,24 @@ class AuthorAutocompleteTest(TestCase):
     def test_render(self):
         author_ac_response = self.client.get(reverse("author-autocomplete"))
         self.assertEqual(author_ac_response.status_code, 200)
+
+    def test_unique(self):
+        author_ac_response = self.client.get(reverse("author-autocomplete"))
+        result_vals = [
+            res["id"] for res in json.loads(author_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_public(self):
+        author_ac_response = self.client.get(reverse("author-autocomplete"))
+        private_author = (
+            Author.objects.exclude(works__state="ac")
+            .distinct()
+            .values_list("id", flat=True)
+        )
+
+        for res in json.loads(author_ac_response.content)["results"]:
+            self.assertNotIn(int(res["id"]), private_author)
 
     def test_q(self):
         author_ac_response = self.client.get(
