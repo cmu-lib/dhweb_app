@@ -60,7 +60,11 @@
 <div class="container p-4">
   {% if messages %}
     {% for message in messages %}
-      <div class="alert m-2 alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+      {% if message.tags == "error" %}
+        <div class="alert m-2 alert-danger" role="alert">{{ message }}</div>
+      {% else %}
+        <div class="alert m-2 alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+        {% endif %}
     {% endfor %}
   {% endif %}
 
