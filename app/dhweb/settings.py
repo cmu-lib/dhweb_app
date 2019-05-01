@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["localhost"]
 
+DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda _request: DEBUG}
+
 
 # Application definition
 
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "import_export",
     "django.contrib.humanize",
+    "debug_toolbar",
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
@@ -54,6 +57,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
