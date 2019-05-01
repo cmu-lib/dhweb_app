@@ -235,3 +235,18 @@ class ConferenceListViewTest(TestCase):
             ConferenceSeries.objects.get(pk=2),
             conference_list_response.context["conference_list"],
         )
+
+
+class AuthorMergeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("author_merge", kwargs={"author_id": 1})
+        redirected_url = f"{reverse('admin:login')}?next={target_url}"
+        merge_response = self.client.get(target_url, follow=True)
+        self.assertRedirects(merge_response, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_merge_response = self.client.get(reverse("author_merge", kwargs={"author_id": 1}))
+        self.assertEqual(auth_merge_response.status_code, 200)
