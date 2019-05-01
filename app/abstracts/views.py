@@ -283,6 +283,16 @@ class WorkList(ListView):
             if topic_res != "":
                 result_set = result_set.filter(topics__pk=topic_res)
 
+        if "language" in filter_form:
+            language_res = filter_form["topic"]
+            if language_res != "":
+                result_set = result_set.filter(languages__pk=language_res)
+
+        if "discipline" in filter_form:
+            discipline_res = filter_form["discipline"]
+            if discipline_res != "":
+                result_set = result_set.filter(disciplines__pk=discipline_res)
+
         if "full_text_available" in filter_form:
             full_text_available_res = filter_form["full_text_available"]
             if full_text_available_res == "on":
