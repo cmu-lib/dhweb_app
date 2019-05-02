@@ -1,6 +1,8 @@
 {% extends "detail.html" %}
 
-{% block detail_title %}{{ work.title }}{% endblock %}
+{% block headertitle %}Work {{ work.pk }} - "{{ work.title }}"{% endblock %}
+
+{% block title %}{{ work.title }}{% endblock %}
 
 {% block main %}
 <div class="card my-2">
