@@ -104,6 +104,12 @@ class AuthorDetailViewTest(TestCase):
         )
         self.assertEqual(author_detail_response.status_code, 200)
 
+    def test_404(self):
+        author_detail_response = self.client.get(
+            reverse("author_detail", kwargs={"author_id": 100})
+        )
+        self.assertEqual(author_detail_response.status_code, 404)
+
     def test_works_unqiue_in_series(self):
         author_detail_response = self.client.get(
             reverse("author_detail", kwargs={"author_id": 1})
@@ -212,6 +218,12 @@ class WorkDetailViewTest(TestCase):
         )
         self.assertEqual(work_detail_response.status_code, 200)
 
+    def test_404(self):
+        work_detail_response = self.client.get(
+            reverse("work_detail", kwargs={"work_id": 100})
+        )
+        self.assertEqual(work_detail_response.status_code, 404)
+
     def test_is_work(self):
         work_detail_response = self.client.get(
             reverse("work_detail", kwargs={"work_id": 1})
@@ -259,3 +271,10 @@ class AuthorMergeViewTest(TestCase):
             reverse("author_merge", kwargs={"author_id": 1})
         )
         self.assertEqual(auth_merge_response.status_code, 200)
+
+    def test_404(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_merge_response = self.client.get(
+            reverse("author_merge", kwargs={"author_id": 100}), follow=True
+        )
+        self.assertEqual(auth_merge_response.status_code, 404)

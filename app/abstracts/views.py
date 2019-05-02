@@ -314,7 +314,7 @@ class WorkList(ListView):
 
 
 def work_view(request, work_id):
-    work = Work.objects.get(pk=work_id)
+    work = get_object_or_404(Work, pk=work_id)
 
     # If work is unaccepted and the user isn't authenticated, boot them back to the homepage
     if work.state != "ac" and not request.user.is_authenticated:
@@ -330,7 +330,7 @@ def work_view(request, work_id):
 
 
 def author_view(request, author_id):
-    author = Author.objects.get(pk=author_id)
+    author = get_object_or_404(Author, pk=author_id)
 
     if (
         not author.works.filter(state="ac").exists()
@@ -495,7 +495,7 @@ def home_view(request):
 @transaction.atomic
 def author_merge_view(request, author_id):
 
-    author = Author.objects.get(pk=author_id)
+    author = get_object_or_404(Author, pk=author_id)
 
     if request.method == "GET":
         """
