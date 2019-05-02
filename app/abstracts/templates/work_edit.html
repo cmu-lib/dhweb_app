@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block header_title %}Editing abstract ID {{ work.pk }}{% endblock %}
+
 {% block content %}
 
 {% if work.state == "su" and not user.is_authenticated %}

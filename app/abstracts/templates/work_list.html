@@ -1,6 +1,8 @@
 {% extends "list.html" %}
 
-{% block results_title%}Abstracts search results{% endblock %}
+{% block header_title %}Abstracts{% endblock %}
+
+{% block results_title %}Abstracts search results{% endblock %}
 
 {% block results %}
 <div class="card-header">Results: Displaying {{ filtered_works_count }} out of {{ available_works_count }} works</div>
