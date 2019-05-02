@@ -14,6 +14,7 @@ from .models import (
     Country,
     Language,
     Discipline,
+    License,
 )
 
 
@@ -82,30 +83,64 @@ class WorkForm(forms.ModelForm):
         queryset=Keyword.objects.all(),
         required=False,
         widget=ModelSelect2Multiple(url="unrestricted-keyword-autocomplete"),
+        help_text="Optional keywords that are supplied by authors during submission in the modern ADHO DH conferences.",
     )
 
     topics = forms.ModelMultipleChoiceField(
         queryset=Topic.objects.all(),
         required=False,
         widget=ModelSelect2Multiple(url="unrestricted-topic-autocomplete"),
+        help_text="Optional topics from a controlled vocabulary established by the ADHO DH conferences.",
     )
 
     languages = forms.ModelMultipleChoiceField(
         queryset=Language.objects.all(),
         required=False,
         widget=ModelSelect2Multiple(url="unrestricted-language-autocomplete"),
+        help_text="Optional language tag to indicate the language(s) of the text of an abstract (not to be confused with e.g. 'English' as a keyword, where the topic of the abstract concerns English.)",
     )
 
     disciplines = forms.ModelMultipleChoiceField(
         queryset=Discipline.objects.all(),
         required=False,
         widget=ModelSelect2Multiple(url="unrestricted-discipline-autocomplete"),
+        help_text="Optional discipline tag from a controlled vocabulary established by the ADHO DH conferences.",
     )
 
     published_version = forms.ModelChoiceField(
         queryset=Work.objects.filter(state="ac"),
         required=False,
         widget=ModelSelect2(url="unrestricted-work-autocomplete"),
+        help_text='Abstracts with the state "submitted" may be associated with "accepted" abstracts, establishing a link that will be visible in the editing interface. Note: one accepted work may be associated with many submitted works, but a submitted work may only be associated with one final accepted work. TODO: do not show unaccepted works in select interface.',
+    )
+
+    conference = forms.ModelChoiceField(
+        queryset=Conference.objects.all(),
+        help_text="The conference where this abstract was submitted/published.",
+    )
+
+    title = forms.CharField(max_length=500, help_text="Abstract title")
+
+    work_type = forms.ModelChoiceField(
+        queryset=WorkType.objects.all(),
+        help_text='Abstracts may belong to one type that has been defined by editors based on a survey of all the abstracts in this collection, e.g. "poster", "workshop", "long paper".',
+    )
+
+    state = forms.ChoiceField(
+        choices=Work.WORK_STATE,
+        widget=forms.RadioSelect,
+        help_text='Abstracts may be either "Accepted" or "Submitted". Abstracts that aren\'t marked "Accepted" will not display to public viewers, and none of the names or affiliations asserted by those abstracts will be listed publicly in author profiles.',
+    )
+
+    full_text_license = forms.ModelChoiceField(
+        queryset=License.objects.all(),
+        help_text="License information to be displayed with the full text of the abstract.",
+    )
+
+    full_text_type = forms.ChoiceField(
+        choices=Work.FT_TYPE,
+        widget=forms.RadioSelect,
+        help_text="Currently text can either be plain text, or entered as XML which will then be rendered into HTML.",
     )
 
     class Meta:

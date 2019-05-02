@@ -155,6 +155,10 @@ class License(models.Model):
 
 
 class Work(TextIndexedModel):
+    WORK_STATE = (("ac", "accpeted"), ("su", "submission"))
+
+    FT_TYPE = (("xml", "XML"), ("txt", "plain text"))
+
     conference = models.ForeignKey(
         Conference, on_delete=models.CASCADE, related_name="works"
     )
@@ -162,13 +166,9 @@ class Work(TextIndexedModel):
     work_type = models.ForeignKey(
         WorkType, blank=True, null=True, on_delete=models.SET_NULL, related_name="works"
     )
-    state = models.CharField(
-        max_length=2, choices=(("ac", "accpeted"), ("su", "submission"))
-    )
+    state = models.CharField(max_length=2, choices=WORK_STATE)
     full_text = models.TextField(max_length=50000, blank=True, null=False, default="")
-    full_text_type = models.CharField(
-        max_length=3, choices=(("xml", "XML"), ("txt", "plain text")), default="txt"
-    )
+    full_text_type = models.CharField(max_length=3, choices=FT_TYPE, default="txt")
     keywords = models.ManyToManyField(Keyword, related_name="works", blank=True)
     languages = models.ManyToManyField(Language, related_name="works", blank=True)
     disciplines = models.ManyToManyField(Discipline, related_name="works", blank=True)
