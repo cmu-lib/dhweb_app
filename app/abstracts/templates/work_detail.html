@@ -1,131 +1,122 @@
-{% extends "base.html" %}
+{% extends "detail.html" %}
 
-{% block content %}
+{% block detail_title %}{{ work.title }}{% endblock %}
 
-<h1>{{ work.title }}</h1>
+{% block main %}
+<div class="card my-2">
+  <div class="card-header">Authorship</div>
+  <ol class="list-group list-group-flush">
+    {% for authorship in authorships.all %}
+    <li class="list-group-item">{% include "authorship_card.html" with authorship=authorship %}</li>
+    {% endfor %}
+  </ol>
+</div>
 
-{% if work.state == "su" and not user.is_authenticated %}
-<div class="alert alert-warning">You must <a href="/admin/login/?next=/works/{{ work.pk }}">log in</a> to view submitted versions.</div>
-{% else %}
+<div class="card my-2">
+  <div class="card-header d-flex justify-content-between">Abstract{% if work.full_text %}<small
+      class="text-muted">.{{ work.full_text_type }}</small>{% endif %}</div>
+  <div class="card-body">
+    {% if work.full_text and user.is_authenticated %}
+    {% if work.full_text_type == "txt" %}
+    <p>{{ work.full_text | linebreaks }}</p>
+    {% elif work.full_text_type == "xml" %}
+    {{ work.full_text | safe }}
+    {% endif %}
+    {% else %}
+    <div class="alert alert-warning">No abstract available for this work.</div>
+    {% endif %}
+  </div>
+  {% if work.full_text and user.is_authenticated %}
+  {% with license=work.full_text_license %}
+  <div class="card-footer">
+    {% if license %}
+    This full text is licensed <a href="{{ license.url }}"><abbr
+        title="{{ license.title }}">{{ license.display_abbreviation }}</a>
+    {% else %}
+    The license for this full text is unknown.
+    {% endif %}
+    {% endwith %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
 
-<div class="row">
-  <div class="col-md-8">
-    <div class="card m-2">
-      <div class="card-header">Authorship</div>
-        <ol class="list-group list-group-flush">
-          {% for authorship in authorships.all %}
-          <li class="list-group-item">{% include "authorship_card.html" with authorship=authorship %}</li>
-          {% endfor %}
-        </ol>
-      </div>
-
-    <div class="card m-2">
-      <div class="card-header d-flex justify-content-between">Abstract{% if work.full_text %}<small class="text-muted">.{{ work.full_text_type }}</small>{% endif %}</div>
-      <div class="card-body">
-          {% if work.full_text and user.is_authenticated %}
-            {% if work.full_text_type == "txt" %}
-              <p>{{ work.full_text | linebreaks }}</p>
-            {% elif work.full_text_type == "xml" %}
-              {{ work.full_text | safe }}
-            {% endif %}
-          {% else %}
-            <div class="alert alert-warning">No abstract available for this work.</div>
-          {% endif %}
-      </div>
-      {% if work.full_text and user.is_authenticated %}
-      {% with license=work.full_text_license %}
-      <div class="card-footer">
-        {% if license %}
-          This full text is licensed <a href="{{ license.url }}"><abbr title="{{ license.title }}">{{ license.display_abbreviation }}</a>
-        {% else %}
-          The license for this full text is unknown.
-        {% endif %}
-      {% endwith %}
-      </div>
+{% block context %}
+{% if user.is_authenticated %}
+<div class="card my-2">
+  <div class="card-header">Administration</div>
+  <div class="card-body">
+    <a class="btn btn-primary" role="button" href="{% url 'work_edit' work.pk %}">Edit this work</a>
+  </div>
+</div>
+{% endif %}
+<div class="card my-2">
+  <div class="card-header">Conference Info</div>
+  <div class="card-body">
+    {% include "conference_card.html" with conference=work.conference %}
+    {% if user.is_authenticated %}
+    {% if work.state == "su" %}
+    <div class="alert alert-warning">
+      <p>This is a submitted version, and may not reflect the final, accepted paper.</p>
+      {% if work.published_version %}
+      <p><a href="{% url 'work_detail' work.published_version.pk%}">See {{ work.published_version.conference.year }}
+          accepted version</a></p>
       {% endif %}
     </div>
-  </div>
-
-  <div class="col-md-4">
-    {% if user.is_authenticated %}
-    <div class="card m-2">
-      <div class="card-header">Administration</div>
-      <div class="card-body">
-        <a class="btn btn-primary" role="button" href="{% url 'work_edit' work.pk %}">Edit this work</a>
-      </div>
+    {% endif %}
+    {% with num_versions=work.unpublished_versions.count%}
+    {% if num_versions > 0 %}
+    <div class="alert alert-info">
+      See submitted version{{ num_versions | pluralize }}:
+      {% for up in work.unpublished_versions.all %}
+      <a class="badge badge-primary" href="{% url 'work_detail' up.pk %}">{{ up.conference.year }}</a>
+      {% endfor %}
     </div>
     {% endif %}
-    <div class="card m-2">
-      <div class="card-header">Conference Info</div>
-      <div class="card-body">
-        {% include "conference_card.html" with conference=work.conference %}
-        {% if user.is_authenticated %}
-        {% if work.state == "su" %}
-          <div class="alert alert-warning"><p>This is a submitted version, and may not reflect the final, accepted paper.</p>
-          {% if work.published_version %}
-            <p><a href="{% url 'work_detail' work.published_version.pk%}">See {{ work.published_version.conference.year }} accepted version</a></p>
-          {% endif %}
-          </div>
-        {% endif %}
-        {% with num_versions=work.unpublished_versions.count%}
-          {% if num_versions > 0 %}
-            <div class="alert alert-info">
-          See submitted version{{ num_versions | pluralize }}:
-          {% for up in work.unpublished_versions.all %}
-            <a class="badge badge-primary" href="{% url 'work_detail' up.pk %}">{{ up.conference.year }}</a>
-          {% endfor %}
-            </div>
-          {% endif %}
-        {% endwith %}
-          {% endif %}
-      </div>
-    </div>
-
-  <div class="card m-2">
-    <div class="card-header">Tags</div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">Keywords:
-          {% if work.keywords.all %}
-            {% for keyword in work.keywords.all %}
-              <a class="badge badge-info" href="{% url 'work_list' %}?keyword={{ keyword.pk }}">{{ keyword.title }}</a>
-            {% endfor %}
-          {% else %}
-          None
-          {% endif %}
-        </li>
-        <li class="list-group-item">Language:
-          {% if work.languages.all %}
-            {% for language in work.languages.all %}
-              <span class="badge badge-info">{{ language.title }}</span>
-            {% endfor %}
-          {% else %}
-          None
-          {% endif %}
-        </li>
-        <li class="list-group-item">Topics:
-          {% if work.topics.all %}
-            {% for topic in work.topics.all %}
-              <a class="badge badge-info" href="{% url 'work_list' %}?topic={{ topic.pk }}">{{ topic.title }}</a>
-            {% endfor %}
-          {% else %}
-          None
-          {% endif %}
-        </li>
-        <li class="list-group-item">Disciplines:
-          {% if work.disciplines.all %}
-            {% for discipline in work.disciplines.all %}
-              <span class="badge badge-info">{{ discipline.title }}</span>
-            {% endfor %}
-          {% else %}
-          None
-          {% endif %}
-        </li>
-      </ul>
-  </div>
-
+    {% endwith %}
+    {% endif %}
   </div>
 </div>
 
-{% endif %}
-
+<div class="card my-2">
+  <div class="card-header">Tags</div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Keywords:
+      {% if work.keywords.all %}
+      {% for keyword in work.keywords.all %}
+      <a class="badge badge-info" href="{% url 'work_list' %}?keyword={{ keyword.pk }}">{{ keyword.title }}</a>
+      {% endfor %}
+      {% else %}
+      None
+      {% endif %}
+    </li>
+    <li class="list-group-item">Language:
+      {% if work.languages.all %}
+      {% for language in work.languages.all %}
+      <span class="badge badge-info">{{ language.title }}</span>
+      {% endfor %}
+      {% else %}
+      None
+      {% endif %}
+    </li>
+    <li class="list-group-item">Topics:
+      {% if work.topics.all %}
+      {% for topic in work.topics.all %}
+      <a class="badge badge-info" href="{% url 'work_list' %}?topic={{ topic.pk }}">{{ topic.title }}</a>
+      {% endfor %}
+      {% else %}
+      None
+      {% endif %}
+    </li>
+    <li class="list-group-item">Disciplines:
+      {% if work.disciplines.all %}
+      {% for discipline in work.disciplines.all %}
+      <span class="badge badge-info">{{ discipline.title }}</span>
+      {% endfor %}
+      {% else %}
+      None
+      {% endif %}
+    </li>
+  </ul>
+</div>
 {% endblock %}
