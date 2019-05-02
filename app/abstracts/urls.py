@@ -6,7 +6,7 @@ urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),
     path("", views.home_view, name="home_view"),
     path("works", views.WorkList.as_view(), name="work_list"),
-    path("works/<int:pk>", views.WorkView.as_view(), name="work_detail"),
+    path("works/<int:pk>", views.work_view, name="work_detail"),
     path("works/<int:pk>/edit", views.WorkEdit.as_view(), name="work_edit"),
     path("authors", views.AuthorList.as_view(), name="author_list"),
     path("authors/<int:pk>", views.AuthorView.as_view(), name="author_detail"),

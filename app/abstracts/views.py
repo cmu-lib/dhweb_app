@@ -313,18 +313,21 @@ class WorkList(ListView):
         return context
 
 
-class WorkView(DetailView):
-    model = Work
-    template_name = "work_detail.html"
+def work_view(request, pk):
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        obj = self.object
+    work = Work.objects.get(pk=pk)
 
-        work_admin_page = reverse("admin:abstracts_work_change", args=(obj.pk,))
-        context["authorships"] = obj.authorships.order_by("authorship_order")
-        context["work_admin_page"] = work_admin_page
-        return context
+    # If work is unaccepted and the user isn't authenticated, boot them back to the homepage
+    if work.state != "ac" and not request.user.is_authenticated:
+        messages.error(
+            request,
+            f"Work ID {work.pk} isn't public yet. Please <a href='/admin/login'>log in</a> to continue.",
+        )
+        return redirect("work_list")
+    else:
+        authorships = work.authorships.order_by("authorship_order")
+        context = {"work": work, "authorships": authorships}
+        return render(request, "work_detail.html", context)
 
 
 class AuthorView(DetailView):
