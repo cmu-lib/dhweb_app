@@ -47,16 +47,19 @@
   </div>
 
   <div class="col-md-4">
+    {% if user.is_authenticated %}
     <div class="card m-2">
       <div class="card-header">Administration</div>
       <div class="card-body">
         <a class="btn btn-primary" role="button" href="{% url 'work_edit' work.pk %}">Edit this work</a>
       </div>
     </div>
+    {% endif %}
     <div class="card m-2">
       <div class="card-header">Conference Info</div>
       <div class="card-body">
         {% include "conference_card.html" with conference=work.conference %}
+        {% if user.is_authenticated %}
         {% if work.state == "su" %}
           <div class="alert alert-warning"><p>This is a submitted version, and may not reflect the final, accepted paper.</p>
           {% if work.published_version %}
@@ -74,6 +77,7 @@
             </div>
           {% endif %}
         {% endwith %}
+          {% endif %}
       </div>
     </div>
 
