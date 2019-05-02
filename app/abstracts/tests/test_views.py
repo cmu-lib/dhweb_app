@@ -100,20 +100,20 @@ class AuthorDetailViewTest(TestCase):
 
     def test_render(self):
         author_detail_response = self.client.get(
-            reverse("author_detail", kwargs={"pk": 1})
+            reverse("author_detail", kwargs={"author_id": 1})
         )
         self.assertEqual(author_detail_response.status_code, 200)
 
     def test_works_unqiue_in_series(self):
         author_detail_response = self.client.get(
-            reverse("author_detail", kwargs={"pk": 1})
+            reverse("author_detail", kwargs={"author_id": 1})
         )
         for series in author_detail_response.context["split_works"]:
             self.assertTrue(is_list_unique(series["works"]))
 
     def test_appellations_unique(self):
         author_detail_response = self.client.get(
-            reverse("author_detail", kwargs={"pk": 1})
+            reverse("author_detail", kwargs={"author_id": 1})
         )
         self.assertTrue(
             is_list_unique(
@@ -126,7 +126,7 @@ class AuthorDetailViewTest(TestCase):
 
     def test_affiliations_unique_institutions(self):
         author_detail_response = self.client.get(
-            reverse("author_detail", kwargs={"pk": 1})
+            reverse("author_detail", kwargs={"author_id": 1})
         )
         self.assertTrue(
             is_list_unique(
@@ -139,7 +139,7 @@ class AuthorDetailViewTest(TestCase):
 
     def test_affiliations_each_has_value(self):
         author_detail_response = self.client.get(
-            reverse("author_detail", kwargs={"pk": 1})
+            reverse("author_detail", kwargs={"author_id": 1})
         )
         for assertion in author_detail_response.context["affiliation_assertions"]:
             self.assertGreaterEqual(len(assertion["works"]), 1)
@@ -147,13 +147,14 @@ class AuthorDetailViewTest(TestCase):
 
     def test_unaccepted_author(self):
         """
-        Authors with only submitted papers should not have pages
+        Authors with only submitted papers should redirect with errors
         """
         unaccepted_author_detail_response = self.client.get(
-            reverse("author_detail", kwargs={"pk": 3})
+            reverse("author_detail", kwargs={"author_id": 3}), follow=True
         )
-        self.assertEqual(
-            len(unaccepted_author_detail_response.context["split_works"]), 0
+        self.assertRedirects(unaccepted_author_detail_response, reverse("author_list"))
+        self.assertGreaterEqual(
+            len(unaccepted_author_detail_response.context["messages"]), 1
         )
 
 
@@ -165,8 +166,8 @@ class WorkListViewTest(TestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
-        author_list_response = self.client.get(reverse("author_list"))
-        self.assertEqual(author_list_response.status_code, 200)
+        work_list_response = self.client.get(reverse("work_list"))
+        self.assertEqual(work_list_response.status_code, 200)
 
     def test_query_filtered_count(self):
         work_list_response = self.client.get(reverse("work_list"))
@@ -206,15 +207,21 @@ class WorkDetailViewTest(TestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
-        work_detail_response = self.client.get(reverse("work_detail", kwargs={"pk": 1}))
+        work_detail_response = self.client.get(
+            reverse("work_detail", kwargs={"work_id": 1})
+        )
         self.assertEqual(work_detail_response.status_code, 200)
 
     def test_is_work(self):
-        work_detail_response = self.client.get(reverse("work_detail", kwargs={"pk": 1}))
+        work_detail_response = self.client.get(
+            reverse("work_detail", kwargs={"work_id": 1})
+        )
         self.assertIsInstance(work_detail_response.context["work"], Work)
 
     def test_authorships_unique(self):
-        work_detail_response = self.client.get(reverse("work_detail", kwargs={"pk": 1}))
+        work_detail_response = self.client.get(
+            reverse("work_detail", kwargs={"work_id": 1})
+        )
         self.assertTrue(is_list_unique(work_detail_response.context["authorships"]))
 
 
@@ -242,11 +249,13 @@ class AuthorMergeViewTest(TestCase):
 
     def test_render(self):
         target_url = reverse("author_merge", kwargs={"author_id": 1})
-        redirected_url = f"{reverse('admin:login')}?next={target_url}"
+        redirected_url = f"{reverse('login')}?next={target_url}"
         merge_response = self.client.get(target_url, follow=True)
         self.assertRedirects(merge_response, redirected_url)
 
     def test_auth_render(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_merge_response = self.client.get(reverse("author_merge", kwargs={"author_id": 1}))
+        auth_merge_response = self.client.get(
+            reverse("author_merge", kwargs={"author_id": 1})
+        )
         self.assertEqual(auth_merge_response.status_code, 200)
