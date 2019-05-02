@@ -314,7 +314,6 @@ class WorkList(ListView):
 
 
 def work_view(request, pk):
-
     work = Work.objects.get(pk=pk)
 
     # If work is unaccepted and the user isn't authenticated, boot them back to the homepage
@@ -330,15 +329,17 @@ def work_view(request, pk):
         return render(request, "work_detail.html", context)
 
 
-class AuthorView(DetailView):
-    model = Author
-    template_name = "author_detail.html"
+def author_view(request, pk):
+    author = Author.objects.get(pk=pk)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        obj = self.object
-
-        obj_authorships = obj.public_authorships
+    if not author.works.filter(state="ac").exists():
+        messages.error(
+            request,
+            f"Author ID {author.pk} isn't public yet. Please <a href='/admin/login'>log in</a> to continue.",
+        )
+        return redirect("author_list")
+    else:
+        obj_authorships = author.public_authorships
 
         public_works = (
             Work.objects.filter(authorships__in=obj_authorships)
@@ -382,13 +383,17 @@ class AuthorView(DetailView):
             ).distinct()
         ]
 
-        author_admin_page = reverse("admin:abstracts_author_change", args=(obj.pk,))
+        author_admin_page = reverse("admin:abstracts_author_change", args=(author.pk,))
 
-        context["split_works"] = split_works
-        context["appellation_assertions"] = appellation_assertions
-        context["affiliation_assertions"] = affiliation_assertions
-        context["author_admin_page"] = author_admin_page
-        return context
+        context = {
+            "author": author,
+            "split_works": split_works,
+            "appellation_assertions": appellation_assertions,
+            "affiliation_assertions": affiliation_assertions,
+            "author_admin_page": author_admin_page,
+        }
+
+        return (request, "author_detail.html", context)
 
 
 class AuthorList(ListView):
