@@ -18,8 +18,8 @@
 </head>
 
 <body>
+  <div class="alert alert-warning text-center">This is an alpha site for demonstration purposes only. Data, layout, and functionality are subject to change or removal at any time.</div>
 
-  {% comment %} Header {% endcomment %}
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="{% url 'home_view' %}">Digital Humanities Abstracts</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -67,8 +67,6 @@
         {% endif %}
     {% endfor %}
   {% endif %}
-
-  <div class="alert alert-danger">This is an alpha site for demonstration purposes only. Data, layout, and functionality are subject to change or removal at any time.</div>
 
   {% block content %}
   {% endblock %}
