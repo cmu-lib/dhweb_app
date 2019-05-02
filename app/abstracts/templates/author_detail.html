@@ -17,50 +17,57 @@
     {% endfor %}
   </div>
   <div class="col-md-4">
-        <div class="card m-2">
-        <div class="card-header">Administration</div>
-        <div class="card-body">
+    {% if user.is_authenticated %}
+    <div class="card m-2">
+      <div class="card-header">Administration</div>
+      <div class="card-body">
         <a href="{% url 'author_merge' author.pk %}" class="btn btn-warning" role="button">Merge</a>
         <a class="btn btn-primary" role="button" href="{{ author_admin_page }}">Edit this author</a>
-        </div>
-        </div>
-        <div class="card m-2">
-          <div class="card-header">All Names</div>
-            <ul class="list-group list-group-flush">
-              {% for appellation in appellation_assertions %}
-              <li class="list-group-item">
-                <div class="d-flex justify-content-between">
-                <p>{{ appellation.appellation }}</p><small class="text-muted">App ID: {{ appellation.appellation.pk }}</small>
-                </div>
-                <small class="text-muted">Given in {% for work in appellation.works %}
-                  <a href="{% url 'work_detail' work.pk %}">{{ work.conference.year }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}</small>
-              </li>
-              {% endfor %}
-            </ul>
-          </div>
-          <div class="card m-2">
-            <div class="card-header">All Affiliations</div>
-            <ul class="list-group list-group-flush">
-              {% for affiliation in affiliation_assertions %}
-              <li class="list-group-item">
-              <p><a href="{% url 'author_list' %}?institution={{ affiliation.institution.pk }}">{{ affiliation.institution }}</a></p>
-                {% if affiliation.departments.0 != '' %}
-                <ul>
-                  {% for department in affiliation.departments %}
-                  <li>{{ department }}</li>
-                  {% endfor %}
-                </ul>
-                {% endif %}
-                <small class="text-muted">Given in {% for work in affiliation.works %}
-                <a href="{% url 'work_detail' work.pk %}">{{ work.conference.year }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}</small>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
       </div>
-
     </div>
+    {% endif %}
+    <div class="card m-2">
+      <div class="card-header">All Names</div>
+      <ul class="list-group list-group-flush">
+        {% for appellation in appellation_assertions %}
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between">
+            <p>{{ appellation.appellation }}</p><small class="text-muted">App ID:
+              {{ appellation.appellation.pk }}</small>
+          </div>
+          <small class="text-muted">Given in {% for work in appellation.works %}
+            <a href="{% url 'work_detail' work.pk %}">{{ work.conference.year }}</a>{% if not forloop.last %},
+            {% endif %}
+            {% endfor %}</small>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="card m-2">
+      <div class="card-header">All Affiliations</div>
+      <ul class="list-group list-group-flush">
+        {% for affiliation in affiliation_assertions %}
+        <li class="list-group-item">
+          <p><a
+              href="{% url 'author_list' %}?institution={{ affiliation.institution.pk }}">{{ affiliation.institution }}</a>
+          </p>
+          {% if affiliation.departments.0 != '' %}
+          <ul>
+            {% for department in affiliation.departments %}
+            <li>{{ department }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          <small class="text-muted">Given in {% for work in affiliation.works %}
+            <a href="{% url 'work_detail' work.pk %}">{{ work.conference.year }}</a>{% if not forloop.last %},
+            {% endif %}
+            {% endfor %}</small>
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
 
-    {% endblock %}
+</div>
+
+{% endblock %}

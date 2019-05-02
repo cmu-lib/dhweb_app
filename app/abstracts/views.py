@@ -313,8 +313,8 @@ class WorkList(ListView):
         return context
 
 
-def work_view(request, pk):
-    work = Work.objects.get(pk=pk)
+def work_view(request, work_id):
+    work = Work.objects.get(pk=work_id)
 
     # If work is unaccepted and the user isn't authenticated, boot them back to the homepage
     if work.state != "ac" and not request.user.is_authenticated:
@@ -329,10 +329,13 @@ def work_view(request, pk):
         return render(request, "work_detail.html", context)
 
 
-def author_view(request, pk):
-    author = Author.objects.get(pk=pk)
+def author_view(request, author_id):
+    author = Author.objects.get(pk=author_id)
 
-    if not author.works.filter(state="ac").exists():
+    if (
+        not author.works.filter(state="ac").exists()
+        and not request.user.is_authenticated
+    ):
         messages.error(
             request,
             f"Author ID {author.pk} isn't public yet. Please <a href='/admin/login'>log in</a> to continue.",
@@ -393,7 +396,7 @@ def author_view(request, pk):
             "author_admin_page": author_admin_page,
         }
 
-        return (request, "author_detail.html", context)
+        return render(request, "author_detail.html", context)
 
 
 class AuthorList(ListView):
