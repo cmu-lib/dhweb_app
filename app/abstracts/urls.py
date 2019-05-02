@@ -1,13 +1,15 @@
 from django.urls import include, path
 import debug_toolbar
+import django.contrib.auth.views as auth_views
 from . import views
 
 urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),
+    path("auth/login", auth_views.LoginView.as_view(), name="login"),
     path("", views.home_view, name="home_view"),
     path("works", views.WorkList.as_view(), name="work_list"),
     path("works/<int:work_id>", views.work_view, name="work_detail"),
-    path("works/<int:work_id>/edit", views.WorkEdit.as_view(), name="work_edit"),
+    path("works/<int:pk>/edit", views.WorkEdit.as_view(), name="work_edit"),
     path("authors", views.AuthorList.as_view(), name="author_list"),
     path("authors/<int:author_id>", views.author_view, name="author_detail"),
     path("authors/<int:author_id>/merge", views.author_merge_view, name="author_merge"),
