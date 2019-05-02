@@ -23,7 +23,7 @@ services:
     volumes:
       - .:/vol/dh
       - dh_static_files:/vol/static_files
-      - ~/Development/dh_abstracts/data:/vol/data
+      - ${DATADIR}:/vol/data
     expose:
       - 8000
     links:
@@ -38,7 +38,8 @@ services:
     volumes:
       - dh_static_files:/vol/static_files
     ports:
-      - "4000:4000"
+      - "${NGINX_PORT}:4000"
+    env_file: .env
     links:
       - "dh-web:dh-web"
     depends_on:
