@@ -1,6 +1,8 @@
 from django import forms
 from dal.autocomplete import ModelSelect2, ModelSelect2Multiple
-from django.forms import inlineformset_factory, modelformset_factory
+from django.forms import formset_factory, inlineformset_factory, modelformset_factory
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 
 from .models import (
     Author,
@@ -15,6 +17,8 @@ from .models import (
     Language,
     Discipline,
     License,
+    Gender,
+    Affiliation,
 )
 
 
@@ -58,24 +62,46 @@ class WorkFilter(forms.Form):
     )
 
 
-class WorkAuthorshipForm(forms.ModelForm):
-    work = forms.ModelChoiceField(
-        queryset=Work.objects.distinct(),
+class WorkAuthorshipForm(forms.Form):
+    # work = forms.ModelChoiceField(
+    #     queryset=Work.objects.distinct(),
+    #     required=True,
+    #     widget=ModelSelect2(url="work-autocomplete"),
+    # )
+    author = forms.ModelChoiceField(
+        queryset=Author.objects.all(),
         required=True,
-        widget=ModelSelect2(url="work-autocomplete"),
+        widget=ModelSelect2(url="unrestricted-author-autocomplete"),
+        help_text="If the author currently exists, select them to auto-populate the fields below. Any edits to the details below will be stored as new assertions about this author.",
     )
-    author = (
-        forms.ModelChoiceField(
-            queryset=Author.objects.distinct(),
-            required=True,
-            widget=ModelSelect2(url="author-autocomplete"),
-        ),
+    authorship_order = forms.IntegerField(
+        min_value=0,
+        help_text="Authorship order must be unique across all the authorships of this work.",
     )
-    authorship_order = forms.IntegerField(min_value=0)
+    first_name = forms.CharField(max_length=100, required=False)
+    last_name = forms.CharField(max_length=100, required=False)
+    department = forms.CharField(
+        max_length=500, required=False, help_text="If given, enter a department name."
+    )
+    institution = forms.ModelChoiceField(
+        queryset=Affiliation.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+    )
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-country-autocomplete"),
+    )
+    gender = forms.ModelMultipleChoiceField(
+        queryset=Gender.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple(),
+        help_text="Gender presentation of the author at this time. This is optional and will not be publicly viewable.",
+    )
 
-    class Meta:
-        model = Authorship
-        fields = ["work", "author", "authorship_order"]
+
+AuthorshipWorkFormset = formset_factory(WorkAuthorshipForm)
 
 
 class WorkForm(forms.ModelForm):
@@ -188,5 +214,3 @@ class AuthorMergeForm(forms.Form):
         help_text="Select the author that will be used to replace the one you are merging.",
     )
 
-
-AuthorshipWorkFormset = modelformset_factory(Authorship, exclude=["work"], extra=0)

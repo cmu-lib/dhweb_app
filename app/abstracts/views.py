@@ -16,6 +16,8 @@ from dal.autocomplete import Select2QuerySetView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.db import transaction
 from django.forms.models import model_to_dict
+from django.forms import formset_factory, inlineformset_factory, modelformset_factory
+
 
 from .models import (
     Work,
@@ -574,19 +576,59 @@ def WorkEdit(request, work_id):
 
 def WorkEditAuthorship(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
+    authorships = work.authorships.all()
 
     if request.method == "GET":
-        authorships_forms = AuthorshipWorkFormset(queryset=work.authorships.all())
-        context = {"authorships_form": authorships_forms, "work": work}
+        initial_data = [
+            {
+                "author": authorship.author,
+                "authorship_order": authorship.authorship_order,
+                "first_name": authorship.appellation.first_name,
+                "last_name": authorship.appellation.last_name,
+                "department": authorship.affiliations.first().department,
+                "institution": authorship.affiliations.first().institution,
+                "country": authorship.affiliations.first().institution.country,
+                "gender": [a for a in authorship.genders.all()],
+            }
+            for authorship in authorships
+        ]
+        authorships_forms = AuthorshipWorkFormset(initial=initial_data)
+        context = {
+            "authorships_form": authorships_forms,
+            "work": work,
+            "idata": initial_data,
+        }
         return render(request, "work_edit_authorships.html", context)
     elif request.method == "POST":
-        authorships_forms = AuthorshipWorkFormset(
-            request.POST, request.FILES, queryset=work.authorships.all()
-        )
+        authorships_forms = AuthorshipWorkFormset(request.POST, request.FILES)
         if authorships_forms.is_valid():
-            authorships_forms.save()
-            messages.success(request, f'"{work.title}" sucessfully updated.')
-            return redirect("work_detail", work_id=work.pk)
+            for aform in authorships_forms:
+                aform_data = aform.cleaned_data
+                appellation = Appellation.objects.get_or_create(
+                    first_name=aform_data["first_name"],
+                    last_name=aform_data["last_name"],
+                )[0]
+                affiliation = (
+                    Affiliation.objects.get_or_create(
+                        department=aform_data["department"],
+                        institution=aform_data["institution"],
+                        country=aform_data["country"],
+                    )[0],
+                )
+                gender = Gender.objects.get_or_create(gender=aform_data["gender"])[0]
+
+                Authorship.objects.update_or_create(
+                    work=work,
+                    author=aform_data["author"],
+                    defaults={
+                        "affiliations": [affiliation],
+                        "appellation": appellation,
+                        "genders": [gender],
+                    },
+                )
+
+                messages.success(request, f'"{work.title}" sucessfully updated.')
+                return redirect("work_detail", work_id=work.pk)
         else:
             messages.error(request, "This form is invalid.")
             return redirect("work_edit_authorships", work_id=work.pk)

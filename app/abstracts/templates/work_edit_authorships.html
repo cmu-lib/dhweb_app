@@ -11,24 +11,32 @@
 
 <div class="card m-2">
   <div class="card-header">
-<nav>
-  <ul class="nav nav-pills">
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'work_edit' work.pk %}">Core Features</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link active" href="{% url 'work_edit_authorship' work.pk %}">Authorships</a>
-    </li>
-  </ul>
-  </nav>
+    <nav>
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'work_edit' work.pk %}">Core Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'work_edit_authorship' work.pk %}">Authorships</a>
+        </li>
+      </ul>
+    </nav>
   </div>
   <div class="card-body">
     {% load static %}
     {% load crispy_forms_tags %}
-    <form method="post">
+    <form action="" , method="post">
       {% csrf_token %}
       {{ authorships_form.media }}
-      {{ authorships_form|crispy }}
+      {{ authorships_form.management_form }}
+      <ul class="list-group list-group">
+        {% for form in authorships_form %}
+        <li class="list-group-item">
+          <h2>Author {{ forloop.counter }}</h2>
+          {{ form|crispy}}
+        </li>
+        {% endfor %}
+      </ul>
       <div class="form-group">
         <button type="submit" class="btn btn-primary mb-2">Submit</button>
         <a class="btn btn-secondary mb-2" href="{% url 'work_detail' work.pk %}" role="button">Cancel</a>
