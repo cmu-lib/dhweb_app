@@ -32,12 +32,24 @@
       <ul class="list-group list-group">
         {% for form in authorships_form %}
         <li class="list-group-item">
-          <h2>Author {{ forloop.counter }}</h2>
-          {{ form|crispy}}
+          <h2>Author {{ form.authorship_order }}</h2>
+          <div class="row">
+            <div class="col">
+              {{ form.author|as_crispy_field }}
+              {{ form.first_name|as_crispy_field }}
+              {{ form.last_name|as_crispy_field }}
+            </div>
+            <div class="col">
+              {{ form.affiliation|as_crispy_field }}
+              {{ form.department|as_crispy_field }}
+              {{ form.institution|as_crispy_field }}
+              {{ form.genders|as_crispy_field }}
+            </div>
+          </div>
         </li>
         {% endfor %}
       </ul>
-      <div class="form-group">
+      <div class="form-group my-4">
         <button type="submit" class="btn btn-primary mb-2">Submit</button>
         <a class="btn btn-secondary mb-2" href="{% url 'work_detail' work.pk %}" role="button">Cancel</a>
       </div>

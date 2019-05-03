@@ -63,11 +63,6 @@ class WorkFilter(forms.Form):
 
 
 class WorkAuthorshipForm(forms.Form):
-    # work = forms.ModelChoiceField(
-    #     queryset=Work.objects.distinct(),
-    #     required=True,
-    #     widget=ModelSelect2(url="work-autocomplete"),
-    # )
     author = forms.ModelChoiceField(
         queryset=Author.objects.all(),
         required=True,
@@ -78,30 +73,36 @@ class WorkAuthorshipForm(forms.Form):
         min_value=0,
         help_text="Authorship order must be unique across all the authorships of this work.",
     )
-    first_name = forms.CharField(max_length=100, required=False)
-    last_name = forms.CharField(max_length=100, required=False)
+    first_name = forms.CharField(
+        max_length=100,
+        required=False,
+        help_text="First name as it appears in the context of this abstract.",
+    )
+    last_name = forms.CharField(
+        max_length=100,
+        required=False,
+        help_text="Last name as it appears in the context of this abstract.",
+    )
+    affiliation = forms.ModelChoiceField(
+        queryset=Affiliation.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        help_text="If the combination of department and institution is not available in this list, then use the fields below to define it.",
+    )
     department = forms.CharField(
         max_length=500, required=False, help_text="If given, enter a department name."
     )
     institution = forms.ModelChoiceField(
-        queryset=Affiliation.objects.all(),
+        queryset=Institution.objects.all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
     )
-    country = forms.ModelChoiceField(
-        queryset=Country.objects.all(),
-        required=False,
-        widget=ModelSelect2(url="unrestricted-country-autocomplete"),
-    )
-    gender = forms.ModelMultipleChoiceField(
+    genders = forms.ModelMultipleChoiceField(
         queryset=Gender.objects.all(),
         required=False,
         widget=forms.CheckboxSelectMultiple(),
         help_text="Gender presentation of the author at this time. This is optional and will not be publicly viewable.",
     )
-
-
-AuthorshipWorkFormset = formset_factory(WorkAuthorshipForm)
 
 
 class WorkForm(forms.ModelForm):

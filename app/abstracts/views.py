@@ -42,7 +42,7 @@ from .forms import (
     AuthorFilter,
     AuthorMergeForm,
     WorkForm,
-    AuthorshipWorkFormset,
+    WorkAuthorshipForm,
 )
 
 
@@ -552,6 +552,7 @@ def download_data(request):
     return render(request, "downloads.html", context)
 
 
+@login_required
 def WorkEdit(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
 
@@ -560,7 +561,7 @@ def WorkEdit(request, work_id):
         context = {"work_form": WorkForm(initial=work_initial_data), "work": work}
         return render(request, "work_edit.html", context)
     elif request.method == "POST":
-        work_form = WorkForm(request.POST)
+        work_form = WorkForm(request.POST, instance=work)
         if work_form.is_valid():
             work_form.save()
             messages.success(request, f'"{work.title}" sucessfully updated.')
@@ -574,33 +575,30 @@ def WorkEdit(request, work_id):
     # success_message = "%(title)s was updated successfully"
 
 
+@login_required
+@transaction.atomic
 def WorkEditAuthorship(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
     authorships = work.authorships.all()
-
-    if request.method == "GET":
-        initial_data = [
-            {
-                "author": authorship.author,
-                "authorship_order": authorship.authorship_order,
-                "first_name": authorship.appellation.first_name,
-                "last_name": authorship.appellation.last_name,
-                "department": authorship.affiliations.first().department,
-                "institution": authorship.affiliations.first().institution,
-                "country": authorship.affiliations.first().institution.country,
-                "gender": [a for a in authorship.genders.all()],
-            }
-            for authorship in authorships
-        ]
-        authorships_forms = AuthorshipWorkFormset(initial=initial_data)
-        context = {
-            "authorships_form": authorships_forms,
-            "work": work,
-            "idata": initial_data,
+    AuthorshipWorkFormset = formset_factory(WorkAuthorshipForm, extra=0)
+    initial_data = [
+        {
+            "author": authorship.author,
+            "authorship_order": authorship.authorship_order,
+            "first_name": authorship.appellation.first_name,
+            "last_name": authorship.appellation.last_name,
+            "affiliation": authorship.affiliations.first(),
+            "department": authorship.affiliations.first().department,
+            "institution": authorship.affiliations.first().institution,
+            "country": authorship.affiliations.first().institution.country,
+            "genders": [a for a in authorship.genders.all()],
         }
-        return render(request, "work_edit_authorships.html", context)
+        for authorship in authorships
+    ]
+    if request.method == "GET":
+        authorships_forms = AuthorshipWorkFormset(initial=initial_data)
     elif request.method == "POST":
-        authorships_forms = AuthorshipWorkFormset(request.POST, request.FILES)
+        authorships_forms = AuthorshipWorkFormset(request.POST, initial=initial_data)
         if authorships_forms.is_valid():
             for aform in authorships_forms:
                 aform_data = aform.cleaned_data
@@ -608,27 +606,37 @@ def WorkEditAuthorship(request, work_id):
                     first_name=aform_data["first_name"],
                     last_name=aform_data["last_name"],
                 )[0]
-                affiliation = (
-                    Affiliation.objects.get_or_create(
+
+                if aform_data["affiliation"] is not None:
+                    affiliation = aform_data["affiliation"]
+                else:
+                    affiliation = Affiliation.objects.get_or_create(
                         department=aform_data["department"],
                         institution=aform_data["institution"],
-                        country=aform_data["country"],
-                    )[0],
-                )
-                gender = Gender.objects.get_or_create(gender=aform_data["gender"])[0]
+                    )[0]
 
-                Authorship.objects.update_or_create(
+                genders = aform_data["genders"]
+
+                authorship_order = aform_data["authorship_order"]
+
+                auth = Authorship.objects.update_or_create(
                     work=work,
                     author=aform_data["author"],
                     defaults={
-                        "affiliations": [affiliation],
+                        "authorship_order": authorship_order,
                         "appellation": appellation,
-                        "genders": [gender],
                     },
-                )
+                )[0]
 
-                messages.success(request, f'"{work.title}" sucessfully updated.')
-                return redirect("work_detail", work_id=work.pk)
+                auth.affiliations.set([affiliation])
+                auth.genders.set(genders)
+            messages.success(
+                request, f'"{work.title}" authorships sucessfully updated.'
+            )
+            return redirect("work_detail", work_id=work.pk)
         else:
-            messages.error(request, "This form is invalid.")
-            return redirect("work_edit_authorships", work_id=work.pk)
+            for error in authorships_forms.errors:
+                messages.error(request, error)
+
+    context = {"authorships_form": authorships_forms, "work": work}
+    return render(request, "work_edit_authorships.html", context)

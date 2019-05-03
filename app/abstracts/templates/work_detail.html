@@ -6,7 +6,12 @@
 
 {% block main %}
 <div class="card my-2">
-  <div class="card-header">Authorship</div>
+  <div class="card-header">
+  Authorship
+  {% if user.is_authenticated %}
+  <a class="btn btn-primary" role="button" href="{% url 'work_edit_authorship' work.pk %}">Edit authorships</a>
+  {% endif %}
+  </div>
   <ol class="list-group list-group-flush">
     {% for authorship in authorships.all %}
     <li class="list-group-item">{% include "authorship_card.html" with authorship=authorship %}</li>
