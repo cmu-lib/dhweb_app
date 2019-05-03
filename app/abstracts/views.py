@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from dal.autocomplete import Select2QuerySetView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.db import transaction
+from django.forms.models import model_to_dict
 
 from .models import (
     Work,
@@ -31,9 +32,16 @@ from .models import (
     Discipline,
     Language,
     CountryLabel,
+    Authorship,
 )
 
-from .forms import WorkFilter, AuthorFilter, AuthorMergeForm, WorkForm
+from .forms import (
+    WorkFilter,
+    AuthorFilter,
+    AuthorMergeForm,
+    WorkForm,
+    AuthorshipWorkFormset,
+)
 
 
 class InstitutionAutocomplete(Select2QuerySetView):
@@ -542,8 +550,43 @@ def download_data(request):
     return render(request, "downloads.html", context)
 
 
-class WorkEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = Work
-    form_class = WorkForm
-    template_name = "work_edit.html"
-    success_message = "%(title)s was updated successfully"
+def WorkEdit(request, work_id):
+    work = get_object_or_404(Work, pk=work_id)
+
+    if request.method == "GET":
+        work_initial_data = model_to_dict(work)
+        context = {"work_form": WorkForm(initial=work_initial_data), "work": work}
+        return render(request, "work_edit.html", context)
+    elif request.method == "POST":
+        work_form = WorkForm(request.POST)
+        if work_form.is_valid():
+            work_form.save()
+            messages.success(request, f'"{work.title}" sucessfully updated.')
+            return redirect("work_detail", work_id=work.pk)
+        else:
+            messages.error(request, "This form is invalid.")
+            return redirect("work_edit", work_id=work_id)
+
+    # form_class = WorkForm
+    # template_name = "work_edit.html"
+    # success_message = "%(title)s was updated successfully"
+
+
+def WorkEditAuthorship(request, work_id):
+    work = get_object_or_404(Work, pk=work_id)
+
+    if request.method == "GET":
+        authorships_forms = AuthorshipWorkFormset(queryset=work.authorships.all())
+        context = {"authorships_form": authorships_forms, "work": work}
+        return render(request, "work_edit_authorships.html", context)
+    elif request.method == "POST":
+        authorships_forms = AuthorshipWorkFormset(
+            request.POST, request.FILES, queryset=work.authorships.all()
+        )
+        if authorships_forms.is_valid():
+            authorships_forms.save()
+            messages.success(request, f'"{work.title}" sucessfully updated.')
+            return redirect("work_detail", work_id=work.pk)
+        else:
+            messages.error(request, "This form is invalid.")
+            return redirect("work_edit_authorships", work_id=work.pk)

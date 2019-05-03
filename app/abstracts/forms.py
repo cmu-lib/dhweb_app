@@ -1,6 +1,6 @@
 from django import forms
 from dal.autocomplete import ModelSelect2, ModelSelect2Multiple
-
+from django.forms import inlineformset_factory, modelformset_factory
 
 from .models import (
     Author,
@@ -58,7 +58,7 @@ class WorkFilter(forms.Form):
     )
 
 
-class AuthorshipForm(forms.ModelForm):
+class WorkAuthorshipForm(forms.ModelForm):
     work = forms.ModelChoiceField(
         queryset=Work.objects.distinct(),
         required=True,
@@ -188,3 +188,5 @@ class AuthorMergeForm(forms.Form):
         help_text="Select the author that will be used to replace the one you are merging.",
     )
 
+
+AuthorshipWorkFormset = modelformset_factory(Authorship, exclude=["work"], extra=0)

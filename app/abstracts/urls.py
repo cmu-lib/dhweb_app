@@ -9,7 +9,12 @@ urlpatterns = [
     path("", views.home_view, name="home_view"),
     path("works", views.WorkList.as_view(), name="work_list"),
     path("works/<int:work_id>", views.work_view, name="work_detail"),
-    path("works/<int:pk>/edit", views.WorkEdit.as_view(), name="work_edit"),
+    path("works/<int:work_id>/edit", views.WorkEdit, name="work_edit"),
+    path(
+        "works/<int:work_id>/edit/authorship",
+        views.WorkEditAuthorship,
+        name="work_edit_authorship",
+    ),
     path("authors", views.AuthorList.as_view(), name="author_list"),
     path("authors/<int:author_id>", views.author_view, name="author_detail"),
     path("authors/<int:author_id>/merge", views.author_merge_view, name="author_merge"),
