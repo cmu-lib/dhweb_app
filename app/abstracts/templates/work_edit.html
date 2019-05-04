@@ -11,16 +11,16 @@
 
 <div class="card m-2">
   <div class="card-header">
-<nav>
-  <ul class="nav nav-pills">
-    <li class="nav-item">
-      <a class="nav-link active" href="{% url 'work_edit' work.pk %}">Core Features</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'work_edit_authorship' work.pk %}">Authorships</a>
-    </li>
-  </ul>
-  </nav>
+    <nav>
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'work_edit' work.pk %}">Core Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'work_edit_authorship' work.pk %}">Authorships</a>
+        </li>
+      </ul>
+    </nav>
   </div>
   <div class="card-body">
     {% load static %}
@@ -28,7 +28,33 @@
     <form method="post">
       {% csrf_token %}
       {{ work_form.media }}
-      {{ work_form|crispy }}
+      {{ work_form.title | as_crispy_field }}
+      <div class="row">
+        <div class="col">
+          <h3>Conference Info</h3>
+          {{ work_form.conference | as_crispy_field }}
+          {{ work_form.work_type | as_crispy_field }}
+          {{ work_form.state | as_crispy_field }}
+          {{ work_form.published_version | as_crispy_field }}
+        </div>
+        <div class="col">
+          <h3>Tags</h3>
+          {{ work_form.keywords | as_crispy_field }}
+          {{ work_form.topics | as_crispy_field }}
+          {{ work_form.languages | as_crispy_field }}
+          {{ work_form.disciplines | as_crispy_field }}
+        </div>
+      </div>
+      <h3>Full Text</h3>
+      <div class="row">
+        <div class="col">
+          {{ work_form.full_text_type | as_crispy_field }}
+        </div>
+        <div class="col">
+          {{ work_form.full_text_license | as_crispy_field }}
+        </div>
+      </div>
+      {{ work_form.full_text | as_crispy_field}}
       <div class="form-group">
         <button type="submit" class="btn btn-primary mb-2">Submit</button>
         <a class="btn btn-secondary mb-2" href="{% url 'work_detail' work.pk %}" role="button">Cancel</a>

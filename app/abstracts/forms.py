@@ -161,6 +161,7 @@ class WorkForm(forms.ModelForm):
 
     full_text_license = forms.ModelChoiceField(
         queryset=License.objects.all(),
+        required=False,
         help_text="License information to be displayed with the full text of the abstract.",
     )
 
