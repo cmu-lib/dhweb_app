@@ -25,7 +25,7 @@
   <div class="card-body">
     {% load static %}
     {% load crispy_forms_tags %}
-    <form action="" , method="post">
+    <form method="post">
       {% csrf_token %}
       {{ authorships_form.media }}
       {{ authorships_form.management_form }}
