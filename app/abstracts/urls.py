@@ -105,4 +105,5 @@ urlpatterns = [
         views.UnrestrictedAuthorAutocomplete.as_view(),
         name="unrestricted-author-autocomplete",
     ),
+    path("editor/authors", views.FullAuthorList.as_view(), name="full_author_list"),
 ]

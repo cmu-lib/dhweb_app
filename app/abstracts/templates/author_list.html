@@ -19,12 +19,12 @@
 {% endblock %}
 
 {% block filter %}
-<form action="{% url 'author_list' %}" method="get">
+<form action="{{ redirect_url }}" method="get">
   {{ author_filter_form.media }}
   {{ author_filter_form|crispy }}
   <div class="form-group">
   <button type="submit" class="btn btn-primary mb-2">Filter</button>
-  <a class="btn btn-secondary mb-2" href="{% url 'author_list' %}" role="button">Reset</a>
+  <a class="btn btn-secondary mb-2" href="{{ redirect_url }}" role="button">Reset</a>
   </div>
 </form>
 {% endblock %}

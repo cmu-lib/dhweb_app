@@ -91,6 +91,47 @@ class AuthorListViewTest(TestCase):
             self.assertGreaterEqual(author.works.filter(state="ac").count(), 1)
 
 
+class AuthorFullListViewTest(TestCase):
+    """
+    Test full Author list page
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("full_author_list")
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        full_author_list_response = self.client.get(target_url, follow=True)
+        self.assertRedirects(full_author_list_response, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_full_author_list_response = self.client.get(reverse("full_author_list"))
+        self.assertEqual(auth_full_author_list_response.status_code, 200)
+
+    def test_query_filtered_count(self):
+        self.client.login(username="root", password="dh-abstracts")
+        full_author_list_response = self.client.get(reverse("full_author_list"))
+        self.assertEqual(
+            full_author_list_response.context["filtered_authors_count"],
+            len(full_author_list_response.context["author_list"]),
+        )
+
+    def test_query_total_count(self):
+        self.client.login(username="root", password="dh-abstracts")
+        full_author_list_response = self.client.get(reverse("full_author_list"))
+        self.assertIsInstance(
+            full_author_list_response.context["available_authors_count"], int
+        )
+
+    def test_unique(self):
+        self.client.login(username="root", password="dh-abstracts")
+        full_author_list_response = self.client.get(reverse("full_author_list"))
+        self.assertTrue(
+            is_list_unique(full_author_list_response.context["author_list"])
+        )
+
+
 class AuthorDetailViewTest(TestCase):
     """
     Test Author detail page

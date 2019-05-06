@@ -43,6 +43,7 @@ from .forms import (
     AuthorMergeForm,
     WorkForm,
     WorkAuthorshipForm,
+    AdminAuthorFilter,
 )
 
 
@@ -452,6 +453,7 @@ class AuthorList(ListView):
             Author.objects.filter(works__state="ac").distinct().count()
         )
         context["filtered_authors_count"] = self.get_queryset().count()
+        context["redirect_url"] = reverse("author_list")
         return context
 
 
@@ -650,3 +652,56 @@ def WorkEditAuthorship(request, work_id):
 
     context = {"authorships_form": authorships_forms, "work": work}
     return render(request, "work_edit_authorships.html", context)
+
+
+class FullAuthorList(LoginRequiredMixin, ListView):
+    context_object_name = "author_list"
+    template_name = "author_list.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        base_result_set = Author.objects.all()
+        raw_filter_form = AdminAuthorFilter(self.request.GET)
+        if raw_filter_form.is_valid():
+            filter_form = raw_filter_form.cleaned_data
+            result_set = base_result_set
+
+            institution_res = filter_form["institution"]
+            if institution_res is not None:
+                result_set = result_set.filter(
+                    authorships__affiliations__institution=institution_res
+                )
+
+            country_res = filter_form["country"]
+            if country_res is not None:
+                result_set = result_set.filter(
+                    authorships__affiliations__institution__country=country_res
+                )
+
+            first_name_res = filter_form["first_name"]
+            if first_name_res is not None:
+                result_set = result_set.filter(
+                    appellations__first_name__icontains=first_name_res
+                )
+
+            last_name_res = filter_form["last_name"]
+            if last_name_res is not None:
+                result_set = result_set.filter(
+                    appellations__last_name__icontains=last_name_res
+                )
+
+            return result_set.order_by("id").distinct()
+        else:
+            messages.warning(
+                self.request,
+                "Query parameters not recognized. Check your URL and try again.",
+            )
+            return base_result_set
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["author_filter_form"] = AdminAuthorFilter(data=self.request.GET)
+        context["available_authors_count"] = Author.objects.count()
+        context["filtered_authors_count"] = self.get_queryset().count()
+        context["redirect_url"] = reverse("full_author_list")
+        return context

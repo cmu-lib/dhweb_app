@@ -3,82 +3,94 @@
 <!doctype html>
 <html lang="en">
 
-<head>
+  <head>
 
-  <link rel="shortcut icon" href="/static/favicon.ico" />
+    <link rel="shortcut icon" href="/static/favicon.ico" />
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-  <script src="{% static 'js/jquery-3.4.0.slim.min.js'%}"></script>
-  <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
-  <script>
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-  </script>
-  <title>DH Abstracts {% block header_title %}{% endblock %}</title>
-</head>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery-3.4.0.slim.min.js'%}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
+    <script>
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
+    </script>
+    <title>DH Abstracts {% block header_title %}{% endblock %}</title>
+  </head>
 
-<body>
-  <div class="alert alert-warning text-center">This is an alpha site for demonstration purposes only. Data, layout, and functionality are subject to change or removal at any time.</div>
+  <body>
+    <div class="alert alert-warning text-center">This is an alpha site for demonstration purposes only. Data, layout,
+      and functionality are subject to change or removal at any time.</div>
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'home_view' %}">Digital Humanities Abstracts</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="{% url 'home_view' %}">Digital Humanities Abstracts</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">Browse</a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{% url 'conference_list' %}">Conferences</a>
-          <a class="dropdown-item" href="{% url 'work_list' %}">Works</a>
-          <a class="dropdown-item" href="{% url 'author_list' %}">Authors</a>
-        </div>
-      </li>
-      {% if user.is_authenticated %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'download_data' %}">Downloads</a>
-      </li>
-      {% endif %}
-      </ul>
-      <ul class="ml-auto navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="/admin">Administration{% if not user.is_authenticated %} (login required){% endif %}</a>
-      </li>
-      {% if user.is_authenticated %}
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/logout/?next=/">Log Out</a>
-      </li>
-      {% endif %}
-    </ul>
-  </div>
-</nav>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">Browse</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'conference_list' %}">Conferences</a>
+              <a class="dropdown-item" href="{% url 'work_list' %}">Abstracts</a>
+              <a class="dropdown-item" href="{% url 'author_list' %}">Authors</a>
+            </div>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">Admin Browser</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <p class="text-muted m-3">Full database listings, including unpublished data.</p>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'full_author_list' %}">Authors</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'download_data' %}">Downloads</a>
+            </div>
+          </li>
+          {% endif %}
+        </ul>
+        <ul class="ml-auto navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/admin">Administration{% if not user.is_authenticated %} (login
+              required){% endif %}</a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/logout/?next=/">Log Out</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
 
-<div class="container p-4">
-  {% if messages %}
-    {% for message in messages %}
+    <div class="container p-4">
+      {% if messages %}
+      {% for message in messages %}
       {% if message.tags == "error" %}
-        <div class="alert my-2 alert-danger" role="alert">{{ message | safe }}</div>
+      <div class="alert my-2 alert-danger" role="alert">{{ message | safe }}</div>
       {% else %}
-        <div class="alert my-2 alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">{{ message | safe }}</div>
-        {% endif %}
-    {% endfor %}
-  {% endif %}
+      <div class="alert my-2 alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">{{ message | safe }}
+      </div>
+      {% endif %}
+      {% endfor %}
+      {% endif %}
 
-  {% block content %}
-  {% endblock %}
-</div>
+      {% block content %}
+      {% endblock %}
+    </div>
 
-<nav class="navbar sticky-bottom navbar-light bg-light">
-  <p>© <a href="http://dsharp.library.cmu.edu/">dSHARP at Carnegie Mellon University</a>, 2019</p>
-</nav>
+    <nav class="navbar sticky-bottom navbar-light bg-light">
+      <p>© <a href="http://dsharp.library.cmu.edu/">dSHARP at Carnegie Mellon University</a>, 2019</p>
+    </nav>
 
-</body>
+  </body>
+
 </html>
