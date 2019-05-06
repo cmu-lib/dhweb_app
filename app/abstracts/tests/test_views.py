@@ -414,3 +414,22 @@ class AuthorMergeViewTest(TestCase):
             reverse("author_merge", kwargs={"author_id": 100}), follow=True
         )
         self.assertEqual(auth_merge_response.status_code, 404)
+
+    def test_post(self):
+        self.client.login(username="root", password="dh-abstracts")
+        post_response = self.client.post(
+            reverse("author_merge", kwargs={"author_id": 1}), data={"into": 2}
+        )
+        expected_redirect = reverse("author_detail", kwargs={"author_id": 2})
+        self.assertRedirects(post_response, expected_redirect)
+
+    def test_invalid_author(self):
+        self.client.login(username="root", password="dh-abstracts")
+        post_response = self.client.post(
+            reverse("author_merge", kwargs={"author_id": 1}),
+            data={"into": 1},
+            follow=True,
+        )
+        expected_redirect = reverse("author_merge", kwargs={"author_id": 1})
+        self.assertRedirects(post_response, expected_redirect)
+        self.assertContains(post_response, "You cannot merge an author into themselves")

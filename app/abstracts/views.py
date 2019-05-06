@@ -534,27 +534,32 @@ def author_merge_view(request, author_id):
         Posting the new author id causes all of the old author's authorships to be reassigned.
         """
 
-        target_id = int(request.POST["into"])
+        raw_form = AuthorMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_author = raw_form.cleaned_data["into"]
 
-        if author_id == target_id:
-            """
-            If the user chooses the existing author, don't merge, but instead error out.
-            """
-            messages.error(
-                request,
-                f"You cannot merge an author into themselves. Please select a different author.",
-            )
-            return redirect("author_merge", author_id=author_id)
+            if author == target_author:
+                """
+                If the user chooses the existing author, don't merge, but instead error out.
+                """
+                messages.error(
+                    request,
+                    f"You cannot merge an author into themselves. Please select a different author.",
+                )
+                return redirect("author_merge", author_id=author_id)
+            else:
+                old_author_string = str(author)
+                author.merge(target_author)
+
+                messages.success(
+                    request,
+                    f"Author {old_author_string} has been merged into {target_author}, and the old author entry has been deleted.",
+                )
+                return redirect("author_detail", author_id=target_author.pk)
         else:
-            target_author = Author.objects.get(pk=target_id)
-            old_author_string = str(author)
-            author.merge(target_author)
-
-            messages.success(
-                request,
-                f"Author {old_author_string} has been merged into {target_author}, and the old author entry has been deleted.",
-            )
-            return redirect("author_detail", pk=target_author.pk)
+            for error in raw_form.errors:
+                messages.error(request, error)
+            return render(request, "author_merge.html", context)
 
 
 @login_required
