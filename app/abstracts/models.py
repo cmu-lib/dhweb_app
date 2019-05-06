@@ -461,7 +461,7 @@ class Author(models.Model):
         return self.most_recent_attributes(Affiliation)
 
     def get_absolute_url(self):
-        return reverse("author_detail", kwargs={"pk": self.pk})
+        return reverse("author_detail", kwargs={"author_id": self.pk})
 
     def merge(self, target):
         """

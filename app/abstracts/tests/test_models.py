@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.db.utils import DataError, IntegrityError
+from django.urls import reverse
 
 from abstracts.models import (
     Organizer,
@@ -141,4 +142,20 @@ class ConferenceModelTest(TestCase):
         """
         cons = Conference.objects.all()
         self.assertGreater(cons.first().year, cons.last().year)
+
+
+class AuthorModelTest(TestCase):
+    """
+    Test the Author model definition
+    """
+
+    @classmethod
+    def setUpTestData(self):
+        Author.objects.create()
+
+    def test_reverse_url(self):
+        a1 = Author.objects.get(pk=1)
+        self.assertEqual(
+            a1.get_absolute_url(), reverse("author_detail", kwargs={"author_id": 1})
+        )
 
