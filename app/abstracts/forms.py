@@ -64,6 +64,12 @@ class WorkFilter(forms.Form):
 
 
 class FullWorkForm(WorkFilter):
+    affiliation = forms.ModelChoiceField(
+        queryset=Affiliation.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        help_text='Search by department+institution combination. This is a more granular search than "Institution" above.',
+    )
     state = forms.ChoiceField(
         choices=Work.WORK_STATE, widget=forms.RadioSelect(), required=False
     )
