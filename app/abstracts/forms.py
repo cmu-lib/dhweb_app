@@ -63,6 +63,15 @@ class WorkFilter(forms.Form):
     )
 
 
+class FullWorkForm(WorkFilter):
+    state = forms.ChoiceField(
+        choices=Work.WORK_STATE, widget=forms.RadioSelect(), required=False
+    )
+    n_authors = forms.IntegerField(
+        label="Number of authors", min_value=0, required=False
+    )
+
+
 class WorkAuthorshipForm(forms.Form):
     author = forms.ModelChoiceField(
         queryset=Author.objects.all(),

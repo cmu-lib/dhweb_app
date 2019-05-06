@@ -16,12 +16,12 @@
 {% block filter %}
 {% load static %}
 {% load crispy_forms_tags %}
-<form action="{% url 'work_list' %}" method="get">
+<form action="{{ redirect_url }}" method="get">
   {{ work_filter_form.media }}
   {{ work_filter_form|crispy }}
   <div class="form-group">
   <button type="submit" class="btn btn-primary mb-2">Filter</button>
-  <a class="btn btn-secondary mb-2" href="{% url 'work_list' %}" role="button">Reset</a>
+  <a class="btn btn-secondary mb-2" href="{{ redirect_url }}" role="button">Reset</a>
   </div>
 </form>
 {% endblock %}

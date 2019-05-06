@@ -44,6 +44,7 @@ from .forms import (
     WorkForm,
     WorkAuthorshipForm,
     FullAuthorFilter,
+    FullWorkForm,
 )
 
 
@@ -317,6 +318,7 @@ class WorkList(ListView):
         context["work_filter_form"] = WorkFilter(data=self.request.GET)
         context["available_works_count"] = Work.objects.filter(state="ac").count()
         context["filtered_works_count"] = self.get_queryset().count()
+        context["redirect_url"] = reverse("work_list")
         return context
 
 
@@ -711,4 +713,79 @@ class FullAuthorList(LoginRequiredMixin, ListView):
         context["available_authors_count"] = Author.objects.count()
         context["filtered_authors_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("full_author_list")
+        return context
+
+
+class FullWorkList(LoginRequiredMixin, ListView):
+    context_object_name = "work_list"
+    template_name = "work_list.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        base_result_set = Work.objects.order_by("title").all()
+        raw_filter_form = FullWorkForm(self.request.GET)
+
+        if raw_filter_form.is_valid():
+            result_set = base_result_set
+            filter_form = raw_filter_form.cleaned_data
+
+            state_res = filter_form["state"]
+            if state_res != "":
+                result_set = result_set.filter(state=state_res)
+
+            work_type_res = filter_form["work_type"]
+            if work_type_res is not None:
+                result_set = result_set.filter(work_type=work_type_res)
+
+            conference_res = filter_form["conference"]
+            if conference_res is not None:
+                result_set = result_set.filter(conference=conference_res)
+
+            institution_res = filter_form["institution"]
+            if institution_res is not None:
+                result_set = result_set.filter(
+                    authorships__affiliations__institution=institution_res
+                )
+
+            keyword_res = filter_form["keyword"]
+            if keyword_res is not None:
+                result_set = result_set.filter(keywords=keyword_res)
+
+            topic_res = filter_form["topic"]
+            if topic_res is not None:
+                result_set = result_set.filter(topics=topic_res)
+
+            language_res = filter_form["topic"]
+            if language_res is not None:
+                result_set = result_set.filter(languages=language_res)
+
+            discipline_res = filter_form["discipline"]
+            if discipline_res is not None:
+                result_set = result_set.filter(disciplines=discipline_res)
+
+            if filter_form["full_text_available"]:
+                result_set = result_set.exclude(full_text="")
+
+            text_res = filter_form["text"]
+            if text_res != "":
+                result_set = result_set.filter(search_text=text_res)
+
+            n_author_res = filter_form["n_authors"]
+            if n_author_res is not None:
+                result_set = result_set.annotate(n_authors=Count("authorships")).filter(
+                    n_authors=n_author_res
+                )
+
+            return result_set.distinct()
+        else:
+            for error in raw_filter_form.errors:
+                messages.warning(self.request, error)
+            return base_result_set
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["work_filter_form"] = FullWorkForm(data=self.request.GET)
+        context["available_works_count"] = Work.objects.count()
+        context["filtered_works_count"] = self.get_queryset().count()
+        context["redirect_url"] = reverse("full_work_list")
         return context
