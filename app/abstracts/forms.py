@@ -225,6 +225,12 @@ class AuthorFilter(forms.Form):
 
 
 class FullAuthorFilter(AuthorFilter):
+    affiliation = forms.ModelChoiceField(
+        queryset=Affiliation.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        help_text='Search by department+institution combination. This is a more granular search than "Institution" above.',
+    )
     first_name = forms.CharField(
         max_length=100, strip=True, required=False, help_text="Search only first names"
     )
@@ -239,5 +245,25 @@ class AuthorMergeForm(forms.Form):
         widget=ModelSelect2(url="unrestricted-author-autocomplete"),
         required=True,
         help_text="Select the author that will be used to replace the one you are merging.",
+    )
+
+
+class FullInstitutionForm(forms.Form):
+    department = forms.CharField(
+        max_length=500, required=False, help_text="This free-text field is searchable"
+    )
+    no_department = forms.BooleanField(
+        required=False,
+        help_text="Show institutions with at least one affiliation that does not specifiy a department?",
+    )
+    institution = forms.ModelChoiceField(
+        queryset=Institution.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
+    )
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.filter().all(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-country-autocomplete"),
     )
 

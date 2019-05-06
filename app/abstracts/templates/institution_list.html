@@ -1,0 +1,32 @@
+{% extends "list.html" %}
+
+{% block header_title %}Institutions{% endblock %}
+
+{% block results_title %}Institution list{% endblock %}
+
+{% block head %}
+<p>Any time an author is associated with a paper, they may supply zero or more 'affiliations', which comprise an institition (which itself is linked to a country), and then an optional statement about a department. This lisitng shows instititions with counts of the departments that have been asserted about them.</p>
+<p>Click the title of any instition or department to see a list of works asserting that affiliation. You may also direclty go to the merge interface for affiliations as well as for whole departments.</p>
+{% endblock %}
+
+{% block results %}
+<div class="card-header">Results: Displaying {{ filtered_institutions_count }} out of {{ available_institutions_count }} institutions</div>
+<ul class="list-group list-group-flush">
+  {% for institution in institution_list %}
+  <li class="list-group-item">{% include "institution_card.html" with institution=institution %}</li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block filter %}
+{% load static %}
+{% load crispy_forms_tags %}
+<form action="{{ redirect_url }}" method="get">
+  {{ institution_filter_form.media }}
+  {{ institution_filter_form|crispy }}
+  <div class="form-group">
+  <button type="submit" class="btn btn-primary mb-2">Filter</button>
+  <a class="btn btn-secondary mb-2" href="{{ redirect_url }}" role="button">Reset</a>
+  </div>
+</form>
+{% endblock %}

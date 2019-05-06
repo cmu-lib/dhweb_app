@@ -107,4 +107,9 @@ urlpatterns = [
     ),
     path("editor/authors", views.FullAuthorList.as_view(), name="full_author_list"),
     path("editor/works", views.FullWorkList.as_view(), name="full_work_list"),
+    path(
+        "editor/institutions",
+        views.FullInstitutionList.as_view(),
+        name="full_institution_list",
+    ),
 ]

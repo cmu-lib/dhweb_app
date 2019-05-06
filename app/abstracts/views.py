@@ -45,6 +45,7 @@ from .forms import (
     WorkAuthorshipForm,
     FullAuthorFilter,
     FullWorkForm,
+    FullInstitutionForm,
 )
 
 
@@ -668,6 +669,12 @@ class FullAuthorList(LoginRequiredMixin, ListView):
             filter_form = raw_filter_form.cleaned_data
             result_set = base_result_set
 
+            affiliation_res = filter_form["affiliation"]
+            if affiliation_res is not None:
+                result_set = result_set.filter(
+                    authorships__affiliations=affiliation_res
+                )
+
             institution_res = filter_form["institution"]
             if institution_res is not None:
                 result_set = result_set.filter(
@@ -741,6 +748,12 @@ class FullWorkList(LoginRequiredMixin, ListView):
             if conference_res is not None:
                 result_set = result_set.filter(conference=conference_res)
 
+            affiliation_res = filter_form["affiliation"]
+            if affiliation_res is not None:
+                result_set = result_set.filter(
+                    authorships__affiliations=affiliation_res
+                )
+
             institution_res = filter_form["institution"]
             if institution_res is not None:
                 result_set = result_set.filter(
@@ -788,4 +801,50 @@ class FullWorkList(LoginRequiredMixin, ListView):
         context["available_works_count"] = Work.objects.count()
         context["filtered_works_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("full_work_list")
+        return context
+
+
+class FullInstitutionList(LoginRequiredMixin, ListView):
+    context_object_name = "institution_list"
+    template_name = "institution_list.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        base_result_set = Institution.objects.all()
+        raw_filter_form = FullInstitutionForm(self.request.GET)
+        if raw_filter_form.is_valid():
+            filter_form = raw_filter_form.cleaned_data
+            result_set = base_result_set
+
+            department_res = filter_form["department"]
+            if department_res != "":
+                result_set = result_set.filter(
+                    affiliations__department__icontains=department_res
+                )
+
+            institution_res = filter_form["institution"]
+            if institution_res is not None:
+                result_set = result_set.filter(pk=institution_res.pk)
+
+            country_res = filter_form["country"]
+            if country_res is not None:
+                result_set = result_set.filter(country=country_res)
+
+            if filter_form["no_department"]:
+                result_set = result_set.filter(affiliations__department="")
+
+            return result_set.distinct()
+        else:
+            messages.warning(
+                self.request,
+                "Query parameters not recognized. Check your URL and try again.",
+            )
+            return base_result_set
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["institution_filter_form"] = FullInstitutionForm(data=self.request.GET)
+        context["available_institutions_count"] = Institution.objects.count()
+        context["filtered_institutions_count"] = self.get_queryset().count()
+        context["redirect_url"] = reverse("full_institution_list")
         return context

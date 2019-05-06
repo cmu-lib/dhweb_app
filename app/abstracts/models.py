@@ -350,6 +350,9 @@ class Affiliation(Attribute):
         else:
             return f"{self.department} - {self.institution}"
 
+    def n_authors(self):
+        return Author.objects.filter(authorships__affiliations=self).distinct().count()
+
 
 class Author(models.Model):
     works = models.ManyToManyField(
