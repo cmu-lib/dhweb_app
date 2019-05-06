@@ -245,6 +245,21 @@ class Gender(Attribute):
     def __str__(self):
         return self.gender
 
+    def merge(self, target):
+        results = {"updates": {}}
+        affected_authorships = (
+            Authorship.objects.filter(genders=self).exclude(genders=target).distinct()
+        )
+
+        for authorship in affected_authorships:
+            authorship.genders.add(target)
+            authorship.save()
+        results["updates"] = {"abstracts.Authorhip": affected_authorships.count()}
+
+        deletion_results = self.delete()[1]
+        results["deletions"] = deletion_results
+        return results
+
 
 class Country(models.Model):
     tgn_id = models.URLField(max_length=100, unique=True)
