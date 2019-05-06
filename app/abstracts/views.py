@@ -417,34 +417,38 @@ class AuthorList(ListView):
 
     def get_queryset(self):
         base_result_set = Author.objects.filter(works__state="ac")
+        raw_filter_form = AuthorFilter(self.request.GET)
 
-        filter_form = self.request.GET
+        if raw_filter_form.is_valid():
+            result_set = base_result_set
+            filter_form = raw_filter_form.cleaned_data
 
-        result_set = base_result_set
-
-        if "institution" in filter_form:
             institution_res = filter_form["institution"]
-            if institution_res != "":
+            if institution_res is not None:
                 result_set = result_set.filter(
-                    authorships__affiliations__institution__pk=institution_res
+                    authorships__affiliations__institution=institution_res
                 )
 
-        if "country" in filter_form:
             country_res = filter_form["country"]
-            if country_res != "":
+            if country_res is not None:
                 result_set = result_set.filter(
-                    authorships__affiliations__institution__country__pk=country_res
+                    authorships__affiliations__institution__country=country_res
                 )
 
-        if "name" in filter_form:
             name_res = filter_form["name"]
-            if name_res != "":
+            if name_res is not None:
                 result_set = result_set.filter(
                     Q(appellations__first_name__icontains=name_res)
                     | Q(appellations__last_name__icontains=name_res)
                 )
 
-        return result_set.order_by("id").distinct()
+            return result_set.order_by("id").distinct()
+        else:
+            messages.warning(
+                self.request,
+                "Query parameters not recognized. Check your URL and try again.",
+            )
+            return base_result_set
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
