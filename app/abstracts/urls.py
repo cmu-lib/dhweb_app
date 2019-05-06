@@ -18,7 +18,7 @@ urlpatterns = [
     path("authors", views.AuthorList.as_view(), name="author_list"),
     path("authors/<int:author_id>", views.author_view, name="author_detail"),
     path("authors/<int:author_id>/merge", views.author_merge_view, name="author_merge"),
-    path("conferences", views.ConferenceList.as_view(), name="conference_list"),
+    path("conferences", views.ConferenceList, name="conference_list"),
     path("downloads", views.download_data, name="download_data"),
     path(
         "institution-autocomplete",

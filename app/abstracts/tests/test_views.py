@@ -255,6 +255,13 @@ class ConferenceListViewTest(TestCase):
             conference_list_response.context["conference_list"],
         )
 
+    def test_has_unaffiliated_conferences(self):
+        conference_list_response = self.client.get(reverse("conference_list"))
+        self.assertIn(
+            Conference.objects.filter(series__isnull=True, works__state="ac").first(),
+            conference_list_response.context["standalone_conferences"],
+        )
+
 
 class AuthorMergeViewTest(TestCase):
     fixtures = ["test.json"]

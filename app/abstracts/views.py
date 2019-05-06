@@ -455,14 +455,24 @@ class AuthorList(ListView):
         return context
 
 
-class ConferenceList(ListView):
+def ConferenceList(request):
     context_object_name = "conference_list"
     template_name = "conference_list.html"
 
-    def get_queryset(self):
-        return ConferenceSeries.objects.filter(
-            conferences__works__state="ac"
-        ).distinct()
+    affiliated_conferences = ConferenceSeries.objects.filter(
+        conferences__works__state="ac"
+    ).distinct()
+
+    unaffiliated_conferences = Conference.objects.filter(
+        works__state="ac", series__isnull=True
+    ).distinct()
+
+    context = {
+        "conference_list": affiliated_conferences,
+        "standalone_conferences": unaffiliated_conferences,
+    }
+
+    return render(request, "conference_list.html", context)
 
 
 def home_view(request):

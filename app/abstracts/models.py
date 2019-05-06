@@ -42,6 +42,7 @@ class Conference(models.Model):
         through="SeriesMembership",
         through_fields=("conference", "series"),
         related_name="conferences",
+        blank=True,
     )
     notes = models.TextField(blank=True, null=False, default="")
     url = models.URLField(blank=True)
@@ -66,7 +67,10 @@ class Conference(models.Model):
         else:
             display = self.venue
         # series.first() is still kludgy - need a nice method to concatenate series names
-        return f"{self.series.first()} {self.year} - {display}"
+        if self.series.exists():
+            return f"{self.series.first()} {self.year} - {display}"
+        else:
+            return f"{self.year} - {display}"
 
 
 class Organizer(models.Model):
