@@ -209,20 +209,12 @@ class AuthorFilter(forms.Form):
     )
 
 
-class AdminAuthorFilter(forms.Form):
-    first_name = forms.CharField(max_length=100, strip=True, required=False)
-    last_name = forms.CharField(max_length=100, strip=True, required=False)
-    institution = forms.ModelChoiceField(
-        queryset=Institution.objects.all(),
-        required=False,
-        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
-        help_text="Authors who were once affiliated with this institution",
+class FullAuthorFilter(AuthorFilter):
+    first_name = forms.CharField(
+        max_length=100, strip=True, required=False, help_text="Search only first names"
     )
-    country = forms.ModelChoiceField(
-        queryset=Country.objects.all(),
-        required=False,
-        help_text="Authors who were once affiliated with an institution in this country",
-        widget=ModelSelect2(url="unrestricted-country-autocomplete"),
+    last_name = forms.CharField(
+        max_length=100, strip=True, required=False, help_text="Search only last names"
     )
 
 

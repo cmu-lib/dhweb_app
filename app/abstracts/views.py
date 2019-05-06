@@ -43,7 +43,7 @@ from .forms import (
     AuthorMergeForm,
     WorkForm,
     WorkAuthorshipForm,
-    AdminAuthorFilter,
+    FullAuthorFilter,
 )
 
 
@@ -661,7 +661,7 @@ class FullAuthorList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         base_result_set = Author.objects.all()
-        raw_filter_form = AdminAuthorFilter(self.request.GET)
+        raw_filter_form = FullAuthorFilter(self.request.GET)
         if raw_filter_form.is_valid():
             filter_form = raw_filter_form.cleaned_data
             result_set = base_result_set
@@ -676,6 +676,13 @@ class FullAuthorList(LoginRequiredMixin, ListView):
             if country_res is not None:
                 result_set = result_set.filter(
                     authorships__affiliations__institution__country=country_res
+                )
+
+            name_res = filter_form["name"]
+            if name_res is not None:
+                result_set = result_set.filter(
+                    Q(appellations__first_name__icontains=name_res)
+                    | Q(appellations__last_name__icontains=name_res)
                 )
 
             first_name_res = filter_form["first_name"]
@@ -700,7 +707,7 @@ class FullAuthorList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["author_filter_form"] = AdminAuthorFilter(data=self.request.GET)
+        context["author_filter_form"] = FullAuthorFilter(data=self.request.GET)
         context["available_authors_count"] = Author.objects.count()
         context["filtered_authors_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("full_author_list")
