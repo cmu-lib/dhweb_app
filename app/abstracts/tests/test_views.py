@@ -422,6 +422,8 @@ class AuthorMergeViewTest(TestCase):
         )
         expected_redirect = reverse("author_detail", kwargs={"author_id": 2})
         self.assertRedirects(post_response, expected_redirect)
+        self.assertContains(post_response, "updated")
+        self.assertContains(post_response, "deleted")
 
     def test_invalid_author(self):
         self.client.login(username="root", password="dh-abstracts")
