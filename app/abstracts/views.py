@@ -263,58 +263,54 @@ class WorkList(ListView):
     def get_queryset(self):
         base_result_set = Work.objects.filter(state="ac").order_by("title").distinct()
 
-        filter_form = self.request.GET
+        raw_filter_form = WorkFilter(self.request.GET)
 
-        result_set = base_result_set
+        if raw_filter_form.is_valid():
+            result_set = base_result_set
+            filter_form = raw_filter_form.cleaned_data
 
-        if "work_type" in filter_form:
             work_type_res = filter_form["work_type"]
-            if work_type_res != "":
-                result_set = result_set.filter(work_type__pk=work_type_res)
+            if work_type_res is not None:
+                result_set = result_set.filter(work_type=work_type_res)
 
-        if "conference" in filter_form:
             conference_res = filter_form["conference"]
-            if conference_res != "":
-                result_set = result_set.filter(conference__pk=conference_res)
+            if conference_res is not None:
+                result_set = result_set.filter(conference=conference_res)
 
-        if "institution" in filter_form:
             institution_res = filter_form["institution"]
-            if institution_res != "":
+            if institution_res is not None:
                 result_set = result_set.filter(
                     authorships__affiliations__institution=institution_res
                 )
 
-        if "keyword" in filter_form:
             keyword_res = filter_form["keyword"]
-            if keyword_res != "":
-                result_set = result_set.filter(keywords__pk=keyword_res)
+            if keyword_res is not None:
+                result_set = result_set.filter(keywords=keyword_res)
 
-        if "topic" in filter_form:
             topic_res = filter_form["topic"]
-            if topic_res != "":
-                result_set = result_set.filter(topics__pk=topic_res)
+            if topic_res is not None:
+                result_set = result_set.filter(topics=topic_res)
 
-        if "language" in filter_form:
             language_res = filter_form["topic"]
-            if language_res != "":
-                result_set = result_set.filter(languages__pk=language_res)
+            if language_res is not None:
+                result_set = result_set.filter(languages=language_res)
 
-        if "discipline" in filter_form:
             discipline_res = filter_form["discipline"]
-            if discipline_res != "":
-                result_set = result_set.filter(disciplines__pk=discipline_res)
+            if discipline_res is not None:
+                result_set = result_set.filter(disciplines=discipline_res)
 
-        if "full_text_available" in filter_form:
-            full_text_available_res = filter_form["full_text_available"]
-            if full_text_available_res == "on":
+            if filter_form["full_text_available"]:
                 result_set = result_set.exclude(full_text="")
 
-        if "text" in filter_form:
             text_res = filter_form["text"]
             if text_res != "":
                 result_set = result_set.filter(search_text=text_res)
 
-        return result_set.distinct()
+            return result_set.distinct()
+        else:
+            for error in raw_filter_form.errors:
+                messages.warning(self.request, error)
+            return base_result_set
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
