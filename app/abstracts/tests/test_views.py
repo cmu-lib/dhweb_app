@@ -171,6 +171,55 @@ class WorkFullListViewTest(TestCase):
         self.assertTrue(is_list_unique(full_work_list_response.context["work_list"]))
 
 
+class InstitutionFullListViewTest(TestCase):
+    """
+    Test full Institution list page
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("full_institution_list")
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        full_institution_list_response = self.client.get(target_url, follow=True)
+        self.assertRedirects(full_institution_list_response, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_full_institution_list_response = self.client.get(
+            reverse("full_institution_list")
+        )
+        self.assertEqual(auth_full_institution_list_response.status_code, 200)
+
+    def test_query_filtered_count(self):
+        self.client.login(username="root", password="dh-abstracts")
+        full_institution_list_response = self.client.get(
+            reverse("full_institution_list")
+        )
+        self.assertEqual(
+            full_institution_list_response.context["filtered_institutions_count"],
+            len(full_institution_list_response.context["institution_list"]),
+        )
+
+    def test_query_total_count(self):
+        self.client.login(username="root", password="dh-abstracts")
+        full_institution_list_response = self.client.get(
+            reverse("full_institution_list")
+        )
+        self.assertIsInstance(
+            full_institution_list_response.context["available_institutions_count"], int
+        )
+
+    def test_unique(self):
+        self.client.login(username="root", password="dh-abstracts")
+        full_institution_list_response = self.client.get(
+            reverse("full_institution_list")
+        )
+        self.assertTrue(
+            is_list_unique(full_institution_list_response.context["institution_list"])
+        )
+
+
 class AuthorDetailViewTest(TestCase):
     """
     Test Author detail page
