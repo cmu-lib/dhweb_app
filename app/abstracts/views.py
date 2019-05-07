@@ -257,7 +257,7 @@ class UnrestrictedAuthorAutocomplete(LoginRequiredMixin, Select2QuerySetView):
         return qs
 
 
-class WorkList(ListView):
+class PublicWorkList(ListView):
     context_object_name = "work_list"
     template_name = "work_list.html"
     paginate_by = 10
@@ -409,7 +409,7 @@ def author_view(request, author_id):
         return render(request, "author_detail.html", context)
 
 
-class AuthorList(ListView):
+class PublicAuthorList(ListView):
     context_object_name = "author_list"
     template_name = "author_list.html"
     paginate_by = 10
@@ -460,10 +460,7 @@ class AuthorList(ListView):
         return context
 
 
-def ConferenceList(request):
-    context_object_name = "conference_list"
-    template_name = "conference_list.html"
-
+def PublicConferenceList(request):
     affiliated_conferences = ConferenceSeries.objects.filter(
         conferences__works__state="ac"
     ).distinct()
