@@ -112,4 +112,5 @@ urlpatterns = [
         views.FullInstitutionList.as_view(),
         name="full_institution_list",
     ),
+    path("editor/wipe_unused", views.wipe_unused, name="wipe_unused"),
 ]

@@ -853,3 +853,28 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
         context["filtered_institutions_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("full_institution_list")
         return context
+
+
+@login_required
+@transaction.atomic
+def wipe_unused(request):
+    deletion_dict = {
+        "Author": Author.objects.filter(authorships__isnull=True).distinct(),
+        "Affiliation": Affiliation.objects.filter(asserted_by__isnull=True).distinct(),
+        "Institution": Institution.objects.filter(
+            affiliations__asserted_by__isnull=True
+        ).distinct(),
+        "Keyword": Keyword.objects.filter(works__isnull=True).distinct(),
+        "Topic": Topic.objects.filter(works__isnull=True).distinct(),
+        "Appellation": Appellation.objects.filter(asserted_by__isnull=True).distinct(),
+    }
+
+    if request.method == "POST":
+        for k, v in deletion_dict.items():
+            res = v.delete()
+            messages.success(request, f"{k}: {res[0]} objects deleted")
+
+    any_hanging_items = any([v.exists() for k, v in deletion_dict.items()])
+    context = {"deletions": deletion_dict, "hanging_items": any_hanging_items}
+
+    return render(request, "wipe_unused.html", context)

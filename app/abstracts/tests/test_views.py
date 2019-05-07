@@ -435,3 +435,30 @@ class AuthorMergeViewTest(TestCase):
         expected_redirect = reverse("author_merge", kwargs={"author_id": 1})
         self.assertRedirects(post_response, expected_redirect)
         self.assertContains(post_response, "You cannot merge an author into themselves")
+
+
+class WipeUnusedViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("wipe_unused")
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        wipe_unused_response = self.client.get(target_url, follow=True)
+        self.assertRedirects(wipe_unused_response, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        wipe_unused_response = self.client.get(reverse("wipe_unused"))
+        self.assertEqual(wipe_unused_response.status_code, 200)
+
+    def test_has_dict(self):
+        self.client.login(username="root", password="dh-abstracts")
+        wipe_unused_response = self.client.get(reverse("wipe_unused"))
+        self.assertIsInstance(wipe_unused_response.context["deletions"], dict)
+        self.assertIsInstance(wipe_unused_response.context["hanging_items"], bool)
+        self.assertTrue(wipe_unused_response.context["hanging_items"])
+
+    def test_post(self):
+        self.client.login(username="root", password="dh-abstracts")
+        wipe_unused_response = self.client.post(reverse("wipe_unused"))
+        self.assertFalse(wipe_unused_response.context["hanging_items"])
