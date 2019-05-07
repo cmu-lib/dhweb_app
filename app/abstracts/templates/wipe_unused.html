@@ -11,18 +11,18 @@
   {% csrf_token %}
   <button class="btn btn-danger btn-block" role="submit">Delete All (This cannot be reversed!)</button>
 </form>
-<div class="card-deck">
-  {% for k, v in deletions.items %}
-  <div class="card my-2">
-    <div class="card-header">{{ k }}</div>
-    <ul class="list-group list-group-flush">
-      {% for o in v.all %}
-      <li class="list-group-item">ID: {{ o.pk }}: "{{ o }}"</li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endfor %}
+
+{% for k, v in deletions.items %}
+<div class="card my-2">
+  <div class="card-header">{{ k }}</div>
+  <ul class="list-group list-group-flush">
+    {% for o in v.all %}
+    <li class="list-group-item">ID: {{ o.pk }}: "{{ o }}"</li>
+    {% endfor %}
+  </ul>
 </div>
+{% endfor %}
+
 {% else %}
 <p>There are no dangling objects to wipe.</p>
 {% endif %}

@@ -867,11 +867,14 @@ def wipe_unused(request):
         "Keyword": Keyword.objects.filter(works__isnull=True).distinct(),
         "Topic": Topic.objects.filter(works__isnull=True).distinct(),
         "Appellation": Appellation.objects.filter(asserted_by__isnull=True).distinct(),
+        "Series": ConferenceSeries.objects.filter(conferences__isnull=True).distinct(),
+        "Conferences": Conference.objects.filter(works__isnull=True).distinct(),
     }
 
     if request.method == "POST":
         for k, v in deletion_dict.items():
             res = v.delete()
+            if res[0] > 0:
             messages.success(request, f"{k}: {res[0]} objects deleted")
 
     any_hanging_items = any([v.exists() for k, v in deletion_dict.items()])
