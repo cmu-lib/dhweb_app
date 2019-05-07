@@ -119,8 +119,8 @@ class ConferenceModelTest(TestCase):
             year=2000, venue="New York", venue_abbreviation="NYC"
         )
         no_abbr_con = Conference.objects.create(year=2001, venue="Oregon")
-        SeriesMembership.objects.create(series=cs, conference=abbr_con, number=1)
-        SeriesMembership.objects.create(series=cs, conference=no_abbr_con, number=2)
+        SeriesMembership.objects.create(series=cs, conference=abbr_con)
+        SeriesMembership.objects.create(series=cs, conference=no_abbr_con)
 
     def test_conference_str_abbr(self):
         abbr_con = Conference.objects.get(pk=1)
