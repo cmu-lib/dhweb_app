@@ -1,0 +1,26 @@
+{% extends "list.html" %}
+
+{% block header_title %}Organizers{% endblock %}
+
+{% block results_title %}Organizer list{% endblock %}
+
+{% block results %}
+<div class="card-header">Organizers</div>
+<ul class="list-group list-group-flush">
+  {% for organizer in organizer_list %}
+  <li class="list-group-item">
+    <p><a href="{% url 'organizer_edit' organizer.pk %}">Name: {{ organizer.name }}</a></p>
+    <p>Abbreviation: {{ organizer.abbrevation }}</p>
+    <p>Conferences Organized:
+      <ul>
+        {% for conference in organizer.conferences_organized.all %}
+        <li><a href="{% url 'conference_edit' conference.pk %}">{{ conference }}</a></li>
+        {% endfor %}
+      </ul>
+    </p>
+    <p>Notes: {{ organizer.notes }}</p>
+    <p>URL: {{ conference.url }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -8,7 +8,8 @@
 <div class="card-header">Series</div>
 <ul class="list-group list-group-flush">
   {% for series in series_list %}
-  <li class="list-group-item">
+  <li class="list-group-item" id="{{ series.pk }}">
+    <a href="{% url 'series_edit' series.pk %}" role="button" class="btn btn-primary">Edit</a>
     <p>Title: <a href="{% url 'series_edit' series.pk %}">{{ series.title }}</a></p>
     <p>Series abbreviation: {{ series.abbreviation }}</p>
     <p><a href="{% url 'full_conference_list' %}?series={{ series.pk }}">Number of conferences:
@@ -19,5 +20,5 @@
 {% endblock %}
 
 {% block filter %}
-
+<a href="{% url 'series_create' %}" role="button" class="btn btn-primary">New series</a>
 {% endblock %}

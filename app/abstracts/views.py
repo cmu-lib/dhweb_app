@@ -28,6 +28,7 @@ from .models import (
     Appellation,
     Affiliation,
     ConferenceSeries,
+    Organizer,
     Country,
     Keyword,
     Topic,
@@ -546,7 +547,7 @@ def author_merge_view(request, author_id):
                 return redirect("author_merge", author_id=author_id)
             else:
                 old_author_string = str(author)
-                author.merge(target_author)
+                merge_results = author.merge(target_author)
 
                 messages.success(
                     request,
@@ -808,7 +809,7 @@ class FullWorkList(LoginRequiredMixin, ListView):
 
 class FullInstitutionList(LoginRequiredMixin, ListView):
     context_object_name = "institution_list"
-    template_name = "institution_list.html"
+    template_name = "full_institution_list.html"
     paginate_by = 10
 
     def get_queryset(self):
@@ -879,38 +880,64 @@ def wipe_unused(request):
 
     return render(request, "wipe_unused.html", context)
 
-class ConferenceCreate(LoginRequiredMixin, CreateView):
+class ConferenceCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Conference
     template_name = "generic_form.html"
     extra_context = {"form_title": "Create conference", "cancel_view": "full_conference_list"}
     fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
+    success_message = "Conference '%(year)s - %(venue)s' created"
 
 class ConferenceList(LoginRequiredMixin, ListView):
     model = Conference
     template_name = "full_conference_list.html"
     context_object_name = "conference_list"
-    paginate_by = 100
 
-class ConferenceEdit(LoginRequiredMixin, UpdateView):
+class ConferenceEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Conference
     template_name = "generic_form.html"
     extra_context = {"form_title": "Edit conference", "cancel_view": "full_conference_list"}
     fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
+    success_message = "Conference '%(year)s - %(venue)s' updated"
 
-class SeriesCreate(LoginRequiredMixin, CreateView):
+class SeriesCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = ConferenceSeries
     template_name = "generic_form.html"
     extra_context = {"form_title": "Create conference series", "cancel_view": "full_series_list"}
     fields = ["title", "abbreviation", "notes"]
+    success_message = "Series '%(title)s' created"
 
-class SeriesEdit(LoginRequiredMixin, UpdateView):
+
+class SeriesEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = ConferenceSeries
     template_name = "generic_form.html"
     extra_context = {"form_title": "Update conference series", "cancel_view": "full_series_list"}
     fields = ["title", "abbreviation", "notes"]
+    success_message = "Series '%(title)s' updated"
+
 
 class SeriesList(LoginRequiredMixin, ListView):
     model = ConferenceSeries
     template_name = "full_series_list.html"
     context_object_name = "series_list"
-    paginate_by = 100
+
+
+class OrganizerCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Organizer
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Create conference organizer", "cancel_view": "full_organizer_list"}
+    fields = ["name", "abbreviation", "conferences_organized", "notes", "url"]
+    success_message = "Organizer '%(name)s' created"
+    success_url = reverse_lazy("full_organizer_list")
+
+class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Organizer
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Update conference organizer", "cancel_view": "full_organizer_list"}
+    fields = ["name", "abbreviation", "conferences_organized", "notes", "url"]
+    success_message = "Organizer '%(name)s' updated"
+    success_url = reverse_lazy("full_organizer_list")
+
+class OrganizerList(LoginRequiredMixin, ListView):
+    model = Organizer
+    template_name = "full_organizer_list.html"
+    context_object_name = "organizer_list"

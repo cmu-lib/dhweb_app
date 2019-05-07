@@ -8,19 +8,22 @@
 <div class="card-header">Conferences</div>
 <ul class="list-group list-group-flush">
   {% for conference in conference_list %}
-  <li class="list-group-item">
-  <p>Venue: <a href="{% url 'conference_edit' conference.pk %}">{{ conference.venue }}</a></p>
-  <p>Year: {{ conference.year }}</p>
-  <p>Conference abbreviation: {{ conference.abbreviation }}</p>
-  <p><a href="{% url 'full_work_list' %}?conference={{ conference.pk }}">Number of works: {{ conference.works.count }}</a></p>
-  <p>Notes: {{ conference.notes }}</p>
-  <p>URL: <a href="{{ conference.url }}">{{ conference.url }}</a></p>
-  <p>Series: {% for series in conference.series_memberships.all %}<a href="{% url 'series_edit' series.pk %}">{{ series.abbreviation }}</a>{% endfor %}</p>
+  <li class="list-group-item" id="{{ conference.pk }}">
+    <a href="{% url 'conference_edit' conference.pk %}" role="button" class="btn btn-primary">Edit</a>
+    <p>Venue: <a href="{% url 'conference_edit' conference.pk %}">{{ conference.venue }}</a></p>
+    <p>Year: {{ conference.year }}</p>
+    <p>Conference abbreviation: {{ conference.abbreviation }}</p>
+    <p><a href="{% url 'full_work_list' %}?conference={{ conference.pk }}">Number of works:
+        {{ conference.works.count }}</a></p>
+    <p>Notes: {{ conference.notes }}</p>
+    <p>URL: <a href="{{ conference.url }}">{{ conference.url }}</a></p>
+    <p>Series: {% for series in conference.series_memberships.all %}<a
+        href="{% url 'series_edit' series.pk %}">{{ series.abbreviation }}</a>{% endfor %}</p>
   </li>
   {% endfor %}
 </ul>
 {% endblock %}
 
 {% block filter %}
-
+<a href="{% url 'conference_create' %}" role="button" class="btn btn-primary">New conferece</a>
 {% endblock %}

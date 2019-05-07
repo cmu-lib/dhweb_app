@@ -99,8 +99,14 @@ urlpatterns = [
         views.UnrestrictedAuthorAutocomplete.as_view(),
         name="unrestricted-author-autocomplete",
     ),
-    path("editor/authors", views.FullAuthorList.as_view(), name="full_author_list"),
     path("editor/works", views.FullWorkList.as_view(), name="full_work_list"),
+    path("editor/works/<int:work_id>/edit", views.WorkEdit, name="work_edit"),
+    path(
+        "editor/works/<int:work_id>/edit/authorship",
+        views.WorkEditAuthorship,
+        name="work_edit_authorship",
+    ),
+    path("editor/authors", views.FullAuthorList.as_view(), name="full_author_list"),
     path(
         "editor/institutions",
         views.FullInstitutionList.as_view(),
@@ -125,4 +131,17 @@ urlpatterns = [
     path("editor/series", views.SeriesList.as_view(), name="full_series_list"),
     path("editor/series/create", views.SeriesCreate.as_view(), name="series_create"),
     path("editor/series/<int:pk>/edit", views.SeriesEdit.as_view(), name="series_edit"),
+    path(
+        "editor/organizers", views.OrganizerList.as_view(), name="full_organizer_list"
+    ),
+    path(
+        "editor/organizers/create",
+        views.OrganizerCreate.as_view(),
+        name="organizer_create",
+    ),
+    path(
+        "editor/organizers/<int:pk>/edit",
+        views.OrganizerEdit.as_view(),
+        name="organizer_edit",
+    ),
 ]

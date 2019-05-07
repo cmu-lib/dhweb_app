@@ -76,7 +76,7 @@ class Conference(models.Model):
             return f"{self.year} - {display}"
 
     def get_absolute_url(self):
-        return f"{reverse('full_work_list')}?conference={self.pk}"
+        return reverse("conference_edit", kwargs={"pk": self.pk})
 
 
 class Organizer(models.Model):

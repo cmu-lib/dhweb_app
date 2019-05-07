@@ -418,7 +418,9 @@ class AuthorMergeViewTest(TestCase):
     def test_post(self):
         self.client.login(username="root", password="dh-abstracts")
         post_response = self.client.post(
-            reverse("author_merge", kwargs={"author_id": 1}), data={"into": 2}
+            reverse("author_merge", kwargs={"author_id": 1}),
+            data={"into": 2},
+            follow=True,
         )
         expected_redirect = reverse("author_detail", kwargs={"author_id": 2})
         self.assertRedirects(post_response, expected_redirect)
@@ -462,3 +464,32 @@ class WipeUnusedViewTest(TestCase):
         self.client.login(username="root", password="dh-abstracts")
         wipe_unused_response = self.client.post(reverse("wipe_unused"))
         self.assertFalse(wipe_unused_response.context["hanging_items"])
+
+
+class CreateConferenceViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("conference_create")
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        res = self.client.get(target_url, follow=True)
+        self.assertRedirects(res, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.get(reverse("conference_create"))
+        self.assertEqual(res.status_code, 200)
+
+    def test_post(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.post(
+            reverse("conference_create"),
+            data={
+                "year": 1987,
+                "venue": "foo",
+                "venue_abbreviation": "bar",
+                "notes": "buzz",
+            },
+            follow=True,
+        )
+        self.assertContains(res, "created")
