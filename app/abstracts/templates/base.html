@@ -64,7 +64,7 @@
         <ul class="ml-auto navbar-nav">
           {% if not user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+            <a class="nav-link" href="{% url 'login' %}?next=/">Log In</a>
           </li>
           {% elif user.is_authenticated %}
           <li class="nav-item">
