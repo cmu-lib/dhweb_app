@@ -875,9 +875,33 @@ def wipe_unused(request):
         for k, v in deletion_dict.items():
             res = v.delete()
             if res[0] > 0:
-            messages.success(request, f"{k}: {res[0]} objects deleted")
+                messages.success(request, f"{k}: {res[0]} objects deleted")
 
     any_hanging_items = any([v.exists() for k, v in deletion_dict.items()])
     context = {"deletions": deletion_dict, "hanging_items": any_hanging_items}
 
     return render(request, "wipe_unused.html", context)
+
+class ConferenceCreate(LoginRequiredMixin, CreateView):
+    model = Conference
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Create conference"}
+    fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
+
+class SeriesCreate(LoginRequiredMixin, CreateView):
+    model = ConferenceSeries
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Create conference series"}
+    fields = ["title", "abbreviation", "notes"]
+
+class SeriesView(LoginRequiredMixin, DetailView):
+    model = ConferenceSeries
+    template_name = "series_view.html"
+    context_object_name = "series"
+
+class SeriesEdit(LoginRequiredMixin, UpdateView):
+    model = ConferenceSeries
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Update conference series"}
+    fields = ["title", "abbreviation", "notes"]
+

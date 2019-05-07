@@ -113,4 +113,12 @@ urlpatterns = [
         name="full_institution_list",
     ),
     path("editor/wipe_unused", views.wipe_unused, name="wipe_unused"),
+    path(
+        "editor/conferences/create",
+        views.ConferenceCreate.as_view(),
+        name="conference_create",
+    ),
+    path("editor/series/create", views.SeriesCreate.as_view(), name="series_create"),
+    path("editor/series/<int:pk>", views.SeriesView.as_view(), name="series_view"),
+    path("editor/series/<int:pk>/edit", views.SeriesEdit.as_view(), name="series_edit"),
 ]

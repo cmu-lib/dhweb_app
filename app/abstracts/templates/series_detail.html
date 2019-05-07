@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block header_title %}Series: {{ series.title }}{% endblock %}
+
+{% block content %}
+
+<h1>{{ series.title }}</h1>
+
+<p>{{ series.abbreviation }}</p>
+<p>{{ series.notes }}</p>
+
+<a class="btn btn-primary" role="button" href="{% url 'series_edit' series.pk %}">Edit</a>
+
+{% endblock %}

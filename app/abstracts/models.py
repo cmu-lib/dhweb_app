@@ -32,6 +32,9 @@ class ConferenceSeries(models.Model):
     def __str__(self):
         return self.abbreviation
 
+    def get_absolute_url(self):
+        return reverse("series_view", kwargs={"pk": self.pk})
+
 
 class Conference(models.Model):
     year = models.IntegerField()
@@ -71,6 +74,9 @@ class Conference(models.Model):
             return f"{self.series.first()} {self.year} - {display}"
         else:
             return f"{self.year} - {display}"
+
+    def get_absolute_url(self):
+        return f"{reverse('full_work_list')}?conference={self.pk}"
 
 
 class Organizer(models.Model):
