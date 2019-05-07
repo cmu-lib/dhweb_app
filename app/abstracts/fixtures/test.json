@@ -93,8 +93,7 @@
   "pk": 1,
   "fields": {
     "series": 1,
-    "conference": 1,
-    "number": 1
+    "conference": 1
   }
 },
 {
@@ -102,8 +101,7 @@
   "pk": 2,
   "fields": {
     "series": 1,
-    "conference": 2,
-    "number": 2
+    "conference": 2
   }
 },
 {
@@ -111,8 +109,7 @@
   "pk": 3,
   "fields": {
     "series": 2,
-    "conference": 3,
-    "number": 1
+    "conference": 3
   }
 },
 {
