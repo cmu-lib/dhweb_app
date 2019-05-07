@@ -100,7 +100,7 @@
     <li class="list-group-item">Language:
       {% if work.languages.all %}
       {% for language in work.languages.all %}
-      <span class="badge badge-info">{{ language.title }}</span>
+      <a class="badge badge-info" href="{% url 'work_list' %}?language={{ language.pk }}">{{ language.title }}</a>
       {% endfor %}
       {% else %}
       None
@@ -118,7 +118,7 @@
     <li class="list-group-item">Disciplines:
       {% if work.disciplines.all %}
       {% for discipline in work.disciplines.all %}
-      <span class="badge badge-info">{{ discipline.title }}</span>
+      <a class="badge badge-info" href="{% url 'work_list' %}?discipline={{ discipline.pk }}">{{ discipline.title }}</a>
       {% endfor %}
       {% else %}
       None
