@@ -9,17 +9,17 @@
 <div class="row">
   <div class="col-md-8">
     <div class="card m-y2">
-    {% block results %}
-    {% endblock %}
-    {% if page_obj.paginator.num_pages > 1 %}
-    <div class="card-footer align-items-center">{% include "paginator.html" %}</div>
-    {% endif %}
+      {% block results %}
+      {% endblock %}
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="card-footer align-items-center">{% include "paginator.html" %}</div>
+      {% endif %}
     </div>
   </div>
 
   <div class="col-md-4">
     <div class="card m-y2">
-      <div class="card-header">Options</div>
+      <div class="card-header">Filter</div>
       <div class="card-body">
         {% block filter %}
         {% endblock %}

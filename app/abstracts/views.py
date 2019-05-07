@@ -885,23 +885,35 @@ def wipe_unused(request):
 class ConferenceCreate(LoginRequiredMixin, CreateView):
     model = Conference
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Create conference"}
+    extra_context = {"form_title": "Create conference", "cancel_view": "full_conference_list"}
+    fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
+
+class ConferenceList(LoginRequiredMixin, ListView):
+    model = Conference
+    template_name = "full_conference_list.html"
+    context_object_name = "conference_list"
+    paginate_by = 100
+
+class ConferenceEdit(LoginRequiredMixin, UpdateView):
+    model = Conference
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Edit conference", "cancel_view": "full_conference_list"}
     fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
 
 class SeriesCreate(LoginRequiredMixin, CreateView):
     model = ConferenceSeries
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Create conference series"}
+    extra_context = {"form_title": "Create conference series", "cancel_view": "full_series_list"}
     fields = ["title", "abbreviation", "notes"]
-
-class SeriesView(LoginRequiredMixin, DetailView):
-    model = ConferenceSeries
-    template_name = "series_view.html"
-    context_object_name = "series"
 
 class SeriesEdit(LoginRequiredMixin, UpdateView):
     model = ConferenceSeries
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Update conference series"}
+    extra_context = {"form_title": "Update conference series", "cancel_view": "full_series_list"}
     fields = ["title", "abbreviation", "notes"]
 
+class SeriesList(LoginRequiredMixin, ListView):
+    model = ConferenceSeries
+    template_name = "full_series_list.html"
+    context_object_name = "series_list"
+    paginate_by = 100

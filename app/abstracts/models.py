@@ -33,7 +33,7 @@ class ConferenceSeries(models.Model):
         return self.abbreviation
 
     def get_absolute_url(self):
-        return reverse("series_view", kwargs={"pk": self.pk})
+        return reverse("series_edit", kwargs={"pk": self.pk})
 
 
 class Conference(models.Model):

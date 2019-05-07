@@ -118,7 +118,17 @@ urlpatterns = [
         views.ConferenceCreate.as_view(),
         name="conference_create",
     ),
+    path(
+        "editor/conferences/<int:pk>/edit",
+        views.ConferenceEdit.as_view(),
+        name="conference_edit",
+    ),
+    path(
+        "editor/conferences",
+        views.ConferenceList.as_view(),
+        name="full_conference_list",
+    ),
+    path("editor/series", views.SeriesList.as_view(), name="full_series_list"),
     path("editor/series/create", views.SeriesCreate.as_view(), name="series_create"),
-    path("editor/series/<int:pk>", views.SeriesView.as_view(), name="series_view"),
     path("editor/series/<int:pk>/edit", views.SeriesEdit.as_view(), name="series_edit"),
 ]
