@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block header_title %}Delete work{% endblock %}
+
+{% block content %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+<h1>Delete "{{ work.title }}"</h1>
+
+<div class="alert alert-warning">
+  <p>This cannot be undone!</p>
+  {% if work.authorships.exists %}
+  <hr>
+  <p>Abstracts are source truth for all information about authors. If you erase an abstract and it's the only
+    information abou that author, their record will be erased as well.</p>
+  <p>This will affect the names and affiliations of the following authors:</p>
+  <ul>
+    {% for authorship in work.authorships.all %}
+    <li>{{ authorship.author }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form | crispy }}
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary mb-2">Confirm?</button>
+    <a class="btn btn-secondary mb-2" href="{% url cancel_view %}" role="button">Cancel</a>
+  </div>
+</form>
+
+{% endblock %}

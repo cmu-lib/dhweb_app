@@ -19,6 +19,9 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'work_edit_authorship' work.pk %}">Authorships</a>
         </li>
+        <li class="nav-item ml-auto">
+          <a class="btn btn-danger" href="{% url 'work_delete' work.pk %}">Delete</a>
+        </li>
       </ul>
     </nav>
   </div>

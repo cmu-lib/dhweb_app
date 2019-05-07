@@ -7,10 +7,10 @@
 {% block main %}
 <div class="card my-2">
   <div class="card-header">
-  Authorship
-  {% if user.is_authenticated %}
-  <a class="btn btn-primary" role="button" href="{% url 'work_edit_authorship' work.pk %}">Edit authorships</a>
-  {% endif %}
+    Authorship
+    {% if user.is_authenticated %}
+    <a class="btn btn-primary" role="button" href="{% url 'work_edit_authorship' work.pk %}">Edit authorships</a>
+    {% endif %}
   </div>
   <ol class="list-group list-group-flush">
     {% for authorship in authorships.all %}
@@ -54,6 +54,7 @@
   <div class="card-header">Administration</div>
   <div class="card-body">
     <a class="btn btn-primary" role="button" href="{% url 'work_edit' work.pk %}">Edit this work</a>
+    <a class="btn btn-danger" role="button" href="{% url 'work_delete' work.pk %}">Delete</a>
   </div>
 </div>
 {% endif %}

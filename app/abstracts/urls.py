@@ -106,6 +106,9 @@ urlpatterns = [
         views.WorkEditAuthorship,
         name="work_edit_authorship",
     ),
+    path(
+        "editor/works/<int:pk>/delete", views.WorkDelete.as_view(), name="work_delete"
+    ),
     path("editor/authors", views.FullAuthorList.as_view(), name="full_author_list"),
     path(
         "editor/institutions",

@@ -660,6 +660,12 @@ def WorkEditAuthorship(request, work_id):
     context = {"authorships_form": authorships_forms, "work": work}
     return render(request, "work_edit_authorships.html", context)
 
+class WorkDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Work
+    template_name = "work_delete.html"
+    extra_context = {"cancel_view": "full_work_list"}
+    success_url = reverse_lazy("full_work_list")
+    success_message = "%(id)s deleted."
 
 class FullAuthorList(LoginRequiredMixin, ListView):
     context_object_name = "author_list"

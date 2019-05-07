@@ -618,3 +618,23 @@ class EditOrganizerViewTest(TestCase):
             follow=True,
         )
         self.assertContains(res, "updated")
+
+
+class DeleteWorkViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("work_delete", kwargs={"pk": 1})
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        res = self.client.get(target_url, follow=True)
+        self.assertRedirects(res, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.get(reverse("work_delete", kwargs={"pk": 1}))
+        self.assertEqual(res.status_code, 200)
+
+    def test_post(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.post(reverse("work_delete", kwargs={"pk": 1}), follow=True)
+        self.assertFalse(Work.objects.filter(pk=1).exists())
