@@ -493,3 +493,128 @@ class CreateConferenceViewTest(TestCase):
             follow=True,
         )
         self.assertContains(res, "created")
+
+
+class EditConferenceViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("conference_edit", kwargs={"pk": 1})
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        res = self.client.get(target_url, follow=True)
+        self.assertRedirects(res, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.get(reverse("conference_edit", kwargs={"pk": 1}))
+        self.assertEqual(res.status_code, 200)
+
+    def test_post(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.post(
+            reverse("conference_edit", kwargs={"pk": 1}),
+            data={
+                "year": 1987,
+                "venue": "foo",
+                "venue_abbreviation": "bar",
+                "notes": "buzz",
+            },
+            follow=True,
+        )
+        self.assertContains(res, "updated")
+
+
+class CreateSeriesViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("series_create")
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        res = self.client.get(target_url, follow=True)
+        self.assertRedirects(res, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.get(reverse("series_create"))
+        self.assertEqual(res.status_code, 200)
+
+    def test_post(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.post(
+            reverse("series_create"),
+            data={"title": "foo", "abbreviation": "bar", "notes": "buzz"},
+            follow=True,
+        )
+        self.assertContains(res, "created")
+
+
+class EditSeriesViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("series_edit", kwargs={"pk": 1})
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        res = self.client.get(target_url, follow=True)
+        self.assertRedirects(res, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.get(reverse("series_edit", kwargs={"pk": 1}))
+        self.assertEqual(res.status_code, 200)
+
+    def test_post(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.post(
+            reverse("series_edit", kwargs={"pk": 1}),
+            data={"title": "foo", "abbreviation": "bar", "notes": "buzz"},
+            follow=True,
+        )
+        self.assertContains(res, "updated")
+
+
+class CreateOrganizerViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("organizer_create")
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        res = self.client.get(target_url, follow=True)
+        self.assertRedirects(res, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.get(reverse("organizer_create"))
+        self.assertEqual(res.status_code, 200)
+
+    def test_post(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.post(
+            reverse("organizer_create"),
+            data={"title": "foo", "abbreviation": "bar", "notes": "buzz"},
+            follow=True,
+        )
+        self.assertContains(res, "created")
+
+
+class EditOrganizerViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("organizer_edit", kwargs={"pk": 1})
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        res = self.client.get(target_url, follow=True)
+        self.assertRedirects(res, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.get(reverse("organizer_edit", kwargs={"pk": 1}))
+        self.assertEqual(res.status_code, 200)
+
+    def test_post(self):
+        self.client.login(username="root", password="dh-abstracts")
+        res = self.client.post(
+            reverse("organizer_edit", kwargs={"pk": 1}),
+            data={"title": "foo", "abbreviation": "bar", "notes": "buzz"},
+            follow=True,
+        )
+        self.assertContains(res, "updated")

@@ -928,7 +928,6 @@ class OrganizerCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     extra_context = {"form_title": "Create conference organizer", "cancel_view": "full_organizer_list"}
     fields = ["name", "abbreviation", "conferences_organized", "notes", "url"]
     success_message = "Organizer '%(name)s' created"
-    success_url = reverse_lazy("full_organizer_list")
 
 class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Organizer
@@ -936,7 +935,6 @@ class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     extra_context = {"form_title": "Update conference organizer", "cancel_view": "full_organizer_list"}
     fields = ["name", "abbreviation", "conferences_organized", "notes", "url"]
     success_message = "Organizer '%(name)s' updated"
-    success_url = reverse_lazy("full_organizer_list")
 
 class OrganizerList(LoginRequiredMixin, ListView):
     model = Organizer
