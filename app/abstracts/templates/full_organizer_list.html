@@ -10,7 +10,7 @@
   {% for organizer in organizer_list %}
   <li class="list-group-item">
     <p><a href="{% url 'organizer_edit' organizer.pk %}">Name: {{ organizer.name }}</a></p>
-    <p>Abbreviation: {{ organizer.abbrevation }}</p>
+    <p>Abbreviation: {{ organizer.abbreviation }}</p>
     <p>Conferences Organized:
       <ul>
         {% for conference in organizer.conferences_organized.all %}
