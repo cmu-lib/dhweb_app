@@ -553,6 +553,7 @@ def author_merge_view(request, author_id):
                     request,
                     f"Author {old_author_string} has been merged into {target_author}, and the old author entry has been deleted.",
                 )
+                messages.success(request, f"{merge_results['update_results']} authorships updated")
                 return redirect("author_detail", author_id=target_author.pk)
         else:
             for error in raw_form.errors:

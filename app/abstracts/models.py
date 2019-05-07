@@ -472,16 +472,34 @@ class Author(models.Model):
         return reverse("author_detail", kwargs={"author_id": self.pk})
 
     def merge(self, target):
+        affected_authorships = (
+            Authorship.objects.filter(genders=self).exclude(genders=target).distinct()
+        )
+
+        for authorship in affected_authorships:
+            authorship.genders.add(target)
+            authorship.save()
+        results["updates"] = {"abstracts.Authorhip": affected_authorships.count()}
+
+        deletion_results = self.delete()[1]
+        results["deletions"] = deletion_results
+        return results
+
+    def merge(self, target):
         """
         Reassign all of an author's authorships to a target author. This effectivley merges one Author instance into another.
         """
-        merges = []
-        merges.append(
+        results = {}
+
+        # Don't double-assign the target author to a work if they already
+        # have an uathorship for it
+        update_results = (
             Authorship.objects.filter(author=self)
-            # Don't double-assign the target author to a work if they already
-            # have an uathorship for it
-            .exclude(work__authorships__author=target).update(author=target)
+            .exclude(work__authorships__author=target)
+            .update(author=target)
         )
+
+        results["update_results"] = update_results
 
         # Register a redirect
         Redirect.objects.create(
@@ -491,8 +509,9 @@ class Author(models.Model):
         )
 
         # Delete self
-        merges.append(self.delete())
-        return merges
+        deletion_results = self.delete()[1]
+        results["deletions"] = deletion_results
+        return results
 
 
 class Authorship(models.Model):
