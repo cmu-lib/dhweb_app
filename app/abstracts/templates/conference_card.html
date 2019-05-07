@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between">
 <h5 class="mb-1"><a href="{% url 'work_list' %}?conference={{ conference.pk }}">{{ conference.year }} - {{ conference.venue }}</a></h5>
-<small class="text-muted">{% for membership in conference.series_memberships.all %}{{ membership.series }} {{ membership.number }}{% if not forloop.last %}, {% endif %}{% endfor %}</small>
+<small class="text-muted">{% for membership in conference.series_memberships.all %}{{ membership.series }}{% if not forloop.last %}, {% endif %}{% endfor %}</small>
 </div>
 <p>{{ conference.public_works.count }} works by {{ conference.public_authors }} authors</p>
 {% if conference.notes or conference.url %}

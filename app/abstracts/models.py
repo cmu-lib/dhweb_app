@@ -101,14 +101,12 @@ class SeriesMembership(models.Model):
     conference = models.ForeignKey(
         Conference, on_delete=models.CASCADE, related_name="series_memberships"
     )
-    number = models.PositiveSmallIntegerField(blank=True)
 
     class Meta:
-        unique_together = ("series", "number")
         ordering = ["-conference__year"]
 
     def __str__(self):
-        return f"{self.series.title} - {self.number} - {self.conference}"
+        return f"{self.series.title} - {self.conference}"
 
 
 class Tag(models.Model):
