@@ -384,7 +384,11 @@ class Author(models.Model):
     )
 
     def __str__(self):
-        return f"{self.pk} - {self.pref_name}"
+        pname = self.most_recent_appellation
+        if pname is not None:
+            return f"{self.pk} - {pname}"
+        else:
+            return f"{self.pk} - anonymous author"
 
     class Meta:
         ordering = ["id"]
