@@ -843,13 +843,15 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
             if filter_form["no_department"]:
                 result_set = result_set.filter(affiliations__department="")
 
-            return result_set.distinct()
+            result_set = result_set.distinct()
         else:
             messages.warning(
                 self.request,
                 "Query parameters not recognized. Check your URL and try again.",
             )
-            return base_result_set
+            result_set = base_result_set
+
+        return result_set.annotate(n_works=Count("affiliations__asserted_by__work")).order_by("-n_works")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

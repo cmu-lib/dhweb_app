@@ -372,6 +372,9 @@ class Affiliation(Attribute):
     def n_authors(self):
         return Author.objects.filter(authorships__affiliations=self).distinct().count()
 
+    def n_works(self):
+        return Work.objects.filter(authorships__affiliations=self).distinct().count()
+
 
 class Author(models.Model):
     works = models.ManyToManyField(
