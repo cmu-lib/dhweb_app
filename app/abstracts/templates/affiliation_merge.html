@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block header_title %}Merging institution ID {{ institution.pk }}{% endblock%}
+{% block header_title %}Merging affiliation ID {{ affiliation.pk }}{% endblock %}
 
 {% block content %}
 
@@ -9,21 +9,19 @@
 
 <div class="row">
   <div class="col-md-6">
-    <p>You're about to merge this institution:</p>
+    <p>You're about to merge this affiliation:</p>
     <p>
       <div class="card m-2">
         <div class="card-body">
-          {% include "institution_card.html" with institution=merging %}
+          {{ merging }}
         </div>
       </div>
     </p>
-    <p>This will reassign the following affiliations and their associated authors:</p>
-    {% for affiliation in merging.affiliations.all %}
+    <p>This will reassign the following authorships to the new affiliaiton:</p>
     <p>
       <div class="card m-2">
         <div class="card-body">
-          {{ affiliation }}
-          {% for authorship in affiliation.asserted_by.all %}
+          {% for authorship in merging.asserted_by.all %}
           <p>
             <div class="card m-2">
               <div class="card-body">
@@ -35,15 +33,14 @@
         </div>
       </div>
       <p>
-        {% endfor %}
   </div>
   <div class="col-md-6">
-    <p>Choose the Institution to reassign all these affiliations to:<p>
+    <p>Choose the affiliaiton to reassign all these authorships to:<p>
 
-        <form action="{% url 'institution_merge' merging.pk %}" method="post">
+        <form action="{% url 'affiliation_merge' merging.pk %}" method="post">
           {% csrf_token %}
-          {{ institution_merge_form.media }}
-          {{ institution_merge_form | crispy }}
+          {{ affiliation_merge_form.media }}
+          {{ affiliation_merge_form | crispy }}
           <div class="alert alert-danger">This action cannot be undone!</div>
           <button type="submit" class="btn btn-primary mb-2">Merge</button>
         </form>

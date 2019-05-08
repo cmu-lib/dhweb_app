@@ -381,6 +381,22 @@ class Affiliation(Attribute):
     def n_works(self):
         return Work.objects.filter(authorships__affiliations=self).distinct().count()
 
+    def merge(self, target):
+        # Don't edit authorships where the target affiliaiton is already # present. It'll get deleted eventually.
+        affected_authorships = (
+            Authorship.objects.filter(affiliations=self)
+            .exclude(affiliations=target)
+            .all()
+        )
+
+        results = {"update_results": affected_authorships.count()}
+        for authorship in affected_authorships:
+            authorship.affiliations.add(target)
+            authorship.save()
+
+        self.delete()
+        return results
+
 
 class Author(models.Model):
     works = models.ManyToManyField(

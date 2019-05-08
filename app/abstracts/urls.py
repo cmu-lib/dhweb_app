@@ -162,4 +162,19 @@ urlpatterns = [
         views.OrganizerEdit.as_view(),
         name="organizer_edit",
     ),
+    path(
+        "editor/affiliations/create",
+        views.AffiliationCreate.as_view(),
+        name="affiliation_create",
+    ),
+    path(
+        "editor/affiliations/<int:pk>/edit",
+        views.AffiliationEdit.as_view(),
+        name="affiliation_edit",
+    ),
+    path(
+        "editor/affiliations/<int:affiliation_id>/merge",
+        views.affiliation_merge,
+        name="affiliation_merge",
+    ),
 ]

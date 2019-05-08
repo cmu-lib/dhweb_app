@@ -48,6 +48,8 @@ from .forms import (
     FullWorkForm,
     FullInstitutionForm,
     InstitutionMergeForm,
+    AffiliationEditForm,
+    AffiliationMergeForm,
 )
 
 
@@ -879,7 +881,7 @@ class InstitutionEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         "merge_view": "institution_merge",
     }
     success_message = "%(name)s updated"
-    success_url = "full_institution_list"
+    success_url = reverse_lazy("full_institution_list")
 
 
 class InstitutionCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -891,7 +893,7 @@ class InstitutionCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         "cancel_view": "full_institution_list",
     }
     success_message = "%(name)s created"
-    success_url = "full_institution_list"
+    success_url = reverse_lazy("full_institution_list")
 
 @login_required
 @transaction.atomic
@@ -939,6 +941,77 @@ def institution_merge(request, institution_id):
             for error in raw_form.errors:
                 messages.error(request, error)
             return render(request, "institution_merge.html", context)
+
+class AffiliationEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Affiliation
+    template_name = "generic_form.html"
+    form_class = AffiliationEditForm
+    extra_context = {
+        "form_title": "Edit affiliation",
+        "cancel_view": "full_institution_list",
+        "merge_view": "affiliation_merge",
+    }
+    success_message = "%(department)s updated"
+    success_url = reverse_lazy("full_institution_list")
+
+
+class AffiliationCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Affiliation
+    template_name = "generic_form.html"
+    form_class = AffiliationEditForm
+    extra_context = {
+        "form_title": "Create affiliation",
+        "cancel_view": "full_institution_list",
+    }
+    success_message = "%(department)s created"
+    success_url = reverse_lazy("full_institution_list")
+
+@login_required
+@transaction.atomic
+def affiliation_merge(request, affiliation_id):
+    affiliation = get_object_or_404(Affiliation, pk=affiliation_id)
+    context = {"merging": affiliation, "affiliation_merge_form": AffiliationMergeForm}
+
+    if request.method == "GET":
+        """
+        Initial load of the merge form displays all the authors and works associated with this affiliation.
+        """
+        return render(request, "affiliation_merge.html", context)
+
+    elif request.method == "POST":
+        """
+        Posting the new author id causes all of the old author's authorships to be reassigned.
+        """
+
+        raw_form = AffiliationMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_affiliation = raw_form.cleaned_data["into"]
+
+            if affiliation == target_affiliation:
+                """
+                If the user chooses the existing affiliation, don't merge, but instead error out.
+                """
+                messages.error(
+                    request,
+                    f"You cannot merge an affiliation into itself. Please select a different affiliation.",
+                )
+                return redirect("affiliation_merge", affiliation_id=affiliation_id)
+            else:
+                old_affiliation_id = str(affiliation)
+                merge_results = affiliation.merge(target_affiliation)
+
+                messages.success(
+                    request,
+                    f"Affiliation {old_affiliation_id} has been merged into {target_affiliation}, and the old affiliation entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} affiliations updated"
+                )
+                return redirect("affiliation_edit", pk=target_affiliation.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+            return render(request, "affiliation_merge.html", context)
 
 @login_required
 @transaction.atomic

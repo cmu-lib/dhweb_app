@@ -257,6 +257,27 @@ class InstitutionMergeForm(forms.Form):
     )
 
 
+class AffiliationMergeForm(forms.Form):
+    into = forms.ModelChoiceField(
+        queryset=Affiliation.objects.all(),
+        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        required=True,
+        help_text="Select the affiliation that will be used to replace the one you are deleting.",
+    )
+
+
+class AffiliationEditForm(forms.ModelForm):
+    institution = forms.ModelChoiceField(
+        queryset=Institution.objects.all(),
+        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
+        required=True,
+    )
+
+    class Meta:
+        model = Affiliation
+        fields = ["department", "institution"]
+
+
 class FullInstitutionForm(forms.Form):
     department = forms.CharField(
         max_length=500, required=False, help_text="This free-text field is searchable"
