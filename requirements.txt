@@ -8,3 +8,4 @@ django-import-export
 django-autocomplete-light
 parsel
 django-debug-toolbar
+tblib
