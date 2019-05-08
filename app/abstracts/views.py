@@ -1078,7 +1078,7 @@ class SeriesCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     }
     fields = ["title", "abbreviation", "notes"]
     success_message = "Series '%(title)s' created"
-    success_url = lazy_reverse("full_series_list")
+    success_url = reverse_lazy("full_series_list")
 
 
 class SeriesEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -1090,7 +1090,7 @@ class SeriesEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     }
     fields = ["title", "abbreviation", "notes"]
     success_message = "Series '%(title)s' updated"
-    success_url = lazy_reverse("full_series_list")
+    success_url = reverse_lazy("full_series_list")
 
 
 class SeriesList(LoginRequiredMixin, ListView):
