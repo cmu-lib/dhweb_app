@@ -1078,6 +1078,7 @@ class SeriesCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     }
     fields = ["title", "abbreviation", "notes"]
     success_message = "Series '%(title)s' created"
+    success_url = lazy_reverse("full_series_list")
 
 
 class SeriesEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -1089,6 +1090,7 @@ class SeriesEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     }
     fields = ["title", "abbreviation", "notes"]
     success_message = "Series '%(title)s' updated"
+    success_url = lazy_reverse("full_series_list")
 
 
 class SeriesList(LoginRequiredMixin, ListView):
@@ -1106,7 +1108,7 @@ class OrganizerCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     }
     fields = ["name", "abbreviation", "conferences_organized", "notes", "url"]
     success_message = "Organizer '%(name)s' created"
-
+    success_url = reverse_lazy("full_organizer_list")
 
 class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Organizer
@@ -1117,6 +1119,7 @@ class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     }
     fields = ["name", "abbreviation", "conferences_organized", "notes", "url"]
     success_message = "Organizer '%(name)s' updated"
+    success_url = reverse_lazy("full_organizer_list")
 
 
 class OrganizerList(LoginRequiredMixin, ListView):
