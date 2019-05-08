@@ -116,10 +116,16 @@ class Tag(models.Model):
         return self.title
 
     def merge(self, target):
-        [target.works.add(w) for w in self.works.all()]
+        results = {}
+        affected_works = self.works.all()
+        for w in affected_works:
+            target.works.add(w)
+        results["updated"] = affected_works.count()
+
         # Add the target tag to all the works with the origin tag
         # remove the origin tag
-        return self.delete()
+        delete_results = self.delete()
+        return results
 
     class Meta:
         abstract = True
@@ -330,7 +336,7 @@ class Institution(models.Model):
         affected_affiliations = Affiliation.objects.filter(institution=self)
 
         # If changing one of those affect afiliations to the new institution would create an affiliation that already exists, then reassign those authorships to the already-existing affiliation
-        merges = []
+        results = {"update_results": affected_affiliations.count()}
         for aff in affected_affiliations:
             if Affiliation.objects.filter(
                 department=aff.department, institution=target
@@ -349,8 +355,8 @@ class Institution(models.Model):
                 aff.save()
 
         # Finally, delete the old institution
-        merges.append(self.delete())
-        return merges
+        self.delete()
+        return results
 
 
 class Affiliation(Attribute):

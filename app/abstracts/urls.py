@@ -115,6 +115,21 @@ urlpatterns = [
         views.FullInstitutionList.as_view(),
         name="full_institution_list",
     ),
+    path(
+        "editor/institutions/<int:pk>/edit",
+        views.InstitutionEdit.as_view(),
+        name="institution_edit",
+    ),
+    path(
+        "editor/institutions/create",
+        views.InstitutionCreate.as_view(),
+        name="institution_create",
+    ),
+    path(
+        "editor/institutions/<int:institution_id>/merge",
+        views.institution_merge,
+        name="institution_merge",
+    ),
     path("editor/wipe_unused", views.wipe_unused, name="wipe_unused"),
     path(
         "editor/conferences/create",

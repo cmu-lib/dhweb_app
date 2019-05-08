@@ -248,6 +248,15 @@ class AuthorMergeForm(forms.Form):
     )
 
 
+class InstitutionMergeForm(forms.Form):
+    into = forms.ModelChoiceField(
+        queryset=Institution.objects.all(),
+        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
+        required=True,
+        help_text="Select the institution that will be used to replace the one you are deleting.",
+    )
+
+
 class FullInstitutionForm(forms.Form):
     department = forms.CharField(
         max_length=500, required=False, help_text="This free-text field is searchable"

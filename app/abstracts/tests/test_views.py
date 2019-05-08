@@ -424,6 +424,7 @@ class AuthorMergeViewTest(TestCase):
         )
         expected_redirect = reverse("author_detail", kwargs={"author_id": 2})
         self.assertRedirects(post_response, expected_redirect)
+        self.assertFalse(Author.objects.filter(pk=1).exists())
         self.assertContains(post_response, "updated")
         self.assertContains(post_response, "deleted")
 
@@ -437,6 +438,55 @@ class AuthorMergeViewTest(TestCase):
         expected_redirect = reverse("author_merge", kwargs={"author_id": 1})
         self.assertRedirects(post_response, expected_redirect)
         self.assertContains(post_response, "You cannot merge an author into themselves")
+
+
+class InstitutionMergeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("institution_merge", kwargs={"institution_id": 1})
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        merge_response = self.client.get(target_url, follow=True)
+        self.assertRedirects(merge_response, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_merge_response = self.client.get(
+            reverse("institution_merge", kwargs={"institution_id": 1})
+        )
+        self.assertEqual(auth_merge_response.status_code, 200)
+
+    def test_404(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_merge_response = self.client.get(
+            reverse("institution_merge", kwargs={"institution_id": 100}), follow=True
+        )
+        self.assertEqual(auth_merge_response.status_code, 404)
+
+    def test_post(self):
+        self.client.login(username="root", password="dh-abstracts")
+        post_response = self.client.post(
+            reverse("institution_merge", kwargs={"institution_id": 1}),
+            data={"into": 2},
+            follow=True,
+        )
+        expected_redirect = reverse("institution_edit", kwargs={"pk": 2})
+        self.assertRedirects(post_response, expected_redirect)
+        self.assertFalse(Institution.objects.filter(pk=1).exists())
+        self.assertContains(post_response, "updated")
+
+    def test_invalid_institution(self):
+        self.client.login(username="root", password="dh-abstracts")
+        post_response = self.client.post(
+            reverse("institution_merge", kwargs={"institution_id": 1}),
+            data={"into": 1},
+            follow=True,
+        )
+        expected_redirect = reverse("institution_merge", kwargs={"institution_id": 1})
+        self.assertRedirects(post_response, expected_redirect)
+        self.assertContains(
+            post_response, "You cannot merge an institution into itself"
+        )
 
 
 class WipeUnusedViewTest(TestCase):

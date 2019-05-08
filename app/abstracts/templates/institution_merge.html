@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block header_title %}Merging institution ID {{ author.pk }}{% endblock%}
+
+{% block content %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div class="row">
+  <div class="col-md-6">
+    <p>You're about to merge this institution:</p>
+    <p>
+      <div class="card m-2">
+        <div class="card-body">
+          {% include "institution_card.html" with institution=merging %}
+        </div>
+      </div>
+    </p>
+    <p>This will reassign the following affiliations and their associated authors:</p>
+    {% for affiliation in merging.affiliations.all %}
+    <p>
+      <div class="card m-2">
+        <div class="card-body">
+          {{ affiliation }}
+          {% for authorship in affiliation.asserted_by.all %}
+          <p>
+            <div class="card m-2">
+              <div class="card-body">
+                {% include "authorship_card.html" with authorship=authorship %}
+              </div>
+            </div>
+          </p>
+          {% endfor %}
+        </div>
+      </div>
+      <p>
+        {% endfor %}
+  </div>
+  <div class="col-md-6">
+    <p>Choose the Institution to reassign all these affiliations to:<p>
+
+        <form action="{% url 'institution_merge' merging.pk %}" method="post">
+          {% csrf_token %}
+          {{ institution_merge_form.media }}
+          {{ institution_merge_form | crispy }}
+          <div class="alert alert-danger">This action cannot be undone!</div>
+          <button type="submit" class="btn btn-primary mb-2">Merge</button>
+        </form>
+  </div>
+</div>
+
+{% endblock %}

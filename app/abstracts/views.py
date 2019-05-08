@@ -47,6 +47,7 @@ from .forms import (
     FullAuthorFilter,
     FullWorkForm,
     FullInstitutionForm,
+    InstitutionMergeForm,
 )
 
 
@@ -553,7 +554,9 @@ def author_merge_view(request, author_id):
                     request,
                     f"Author {old_author_string} has been merged into {target_author}, and the old author entry has been deleted.",
                 )
-                messages.success(request, f"{merge_results['update_results']} authorships updated")
+                messages.success(
+                    request, f"{merge_results['update_results']} authorships updated"
+                )
                 return redirect("author_detail", author_id=target_author.pk)
         else:
             for error in raw_form.errors:
@@ -660,12 +663,14 @@ def WorkEditAuthorship(request, work_id):
     context = {"authorships_form": authorships_forms, "work": work}
     return render(request, "work_edit_authorships.html", context)
 
+
 class WorkDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Work
     template_name = "work_delete.html"
     extra_context = {"cancel_view": "full_work_list"}
     success_url = reverse_lazy("full_work_list")
     success_message = "%(id)s deleted."
+
 
 class FullAuthorList(LoginRequiredMixin, ListView):
     context_object_name = "author_list"
@@ -851,7 +856,9 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
             )
             result_set = base_result_set
 
-        return result_set.annotate(n_works=Count("affiliations__asserted_by__work")).order_by("-n_works")
+        return result_set.annotate(
+            n_works=Count("affiliations__asserted_by__work")
+        ).order_by("-n_works")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -861,6 +868,77 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
         context["redirect_url"] = reverse("full_institution_list")
         return context
 
+
+class InstitutionEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Institution
+    template_name = "generic_form.html"
+    fields = ["name", "city", "country"]
+    extra_context = {
+        "form_title": "Edit institution",
+        "cancel_view": "full_institution_list",
+        "merge_view": "institution_merge",
+    }
+    success_message = "%(name)s updated"
+    success_url = "full_institution_list"
+
+
+class InstitutionCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Institution
+    template_name = "generic_form.html"
+    fields = ["name", "city", "country"]
+    extra_context = {
+        "form_title": "Create institution",
+        "cancel_view": "full_institution_list",
+    }
+    success_message = "%(name)s created"
+    success_url = "full_institution_list"
+
+@login_required
+@transaction.atomic
+def institution_merge(request, institution_id):
+    institution = get_object_or_404(Institution, pk=institution_id)
+    context = {"merging": institution, "institution_merge_form": InstitutionMergeForm}
+
+    if request.method == "GET":
+        """
+        Initial load of the merge form displays all the authors and works associated with this institution.
+        """
+        return render(request, "institution_merge.html", context)
+
+    elif request.method == "POST":
+        """
+        Posting the new author id causes all of the old author's authorships to be reassigned.
+        """
+
+        raw_form = InstitutionMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_institution = raw_form.cleaned_data["into"]
+
+            if institution == target_institution:
+                """
+                If the user chooses the existing institution, don't merge, but instead error out.
+                """
+                messages.error(
+                    request,
+                    f"You cannot merge an institution into itself. Please select a different institution.",
+                )
+                return redirect("institution_merge", institution_id=institution_id)
+            else:
+                old_institution_id = str(institution)
+                merge_results = institution.merge(target_institution)
+
+                messages.success(
+                    request,
+                    f"Author {old_institution_id} has been merged into {target_institution}, and the old institution entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} affiliations updated"
+                )
+                return redirect("institution_edit", pk=target_institution.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+            return render(request, "institution_merge.html", context)
 
 @login_required
 @transaction.atomic
@@ -889,29 +967,42 @@ def wipe_unused(request):
 
     return render(request, "wipe_unused.html", context)
 
+
 class ConferenceCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Conference
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Create conference", "cancel_view": "full_conference_list"}
+    extra_context = {
+        "form_title": "Create conference",
+        "cancel_view": "full_conference_list",
+    }
     fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
     success_message = "Conference '%(year)s - %(venue)s' created"
+
 
 class ConferenceList(LoginRequiredMixin, ListView):
     model = Conference
     template_name = "full_conference_list.html"
     context_object_name = "conference_list"
 
+
 class ConferenceEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Conference
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Edit conference", "cancel_view": "full_conference_list"}
+    extra_context = {
+        "form_title": "Edit conference",
+        "cancel_view": "full_conference_list",
+    }
     fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
     success_message = "Conference '%(year)s - %(venue)s' updated"
+
 
 class SeriesCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = ConferenceSeries
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Create conference series", "cancel_view": "full_series_list"}
+    extra_context = {
+        "form_title": "Create conference series",
+        "cancel_view": "full_series_list",
+    }
     fields = ["title", "abbreviation", "notes"]
     success_message = "Series '%(title)s' created"
 
@@ -919,7 +1010,10 @@ class SeriesCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 class SeriesEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = ConferenceSeries
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Update conference series", "cancel_view": "full_series_list"}
+    extra_context = {
+        "form_title": "Update conference series",
+        "cancel_view": "full_series_list",
+    }
     fields = ["title", "abbreviation", "notes"]
     success_message = "Series '%(title)s' updated"
 
@@ -933,16 +1027,24 @@ class SeriesList(LoginRequiredMixin, ListView):
 class OrganizerCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Organizer
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Create conference organizer", "cancel_view": "full_organizer_list"}
+    extra_context = {
+        "form_title": "Create conference organizer",
+        "cancel_view": "full_organizer_list",
+    }
     fields = ["name", "abbreviation", "conferences_organized", "notes", "url"]
     success_message = "Organizer '%(name)s' created"
+
 
 class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Organizer
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Update conference organizer", "cancel_view": "full_organizer_list"}
+    extra_context = {
+        "form_title": "Update conference organizer",
+        "cancel_view": "full_organizer_list",
+    }
     fields = ["name", "abbreviation", "conferences_organized", "notes", "url"]
     success_message = "Organizer '%(name)s' updated"
+
 
 class OrganizerList(LoginRequiredMixin, ListView):
     model = Organizer
