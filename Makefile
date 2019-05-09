@@ -13,7 +13,7 @@ db:
 restart:
 	docker-compose restart dh-web dh-nginx
 rebuild:
-	docker-compose build --no-cache dh-web
+	docker-compose build --no-cache dh-web dh-nginx
 wipe: stop
 	docker-compose exec dh-postgres psql -U dh -d postgres -c 'DROP DATABASE dh;'
 	docker-compose exec dh-postgres psql -U dh -d postgres -c 'CREATE DATABASE dh;'
