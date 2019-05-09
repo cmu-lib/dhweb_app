@@ -297,3 +297,27 @@ class FullInstitutionForm(forms.Form):
         widget=ModelSelect2(url="unrestricted-country-autocomplete"),
     )
 
+
+class KeywordMergeForm(forms.Form):
+    into = forms.ModelChoiceField(
+        queryset=Keyword.objects.all(),
+        widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
+        required=True,
+        help_text="Select the keyword that will be used to replace the one you are deleting.",
+    )
+
+
+class TagForm(forms.Form):
+    name = forms.CharField(
+        max_length=100, required=False, help_text="Search by tag name"
+    )
+    ordering = forms.ChoiceField(
+        choices=(
+            ("a", "A-Z"),
+            ("n_asc", "Number of Works (ascending)"),
+            ("n_dsc", "Number of works (descending)"),
+        ),
+        required=True,
+        initial="a",
+    )
+

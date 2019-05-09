@@ -120,7 +120,7 @@ class Tag(models.Model):
         affected_works = self.works.all()
         for w in affected_works:
             target.works.add(w)
-        results["updated"] = affected_works.count()
+        results["update_results"] = affected_works.count()
 
         # Add the target tag to all the works with the origin tag
         # remove the origin tag

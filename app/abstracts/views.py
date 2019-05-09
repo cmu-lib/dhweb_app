@@ -50,6 +50,8 @@ from .forms import (
     InstitutionMergeForm,
     AffiliationEditForm,
     AffiliationMergeForm,
+    KeywordMergeForm,
+    TagForm,
 )
 
 
@@ -236,7 +238,7 @@ class UnrestrictedAffiliationAutocomplete(LoginRequiredMixin, Select2QuerySetVie
     raise_exception = True
 
     def get_queryset(self):
-        qs = Affiliation.objects.all()
+        qs = Affiliation.objects.annotate(n_works=Count("asserted_by__work")).order_by("-n_works")
 
         if self.q:
             qs = qs.filter(
@@ -895,6 +897,7 @@ class InstitutionCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "%(name)s created"
     success_url = reverse_lazy("full_institution_list")
 
+
 @login_required
 @transaction.atomic
 def institution_merge(request, institution_id):
@@ -942,6 +945,7 @@ def institution_merge(request, institution_id):
                 messages.error(request, error)
             return render(request, "institution_merge.html", context)
 
+
 class AffiliationEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Affiliation
     template_name = "generic_form.html"
@@ -965,6 +969,7 @@ class AffiliationCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     }
     success_message = "%(department)s created"
     success_url = reverse_lazy("full_institution_list")
+
 
 @login_required
 @transaction.atomic
@@ -1012,6 +1017,7 @@ def affiliation_merge(request, affiliation_id):
             for error in raw_form.errors:
                 messages.error(request, error)
             return render(request, "affiliation_merge.html", context)
+
 
 @login_required
 @transaction.atomic
@@ -1110,6 +1116,7 @@ class OrganizerCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "Organizer '%(name)s' created"
     success_url = reverse_lazy("full_organizer_list")
 
+
 class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Organizer
     template_name = "generic_form.html"
@@ -1126,3 +1133,121 @@ class OrganizerList(LoginRequiredMixin, ListView):
     model = Organizer
     template_name = "full_organizer_list.html"
     context_object_name = "organizer_list"
+
+
+class KeywordCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Keyword
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Create keyword",
+        "cancel_view": "full_keyword_list",
+    }
+    fields = ["title"]
+    success_message = "Keyword '%(name)s' created"
+    success_url = reverse_lazy("full_keyword_list")
+
+class KeywordDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Keyword
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Delete keyword",
+        "cancel_view": "full_keyword_list",
+    }
+    success_message = "Keyword '%(name)s' deleted"
+    success_url = reverse_lazy("full_keyword_list")
+
+
+class KeywordEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Keyword
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Update keyword",
+        "cancel_view": "full_keyword_list",
+        "merge_view": "keyword_merge",
+        "delete_view": "keyword_delete",
+    }
+    fields = ["title"]
+    success_message = "Keyword '%(name)s' updated"
+    success_url = reverse_lazy("full_keyword_list")
+
+
+class KeywordList(LoginRequiredMixin, ListView):
+    model = Keyword
+    template_name = "tag_list.html"
+    context_object_name = "tag_list"
+    extra_context = {"tag_category": "Keywords", "tag_edit_view": "keyword_edit", "tag_filter_form": TagForm, "tag_list_view": "full_keyword_list"}
+
+    def get_queryset(self):
+        base_results_set = Keyword.objects.order_by("title")
+        results_set = base_results_set.annotate(n_works=Count("works"))
+
+        raw_filter_form = TagForm(self.request.GET)
+        if raw_filter_form.is_valid():
+            filter_form = raw_filter_form.cleaned_data
+
+            if filter_form["name"] != "":
+                results_set = results_set.filter(title__icontains=filter_form["name"])
+
+            if filter_form["ordering"] == "a":
+                results_set = results_set.order_by("title")
+            elif filter_form["ordering"] == "n_asc":
+                results_set = results_set.order_by("n_works")
+            elif filter_form["ordering"] == "n_dsc":
+                results_set = results_set.order_by("-n_works")
+
+        return results_set
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filtered_tags_count"] = self.get_queryset().count()
+        context["available_tags_count"] = Keyword.objects.count()
+        return context
+
+
+
+@login_required
+@transaction.atomic
+def keyword_merge(request, keyword_id):
+    keyword = get_object_or_404(Keyword, pk=keyword_id)
+    context = {"merging": keyword, "tag_merge_form": KeywordMergeForm, "tag_category": "Keyword", "merge_view": "keyword_merge"}
+
+    if request.method == "GET":
+        """
+        Initial load of the merge form displays all the authors and works associated with this keyword.
+        """
+        return render(request, "tag_merge.html", context)
+
+    elif request.method == "POST":
+        """
+        Posting the new author id causes all of the old author's authorships to be reassigned.
+        """
+
+        raw_form = KeywordMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_keyword = raw_form.cleaned_data["into"]
+
+            if keyword == target_keyword:
+                """
+                If the user chooses the existing keyword, don't merge, but instead error out.
+                """
+                messages.error(
+                    request,
+                    f"You cannot merge a keyword into itself. Please select a different keyword.",
+                )
+                return redirect("keyword_merge", keyword_id=keyword_id)
+            else:
+                old_keyword_id = str(keyword)
+                merge_results = keyword.merge(target_keyword)
+
+                messages.success(
+                    request,
+                    f"Keyword {old_keyword_id} has been merged into {target_keyword}, and the old keyword entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} keywords updated"
+                )
+                return redirect("keyword_edit", pk=target_keyword.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+            return render(request, "tag_merge.html", context)

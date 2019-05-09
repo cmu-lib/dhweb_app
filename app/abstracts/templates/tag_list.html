@@ -1,0 +1,39 @@
+{% extends "list.html" %}
+
+{% block header_title %}{{ tag_category }}{% endblock %}
+
+{% block results_title %}{{ tag_category }}{% endblock %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+<h1>Tags</h1>
+
+{% block results %}
+<div class="card-header">Results: Displaying {{ filtered_tags_count }} out of {{ available_tags_count }}
+  {{ tag_category }}
+</div>
+<ul class="list-group list-group-flush">
+  {% for tag in tag_list %}
+  <li class="list-group-item d-flex justify-content-between">
+    <a href="{% url tag_edit_view tag.pk %}">{{ tag }}</a>
+    <a href="{% url 'full_work_list' %}?keyword={{ tag.pk }}">
+      <span class="badge badge-primary badge-small">{{ tag.n_works }} works</span>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block filter %}
+{% load static %}
+{% load crispy_forms_tags %}
+<form method="get">
+  {{ tag_filter_form.media }}
+  {{ tag_filter_form|crispy }}
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary mb-2">Filter</button>
+    <a class="btn btn-secondary mb-2" href="{% url tag_list_view %}" role="button">Reset</a>
+  </div>
+</form>
+{% endblock %}

@@ -20,6 +20,9 @@
   <div class="form-group">
     <button type="submit" class="btn btn-primary mb-2">Save</button>
     <a class="btn btn-secondary mb-2" href="{% url cancel_view %}" role="button">Cancel</a>
+    {% if delete_view %}
+    <a class="btn btn-danger mb-2" href="{% url delete_view object.pk %}" role="button">Delete</a>
+    {% endif %}
     {% if merge_view %}
     <a class="btn btn-warning mb-2" href="{% url merge_view object.pk %}" role="button" data-toggle="tooltip"
       data-placement="top"

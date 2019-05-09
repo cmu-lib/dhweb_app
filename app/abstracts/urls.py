@@ -177,4 +177,23 @@ urlpatterns = [
         views.affiliation_merge,
         name="affiliation_merge",
     ),
+    path("editor/keywords", views.KeywordList.as_view(), name="full_keyword_list"),
+    path(
+        "editor/keywords/create", views.KeywordCreate.as_view(), name="keyword_create"
+    ),
+    path(
+        "editor/keywords/<int:pk>/delete",
+        views.KeywordDelete.as_view(),
+        name="keyword_delete",
+    ),
+    path(
+        "editor/keywords/<int:pk>/edit",
+        views.KeywordEdit.as_view(),
+        name="keyword_edit",
+    ),
+    path(
+        "editor/keywords/<int:keyword_id>/merge",
+        views.keyword_merge,
+        name="keyword_merge",
+    ),
 ]

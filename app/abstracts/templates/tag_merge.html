@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block header_title %}Merging {{ tag.category }} ID {{ merging.pk }}{% endblock %}
+
+{% block content %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div class="row">
+  <div class="col-md-6">
+    <p>You're about to merge this {{ tag_category }}:</p>
+    <h2>{{ merging }}</h2>
+    <p>This will reassign the following to a new {{ tag_category }}:</p>
+    {% for work in merging.works.all %}
+    <p>
+      <div class="card m-2">
+        <div class="card-body">
+          {% include "work_card.html" with work=work%}
+        </div>
+      </div>
+      <p>
+        {% endfor %}
+  </div>
+  <div class="col-md-6">
+    <p>Choose the {{ tag_category }} to reassign all these works to:<p>
+
+        <form action="{% url merge_view merging.pk %}" method="post">
+          {% csrf_token %}
+          {{ tag_merge_form.media }}
+          {{ tag_merge_form | crispy }}
+          <div class="alert alert-danger">This action cannot be undone!</div>
+          <button type="submit" class="btn btn-primary mb-2">Merge</button>
+        </form>
+  </div>
+</div>
+
+{% endblock %}
