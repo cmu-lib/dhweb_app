@@ -299,7 +299,7 @@ class PublicWorkList(ListView):
             if topic_res is not None:
                 result_set = result_set.filter(topics=topic_res)
 
-            language_res = filter_form["topic"]
+            language_res = filter_form["language"]
             if language_res is not None:
                 result_set = result_set.filter(languages=language_res)
 
@@ -787,7 +787,7 @@ class FullWorkList(LoginRequiredMixin, ListView):
             if topic_res is not None:
                 result_set = result_set.filter(topics=topic_res)
 
-            language_res = filter_form["topic"]
+            language_res = filter_form["language"]
             if language_res is not None:
                 result_set = result_set.filter(languages=language_res)
 
