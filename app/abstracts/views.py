@@ -52,6 +52,7 @@ from .forms import (
     AffiliationMergeForm,
     KeywordMergeForm,
     TagForm,
+    TopicMergeForm,
 )
 
 
@@ -1247,6 +1248,124 @@ def keyword_merge(request, keyword_id):
                     request, f"{merge_results['update_results']} keywords updated"
                 )
                 return redirect("keyword_edit", pk=target_keyword.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+            return render(request, "tag_merge.html", context)
+
+class TopicCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Topic
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Create topic",
+        "cancel_view": "full_topic_list",
+    }
+    fields = ["title"]
+    success_message = "Topic '%(name)s' created"
+    success_url = reverse_lazy("full_topic_list")
+
+class TopicDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Topic
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Delete topic",
+        "cancel_view": "full_topic_list",
+    }
+    success_message = "Topic '%(name)s' deleted"
+    success_url = reverse_lazy("full_topic_list")
+
+
+class TopicEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Topic
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Update topic",
+        "cancel_view": "full_topic_list",
+        "merge_view": "topic_merge",
+        "delete_view": "topic_delete",
+    }
+    fields = ["title"]
+    success_message = "Topic '%(name)s' updated"
+    success_url = reverse_lazy("full_topic_list")
+
+
+class TopicList(LoginRequiredMixin, ListView):
+    model = Topic
+    template_name = "tag_list.html"
+    context_object_name = "tag_list"
+    extra_context = {"tag_category": "Topics", "tag_edit_view": "topic_edit", "tag_filter_form": TagForm, "tag_list_view": "full_topic_list"}
+
+    def get_queryset(self):
+        base_results_set = Topic.objects.order_by("title")
+        results_set = base_results_set.annotate(n_works=Count("works"))
+
+        raw_filter_form = TagForm(self.request.GET)
+        if raw_filter_form.is_valid():
+            filter_form = raw_filter_form.cleaned_data
+
+            if filter_form["name"] != "":
+                results_set = results_set.filter(title__icontains=filter_form["name"])
+
+            if filter_form["ordering"] == "a":
+                results_set = results_set.order_by("title")
+            elif filter_form["ordering"] == "n_asc":
+                results_set = results_set.order_by("n_works")
+            elif filter_form["ordering"] == "n_dsc":
+                results_set = results_set.order_by("-n_works")
+
+        return results_set
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filtered_tags_count"] = self.get_queryset().count()
+        context["available_tags_count"] = Topic.objects.count()
+        return context
+
+@login_required
+@transaction.atomic
+def topic_merge(request, topic_id):
+    topic = get_object_or_404(Topic, pk=topic_id)
+    affected_elements = topic.works.all()
+    count_elements = affected_elements.count() - 10
+    sample_elements = affected_elements[:10]
+    context = {"merging": topic, "tag_merge_form": TopicMergeForm, "tag_category": "Topic", "merge_view": "topic_merge", "sample_elements": sample_elements, "count_elements": count_elements}
+
+    if request.method == "GET":
+        """
+        Initial load of the merge form displays all the authors and works associated with this topic.
+        """
+        return render(request, "tag_merge.html", context)
+
+    elif request.method == "POST":
+        """
+        Posting the new author id causes all of the old author's authorships to be reassigned.
+        """
+
+        raw_form = TopicMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_topic = raw_form.cleaned_data["into"]
+
+            if topic == target_topic:
+                """
+                If the user chooses the existing topic, don't merge, but instead error out.
+                """
+                messages.error(
+                    request,
+                    f"You cannot merge a topic into itself. Please select a different topic.",
+                )
+                return redirect("topic_merge", topic_id=topic_id)
+            else:
+                old_topic_id = str(topic)
+                merge_results = topic.merge(target_topic)
+
+                messages.success(
+                    request,
+                    f"Topic {old_topic_id} has been merged into {target_topic}, and the old topic entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} topics updated"
+                )
+                return redirect("topic_edit", pk=target_topic.pk)
         else:
             for error in raw_form.errors:
                 messages.error(request, error)

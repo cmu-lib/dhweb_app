@@ -76,6 +76,11 @@ class FullWorkForm(WorkFilter):
     n_authors = forms.IntegerField(
         label="Number of authors", min_value=0, required=False
     )
+    keyword = forms.ModelChoiceField(
+        queryset=Keyword.objects.distinct(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
+    )
 
 
 class WorkAuthorshipForm(forms.Form):
@@ -304,6 +309,15 @@ class KeywordMergeForm(forms.Form):
         widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
         required=True,
         help_text="Select the keyword that will be used to replace the one you are deleting.",
+    )
+
+
+class TopicMergeForm(forms.Form):
+    into = forms.ModelChoiceField(
+        queryset=Topic.objects.all(),
+        widget=ModelSelect2(url="unrestricted-topic-autocomplete"),
+        required=True,
+        help_text="Select the topic that will be used to replace the one you are deleting.",
     )
 
 

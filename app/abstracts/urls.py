@@ -196,4 +196,13 @@ urlpatterns = [
         views.keyword_merge,
         name="keyword_merge",
     ),
+    path("editor/topics", views.TopicList.as_view(), name="full_topic_list"),
+    path("editor/topics/create", views.TopicCreate.as_view(), name="topic_create"),
+    path(
+        "editor/topics/<int:pk>/delete",
+        views.TopicDelete.as_view(),
+        name="topic_delete",
+    ),
+    path("editor/topics/<int:pk>/edit", views.TopicEdit.as_view(), name="topic_edit"),
+    path("editor/topics/<int:topic_id>/merge", views.topic_merge, name="topic_merge"),
 ]

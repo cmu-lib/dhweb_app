@@ -34,9 +34,11 @@ from abstracts.forms import WorkFilter
 def is_list_unique(x):
     return len(x) == len(set(x))
 
+
 def publicly_available(testcase, viewname):
     res = testcase.client.get(reverse("home_view"))
     testcase.assertEqual(res.status_code, 200)
+
 
 def privately_available(testcase, viewname):
     target_url = reverse(viewname)
@@ -497,6 +499,7 @@ class InstitutionMergeViewTest(TestCase):
             post_response, "You cannot merge an institution into itself"
         )
 
+
 class AffiliationMergeViewTest(TestCase):
     fixtures = ["test.json"]
 
@@ -544,6 +547,7 @@ class AffiliationMergeViewTest(TestCase):
         self.assertContains(
             post_response, "You cannot merge an affiliation into itself"
         )
+
 
 class WipeUnusedViewTest(TestCase):
     fixtures = ["test.json"]
@@ -745,6 +749,7 @@ class DeleteWorkViewTest(TestCase):
         res = self.client.post(reverse("work_delete", kwargs={"pk": 1}), follow=True)
         self.assertFalse(Work.objects.filter(pk=1).exists())
 
+
 class KeywordFullListViewTest(TestCase):
     """
     Test full Keyword list page
@@ -781,6 +786,44 @@ class KeywordFullListViewTest(TestCase):
     def test_unique(self):
         self.client.login(username="root", password="dh-abstracts")
         full_keyword_list_response = self.client.get(reverse("full_keyword_list"))
-        self.assertTrue(
-            is_list_unique(full_keyword_list_response.context["tag_list"])
+        self.assertTrue(is_list_unique(full_keyword_list_response.context["tag_list"]))
+
+
+class TopicFullListViewTest(TestCase):
+    """
+    Test full Topic list page
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        target_url = reverse("full_topic_list")
+        redirected_url = f"{reverse('login')}?next={target_url}"
+        full_topic_list_response = self.client.get(target_url, follow=True)
+        self.assertRedirects(full_topic_list_response, redirected_url)
+
+    def test_auth_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_full_topic_list_response = self.client.get(reverse("full_topic_list"))
+        self.assertEqual(auth_full_topic_list_response.status_code, 200)
+
+    def test_query_filtered_count(self):
+        self.client.login(username="root", password="dh-abstracts")
+        full_topic_list_response = self.client.get(reverse("full_topic_list"))
+        self.assertEqual(
+            full_topic_list_response.context["filtered_tags_count"],
+            len(full_topic_list_response.context["tag_list"]),
         )
+
+    def test_query_total_count(self):
+        self.client.login(username="root", password="dh-abstracts")
+        full_topic_list_response = self.client.get(reverse("full_topic_list"))
+        self.assertIsInstance(
+            full_topic_list_response.context["available_tags_count"], int
+        )
+
+    def test_unique(self):
+        self.client.login(username="root", password="dh-abstracts")
+        full_topic_list_response = self.client.get(reverse("full_topic_list"))
+        self.assertTrue(is_list_unique(full_topic_list_response.context["tag_list"]))
+

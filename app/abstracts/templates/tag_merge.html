@@ -12,15 +12,18 @@
     <p>You're about to merge this {{ tag_category }}:</p>
     <h2>{{ merging }}</h2>
     <p>This will reassign the following to a new {{ tag_category }}:</p>
-    {% for work in merging.works.all %}
+    {% for work in sample_elements %}
     <p>
       <div class="card m-2">
         <div class="card-body">
           {% include "work_card.html" with work=work%}
         </div>
       </div>
-      <p>
-        {% endfor %}
+    </p>
+    {% endfor %}
+    {% if count_elements > 0 %}
+    <a href="{% url 'full_work_list' %}?topic={{ merging.pk }}">... and {{ count_elements }} more</a>
+    {% endif %}
   </div>
   <div class="col-md-6">
     <p>Choose the {{ tag_category }} to reassign all these works to:<p>
