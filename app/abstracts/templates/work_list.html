@@ -5,7 +5,12 @@
 {% block results_title %}Abstracts search results{% endblock %}
 
 {% block results %}
-<div class="card-header">Results: Displaying {{ filtered_works_count }} out of {{ available_works_count }} works</div>
+<div class="card-header d-flex justify-content-between">
+  Results: Displaying {{ filtered_works_count }} out of {{ available_works_count }} works
+  {% if user.is_authenticated %}
+  <a class="btn btn-primary" role="button" href="{% url 'work_create' %}">New Abstract</a>
+  {% endif %}
+</div>
 <ul class="list-group list-group-flush">
   {% for work in work_list %}
   <li class="list-group-item">{% include "work_card.html" with work=work %}</li>
@@ -20,8 +25,8 @@
   {{ work_filter_form.media }}
   {{ work_filter_form|crispy }}
   <div class="form-group">
-  <button type="submit" class="btn btn-primary mb-2">Filter</button>
-  <a class="btn btn-secondary mb-2" href="{{ redirect_url }}" role="button">Reset</a>
+    <button type="submit" class="btn btn-primary mb-2">Filter</button>
+    <a class="btn btn-secondary mb-2" href="{{ redirect_url }}" role="button">Reset</a>
   </div>
 </form>
 {% endblock %}

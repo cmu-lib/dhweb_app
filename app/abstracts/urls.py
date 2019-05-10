@@ -100,6 +100,7 @@ urlpatterns = [
         name="unrestricted-author-autocomplete",
     ),
     path("editor/works", views.FullWorkList.as_view(), name="full_work_list"),
+    path("editor/works/create", views.WorkCreate, name="work_create"),
     path("editor/works/<int:work_id>/edit", views.WorkEdit, name="work_edit"),
     path(
         "editor/works/<int:work_id>/edit/authorship",

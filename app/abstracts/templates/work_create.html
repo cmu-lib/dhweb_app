@@ -8,13 +8,10 @@
     <nav>
       <ul class="nav nav-pills">
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'work_edit' work.pk %}">Core Features</a>
+          <a class="nav-link active">Core Features</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'work_edit_authorship' work.pk %}">Authorships</a>
-        </li>
-        <li class="nav-item ml-auto">
-          <a class="btn btn-danger" href="{% url 'work_delete' work.pk %}">Delete</a>
+          <a class="nav-link inactive">Authorships</a>
         </li>
       </ul>
     </nav>
@@ -53,8 +50,8 @@
       </div>
       {{ work_form.full_text | as_crispy_field}}
       <div class="form-group">
-        <button type="submit" class="btn btn-primary mb-2">Submit</button>
-        <a class="btn btn-secondary mb-2" href="{% url 'work_detail' work.pk %}" role="button">Cancel</a>
+        <button type="submit" class="btn btn-primary mb-2">Next</button>
+        <a class="btn btn-secondary mb-2" href="{% url 'full_work_list' %}" role="button">Cancel</a>
       </div>
     </form>
   </div>

@@ -578,6 +578,28 @@ def download_data(request):
 
     return render(request, "downloads.html", context)
 
+@login_required
+def WorkCreate(request):
+
+    if request.method == "GET":
+        if "conference" in request.GET:
+            conf = get_object_or_404(Conference, pk = int(request.GET["conference"]))
+            work_form = WorkForm(initial={"conference": conf.pk})
+        else:
+            work_form = WorkForm()
+    if request.method == "POST":
+        work_form = WorkForm(request.POST)
+        if work_form.is_valid():
+            new_work = work_form.save()
+            messages.success(request, f"{new_work} created.")
+            return redirect("work_edit_authorship", work_id=new_work.pk)
+        else:
+            for err in work_form.errors:
+                messages.error(request, err)
+
+    context = {"work_form": work_form}
+    return render(request, "work_create.html", context)
+
 
 @login_required
 def WorkEdit(request, work_id):
@@ -597,17 +619,13 @@ def WorkEdit(request, work_id):
             messages.error(request, "This form is invalid.")
             return redirect("work_edit", work_id=work_id)
 
-    # form_class = WorkForm
-    # template_name = "work_edit.html"
-    # success_message = "%(title)s was updated successfully"
-
 
 @login_required
 @transaction.atomic
 def WorkEditAuthorship(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
     authorships = work.authorships.all()
-    AuthorshipWorkFormset = formset_factory(WorkAuthorshipForm, extra=0)
+    AuthorshipWorkFormset = formset_factory(WorkAuthorshipForm, extra=5)
     initial_data = [
         {
             "author": authorship.author,
@@ -660,6 +678,9 @@ def WorkEditAuthorship(request, work_id):
             messages.success(
                 request, f'"{work.title}" authorships sucessfully updated.'
             )
+            if "start_new" in request.POST:
+                return redirect("work_create", kwargs={"conference": work.conference.pk })
+
             return redirect("work_detail", work_id=work.pk)
         else:
             for error in authorships_forms.errors:

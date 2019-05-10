@@ -53,8 +53,10 @@
         {% endfor %}
       </ul>
       <div class="form-group my-4">
-        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+        <button name="submit" type="submit" class="btn btn-primary mb-2">Submit</button>
         <a class="btn btn-secondary mb-2" href="{% url 'work_detail' work.pk %}" role="button">Cancel</a>
+        <button type="submit" class="btn btn-secondary mb-2" href="{% url 'work_detail' work.pk %}" name="start_new"
+          value="new_work">Save and start new work</a>
       </div>
     </form>
   </div>
