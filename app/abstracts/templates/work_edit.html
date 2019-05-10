@@ -3,12 +3,6 @@
 {% block header_title %}Editing abstract ID {{ work.pk }}{% endblock %}
 
 {% block content %}
-
-{% if work.state == "su" and not user.is_authenticated %}
-<div class="alert alert-warning">You must <a href="/admin/login/?next=/works/{{ work.pk }}">log in</a> to view submitted
-  versions.</div>
-{% else %}
-
 <div class="card m-2">
   <div class="card-header">
     <nav>
