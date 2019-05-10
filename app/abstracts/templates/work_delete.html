@@ -13,18 +13,19 @@
   <p>This cannot be undone!</p>
   {% if work.authorships.exists %}
   <hr>
-  <p>Abstracts are source truth for all information about authors. If you erase an abstract and it's the only
-    information abou that author, their record will be erased as well.</p>
+  <p>Abstracts are source truth for all information about authors, so removing an abstract may result in new "most
+    recent" names and affiliations for authors. If you erase an abstract and it's the only
+    information abou that author, their record will be emptied as well.</p>
   <p>This will affect the names and affiliations of the following authors:</p>
   <ul>
     {% for authorship in work.authorships.all %}
     <li>
-      <a href="{% url {{ authorship.author }}
+      <a href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.author }}</a>
       {% if authorship.author.authorships.count == 1 %}
       <span class=" badge badge-danger">This is
         the only work by this
         author!</span>
-        {% endif %}
+      {% endif %}
     </li>
     {% endfor %}
   </ul>
