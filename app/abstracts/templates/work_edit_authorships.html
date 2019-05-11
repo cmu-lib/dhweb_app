@@ -3,12 +3,6 @@
 {% block header_title %}Editing abstract ID {{ work.pk }}{% endblock %}
 
 {% block content %}
-
-{% if work.state == "su" and not user.is_authenticated %}
-<div class="alert alert-warning">You must <a href="/admin/login/?next=/works/{{ work.pk }}">log in</a> to view submitted
-  versions.</div>
-{% else %}
-
 <div class="card m-2">
   <div class="card-header">
     <nav>
@@ -30,7 +24,53 @@
     {% load crispy_forms_tags %}
     <form method="post">
       {% csrf_token %}
-      {{ authorships_form.media }}
+      <script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
+      <link href="/static/admin/css/vendor/select2/select2.css" type="text/css" media="screen" rel="stylesheet">
+      <link href="/static/admin/css/autocomplete.css" type="text/css" media="screen" rel="stylesheet">
+      <link href="/static/autocomplete_light/select2.css" type="text/css" media="screen" rel="stylesheet">
+      <script type="text/javascript" src="/static/autocomplete_light/jquery.init.js"></script>
+      <script type="text/javascript" src="/static/admin/js/vendor/select2/select2.full.js"></script>
+      <script type="text/javascript" src="/static/autocomplete_light/autocomplete.init.js"></script>
+      <script type="text/javascript" src="/static/autocomplete_light/forward.js"></script>
+      <script type="text/javascript" src="/static/autocomplete_light/select2.js"></script>
+      <script type="text/javascript" src="/static/autocomplete_light/jquery.post-setup.js"></script>
+      <script>
+        $(document).ready(function () {
+          var author_select = $("#id_form-0-author");
+          var aff_select = $("#id_form-0-affiliation");
+          var inst_select = $("#id_form-0-institution");
+
+          author_select.on("select2:select", function (e) {
+            $.getJSON("/author-info-json/" + author_select.val(), function (data) {
+              $("#id_form-0-first_name").val(data.first_name);
+              $("#id_form-0-last_name").val(data.last_name);
+              var affiliation_option = new Option(data.affiliation.name, data.affiliation.id, true, true);
+              aff_select.append(affiliation_option).trigger('change');
+              aff_select.trigger({
+                type: 'select2:select',
+                params: {
+                  data: data
+                }
+              });
+            });
+          });
+
+          aff_select.on("select2:select", function (e) {
+            $.getJSON("/affiliation-info-json/" + aff_select.val(), function (data) {
+              $("#id_form-0-department").val(data.department);
+              var institution_option = new Option(data.institution.name, data.institution.id, true, true);
+              inst_select.append(institution_option).trigger('change');
+              inst_select.trigger({
+                type: 'select2:select',
+                params: {
+                  data: data
+                }
+              });
+              var country_option = new Option(data.country.name, data.country.id, true, true);
+            });
+          });
+        });
+      </script>
       {{ authorships_form.management_form }}
       <ul class="list-group list-group">
         {% for form in authorships_form %}
@@ -61,7 +101,5 @@
     </form>
   </div>
 </div>
-
-{% endif %}
 
 {% endblock %}

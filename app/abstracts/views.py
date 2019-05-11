@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DetailView, ListView
@@ -689,6 +689,35 @@ def WorkEditAuthorship(request, work_id):
     context = {"authorships_form": authorships_forms, "work": work}
     return render(request, "work_edit_authorships.html", context)
 
+@login_required
+def AuthorInfoJSON(request, author_id):
+    if request.method == "GET":
+        author = get_object_or_404(Author, pk=author_id)
+        author_aff = author.most_recent_affiliation
+        author_dict = {
+            "first_name": author.most_recent_appellation.first_name,
+            "last_name": author.most_recent_appellation.last_name,
+        }
+        if author_aff is not None:
+            author_dict["affiliation"] = {
+                "name": str(author_aff),
+                "id": author_aff.pk,
+            }
+        return(JsonResponse(author_dict))
+
+@login_required
+def AffiliationInfoJSON(request, affiliation_id):
+    if request.method == "GET":
+        affiliation = get_object_or_404(Affiliation, pk=affiliation_id)
+        affiliation_dict = {
+            "institution": {
+                "name": str(affiliation.institution),
+                "id": affiliation.institution.id,
+            }
+            }
+        if affiliation.department is not None:
+            affiliation_dict["department"] = affiliation.department
+        return(JsonResponse(affiliation_dict))
 
 class WorkDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Work

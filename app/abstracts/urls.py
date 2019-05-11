@@ -99,6 +99,16 @@ urlpatterns = [
         views.UnrestrictedAuthorAutocomplete.as_view(),
         name="unrestricted-author-autocomplete",
     ),
+    path(
+        "author-info-json/<int:author_id>",
+        views.AuthorInfoJSON,
+        name="author-info-json",
+    ),
+    path(
+        "affiliation-info-json/<int:affiliation_id>",
+        views.AffiliationInfoJSON,
+        name="affiliation-info-json",
+    ),
     path("editor/works", views.FullWorkList.as_view(), name="full_work_list"),
     path("editor/works/create", views.WorkCreate, name="work_create"),
     path("editor/works/<int:work_id>/edit", views.WorkEdit, name="work_edit"),
