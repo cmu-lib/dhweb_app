@@ -271,6 +271,21 @@ class AffiliationMergeForm(forms.Form):
     )
 
 
+class AffiliationMultiMergeForm(forms.Form):
+    sources = forms.ModelMultipleChoiceField(
+        queryset=Affiliation.objects.all(),
+        widget=ModelSelect2Multiple(url="unrestricted-affiliation-autocomplete"),
+        required=True,
+        help_text="Select the affiliations that you want to merge together",
+    )
+    into = forms.ModelChoiceField(
+        queryset=Affiliation.objects.all(),
+        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        required=True,
+        help_text="Select the target affiliation to merge into",
+    )
+
+
 class AffiliationEditForm(forms.ModelForm):
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block header_title %}Merging multiple ffiliations{% endblock %}
+
+{% block content %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div class="row">
+  <div class="col-md-6">
+    <p>Select affiliations to merge</p>
+    <form action="{% url 'affiliation_multi_merge' %}" method="post">
+      {% csrf_token %}
+      {{ form | crispy }}
+      <div class="alert alert-danger">This action cannot be undone!</div>
+      <button type="submit" class="btn btn-primary mb-2">Merge</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+{% include 'autocomplete_boilerplate.html' %}
+{% endblock js %}

@@ -188,6 +188,11 @@ urlpatterns = [
         views.affiliation_merge,
         name="affiliation_merge",
     ),
+    path(
+        "editor/affiliations/multi_merge",
+        views.affiliation_multi_merge,
+        name="affiliation_multi_merge",
+    ),
     path("editor/keywords", views.KeywordList.as_view(), name="full_keyword_list"),
     path(
         "editor/keywords/create", views.KeywordCreate.as_view(), name="keyword_create"

@@ -53,6 +53,7 @@ from .forms import (
     KeywordMergeForm,
     TagForm,
     TopicMergeForm,
+    AffiliationMultiMergeForm,
 )
 
 
@@ -1076,6 +1077,35 @@ def affiliation_merge(request, affiliation_id):
             for error in raw_form.errors:
                 messages.error(request, error)
             return render(request, "affiliation_merge.html", context)
+
+@login_required
+@transaction.atomic
+def affiliation_multi_merge(request):
+    context = {"form": AffiliationMultiMergeForm}
+
+    if request.method == "POST":
+        raw_form = AffiliationMultiMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_affiliation = raw_form.cleaned_data["into"]
+            source_affiliations = raw_form.cleaned_data["sources"].exclude(pk=target_affiliation.pk)
+
+            for affiliation in source_affiliations:
+                old_affiliation_id = str(affiliation)
+                merge_results = affiliation.merge(target_affiliation)
+
+                messages.success(
+                    request,
+                    f"Affiliation {old_affiliation_id} has been merged into {target_affiliation}, and the old affiliation entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} affiliations updated"
+                )
+            return redirect("affiliation_edit", pk=target_affiliation.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+
+    return render(request, "affiliation_multi_merge.html", context)
 
 
 @login_required
