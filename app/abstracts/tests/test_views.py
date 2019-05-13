@@ -49,6 +49,12 @@ def privately_available(testcase, viewname):
     auth_res = testcase.client.get(target_url)
     testcase.assertEqual(auth_res.status_code, 200)
 
+def as_auth(func):
+    def auth_client(self):
+        self.client.login(username="root", password="dh-abstracts")
+        return func(self)
+    return auth_client
+
 
 class EmptyListViewTest(TestCase):
     """
@@ -76,8 +82,7 @@ class AuthorListViewTest(TestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
-        author_list_response = self.client.get(reverse("author_list"))
-        self.assertEqual(author_list_response.status_code, 200)
+        publicly_available(self, "author_list")
 
     def test_query_filtered_count(self):
         author_list_response = self.client.get(reverse("author_list"))
@@ -110,18 +115,10 @@ class AuthorFullListViewTest(TestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
-        target_url = reverse("full_author_list")
-        redirected_url = f"{reverse('login')}?next={target_url}"
-        full_author_list_response = self.client.get(target_url, follow=True)
-        self.assertRedirects(full_author_list_response, redirected_url)
+        privately_available(self, "full_author_list")
 
-    def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
-        auth_full_author_list_response = self.client.get(reverse("full_author_list"))
-        self.assertEqual(auth_full_author_list_response.status_code, 200)
-
+    @as_auth
     def test_query_filtered_count(self):
-        self.client.login(username="root", password="dh-abstracts")
         full_author_list_response = self.client.get(reverse("full_author_list"))
         self.assertEqual(
             full_author_list_response.context["filtered_authors_count"],
