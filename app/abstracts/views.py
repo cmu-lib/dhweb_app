@@ -626,20 +626,28 @@ def WorkEditAuthorship(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
     authorships = work.authorships.all()
     AuthorshipWorkFormset = formset_factory(WorkAuthorshipForm, extra=5)
-    initial_data = [
-        {
+
+    initial_data = []
+
+    for authorship in authorships:
+
+        base_data = {
             "author": authorship.author,
             "authorship_order": authorship.authorship_order,
             "first_name": authorship.appellation.first_name,
             "last_name": authorship.appellation.last_name,
-            "affiliation": authorship.affiliations.first(),
-            "department": authorship.affiliations.first().department,
-            "institution": authorship.affiliations.first().institution,
-            "country": authorship.affiliations.first().institution.country,
             "genders": [a for a in authorship.genders.all()],
         }
-        for authorship in authorships
-    ]
+
+        if authorship.affiliations.exists():
+            first_affiliation = authorship.affiliations.first()
+            base_data["affiliation"]: first_affiliation
+            base_data["department"]: first_affiliation.department
+            base_data["institution"]: first_affiliation.institution
+            base_data["country"]: first_affiliation.institution.country
+
+        initial_data.append(base_data)
+
     if request.method == "GET":
         authorships_forms = AuthorshipWorkFormset(initial=initial_data)
     elif request.method == "POST":
