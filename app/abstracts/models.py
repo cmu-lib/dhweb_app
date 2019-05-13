@@ -344,11 +344,10 @@ class Institution(models.Model):
                 replacement_aff = Affiliation.objects.get(
                     department=aff.department, institution=target
                 )
-                merges.append(
-                    Authorship.objects.filter(affiliation=aff).update(
-                        affiliation=replacement_aff
-                    )
-                )
+
+                for affected_auth in Authorship.objects.filter(affiliations=aff).all():
+                    affected_auth.affiliations.remove(aff)
+                    affected_auth.affiliations.add(replacement_aff)
                 # Otherwise, we can just reassign the institution
             else:
                 aff.institution = target
