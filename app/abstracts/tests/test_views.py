@@ -525,10 +525,22 @@ class EditSeriesViewTest(TestCase):
     def test_post(self):
         res = self.client.post(
             reverse("series_edit", kwargs={"pk": 1}),
-            data={"title": "foo", "abbreviation": "bar", "notes": "buzz"},
+            data={"title": "fi", "abbreviation": "fi", "notes": "buzz"},
             follow=True,
         )
         self.assertContains(res, "updated")
+
+
+class OrganizerListViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "full_organizer_list")
+
+    @as_auth
+    def test_unique(self):
+        res = self.client.get(reverse("full_organizer_list"))
+        self.assertTrue(is_list_unique(res.context["organizer_list"]))
 
 
 class CreateOrganizerViewTest(TestCase):
