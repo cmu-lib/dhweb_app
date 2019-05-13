@@ -23,7 +23,7 @@
       <div class="card m-2">
         <div class="card-body">
           {{ affiliation }}
-          {% for authorship in affiliation.asserted_by.all %}
+          {% for authorship in affiliation.asserted_by.all|slice:":5" %}
           <p>
             <div class="card m-2">
               <div class="card-body">
