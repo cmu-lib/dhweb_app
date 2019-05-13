@@ -15,13 +15,23 @@
 {% block results %}
 <div class="card-header">
   Results: Displaying {{ filtered_institutions_count }} out of {{ available_institutions_count }} institutions
-  <a href="{% url 'institution_create' %}" class="btn btn-primary" role="button">New institution</a>
 </div>
 <ul class="list-group list-group-flush">
   {% for institution in institution_list %}
   <li class="list-group-item">{% include "institution_card.html" with institution=institution %}</li>
   {% endfor %}
 </ul>
+{% endblock %}
+
+{% block prefilter %}
+<div class="card my-2">
+  <div class="card-body">
+    <div class="d-flex">
+      <a href="{% url 'institution_create' %}" class="btn btn-primary" role="button">New institution</a>
+      <a class="btn btn-warning" role="button" href="{% url 'affiliation_multi_merge' %}">Merge affiliations</a>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block filter %}
