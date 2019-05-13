@@ -30,7 +30,6 @@
 
         <form action="{% url merge_view merging.pk %}" method="post">
           {% csrf_token %}
-          {{ tag_merge_form.media }}
           {{ tag_merge_form | crispy }}
           <div class="alert alert-danger">This action cannot be undone!</div>
           <button type="submit" class="btn btn-primary mb-2">Merge</button>
@@ -39,3 +38,7 @@
 </div>
 
 {% endblock %}
+
+{% block js %}
+{% include 'autocomplete_boilerplate.html' %}
+{% endblock js %}

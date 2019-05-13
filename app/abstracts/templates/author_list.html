@@ -10,21 +10,25 @@
 <h1>Authors</h1>
 
 {% block results %}
-<div class="card-header">Results: Displaying {{ filtered_authors_count }} out of {{ available_authors_count }} authors</div>
+<div class="card-header">Results: Displaying {{ filtered_authors_count }} out of {{ available_authors_count }} authors
+</div>
 <ul class="list-group list-group-flush">
-{% for author in author_list %}
+  {% for author in author_list %}
   <li class="list-group-item">{% include 'author_card.html' with author=author %}</li>
-{% endfor %}
+  {% endfor %}
 </ul>
 {% endblock %}
 
 {% block filter %}
 <form action="{{ redirect_url }}" method="get">
-  {{ author_filter_form.media }}
   {{ author_filter_form|crispy }}
   <div class="form-group">
-  <button type="submit" class="btn btn-primary mb-2">Filter</button>
-  <a class="btn btn-secondary mb-2" href="{{ redirect_url }}" role="button">Reset</a>
+    <button type="submit" class="btn btn-primary mb-2">Filter</button>
+    <a class="btn btn-secondary mb-2" href="{{ redirect_url }}" role="button">Reset</a>
   </div>
 </form>
 {% endblock %}
+
+{% block js %}
+{% include 'autocomplete_boilerplate.html' %}
+{% endblock js %}

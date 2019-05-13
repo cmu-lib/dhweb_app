@@ -22,7 +22,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
 <form action="{{ redirect_url }}" method="get">
-  {{ work_filter_form.media }}
   {{ work_filter_form|crispy }}
   <div class="form-group">
     <button type="submit" class="btn btn-primary mb-2">Filter</button>
@@ -30,3 +29,7 @@
   </div>
 </form>
 {% endblock %}
+
+{% block js %}
+{% include 'autocomplete_boilerplate.html' %}
+{% endblock js %}

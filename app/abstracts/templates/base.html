@@ -11,13 +11,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <!-- <script src="{% static 'js/jquer y-3.4.1.min.js' %}"></script> -->
-    <!-- <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script> -->
-    <script>
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-      })
-    </script>
     <title>DH Abstracts {% block header_title %}{% endblock %}</title>
   </head>
 
@@ -104,5 +97,19 @@
     </nav>
 
   </body>
+
+  <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  {% comment %}
+  Activate tooltips present on the this page
+  {% endcomment %}
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  {% block js %}
+  {% endblock %}
 
 </html>

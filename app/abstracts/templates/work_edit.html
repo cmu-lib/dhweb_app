@@ -24,7 +24,6 @@
     {% load crispy_forms_tags %}
     <form method="post">
       {% csrf_token %}
-      {{ work_form.media }}
       {{ work_form.title | as_crispy_field }}
       <div class="row">
         <div class="col">
@@ -61,3 +60,7 @@
 </div>
 
 {% endblock %}
+
+{% block js %}
+{% include 'autocomplete_boilerplate.html' %}
+{% endblock js %}

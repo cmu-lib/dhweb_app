@@ -39,7 +39,6 @@
 
         <form action="{% url 'affiliation_merge' merging.pk %}" method="post">
           {% csrf_token %}
-          {{ affiliation_merge_form.media }}
           {{ affiliation_merge_form | crispy }}
           <div class="alert alert-danger">This action cannot be undone!</div>
           <button type="submit" class="btn btn-primary mb-2">Merge</button>
@@ -48,3 +47,7 @@
 </div>
 
 {% endblock %}
+
+{% block js %}
+{% include 'autocomplete_boilerplate.html' %}
+{% endblock js %}
