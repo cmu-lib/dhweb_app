@@ -125,15 +125,15 @@ class AuthorFullListViewTest(TestCase):
             len(res.context["author_list"]),
         )
 
+    @as_auth
     def test_query_total_count(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_author_list"))
         self.assertIsInstance(
             res.context["available_authors_count"], int
         )
 
+    @as_auth
     def test_unique(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_author_list"))
         self.assertTrue(
             is_list_unique(res.context["author_list"])
@@ -153,28 +153,28 @@ class WorkFullListViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_work_list"))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_query_filtered_count(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_work_list"))
         self.assertEqual(
             res.context["filtered_works_count"],
             len(res.context["work_list"]),
         )
 
+    @as_auth
     def test_query_total_count(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_work_list"))
         self.assertIsInstance(
             res.context["available_works_count"], int
         )
 
+    @as_auth
     def test_unique(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_work_list"))
         self.assertTrue(is_list_unique(res.context["work_list"]))
 
@@ -192,15 +192,15 @@ class InstitutionFullListViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(
             reverse("full_institution_list")
         )
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_query_filtered_count(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(
             reverse("full_institution_list")
         )
@@ -209,8 +209,8 @@ class InstitutionFullListViewTest(TestCase):
             len(res.context["institution_list"]),
         )
 
+    @as_auth
     def test_query_total_count(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(
             reverse("full_institution_list")
         )
@@ -218,8 +218,8 @@ class InstitutionFullListViewTest(TestCase):
             res.context["available_institutions_count"], int
         )
 
+    @as_auth
     def test_unique(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(
             reverse("full_institution_list")
         )
@@ -409,22 +409,22 @@ class AuthorMergeViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(
             reverse("author_merge", kwargs={"author_id": 1})
         )
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_404(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(
             reverse("author_merge", kwargs={"author_id": 100}), follow=True
         )
         self.assertEqual(res.status_code, 404)
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("author_merge", kwargs={"author_id": 1}),
             data={"into": 2},
@@ -436,8 +436,8 @@ class AuthorMergeViewTest(TestCase):
         self.assertContains(res, "updated")
         self.assertContains(res, "deleted")
 
+    @as_auth
     def test_invalid_author(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("author_merge", kwargs={"author_id": 1}),
             data={"into": 1},
@@ -457,22 +457,22 @@ class InstitutionMergeViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(
             reverse("institution_merge", kwargs={"institution_id": 1})
         )
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_404(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(
             reverse("institution_merge", kwargs={"institution_id": 100}), follow=True
         )
         self.assertEqual(res.status_code, 404)
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("institution_merge", kwargs={"institution_id": 1}),
             data={"into": 2},
@@ -483,8 +483,8 @@ class InstitutionMergeViewTest(TestCase):
         self.assertFalse(Institution.objects.filter(pk=1).exists())
         self.assertContains(res, "updated")
 
+    @as_auth
     def test_invalid_institution(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("institution_merge", kwargs={"institution_id": 1}),
             data={"into": 1},
@@ -506,22 +506,22 @@ class AffiliationMergeViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(
             reverse("affiliation_merge", kwargs={"affiliation_id": 1})
         )
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_404(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(
             reverse("affiliation_merge", kwargs={"affiliation_id": 100}), follow=True
         )
         self.assertEqual(res.status_code, 404)
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("affiliation_merge", kwargs={"affiliation_id": 1}),
             data={"into": 2},
@@ -532,8 +532,8 @@ class AffiliationMergeViewTest(TestCase):
         self.assertFalse(Affiliation.objects.filter(pk=1).exists())
         self.assertContains(res, "updated")
 
+    @as_auth
     def test_invalid_affiliation(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("affiliation_merge", kwargs={"affiliation_id": 1}),
             data={"into": 1},
@@ -555,20 +555,20 @@ class WipeUnusedViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("wipe_unused"))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_has_dict(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("wipe_unused"))
         self.assertIsInstance(res.context["deletions"], dict)
         self.assertIsInstance(res.context["hanging_items"], bool)
         self.assertTrue(res.context["hanging_items"])
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(reverse("wipe_unused"))
         self.assertFalse(res.context["hanging_items"])
 
@@ -582,13 +582,13 @@ class CreateConferenceViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("conference_create"))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("conference_create"),
             data={
@@ -611,13 +611,13 @@ class EditConferenceViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("conference_edit", kwargs={"pk": 1}))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("conference_edit", kwargs={"pk": 1}),
             data={
@@ -640,13 +640,13 @@ class CreateSeriesViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("series_create"))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("series_create"),
             data={"title": "foo", "abbreviation": "bar", "notes": "buzz"},
@@ -664,13 +664,13 @@ class EditSeriesViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("series_edit", kwargs={"pk": 1}))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("series_edit", kwargs={"pk": 1}),
             data={"title": "foo", "abbreviation": "bar", "notes": "buzz"},
@@ -688,13 +688,13 @@ class CreateOrganizerViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("organizer_create"))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("organizer_create"),
             data={"title": "foo", "abbreviation": "bar", "notes": "buzz"},
@@ -712,13 +712,13 @@ class EditOrganizerViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("organizer_edit", kwargs={"pk": 1}))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(
             reverse("organizer_edit", kwargs={"pk": 1}),
             data={"title": "foo", "abbreviation": "bar", "notes": "buzz"},
@@ -736,13 +736,13 @@ class DeleteWorkViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("work_delete", kwargs={"pk": 1}))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_post(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.post(reverse("work_delete", kwargs={"pk": 1}), follow=True)
         self.assertFalse(Work.objects.filter(pk=1).exists())
 
@@ -760,28 +760,28 @@ class KeywordFullListViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_keyword_list"))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_query_filtered_count(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_keyword_list"))
         self.assertEqual(
             res.context["filtered_tags_count"],
             len(res.context["tag_list"]),
         )
 
+    @as_auth
     def test_query_total_count(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_keyword_list"))
         self.assertIsInstance(
             res.context["available_tags_count"], int
         )
 
+    @as_auth
     def test_unique(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_keyword_list"))
         self.assertTrue(is_list_unique(res.context["tag_list"]))
 
@@ -799,28 +799,28 @@ class TopicFullListViewTest(TestCase):
         res = self.client.get(target_url, follow=True)
         self.assertRedirects(res, redirected_url)
 
+    @as_auth
     def test_auth_render(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_topic_list"))
         self.assertEqual(res.status_code, 200)
 
+    @as_auth
     def test_query_filtered_count(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_topic_list"))
         self.assertEqual(
             res.context["filtered_tags_count"],
             len(res.context["tag_list"]),
         )
 
+    @as_auth
     def test_query_total_count(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_topic_list"))
         self.assertIsInstance(
             res.context["available_tags_count"], int
         )
 
+    @as_auth
     def test_unique(self):
-        self.client.login(username="root", password="dh-abstracts")
         res = self.client.get(reverse("full_topic_list"))
         self.assertTrue(is_list_unique(res.context["tag_list"]))
 
