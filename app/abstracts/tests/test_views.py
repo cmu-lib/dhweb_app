@@ -76,6 +76,13 @@ class EmptyListViewTest(TestCase):
         publicly_available(self, "conference_list")
 
 
+class DownloadPageTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "download_data")
+
+
 class AuthorListViewTest(TestCase):
     """
     Test Author list page
