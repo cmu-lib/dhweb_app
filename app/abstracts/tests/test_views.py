@@ -140,6 +140,11 @@ class AuthorFullListViewTest(TestCase):
         res = self.client.get(reverse("full_author_list"))
         self.assertTrue(is_list_unique(res.context["author_list"]))
 
+    def test_filter_affiliation(self):
+        res = self.client.get(reverse("full_author_list"), data={"affiliation": 1})
+        for author in res.context["author_list"]:
+            self.assertTrue(author.filter(affiliations__pk=1).exists())
+
 
 class WorkFullListViewTest(TestCase):
     """
@@ -333,6 +338,24 @@ class ConferenceListViewTest(TestCase):
         )
 
 
+class FullConferenceListViewTest(TestCase):
+    """
+    Test Full Conference list view
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "full_conference_list")
+
+    def test_has_unaccepted_conferences(self):
+        res = self.client.get(reverse("full_conference_list"))
+        self.assertIn(
+            Conference.objects.exclude(works__state="ac").first(),
+            res.context["conference_list"],
+        )
+
+
 class AuthorMergeViewTest(TestCase):
     fixtures = ["test.json"]
 
@@ -505,6 +528,7 @@ class CreateConferenceViewTest(TestCase):
             follow=True,
         )
         self.assertContains(res, "created")
+        self.assertTrue(Conference.objects.filter(year=1987, venue="foo").exists())
 
 
 class EditConferenceViewTest(TestCase):
@@ -526,6 +550,21 @@ class EditConferenceViewTest(TestCase):
             follow=True,
         )
         self.assertContains(res, "updated")
+
+
+class DeleteConferenceViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "conference_delete", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("conference_delete", kwargs={"pk": 1}), follow=True
+        )
+        self.assertContains(res, "deleted")
+        self.assertFalse(Conference.objects.filter(pk=1).exists())
 
 
 class CreateSeriesViewTest(TestCase):
@@ -558,6 +597,19 @@ class EditSeriesViewTest(TestCase):
             follow=True,
         )
         self.assertContains(res, "updated")
+
+
+class DeleteSeriesViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "series_delete", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(reverse("series_delete", kwargs={"pk": 1}), follow=True)
+        self.assertContains(res, "deleted")
+        self.assertFalse(Conference.objects.filter(pk=1).exists())
 
 
 class OrganizerListViewTest(TestCase):
@@ -616,6 +668,33 @@ class DeleteWorkViewTest(TestCase):
         self.assertFalse(Work.objects.filter(pk=1).exists())
 
 
+class AuthorJSONViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "author-info-json", kwargs={"author_id": 1})
+
+    @as_auth
+    def test_format(self):
+        res = self.client.get(reverse("author-info-json", kwargs={"author_id": 1}))
+        self.assertTrue("first_name" in json.dumps(str(res.content)))
+        self.assertTrue("last_name" in json.dumps(str(res.content)))
+        self.assertTrue("affiliation" in json.dumps(str(res.content)))
+
+
+class AffiliationJSONViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "affiliation-info-json", kwargs={"affiliation_id": 1})
+
+    @as_auth
+    def test_format(self):
+        res = self.client.get(reverse("affiliation-info-json", kwargs={"affiliation_id": 1}))
+        self.assertTrue("department" in json.dumps(str(res.content)))
+        self.assertTrue("institution" in json.dumps(str(res.content)))
+
+
 class KeywordFullListViewTest(TestCase):
     """
     Test full Keyword list page
@@ -642,6 +721,101 @@ class KeywordFullListViewTest(TestCase):
     def test_unique(self):
         res = self.client.get(reverse("full_keyword_list"))
         self.assertTrue(is_list_unique(res.context["tag_list"]))
+
+    @as_auth
+    def test_sort(self):
+        res = self.client.get(reverse("full_keyword_list", kwargs={"ordering": "a"}))
+        self.assertTrue(res.context["tag_list"].ordered)
+        res = self.client.get(
+            reverse("full_keyword_list", kwargs={"ordering": "n_dsc"})
+        )
+        self.assertTrue(res.context["tag_list"].ordered)
+        res = self.client.get(
+            reverse("full_keyword_list", kwargs={"ordering": "n_asc"})
+        )
+        self.assertTrue(res.context["tag_list"].ordered)
+
+
+class CreateKeywordViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "keyword_create")
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("keyword_create"), data={"title": "foo"}, follow=True
+        )
+        self.assertContains(res, "created")
+        self.assertTrue(Keyword.objects.filter(title="foo").exists())
+
+
+class EditKeywordViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "keyword_edit", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("keyword_edit", kwargs={"pk": 1}),
+            data={"title": "buzz"},
+            follow=True,
+        )
+        self.assertContains(res, "updated")
+        self.assertTrue(Keyword.objects.filter(title="buzz").exists())
+
+
+class DeleteKeywordViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "keyword_delete", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(reverse("keyword_delete", kwargs={"pk": 1}), follow=True)
+        self.assertFalse(Keyword.objects.filter(pk=1).exists())
+
+
+class KeywordMergeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "keyword_merge", kwargs={"keyword_id": 1})
+
+    @as_auth
+    def test_404(self):
+        res = self.client.get(
+            reverse("keyword_merge", kwargs={"keyword_id": 100}), follow=True
+        )
+        self.assertEqual(res.status_code, 404)
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("keyword_merge", kwargs={"keyword_id": 1}),
+            data={"into": 2},
+            follow=True,
+        )
+        expected_redirect = reverse("keyword_detail", kwargs={"keyword_id": 2})
+        self.assertRedirects(res, expected_redirect)
+        self.assertFalse(Keyword.objects.filter(pk=1).exists())
+        self.assertContains(res, "updated")
+        self.assertContains(res, "deleted")
+
+    @as_auth
+    def test_invalid_keyword(self):
+        res = self.client.post(
+            reverse("keyword_merge", kwargs={"keyword_id": 1}),
+            data={"into": 1},
+            follow=True,
+        )
+        expected_redirect = reverse("keyword_merge", kwargs={"keyword_id": 1})
+        self.assertRedirects(res, expected_redirect)
+        self.assertContains(res, "You cannot merge an keyword into themselves")
 
 
 class TopicFullListViewTest(TestCase):
@@ -671,3 +845,44 @@ class TopicFullListViewTest(TestCase):
         res = self.client.get(reverse("full_topic_list"))
         self.assertTrue(is_list_unique(res.context["tag_list"]))
 
+
+class CreateTopicViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "topic_create")
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("topic_create"), data={"title": "foo"}, follow=True
+        )
+        self.assertContains(res, "created")
+        self.assertTrue(Topic.objects.filter(title="foo").exists())
+
+
+class EditTopicViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "topic_edit", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("topic_edit", kwargs={"pk": 1}), data={"title": "buzz"}, follow=True
+        )
+        self.assertContains(res, "updated")
+        self.assertTrue(Topic.objects.filter(title="buzz").exists())
+
+
+class DeleteTopicViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "topic_delete", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(reverse("topic_delete", kwargs={"pk": 1}), follow=True)
+        self.assertFalse(Topic.objects.filter(pk=1).exists())
