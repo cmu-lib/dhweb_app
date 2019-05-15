@@ -438,6 +438,28 @@ class AffiliationMergeViewTest(TestCase):
         self.assertContains(res, "You cannot merge an affiliation into itself")
 
 
+class AffiliationMultiMergeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "affiliation_multi_merge")
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("affiliation_multi_merge"),
+            data={"sources": [1, 3, 4], "into": 2},
+            follow=True,
+        )
+        expected_redirect = reverse("affiliation_edit", kwargs={"pk": 2})
+        self.assertRedirects(res, expected_redirect)
+        self.assertFalse(Affiliation.objects.filter(pk=1).exists())
+        self.assertTrue(Affiliation.objects.filter(pk=2).exists())
+        self.assertFalse(Affiliation.objects.filter(pk=3).exists())
+        self.assertFalse(Affiliation.objects.filter(pk=4).exists())
+        self.assertContains(res, "updated")
+
+
 class WipeUnusedViewTest(TestCase):
     fixtures = ["test.json"]
 
