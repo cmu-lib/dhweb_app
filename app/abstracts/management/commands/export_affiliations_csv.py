@@ -12,4 +12,3 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         ds = AffiliationResource().export()
         print(ds.csv, file=open("abstracts/static/downloads/affiliations.csv", "w"))
-

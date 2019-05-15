@@ -240,7 +240,9 @@ class UnrestrictedAffiliationAutocomplete(LoginRequiredMixin, Select2QuerySetVie
     raise_exception = True
 
     def get_queryset(self):
-        qs = Affiliation.objects.annotate(n_works=Count("asserted_by__work")).order_by("-n_works")
+        qs = Affiliation.objects.annotate(n_works=Count("asserted_by__work")).order_by(
+            "-n_works"
+        )
 
         if self.q:
             qs = qs.filter(
@@ -579,12 +581,13 @@ def download_data(request):
 
     return render(request, "downloads.html", context)
 
+
 @login_required
 def WorkCreate(request):
 
     if request.method == "GET":
         if "conference" in request.GET:
-            conf = get_object_or_404(Conference, pk = int(request.GET["conference"]))
+            conf = get_object_or_404(Conference, pk=int(request.GET["conference"]))
             work_form = WorkForm(initial={"conference": conf.pk})
         else:
             work_form = WorkForm()
@@ -688,7 +691,9 @@ def WorkEditAuthorship(request, work_id):
                 request, f'"{work.title}" authorships sucessfully updated.'
             )
             if "start_new" in request.POST:
-                return redirect("work_create", kwargs={"conference": work.conference.pk })
+                return redirect(
+                    "work_create", kwargs={"conference": work.conference.pk}
+                )
 
             return redirect("work_detail", work_id=work.pk)
         else:
@@ -697,6 +702,7 @@ def WorkEditAuthorship(request, work_id):
 
     context = {"authorships_form": authorships_forms, "work": work}
     return render(request, "work_edit_authorships.html", context)
+
 
 @login_required
 def AuthorInfoJSON(request, author_id):
@@ -708,11 +714,9 @@ def AuthorInfoJSON(request, author_id):
             "last_name": author.most_recent_appellation.last_name,
         }
         if author_aff is not None:
-            author_dict["affiliation"] = {
-                "name": str(author_aff),
-                "id": author_aff.pk,
-            }
-        return(JsonResponse(author_dict))
+            author_dict["affiliation"] = {"name": str(author_aff), "id": author_aff.pk}
+        return JsonResponse(author_dict)
+
 
 @login_required
 def AffiliationInfoJSON(request, affiliation_id):
@@ -723,10 +727,11 @@ def AffiliationInfoJSON(request, affiliation_id):
                 "name": str(affiliation.institution),
                 "id": affiliation.institution.id,
             }
-            }
+        }
         if affiliation.department is not None:
             affiliation_dict["department"] = affiliation.department
-        return(JsonResponse(affiliation_dict))
+        return JsonResponse(affiliation_dict)
+
 
 class WorkDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Work
@@ -1078,6 +1083,7 @@ def affiliation_merge(request, affiliation_id):
                 messages.error(request, error)
             return render(request, "affiliation_merge.html", context)
 
+
 @login_required
 @transaction.atomic
 def affiliation_multi_merge(request):
@@ -1087,7 +1093,9 @@ def affiliation_multi_merge(request):
         raw_form = AffiliationMultiMergeForm(request.POST)
         if raw_form.is_valid():
             target_affiliation = raw_form.cleaned_data["into"]
-            source_affiliations = raw_form.cleaned_data["sources"].exclude(pk=target_affiliation.pk)
+            source_affiliations = raw_form.cleaned_data["sources"].exclude(
+                pk=target_affiliation.pk
+            )
 
             for affiliation in source_affiliations:
                 old_affiliation_id = str(affiliation)
@@ -1227,21 +1235,16 @@ class OrganizerList(LoginRequiredMixin, ListView):
 class KeywordCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Keyword
     template_name = "generic_form.html"
-    extra_context = {
-        "form_title": "Create keyword",
-        "cancel_view": "full_keyword_list",
-    }
+    extra_context = {"form_title": "Create keyword", "cancel_view": "full_keyword_list"}
     fields = ["title"]
     success_message = "Keyword '%(name)s' created"
     success_url = reverse_lazy("full_keyword_list")
 
+
 class KeywordDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Keyword
     template_name = "generic_form.html"
-    extra_context = {
-        "form_title": "Delete keyword",
-        "cancel_view": "full_keyword_list",
-    }
+    extra_context = {"form_title": "Delete keyword", "cancel_view": "full_keyword_list"}
     success_message = "Keyword '%(name)s' deleted"
     success_url = reverse_lazy("full_keyword_list")
 
@@ -1264,7 +1267,12 @@ class KeywordList(LoginRequiredMixin, ListView):
     model = Keyword
     template_name = "tag_list.html"
     context_object_name = "tag_list"
-    extra_context = {"tag_category": "Keywords", "tag_edit_view": "keyword_edit", "tag_filter_form": TagForm, "tag_list_view": "full_keyword_list"}
+    extra_context = {
+        "tag_category": "Keywords",
+        "tag_edit_view": "keyword_edit",
+        "tag_filter_form": TagForm,
+        "tag_list_view": "full_keyword_list",
+    }
 
     def get_queryset(self):
         base_results_set = Keyword.objects.order_by("title")
@@ -1293,12 +1301,16 @@ class KeywordList(LoginRequiredMixin, ListView):
         return context
 
 
-
 @login_required
 @transaction.atomic
 def keyword_merge(request, keyword_id):
     keyword = get_object_or_404(Keyword, pk=keyword_id)
-    context = {"merging": keyword, "tag_merge_form": KeywordMergeForm, "tag_category": "Keyword", "merge_view": "keyword_merge"}
+    context = {
+        "merging": keyword,
+        "tag_merge_form": KeywordMergeForm,
+        "tag_category": "Keyword",
+        "merge_view": "keyword_merge",
+    }
 
     if request.method == "GET":
         """
@@ -1341,24 +1353,20 @@ def keyword_merge(request, keyword_id):
                 messages.error(request, error)
             return render(request, "tag_merge.html", context)
 
+
 class TopicCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Topic
     template_name = "generic_form.html"
-    extra_context = {
-        "form_title": "Create topic",
-        "cancel_view": "full_topic_list",
-    }
+    extra_context = {"form_title": "Create topic", "cancel_view": "full_topic_list"}
     fields = ["title"]
     success_message = "Topic '%(name)s' created"
     success_url = reverse_lazy("full_topic_list")
 
+
 class TopicDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Topic
     template_name = "generic_form.html"
-    extra_context = {
-        "form_title": "Delete topic",
-        "cancel_view": "full_topic_list",
-    }
+    extra_context = {"form_title": "Delete topic", "cancel_view": "full_topic_list"}
     success_message = "Topic '%(name)s' deleted"
     success_url = reverse_lazy("full_topic_list")
 
@@ -1381,7 +1389,12 @@ class TopicList(LoginRequiredMixin, ListView):
     model = Topic
     template_name = "tag_list.html"
     context_object_name = "tag_list"
-    extra_context = {"tag_category": "Topics", "tag_edit_view": "topic_edit", "tag_filter_form": TagForm, "tag_list_view": "full_topic_list"}
+    extra_context = {
+        "tag_category": "Topics",
+        "tag_edit_view": "topic_edit",
+        "tag_filter_form": TagForm,
+        "tag_list_view": "full_topic_list",
+    }
 
     def get_queryset(self):
         base_results_set = Topic.objects.order_by("title")
@@ -1409,6 +1422,7 @@ class TopicList(LoginRequiredMixin, ListView):
         context["available_tags_count"] = Topic.objects.count()
         return context
 
+
 @login_required
 @transaction.atomic
 def topic_merge(request, topic_id):
@@ -1416,7 +1430,14 @@ def topic_merge(request, topic_id):
     affected_elements = topic.works.all()
     count_elements = affected_elements.count() - 10
     sample_elements = affected_elements[:10]
-    context = {"merging": topic, "tag_merge_form": TopicMergeForm, "tag_category": "Topic", "merge_view": "topic_merge", "sample_elements": sample_elements, "count_elements": count_elements}
+    context = {
+        "merging": topic,
+        "tag_merge_form": TopicMergeForm,
+        "tag_category": "Topic",
+        "merge_view": "topic_merge",
+        "sample_elements": sample_elements,
+        "count_elements": count_elements,
+    }
 
     if request.method == "GET":
         """

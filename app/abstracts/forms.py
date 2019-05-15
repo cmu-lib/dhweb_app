@@ -349,4 +349,3 @@ class TagForm(forms.Form):
         required=True,
         initial="a",
     )
-

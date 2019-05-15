@@ -238,4 +238,3 @@ class Command(BaseCommand):
 
                     if affiliation is not None:
                         new_authorship.affiliations.add(target_affiliation)
-

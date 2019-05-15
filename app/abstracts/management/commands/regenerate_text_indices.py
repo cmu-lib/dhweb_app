@@ -17,4 +17,3 @@ class Command(BaseCommand):
         print("Updating index for Works...", end="", flush=True)
         Work.objects.update(search_text=SearchVector("title", "full_text"))
         print("done.")
-

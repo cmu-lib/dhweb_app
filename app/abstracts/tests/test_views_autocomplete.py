@@ -233,7 +233,9 @@ class CountryAutocompleteTest(TestCase):
     def test_public(self):
         country_ac_response = self.client.get(reverse("country-autocomplete"))
         private_country = (
-            Country.objects.exclude(institutions__affiliations__asserted_by__work__state="ac")
+            Country.objects.exclude(
+                institutions__affiliations__asserted_by__work__state="ac"
+            )
             .distinct()
             .values_list("id", flat=True)
         )
