@@ -140,10 +140,11 @@ class AuthorFullListViewTest(TestCase):
         res = self.client.get(reverse("full_author_list"))
         self.assertTrue(is_list_unique(res.context["author_list"]))
 
+    @as_auth
     def test_filter_affiliation(self):
         res = self.client.get(reverse("full_author_list"), data={"affiliation": 1})
         for author in res.context["author_list"]:
-            self.assertTrue(author.filter(affiliations__pk=1).exists())
+            self.assertTrue(Affiliation.objects.filter(pk=1, asserted_by__author=author.pk).exists())
 
 
 class WorkFullListViewTest(TestCase):
