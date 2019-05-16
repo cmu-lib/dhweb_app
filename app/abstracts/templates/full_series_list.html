@@ -10,6 +10,7 @@
   {% for series in series_list %}
   <li class="list-group-item" id="{{ series.pk }}">
     <a href="{% url 'series_edit' series.pk %}" role="button" class="btn btn-primary">Edit</a>
+    <a href="{% url 'series_delete' series.pk %}" role="button" class="btn btn-danger">Delete</a>
     <p>Title: <a href="{% url 'series_edit' series.pk %}">{{ series.title }}</a></p>
     <p>Series abbreviation: {{ series.abbreviation }}</p>
     <p><a href="{% url 'full_conference_list' %}?series={{ series.pk }}">Number of conferences:
