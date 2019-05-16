@@ -174,11 +174,6 @@ class WorkResource(resources.ModelResource):
         column_name="conference_series",
         widget=ManyToManyWidget(model=ConferenceSeries, separator=";", field="title"),
     )
-    conference_series_number_field = Field(
-        attribute="conference__series_memberships",
-        column_name="conference_series_number",
-        widget=ManyToManyWidget(model=SeriesMembership, separator=";", field="number"),
-    )
     title_field = Field(attribute="title", column_name="work_title")
     work_type_field = Field(attribute="work_type__title", column_name="work_type")
     work_state_field = Field(attribute="state", column_name="work_state")
@@ -218,7 +213,6 @@ class WorkResource(resources.ModelResource):
             "conference_year_field",
             "conference_organizers_field",
             "conference_series_field",
-            "conference_series_number_field",
             "title_field",
             "work_type_field",
             "work_state_field",
