@@ -25,6 +25,15 @@
 </ul>
 {% endblock %}
 
+{% block prefilter %}
+<div class="card">
+  <div class="card-header">Administration</div>
+  <div class="card-body">
+    <a href="{% url 'keyword_multi_merge' %}" class="btn btn-secondary" role="button">Merge Keywords</a>
+  </div>
+</div>
+{% endblock %}
+
 {% block filter %}
 {% load static %}
 {% load crispy_forms_tags %}

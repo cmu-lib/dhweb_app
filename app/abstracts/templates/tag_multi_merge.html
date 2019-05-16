@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block header_title %}Merging multiple {{ tag_category }}s {% endblock %}
+
+{% block content %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div class="row">
+  <div class="col-md-6">
+    <p>Select keywords to merge</p>
+    <form action="{% url 'keyword_multi_merge' %}" method="post">
+      {% csrf_token %}
+      {{ tag_merge_form | crispy }}
+      <div class="alert alert-danger">This action cannot be undone!</div>
+      <button type="submit" class="btn btn-primary mb-2">Merge</button>
+      <a href="{% url 'full_keyword_list' %}" class="btn btn-secondary" role="button">Cancel</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+{% include 'autocomplete_boilerplate.html' %}
+{% endblock js %}

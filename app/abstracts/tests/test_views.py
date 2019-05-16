@@ -819,6 +819,28 @@ class KeywordMergeViewTest(TestCase):
         self.assertRedirects(res, expected_redirect)
         self.assertContains(res, "You cannot merge a keyword into itself")
 
+class KeywordMultiMergeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "keyword_multi_merge")
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("keyword_multi_merge"),
+            data={"sources": [1,3,4], "into": 2},
+            follow=True,
+        )
+        expected_redirect = reverse("keyword_edit", kwargs={"pk": 2})
+        self.assertRedirects(res, expected_redirect)
+        self.assertFalse(Keyword.objects.filter(pk=1).exists())
+        self.assertTrue(Keyword.objects.filter(pk=2).exists())
+        self.assertFalse(Keyword.objects.filter(pk=3).exists())
+        self.assertFalse(Keyword.objects.filter(pk=4).exists())
+        self.assertContains(res, "updated")
+        self.assertContains(res, "deleted")
+
 
 class TopicFullListViewTest(TestCase):
     """

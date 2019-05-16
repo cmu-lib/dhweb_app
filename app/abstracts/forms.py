@@ -334,6 +334,21 @@ class KeywordMergeForm(forms.Form):
     )
 
 
+class KeywordMultiMergeForm(forms.Form):
+    sources = forms.ModelMultipleChoiceField(
+        queryset=Keyword.objects.all(),
+        widget=ModelSelect2Multiple(url="unrestricted-keyword-autocomplete"),
+        required=True,
+        help_text="Select the keywords that you want to merge together",
+    )
+    into = forms.ModelChoiceField(
+        queryset=Keyword.objects.all(),
+        widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
+        required=True,
+        help_text="Select the target keyword to merge into",
+    )
+
+
 class TopicMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Topic.objects.all(),

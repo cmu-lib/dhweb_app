@@ -227,6 +227,11 @@ urlpatterns = [
         views.keyword_merge,
         name="keyword_merge",
     ),
+    path(
+        "editor/keywords/multi_merge",
+        views.keyword_multi_merge,
+        name="keyword_multi_merge",
+    ),
     path("editor/topics", views.TopicList.as_view(), name="full_topic_list"),
     path("editor/topics/create", views.TopicCreate.as_view(), name="topic_create"),
     path(

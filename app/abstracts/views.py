@@ -54,6 +54,7 @@ from .forms import (
     TagForm,
     TopicMergeForm,
     AffiliationMultiMergeForm,
+    KeywordMultiMergeForm,
 )
 
 
@@ -1358,9 +1359,13 @@ class KeywordList(LoginRequiredMixin, ListView):
 @transaction.atomic
 def keyword_merge(request, keyword_id):
     keyword = get_object_or_404(Keyword, pk=keyword_id)
+    affected_works = Work.objects.filter(keywords=keyword).all()
+    sample_works = affected_works[:15]
+    count_elements = affected_works.count() - 15
     context = {
         "merging": keyword,
         "tag_merge_form": KeywordMergeForm,
+        "sample_elements": sample_works,
         "tag_category": "Keyword",
         "merge_view": "keyword_merge",
     }
@@ -1405,6 +1410,40 @@ def keyword_merge(request, keyword_id):
             for error in raw_form.errors:
                 messages.error(request, error)
             return render(request, "tag_merge.html", context)
+
+@login_required
+@transaction.atomic
+def keyword_multi_merge(request):
+    context = {
+        "tag_merge_form": KeywordMultiMergeForm,
+        "tag_category": "Keyword",
+    }
+
+    if request.method == "POST":
+        """
+        Posting the new author id causes all of the old author's authorships to be reassigned.
+        """
+        raw_form = KeywordMultiMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_keyword = raw_form.cleaned_data["into"]
+            source_keywords = raw_form.cleaned_data["sources"].exclude(pk=target_keyword.pk)
+
+            for keyword in source_keywords:
+                old_keyword_id = keyword.title
+                merge_results = keyword.merge(target_keyword)
+                messages.success(
+                    request,
+                    f"Keyword {old_keyword_id} has been merged into {target_keyword}, and the old keyword entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} keywords updated"
+                )
+            return redirect("keyword_edit", pk=target_keyword.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+
+    return render(request, "tag_multi_merge.html", context)
 
 
 class TopicCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
