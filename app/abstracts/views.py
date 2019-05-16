@@ -1320,7 +1320,6 @@ class KeywordList(LoginRequiredMixin, ListView):
     extra_context = {
         "tag_category": "Keywords",
         "tag_edit_view": "keyword_edit",
-        "tag_filter_form": TagForm,
         "tag_list_view": "full_keyword_list",
     }
 
@@ -1346,6 +1345,10 @@ class KeywordList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if "ordering" in self.request.GET:
+            context["tag_filter_form"] = TagForm(data=self.request.GET)
+        else:
+            context["tag_filter_form"] = TagForm(initial={"ordering": "a"})
         context["filtered_tags_count"] = self.get_queryset().count()
         context["available_tags_count"] = Keyword.objects.count()
         return context
