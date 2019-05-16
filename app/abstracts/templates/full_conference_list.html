@@ -21,7 +21,8 @@
     <p>Notes: {{ conference.notes }}</p>
     <p>URL: <a href="{{ conference.url }}">{{ conference.url }}</a></p>
     <p>Series: {% for series in conference.series_memberships.all %}<a
-        href="{% url 'series_edit' series.pk %}">{{ series.abbreviation }}</a>{% endfor %}</p>
+        href="{% url 'series_edit' series.pk %}">{{ series.abbreviation }}{% if series.number %} {{ series.number }}
+        {% endif %}</a>{% endfor %}</p>
   </li>
   {% endfor %}
 </ul>

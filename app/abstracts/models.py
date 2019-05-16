@@ -101,6 +101,9 @@ class SeriesMembership(models.Model):
     conference = models.ForeignKey(
         Conference, on_delete=models.CASCADE, related_name="series_memberships"
     )
+    number = models.IntegerField(
+        blank=True, null=True, help_text="Order of this conference within this series."
+    )
 
     class Meta:
         ordering = ["-conference__year"]
