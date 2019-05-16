@@ -1247,7 +1247,7 @@ class KeywordCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = "generic_form.html"
     extra_context = {"form_title": "Create keyword", "cancel_view": "full_keyword_list"}
     fields = ["title"]
-    success_message = "Keyword '%(name)s' created"
+    success_message = "Keyword '%(title)s' created"
     success_url = reverse_lazy("full_keyword_list")
 
 
@@ -1255,7 +1255,7 @@ class KeywordDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Keyword
     template_name = "generic_form.html"
     extra_context = {"form_title": "Delete keyword", "cancel_view": "full_keyword_list"}
-    success_message = "Keyword '%(name)s' deleted"
+    success_message = "Keyword '%(title)s' deleted"
     success_url = reverse_lazy("full_keyword_list")
 
 
@@ -1269,7 +1269,7 @@ class KeywordEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         "delete_view": "keyword_delete",
     }
     fields = ["title"]
-    success_message = "Keyword '%(name)s' updated"
+    success_message = "Keyword '%(title)s' updated"
     success_url = reverse_lazy("full_keyword_list")
 
 
@@ -1369,7 +1369,7 @@ class TopicCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = "generic_form.html"
     extra_context = {"form_title": "Create topic", "cancel_view": "full_topic_list"}
     fields = ["title"]
-    success_message = "Topic '%(name)s' created"
+    success_message = "Topic '%(title)s' created"
     success_url = reverse_lazy("full_topic_list")
 
 
@@ -1377,7 +1377,7 @@ class TopicDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Topic
     template_name = "generic_form.html"
     extra_context = {"form_title": "Delete topic", "cancel_view": "full_topic_list"}
-    success_message = "Topic '%(name)s' deleted"
+    success_message = "Topic '%(title)s' deleted"
     success_url = reverse_lazy("full_topic_list")
 
 
@@ -1391,7 +1391,7 @@ class TopicEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         "delete_view": "topic_delete",
     }
     fields = ["title"]
-    success_message = "Topic '%(name)s' updated"
+    success_message = "Topic '%(title)s' updated"
     success_url = reverse_lazy("full_topic_list")
 
 
