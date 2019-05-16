@@ -189,6 +189,7 @@ class WorkForm(forms.ModelForm):
     full_text_type = forms.ChoiceField(
         choices=Work.FT_TYPE,
         widget=forms.RadioSelect,
+        initial="txt",
         help_text="Currently text can either be plain text, or entered as XML which will then be rendered into HTML.",
     )
 
