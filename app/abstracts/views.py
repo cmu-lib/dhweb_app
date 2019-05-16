@@ -70,6 +70,19 @@ class InstitutionAutocomplete(Select2QuerySetView):
 
         return qs
 
+class AffiliationAutocomplete(Select2QuerySetView):
+    def get_queryset(self):
+        qs = Affiliation.objects.filter(
+            asserted_by__work__state="ac"
+        ).distinct()
+
+        if self.q:
+            qs = qs.filter(
+                Q(department__icontains=self.q) | Q(institution__name__icontains=self.q)
+            ).distinct()
+
+        return qs
+
 
 class KeywordAutocomplete(Select2QuerySetView):
     def get_queryset(self):
@@ -1178,7 +1191,7 @@ class ConferenceDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         "form_title": "Delete conference",
         "cancel_view": "full_conference_list",
     }
-    success_message = "Conference '%(year)s - %(venue)s' deleted"
+    success_message = "Conference deleted"
     success_url = reverse_lazy("full_conference_list")
 
 
@@ -1205,6 +1218,15 @@ class SeriesEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     success_message = "Series '%(title)s' updated"
     success_url = reverse_lazy("full_series_list")
 
+class SeriesDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = ConferenceSeries
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Delete conference series",
+        "cancel_view": "full_series_list",
+    }
+    success_message = "Series '%(title)s' deleted"
+    success_url = reverse_lazy("full_series_list")
 
 class SeriesList(LoginRequiredMixin, ListView):
     model = ConferenceSeries

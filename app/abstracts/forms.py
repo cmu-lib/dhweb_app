@@ -212,6 +212,12 @@ class WorkForm(forms.ModelForm):
 
 class AuthorFilter(forms.Form):
     name = forms.CharField(max_length=100, strip=True, required=False)
+    affiliation = forms.ModelChoiceField(
+        queryset=Affiliation.objects.filter(asserted_by__work__state="ac").distinct(),
+        required=False,
+        widget=ModelSelect2(url="affiliation-autocomplete"),
+        help_text="Authors who were once affiliated with this department",
+    )
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.filter(
             affiliations__asserted_by__work__state="ac"

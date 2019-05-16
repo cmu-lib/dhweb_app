@@ -20,6 +20,11 @@ urlpatterns = [
         name="institution-autocomplete",
     ),
     path(
+        "affiliation-autocomplete",
+        views.AffiliationAutocomplete.as_view(),
+        name="affiliation-autocomplete",
+    ),
+    path(
         "topic-autocomplete",
         views.TopicAutocomplete.as_view(),
         name="topic-autocomplete",
@@ -165,6 +170,11 @@ urlpatterns = [
     path("editor/series", views.SeriesList.as_view(), name="full_series_list"),
     path("editor/series/create", views.SeriesCreate.as_view(), name="series_create"),
     path("editor/series/<int:pk>/edit", views.SeriesEdit.as_view(), name="series_edit"),
+    path(
+        "editor/series/<int:pk>/delete",
+        views.SeriesDelete.as_view(),
+        name="series_delete",
+    ),
     path(
         "editor/organizers", views.OrganizerList.as_view(), name="full_organizer_list"
     ),

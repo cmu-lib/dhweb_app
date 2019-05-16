@@ -71,6 +71,42 @@ class InstitutionAutocompleteTest(TestCase):
         self.assertTrue(is_list_unique(result_vals))
 
 
+class AffiliationAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        affiliation_ac_response = self.client.get(reverse("affiliation-autocomplete"))
+        self.assertEqual(affiliation_ac_response.status_code, 200)
+
+    def test_unique(self):
+        affiliation_ac_response = self.client.get(reverse("affiliation-autocomplete"))
+        result_vals = [
+            res["id"] for res in json.loads(affiliation_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_public(self):
+        affiliation_ac_response = self.client.get(reverse("affiliation-autocomplete"))
+        private_affiliations = (
+            Affiliation.objects.exclude(asserted_by__work__state="ac")
+            .distinct()
+            .values_list("id", flat=True)
+        )
+
+        for res in json.loads(affiliation_ac_response.content)["results"]:
+            self.assertNotIn(int(res["id"]), private_affiliations)
+
+    def test_q(self):
+        affiliation_ac_response = self.client.get(
+            reverse("affiliation-autocomplete"), data={"q": "librar"}
+        )
+        self.assertRegex(str(affiliation_ac_response.content), "Librar")
+        result_vals = [
+            res["id"] for res in json.loads(affiliation_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+
 class TopicAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
