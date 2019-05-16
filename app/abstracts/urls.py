@@ -148,6 +148,11 @@ urlpatterns = [
         name="conference_create",
     ),
     path(
+        "editor/conferences/<int:pk>/delete",
+        views.ConferenceDelete.as_view(),
+        name="conference_delete",
+    ),
+    path(
         "editor/conferences/<int:pk>/edit",
         views.ConferenceEdit.as_view(),
         name="conference_edit",

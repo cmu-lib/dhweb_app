@@ -1,0 +1,15 @@
+{% extends "generic_form.html" %}
+
+{% block header_title %}{{ form_title }}{% endblock %}
+
+{% block form_extra %}
+{% if conference.works %}
+<p>This will also delete the following works:</p>
+<ul>
+  {% for work in conference.works.all %}
+  <li><a href="{% url 'work_detail' work.pk %}">{{ work }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

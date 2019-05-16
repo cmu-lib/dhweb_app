@@ -1171,6 +1171,16 @@ class ConferenceEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
     success_message = "Conference '%(year)s - %(venue)s' updated"
 
+class ConferenceDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Conference
+    template_name = "conference_delete.html"
+    extra_context = {
+        "form_title": "Delete conference",
+        "cancel_view": "full_conference_list",
+    }
+    success_message = "Conference '%(year)s - %(venue)s' deleted"
+    success_url = reverse_lazy("full_conference_list")
+
 
 class SeriesCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = ConferenceSeries

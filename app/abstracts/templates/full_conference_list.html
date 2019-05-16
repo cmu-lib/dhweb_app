@@ -10,6 +10,7 @@
   {% for conference in conference_list %}
   <li class="list-group-item" id="{{ conference.pk }}">
     <a href="{% url 'conference_edit' conference.pk %}" role="button" class="btn btn-primary">Edit</a>
+    <a href="{% url 'conference_delete' conference.pk %}" role="button" class="btn btn-danger">Delete</a>
     <a href="{% url 'work_create' %}?conference={{ conference.pk }}" role="button" class="btn btn-primary">New
       abstract</a>
     <p>Venue: <a href="{% url 'conference_edit' conference.pk %}">{{ conference.venue }}</a></p>
