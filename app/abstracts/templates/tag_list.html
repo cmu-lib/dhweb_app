@@ -16,7 +16,7 @@
 <ul class="list-group list-group-flush">
   {% for tag in tag_list %}
   <li class="list-group-item d-flex justify-content-between">
-    <a href="{% url tag_edit_view tag.pk %}">{{ tag }}</a>
+    <a href="{% url tag_edit_view tag.pk %}">{{ tag.pk }} - {{ tag }}</a>
     <a href="{% url 'full_work_list' %}?keyword={{ tag.pk }}">
       <span class="badge badge-primary badge-small">{{ tag.n_works }} works</span>
     </a>
