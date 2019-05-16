@@ -158,4 +158,3 @@ class AuthorModelTest(TestCase):
         self.assertEqual(
             a1.get_absolute_url(), reverse("author_detail", kwargs={"author_id": 1})
         )
-

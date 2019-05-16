@@ -70,11 +70,10 @@ class InstitutionAutocomplete(Select2QuerySetView):
 
         return qs
 
+
 class AffiliationAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Affiliation.objects.filter(
-            asserted_by__work__state="ac"
-        ).distinct()
+        qs = Affiliation.objects.filter(asserted_by__work__state="ac").distinct()
 
         if self.q:
             qs = qs.filter(
@@ -753,6 +752,10 @@ class WorkDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy("full_work_list")
     success_message = "%(id)s deleted."
 
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(WorkDelete, self).delete(request, *args, **kwargs)
+
 
 class FullAuthorList(LoginRequiredMixin, ListView):
     context_object_name = "author_list"
@@ -1184,6 +1187,7 @@ class ConferenceEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
     success_message = "Conference '%(year)s - %(venue)s' updated"
 
+
 class ConferenceDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Conference
     template_name = "conference_delete.html"
@@ -1193,6 +1197,10 @@ class ConferenceDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     }
     success_message = "Conference deleted"
     success_url = reverse_lazy("full_conference_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(ConferenceDelete, self).delete(request, *args, **kwargs)
 
 
 class SeriesCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -1218,6 +1226,7 @@ class SeriesEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     success_message = "Series '%(title)s' updated"
     success_url = reverse_lazy("full_series_list")
 
+
 class SeriesDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = ConferenceSeries
     template_name = "generic_form.html"
@@ -1227,6 +1236,11 @@ class SeriesDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     }
     success_message = "Series '%(title)s' deleted"
     success_url = reverse_lazy("full_series_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(SeriesDelete, self).delete(request, *args, **kwargs)
+
 
 class SeriesList(LoginRequiredMixin, ListView):
     model = ConferenceSeries
@@ -1279,6 +1293,10 @@ class KeywordDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     extra_context = {"form_title": "Delete keyword", "cancel_view": "full_keyword_list"}
     success_message = "Keyword '%(title)s' deleted"
     success_url = reverse_lazy("full_keyword_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(KeywordDelete, self).delete(request, *args, **kwargs)
 
 
 class KeywordEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -1401,6 +1419,10 @@ class TopicDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     extra_context = {"form_title": "Delete topic", "cancel_view": "full_topic_list"}
     success_message = "Topic '%(title)s' deleted"
     success_url = reverse_lazy("full_topic_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(TopicDelete, self).delete(request, *args, **kwargs)
 
 
 class TopicEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
