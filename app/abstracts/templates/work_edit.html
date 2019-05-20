@@ -35,7 +35,11 @@
         </div>
         <div class="col">
           <h3>Tags</h3>
-          {{ work_form.keywords | as_crispy_field }}
+          <div class="d-flex align-items-center">
+            {{ work_form.keywords | as_crispy_field }}
+            <a href="{% url 'keyword_create' %}" class="btn btn-primary btn-small mx-2" role="button"
+              target="_blank">+</a>
+          </div>
           {{ work_form.topics | as_crispy_field }}
           {{ work_form.languages | as_crispy_field }}
           {{ work_form.disciplines | as_crispy_field }}
