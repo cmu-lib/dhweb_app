@@ -8,7 +8,8 @@
     {% for affiliation in institution.affiliations.all %}
     <li class="list-group-item  d-flex justify-content-between align-items-center">
       <a href="{% url 'affiliation_edit' affiliation.pk %}">{{ affiliation.department|default:"(no department)"}}</a>
-      <span>Number of abstracts: <span class="badge badge-primary">{{ affiliation.n_works }}</span></span>
+      <span>Number of abstracts: <a class="badge badge-primary"
+          href="{% url 'full_work_list' %}?affiliation={{ affiliation.pk }}">{{ affiliation.n_works }}</a></span>
     </li>
     {% endfor %}
   </ul>
