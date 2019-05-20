@@ -29,7 +29,10 @@
 <div class="card">
   <div class="card-header">Administration</div>
   <div class="card-body">
-    <a href="{% url 'keyword_multi_merge' %}" class="btn btn-secondary" role="button">Merge Keywords</a>
+    <a href="{% url tag_create_view %}" class="btn btn-secondary" role="button">Create {{ tag_category}}</a>
+    {% if multi_merge %}
+    <a href="{% url multi_merge %}" class="btn btn-secondary" role="button">Merge {{ tag_category}}</a>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

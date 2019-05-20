@@ -910,3 +910,121 @@ class DeleteTopicViewTest(TestCase):
     def test_post(self):
         res = self.client.post(reverse("topic_delete", kwargs={"pk": 1}), follow=True)
         self.assertFalse(Topic.objects.filter(pk=1).exists())
+
+class LanguageFullListViewTest(TestCase):
+    """
+    Test full Language list page
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "full_language_list")
+
+    @as_auth
+    def test_query_filtered_count(self):
+        res = self.client.get(reverse("full_language_list"))
+        self.assertEqual(
+            res.context["filtered_tags_count"], len(res.context["tag_list"])
+        )
+
+    @as_auth
+    def test_query_total_count(self):
+        res = self.client.get(reverse("full_language_list"))
+        self.assertIsInstance(res.context["available_tags_count"], int)
+
+    @as_auth
+    def test_unique(self):
+        res = self.client.get(reverse("full_language_list"))
+        self.assertTrue(is_list_unique(res.context["tag_list"]))
+
+    @as_auth
+    def test_sort(self):
+        res = self.client.get(reverse("full_language_list"), data={"ordering": "a"})
+        self.assertTrue(res.context["tag_list"].ordered)
+        res = self.client.get(reverse("full_language_list"), data={"ordering": "n_dsc"})
+        self.assertTrue(res.context["tag_list"].ordered)
+        res = self.client.get(reverse("full_language_list"), data={"ordering": "n_asc"})
+        self.assertTrue(res.context["tag_list"].ordered)
+
+
+class CreateLanguageViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "language_create")
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("language_create"), data={"title": "foo"}, follow=True
+        )
+        self.assertContains(res, "created")
+        self.assertTrue(Language.objects.filter(title="foo").exists())
+
+
+class EditLanguageViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "language_edit", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("language_edit", kwargs={"pk": 1}),
+            data={"title": "buzz"},
+            follow=True,
+        )
+        self.assertContains(res, "updated")
+        self.assertTrue(Language.objects.filter(title="buzz").exists())
+
+
+class DeleteLanguageViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "language_delete", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(reverse("language_delete", kwargs={"pk": 1}), follow=True)
+        self.assertFalse(Language.objects.filter(pk=1).exists())
+
+
+class LanguageMergeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "language_merge", kwargs={"language_id": 1})
+
+    @as_auth
+    def test_404(self):
+        res = self.client.get(
+            reverse("language_merge", kwargs={"language_id": 100}), follow=True
+        )
+        self.assertEqual(res.status_code, 404)
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("language_merge", kwargs={"language_id": 1}),
+            data={"into": 2},
+            follow=True,
+        )
+        expected_redirect = reverse("language_edit", kwargs={"pk": 2})
+        self.assertRedirects(res, expected_redirect)
+        self.assertFalse(Language.objects.filter(pk=1).exists())
+        self.assertContains(res, "updated")
+        self.assertContains(res, "deleted")
+
+    @as_auth
+    def test_invalid_language(self):
+        res = self.client.post(
+            reverse("language_merge", kwargs={"language_id": 1}),
+            data={"into": 1},
+            follow=True,
+        )
+        expected_redirect = reverse("language_merge", kwargs={"language_id": 1})
+        self.assertRedirects(res, expected_redirect)
+        self.assertContains(res, "You cannot merge a language into itself")

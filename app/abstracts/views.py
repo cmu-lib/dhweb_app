@@ -58,6 +58,7 @@ from .forms import (
     KeywordMultiMergeForm,
     ConferenceForm,
     ConferenceSeriesInline,
+    LanguageMergeForm,
 )
 
 
@@ -1366,6 +1367,7 @@ class KeywordList(LoginRequiredMixin, ListView):
     extra_context = {
         "tag_category": "Keywords",
         "tag_edit_view": "keyword_edit",
+        "tag_create_view": "keyword_create",
         "tag_list_view": "full_keyword_list",
     }
 
@@ -1533,6 +1535,7 @@ class TopicList(LoginRequiredMixin, ListView):
     extra_context = {
         "tag_category": "Topics",
         "tag_edit_view": "topic_edit",
+        "tag_create_view": "topic_create",
         "tag_filter_form": TagForm,
         "tag_list_view": "full_topic_list",
     }
@@ -1616,6 +1619,138 @@ def topic_merge(request, topic_id):
                     request, f"{merge_results['update_results']} topics updated"
                 )
                 return redirect("topic_edit", pk=target_topic.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+            return render(request, "tag_merge.html", context)
+
+
+class LanguageCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Language
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Create language", "cancel_view": "full_language_list"}
+    fields = ["title"]
+    success_message = "Language '%(title)s' created"
+    success_url = reverse_lazy("full_language_list")
+
+
+class LanguageDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Language
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Delete language", "cancel_view": "full_language_list"}
+    success_message = "Language '%(title)s' deleted"
+    success_url = reverse_lazy("full_language_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(LanguageDelete, self).delete(request, *args, **kwargs)
+
+
+class LanguageEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Language
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Update language",
+        "cancel_view": "full_language_list",
+        "merge_view": "language_merge",
+        "delete_view": "language_delete",
+    }
+    fields = ["title"]
+    success_message = "Language '%(title)s' updated"
+    success_url = reverse_lazy("full_language_list")
+
+
+class LanguageList(LoginRequiredMixin, ListView):
+    model = Language
+    template_name = "tag_list.html"
+    context_object_name = "tag_list"
+    extra_context = {
+        "tag_category": "Languages",
+        "tag_edit_view": "language_edit",
+        "tag_create_view": "language_create",
+        "tag_filter_form": TagForm,
+        "tag_list_view": "full_language_list",
+    }
+
+    def get_queryset(self):
+        base_results_set = Language.objects.order_by("title")
+        results_set = base_results_set.annotate(n_works=Count("works"))
+
+        raw_filter_form = TagForm(self.request.GET)
+        if raw_filter_form.is_valid():
+            filter_form = raw_filter_form.cleaned_data
+
+            if filter_form["name"] != "":
+                results_set = results_set.filter(title__icontains=filter_form["name"])
+
+            if filter_form["ordering"] == "a":
+                results_set = results_set.order_by("title")
+            elif filter_form["ordering"] == "n_asc":
+                results_set = results_set.order_by("n_works")
+            elif filter_form["ordering"] == "n_dsc":
+                results_set = results_set.order_by("-n_works")
+
+        return results_set
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filtered_tags_count"] = self.get_queryset().count()
+        context["available_tags_count"] = Language.objects.count()
+        return context
+
+
+@login_required
+@transaction.atomic
+def language_merge(request, language_id):
+    language = get_object_or_404(Language, pk=language_id)
+    affected_elements = language.works.all()
+    count_elements = affected_elements.count() - 10
+    sample_elements = affected_elements[:10]
+    context = {
+        "merging": language,
+        "tag_merge_form": LanguageMergeForm,
+        "tag_category": "Language",
+        "merge_view": "language_merge",
+        "sample_elements": sample_elements,
+        "count_elements": count_elements,
+    }
+
+    if request.method == "GET":
+        """
+        Initial load of the merge form displays all the authors and works associated with this language.
+        """
+        return render(request, "tag_merge.html", context)
+
+    elif request.method == "POST":
+        """
+        Posting the new author id causes all of the old author's authorships to be reassigned.
+        """
+
+        raw_form = LanguageMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_language = raw_form.cleaned_data["into"]
+
+            if language == target_language:
+                """
+                If the user chooses the existing language, don't merge, but instead error out.
+                """
+                messages.error(
+                    request,
+                    f"You cannot merge a language into itself. Please select a different language.",
+                )
+                return redirect("language_merge", language_id=language_id)
+            else:
+                old_language_id = str(language)
+                merge_results = language.merge(target_language)
+
+                messages.success(
+                    request,
+                    f"Language {old_language_id} has been merged into {target_language}, and the old language entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} languages updated"
+                )
+                return redirect("language_edit", pk=target_language.pk)
         else:
             for error in raw_form.errors:
                 messages.error(request, error)

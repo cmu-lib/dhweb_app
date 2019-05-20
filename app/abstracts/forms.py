@@ -360,6 +360,14 @@ class TopicMergeForm(forms.Form):
         help_text="Select the topic that will be used to replace the one you are deleting.",
     )
 
+class LanguageMergeForm(forms.Form):
+    into = forms.ModelChoiceField(
+        queryset=Language.objects.all(),
+        widget=ModelSelect2(url="unrestricted-language-autocomplete"),
+        required=True,
+        help_text="Select the language that will be used to replace the one you are deleting.",
+    )
+
 
 class TagForm(forms.Form):
     name = forms.CharField(

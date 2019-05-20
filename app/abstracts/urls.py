@@ -239,4 +239,25 @@ urlpatterns = [
     ),
     path("editor/topics/<int:pk>/edit", views.TopicEdit.as_view(), name="topic_edit"),
     path("editor/topics/<int:topic_id>/merge", views.topic_merge, name="topic_merge"),
+    path("editor/languages", views.LanguageList.as_view(), name="full_language_list"),
+    path(
+        "editor/languages/create",
+        views.LanguageCreate.as_view(),
+        name="language_create",
+    ),
+    path(
+        "editor/languages/<int:pk>/delete",
+        views.LanguageDelete.as_view(),
+        name="language_delete",
+    ),
+    path(
+        "editor/languages/<int:pk>/edit",
+        views.LanguageEdit.as_view(),
+        name="language_edit",
+    ),
+    path(
+        "editor/languages/<int:language_id>/merge",
+        views.language_merge,
+        name="language_merge",
+    ),
 ]
