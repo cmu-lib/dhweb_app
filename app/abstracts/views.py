@@ -1213,13 +1213,15 @@ class ConferenceEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, extra=0)
         series_forms = ConferenceSeriesFormSet(data=self.request.POST)
         if series_forms.is_valid():
-            for s_form in series_forms:
-                s_form_data = s_form.cleaned_data
-                SeriesMembership.objects.update_or_create(
-                    conference=self.object,
-                    series=s_form_data["series"],
-                    defaults={"number": s_form_data["number"],},
-                )
+            with transaction.atomic():
+                SeriesMembership.objects.filter(conference=self.object).delete()
+                for s_form in series_forms:
+                    s_form_data = s_form.cleaned_data
+                    SeriesMembership.objects.create(
+                        conference=self.object,
+                        series=s_form_data["series"],
+                        defaults={"number": s_form_data["number"],},
+                    )
 
         messages.success(self.request, f"Conference {self.object} updated.")
         return redirect(self.get_success_url())

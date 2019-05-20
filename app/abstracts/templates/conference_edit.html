@@ -14,8 +14,21 @@
 <form method="post">
   {% csrf_token %}
   {{ form | crispy }}
-  {{ series_membership_form | crispy }}
-
+  <h2>Conference Series</h2>
+  <input class="btn btn-primary btn-sm" type="button" value="New series" id="add_series">
+  {{ series_membership_form.management_form }}
+  <div id="membership_formset">
+    {% for form in series_membership_form.forms %}
+    <div class="row" id="series_{{ forloop.counter0 }}">
+      <div class="col">
+        {{ form.series | as_crispy_field }}
+      </div>
+      <div class="col">
+        {{ form.number | as_crispy_field }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
   <div class="form-group">
     <button type="submit" class="btn btn-primary mb-2">Save</button>
     {% comment %}<a class="btn btn-secondary mb-2" href="{% url cancel_view %}" role="button">Cancel</a>{% endcomment %}
@@ -27,6 +40,17 @@
 
 {% block js %}
 {% include 'autocomplete_boilerplate.html' %}
+
+<script>
+  var form_count = {{ series_membership_form.total_form_count }};
+
+  $('#add_series').click(function () {
+    form_count++;
+    var form = '{{ series_membership_form.empty_form|crispy|escapejs }}'.replace(/__prefix__/g, form_count - 1);
+    $('#membership_formset').append(form);
+    $('#id_form-TOTAL_FORMS').val(form_count);
+  });
+</script>
 {% endblock %}
 
 {% endblock %}
