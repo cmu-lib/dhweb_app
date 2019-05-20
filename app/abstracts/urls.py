@@ -260,4 +260,29 @@ urlpatterns = [
         views.language_merge,
         name="language_merge",
     ),
+    path(
+        "editor/disciplines",
+        views.DisciplineList.as_view(),
+        name="full_discipline_list",
+    ),
+    path(
+        "editor/disciplines/create",
+        views.DisciplineCreate.as_view(),
+        name="discipline_create",
+    ),
+    path(
+        "editor/disciplines/<int:pk>/delete",
+        views.DisciplineDelete.as_view(),
+        name="discipline_delete",
+    ),
+    path(
+        "editor/disciplines/<int:pk>/edit",
+        views.DisciplineEdit.as_view(),
+        name="discipline_edit",
+    ),
+    path(
+        "editor/disciplines/<int:discipline_id>/merge",
+        views.discipline_merge,
+        name="discipline_merge",
+    ),
 ]
