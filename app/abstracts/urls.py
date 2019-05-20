@@ -158,9 +158,7 @@ urlpatterns = [
         name="conference_delete",
     ),
     path(
-        "editor/conferences/<int:pk>/edit",
-        views.ConferenceEdit.as_view(),
-        name="conference_edit",
+        "editor/conferences/<int:pk>/edit", views.ConferenceEdit, name="conference_edit"
     ),
     path(
         "editor/conferences",

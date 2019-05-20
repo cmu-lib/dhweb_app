@@ -384,7 +384,7 @@ class ConferenceForm(forms.ModelForm):
 
 class ConferenceSeriesInline(forms.Form):
     series = forms.ModelChoiceField(
-        queryset=ConferenceSeries.objects.all(), required=False
+        queryset=ConferenceSeries.objects.all(), required=True
     )
     number = forms.IntegerField(
         min_value=1,

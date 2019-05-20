@@ -25,6 +25,7 @@
       </div>
       <div class="col">
         {{ form.number | as_crispy_field }}
+        {{ form.DELETE | as_crispy_field }}
       </div>
     </div>
     {% endfor %}
@@ -37,6 +38,7 @@
     {% endif %}
   </div>
 </form>
+{% endblock %}
 
 {% block js %}
 {% include 'autocomplete_boilerplate.html' %}
@@ -51,6 +53,4 @@
     $('#id_form-TOTAL_FORMS').val(form_count);
   });
 </script>
-{% endblock %}
-
 {% endblock %}

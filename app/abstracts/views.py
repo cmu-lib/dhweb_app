@@ -1181,50 +1181,57 @@ class ConferenceList(LoginRequiredMixin, ListView):
     context_object_name = "conference_list"
 
 
-class ConferenceEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = Conference
-    form_class = ConferenceForm
-    template_name = "conference_edit.html"
-    extra_context = {
+@login_required
+def ConferenceEdit(request, pk):
+    conference = get_object_or_404(Conference, pk=pk)
+    form = ConferenceForm(initial=model_to_dict(conference))
+    ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, can_delete=True, extra=0)
+    initial_series = [
+        {
+        "series": memb.series,
+        "number": memb.number,
+        }
+        for memb in SeriesMembership.objects.filter(conference=conference).all()
+    ]
+    context = {
+        "conference": conference,
+        "form": form,
+        "series_membership_form": ConferenceSeriesFormSet(initial=initial_series),
         "form_title": "Edit conference",
         "cancel_view": "full_conference_list",
     }
+    if request.method == "POST":
+        form = ConferenceForm(data=request.POST)
+        if form.is_valid():
+            form.save()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        initial_series = [
-            {
-            "series": memb.series,
-            "number": memb.number,
-            }
-        for memb in SeriesMembership.objects.filter(conference=self.object).all()
-        ]
-
-        ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, extra=0)
-        context["series_membership_form"] = ConferenceSeriesFormSet(initial=initial_series)
-
-        return context
-
-    def form_valid(self, form):
-        self.object = form.save()
-
-        # Also check the series formset
-        ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, extra=0)
-        series_forms = ConferenceSeriesFormSet(data=self.request.POST)
-        if series_forms.is_valid():
-            with transaction.atomic():
-                SeriesMembership.objects.filter(conference=self.object).delete()
-                for s_form in series_forms:
+            # Also check the series formset
+            ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, extra=0)
+            series_forms = ConferenceSeriesFormSet(data=request.POST)
+            if series_forms.is_valid():
+                for s_form in series_forms.forms:
                     s_form_data = s_form.cleaned_data
-                    SeriesMembership.objects.create(
-                        conference=self.object,
+                    SeriesMembership.objects.update_or_create(
+                        conference=conference,
                         series=s_form_data["series"],
                         defaults={"number": s_form_data["number"],},
                     )
+                for d_form in series_forms.deleted_forms:
+                    d_form_data = d_form.cleaned_data
+                    SeriesMembership.objects.filter(
+                        conference=conference,
+                        series=d_form_data["series"]
+                    ).delete()
+                messages.success(request, f"Conference {conference} updated.")
+                return redirect("conference_edit", pk=conference.pk)
+            else:
+                for error in series_forms.errors:
+                    messages.error(request, error)
+        else:
+            for error in form.errors:
+                messages.error(request, error)
 
-        messages.success(self.request, f"Conference {self.object} updated.")
-        return redirect(self.get_success_url())
+    return render(request, "conference_edit.html", context)
 
 
 class ConferenceDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
