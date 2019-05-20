@@ -28,6 +28,7 @@ from .models import (
     Appellation,
     Affiliation,
     ConferenceSeries,
+    SeriesMembership,
     Organizer,
     Country,
     Keyword,
@@ -55,6 +56,8 @@ from .forms import (
     TopicMergeForm,
     AffiliationMultiMergeForm,
     KeywordMultiMergeForm,
+    ConferenceForm,
+    ConferenceSeriesInline,
 )
 
 
@@ -1180,13 +1183,46 @@ class ConferenceList(LoginRequiredMixin, ListView):
 
 class ConferenceEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Conference
-    template_name = "generic_form.html"
+    form_class = ConferenceForm
+    template_name = "conference_edit.html"
     extra_context = {
         "form_title": "Edit conference",
         "cancel_view": "full_conference_list",
     }
-    fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
-    success_message = "Conference '%(year)s - %(venue)s' updated"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        initial_series = [
+            {
+            "series": memb.series,
+            "number": memb.number,
+            }
+        for memb in SeriesMembership.objects.filter(conference=self.object).all()
+        ]
+
+        ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, extra=0)
+        context["series_membership_form"] = ConferenceSeriesFormSet(initial=initial_series)
+
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save()
+
+        # Also check the series formset
+        ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, extra=0)
+        series_forms = ConferenceSeriesFormSet(data=self.request.POST)
+        if series_forms.is_valid():
+            for s_form in series_forms:
+                s_form_data = s_form.cleaned_data
+                SeriesMembership.objects.update_or_create(
+                    conference=self.object,
+                    series=s_form_data["series"],
+                    defaults={"number": s_form_data["number"],},
+                )
+
+        messages.success(self.request, f"Conference {self.object} updated.")
+        return redirect(self.get_success_url())
 
 
 class ConferenceDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):

@@ -19,6 +19,8 @@ from .models import (
     License,
     Gender,
     Affiliation,
+    SeriesMembership,
+    ConferenceSeries,
 )
 
 
@@ -371,3 +373,21 @@ class TagForm(forms.Form):
         required=True,
         initial="a",
     )
+
+
+class ConferenceForm(forms.ModelForm):
+    class Meta:
+        model = Conference
+        exclude = ["series"]
+
+
+class ConferenceSeriesInline(forms.Form):
+    series = forms.ModelChoiceField(
+        queryset=ConferenceSeries.objects.all(), required=False
+    )
+    number = forms.IntegerField(
+        min_value=1,
+        required=False,
+        help_text="Number in the sequence of this conference series.",
+    )
+

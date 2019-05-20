@@ -110,6 +110,7 @@ class SeriesMembership(models.Model):
 
     class Meta:
         ordering = ["-conference__year"]
+        unique_together = (("series", "conference"),)
 
     def __str__(self):
         return f"{self.series.title} - {self.conference}"
