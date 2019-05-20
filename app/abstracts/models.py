@@ -30,7 +30,10 @@ class ConferenceSeries(models.Model):
         return Organizer.objects.filter(conferences_organized__series=self).distinct()
 
     def __str__(self):
-        return self.abbreviation
+        if self.abbreviation is not "":
+            return self.abbreviation
+        else:
+            return self.title
 
     def get_absolute_url(self):
         return reverse("series_edit", kwargs={"pk": self.pk})
