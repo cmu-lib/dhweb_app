@@ -21,6 +21,7 @@ from .models import (
     Affiliation,
     SeriesMembership,
     ConferenceSeries,
+    Organizer,
 )
 
 
