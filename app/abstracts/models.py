@@ -92,7 +92,10 @@ class Organizer(models.Model):
     url = models.URLField(blank=True, max_length=100)
 
     def __str__(self):
-        return self.abbreviation
+        if self.abbreviation:
+            return self.abbreviation
+        else:
+            return self.name
 
 
 class SeriesMembership(models.Model):
