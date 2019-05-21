@@ -25,10 +25,11 @@
     <form method="post">
       {% csrf_token %}
       {{ authorships_form.management_form }}
-      <ul class="list-group list-group">
+      <ul class="list-group list-group" id="authorship_formset">
         {% for form in authorships_form %}
-        <li class="list-group-item">
+        <li class="list-group-item" id="authorship_{{ forloop.coutner0 }}">
           <h2>Author {{ form.authorship_order }}</h2>
+          <p>{{ form.DELETE|as_crispy_field }}</p>
           <div class="row">
             <div class="col">
               {{ form.author|as_crispy_field }}
@@ -68,6 +69,7 @@ When the user selects an author, fill in the most recent known information about
     var author_select = $("#id_form-{{ forloop.counter0 }}-author");
     var aff_select = $("#id_form-{{ forloop.counter0 }}-affiliation");
     var inst_select = $("#id_form-{{ forloop.counter0 }}-institution");
+    var dept_field = $("#id_form-{{ forloop.counter0 }}-department")
 
     author_select.on("select2:select", function (e) {
       $.getJSON("/author-info-json/" + author_select.val(), function (data) {
@@ -86,16 +88,18 @@ When the user selects an author, fill in the most recent known information about
 
     aff_select.on("select2:select", function (e) {
       $.getJSON("/affiliation-info-json/" + aff_select.val(), function (data) {
-        $("#id_form-{{ forloop.counter0 }}-department").val(data.department);
+        dept_field.val(data.department);
         var institution_option = new Option(data.institution.name, data.institution.id, true, true);
         inst_select.append(institution_option).trigger('change');
-        inst_select.trigger({
-          type: 'select2:select',
-          params: {
-            data: data
-          }
-        });
       });
+    });
+
+    inst_select.on("select2:select", function (e) {
+      aff_select.val(null).trigger("change");
+    });
+
+    dept_field.on("input", function (e) {
+      aff_select.val(null).trigger("change");
     });
   });
   {% endfor %}

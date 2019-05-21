@@ -673,38 +673,42 @@ def WorkEditAuthorship(request, work_id):
     if request.method == "GET":
         authorships_forms = AuthorshipWorkFormset(initial=initial_data)
     elif request.method == "POST":
-        authorships_forms = AuthorshipWorkFormset(request.POST, initial=initial_data)
+        authorships_forms = AuthorshipWorkFormset(request.POST)
         if authorships_forms.is_valid():
+            for dform in authorships_forms.deleted_forms:
+                d_form_data = d_form.cleaned_data
+                Authorship.objects.filter(work=work, author=dform["author"]).delete()
             for aform in authorships_forms:
-                aform_data = aform.cleaned_data
-                appellation = Appellation.objects.get_or_create(
-                    first_name=aform_data["first_name"],
-                    last_name=aform_data["last_name"],
-                )[0]
-
-                if aform_data["affiliation"] is not None:
-                    affiliation = aform_data["affiliation"]
-                else:
-                    affiliation = Affiliation.objects.get_or_create(
-                        department=aform_data["department"],
-                        institution=aform_data["institution"],
+                if aform not in authorships_forms.deleted_forms:
+                    aform_data = aform.cleaned_data
+                    appellation = Appellation.objects.get_or_create(
+                        first_name=aform_data["first_name"],
+                        last_name=aform_data["last_name"],
                     )[0]
 
-                genders = aform_data["genders"]
+                    if aform_data["affiliation"] is not None:
+                        affiliation = aform_data["affiliation"]
+                    else:
+                        affiliation = Affiliation.objects.get_or_create(
+                            department=aform_data["department"],
+                            institution=aform_data["institution"],
+                        )[0]
 
-                authorship_order = aform_data["authorship_order"]
+                    genders = aform_data["genders"]
 
-                auth = Authorship.objects.update_or_create(
-                    work=work,
-                    author=aform_data["author"],
-                    defaults={
-                        "authorship_order": authorship_order,
-                        "appellation": appellation,
-                    },
-                )[0]
+                    authorship_order = aform_data["authorship_order"]
 
-                auth.affiliations.set([affiliation])
-                auth.genders.set(genders)
+                    auth = Authorship.objects.update_or_create(
+                        work=work,
+                        author=aform_data["author"],
+                        defaults={
+                            "authorship_order": authorship_order,
+                            "appellation": appellation,
+                        },
+                    )[0]
+
+                    auth.affiliations.set([affiliation])
+                    auth.genders.set(genders)
             messages.success(
                 request, f'"{work.title}" authorships sucessfully updated.'
             )
