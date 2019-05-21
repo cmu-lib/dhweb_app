@@ -63,15 +63,16 @@
 When the user selects an author, fill in the most recent known information about that author.
 {% endcomment %}
 <script>
+  {% for form in authorships_form %}
   $(document).ready(function () {
-    var author_select = $("#id_form-0-author");
-    var aff_select = $("#id_form-0-affiliation");
-    var inst_select = $("#id_form-0-institution");
+    var author_select = $("#id_form-{{ forloop.counter0 }}-author");
+    var aff_select = $("#id_form-{{ forloop.counter0 }}-affiliation");
+    var inst_select = $("#id_form-{{ forloop.counter0 }}-institution");
 
     author_select.on("select2:select", function (e) {
       $.getJSON("/author-info-json/" + author_select.val(), function (data) {
-        $("#id_form-0-first_name").val(data.first_name);
-        $("#id_form-0-last_name").val(data.last_name);
+        $("#id_form-{{ forloop.counter0 }}-first_name").val(data.first_name);
+        $("#id_form-{{ forloop.counter0 }}-last_name").val(data.last_name);
         var affiliation_option = new Option(data.affiliation.name, data.affiliation.id, true, true);
         aff_select.append(affiliation_option).trigger('change');
         aff_select.trigger({
@@ -85,7 +86,7 @@ When the user selects an author, fill in the most recent known information about
 
     aff_select.on("select2:select", function (e) {
       $.getJSON("/affiliation-info-json/" + aff_select.val(), function (data) {
-        $("#id_form-0-department").val(data.department);
+        $("#id_form-{{ forloop.counter0 }}-department").val(data.department);
         var institution_option = new Option(data.institution.name, data.institution.id, true, true);
         inst_select.append(institution_option).trigger('change');
         inst_select.trigger({
@@ -97,5 +98,6 @@ When the user selects an author, fill in the most recent known information about
       });
     });
   });
+  {% endfor %}
 </script>
 {% endblock %}
