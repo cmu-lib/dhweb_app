@@ -1184,10 +1184,13 @@ class ConferenceList(LoginRequiredMixin, ListView):
 
 
 @login_required
+@transaction.atomic
 def ConferenceEdit(request, pk):
     conference = get_object_or_404(Conference, pk=pk)
     # populate the conference form, including pulling in the related organizers
-    form = ConferenceForm(instance=conference, initial={"organizers": conference.organizers.all()})
+    conference_dict = model_to_dict(conference)
+    conference_dict["organizers"] = conference.organizers.all()
+    form = ConferenceForm(initial=conference_dict)
     ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, can_delete=True, extra=0)
     initial_series = [
         {
@@ -1206,7 +1209,19 @@ def ConferenceEdit(request, pk):
     if request.method == "POST":
         form = ConferenceForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            clean_form = form.cleaned_data
+            conference.year = clean_form["year"]
+            conference.venue = clean_form["venue"]
+            conference.venue_abbreviation = clean_form["venue_abbreviation"]
+            conference.notes = clean_form["notes"]
+            conference.url = clean_form["url"]
+
+            # Clear existing relations and update according to the form
+            conference.organizers.clear()
+            for organizer in clean_form["organizers"]:
+                conference.organizers.add(organizer)
+
+            conference.save()
 
             series_forms = ConferenceSeriesFormSet(data=request.POST)
             if series_forms.is_valid():
