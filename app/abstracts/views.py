@@ -714,7 +714,7 @@ def WorkEditAuthorship(request, work_id):
             )
             if "start_new" in request.POST:
                 return redirect(
-                    "work_create", kwargs={"conference": work.conference.pk}
+                    f"{reverse('work_create')}?conference={work.conference.pk}"
                 )
 
             return redirect("work_detail", work_id=work.pk)
