@@ -395,9 +395,15 @@ class TagForm(forms.Form):
 
 
 class ConferenceForm(forms.ModelForm):
+    organizers = forms.ModelMultipleChoiceField(
+        queryset=Organizer.objects.all(),
+        required=False,
+        help_text="Organizers of the conference",
+    )
+
     class Meta:
         model = Conference
-        exclude = ["series"]
+        fields = ["year", "venue", "venue_abbreviation", "notes", "url", "organizers"]
 
 
 class ConferenceSeriesInline(forms.Form):

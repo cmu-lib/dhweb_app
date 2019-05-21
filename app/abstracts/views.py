@@ -1186,7 +1186,8 @@ class ConferenceList(LoginRequiredMixin, ListView):
 @login_required
 def ConferenceEdit(request, pk):
     conference = get_object_or_404(Conference, pk=pk)
-    form = ConferenceForm(initial=model_to_dict(conference))
+    # populate the conference form, including pulling in the related organizers
+    form = ConferenceForm(instance=conference, initial={"organizers": conference.organizers.all()})
     ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, can_delete=True, extra=0)
     initial_series = [
         {
