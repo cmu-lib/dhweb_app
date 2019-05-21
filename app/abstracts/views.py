@@ -647,7 +647,7 @@ def WorkEdit(request, work_id):
 def WorkEditAuthorship(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
     authorships = work.authorships.all()
-    AuthorshipWorkFormset = formset_factory(WorkAuthorshipForm, extra=5)
+    AuthorshipWorkFormset = formset_factory(WorkAuthorshipForm, can_delete=True, extra=0)
 
     initial_data = []
 
@@ -663,10 +663,10 @@ def WorkEditAuthorship(request, work_id):
 
         if authorship.affiliations.exists():
             first_affiliation = authorship.affiliations.first()
-            base_data["affiliation"]: first_affiliation
-            base_data["department"]: first_affiliation.department
-            base_data["institution"]: first_affiliation.institution
-            base_data["country"]: first_affiliation.institution.country
+            base_data["affiliation"] = first_affiliation
+            base_data["department"] = first_affiliation.department
+            base_data["institution"] = first_affiliation.institution
+            base_data["country"] = first_affiliation.institution.country
 
         initial_data.append(base_data)
 
