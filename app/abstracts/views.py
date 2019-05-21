@@ -1146,16 +1146,16 @@ def affiliation_multi_merge(request):
 @transaction.atomic
 def wipe_unused(request):
     deletion_dict = {
-        "Author": Author.objects.filter(authorships__isnull=True).distinct(),
-        "Affiliation": Affiliation.objects.filter(asserted_by__isnull=True).distinct(),
-        "Institution": Institution.objects.filter(
-            affiliations__asserted_by__isnull=True
+        "Author": Author.objects.exclude(authorships__isnull=False).distinct(),
+        "Affiliation": Affiliation.objects.exclude(asserted_by__isnull=False).distinct(),
+        "Institution": Institution.objects.exclude(
+            affiliations__asserted_by__isnull=False
         ).distinct(),
-        "Keyword": Keyword.objects.filter(works__isnull=True).distinct(),
-        "Topic": Topic.objects.filter(works__isnull=True).distinct(),
-        "Appellation": Appellation.objects.filter(asserted_by__isnull=True).distinct(),
-        "Series": ConferenceSeries.objects.filter(conferences__isnull=True).distinct(),
-        "Conferences": Conference.objects.filter(works__isnull=True).distinct(),
+        "Keyword": Keyword.objects.exclude(works__isnull=False).distinct(),
+        "Topic": Topic.objects.exclude(works__isnull=False).distinct(),
+        "Appellation": Appellation.objects.exclude(asserted_by__isnull=False).distinct(),
+        "Series": ConferenceSeries.objects.exclude(conferences__isnull=False).distinct(),
+        "Conferences": Conference.objects.exclude(works__isnull=False).distinct(),
     }
 
     if request.method == "POST":
