@@ -1208,23 +1208,25 @@ def ConferenceEdit(request, pk):
         if form.is_valid():
             form.save()
 
-            # Also check the series formset
-            ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, extra=0)
             series_forms = ConferenceSeriesFormSet(data=request.POST)
             if series_forms.is_valid():
-                for s_form in series_forms.forms:
-                    s_form_data = s_form.cleaned_data
-                    SeriesMembership.objects.update_or_create(
-                        conference=conference,
-                        series=s_form_data["series"],
-                        defaults={"number": s_form_data["number"],},
-                    )
+                # Delete memberships first
                 for d_form in series_forms.deleted_forms:
                     d_form_data = d_form.cleaned_data
                     SeriesMembership.objects.filter(
                         conference=conference,
-                        series=d_form_data["series"]
+                        series=d_form_data["series"],
+                        number=d_form_data["number"],
                     ).delete()
+                # Then update new ones
+                for s_form in series_forms.forms:
+                    if s_form not in series_forms.deleted_forms:
+                        s_form_data = s_form.cleaned_data
+                        SeriesMembership.objects.update_or_create(
+                            conference=conference,
+                            series=s_form_data["series"],
+                            defaults={"number": s_form_data["number"],},
+                        )
                 messages.success(request, f"Conference {conference} updated.")
                 return redirect("conference_edit", pk=conference.pk)
             else:
