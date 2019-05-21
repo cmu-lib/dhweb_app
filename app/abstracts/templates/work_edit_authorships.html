@@ -46,6 +46,7 @@
         </li>
         {% endfor %}
       </ul>
+      <input class="btn btn-primary" id="add_authorship" type="button" value="Add author">
       <div class="form-group my-4">
         <button name="submit" type="submit" class="btn btn-primary mb-2">Submit</button>
         <a class="btn btn-secondary mb-2" href="{% url 'work_detail' work.pk %}" role="button">Cancel</a>
@@ -64,7 +65,18 @@
 When the user selects an author, fill in the most recent known information about that author.
 {% endcomment %}
 <script>
-  {% for form in authorships_form %}
+
+  var author_count = {{ authorships_form.total_form_count }};
+
+  $("#add_authorship").click(function () {
+    author_count++;
+    var authorship_form = '{{ authorships_form.empty_form|crispy|escapejs }}'.replace(/__prefix__/g, author_count - 1);
+    $("#authorship_formset").append(authorship_form);
+    $("#id_form-" + author_count + "-authorship_order").val(author_count);
+    $("#id_form-TOTAL_FORMS").val(author_count);
+  })
+
+  {% for index in max_authors %}
   $(document).ready(function () {
     var author_select = $("#id_form-{{ forloop.counter0 }}-author");
     var aff_select = $("#id_form-{{ forloop.counter0 }}-affiliation");

@@ -722,7 +722,7 @@ def WorkEditAuthorship(request, work_id):
             for error in authorships_forms.errors:
                 messages.error(request, error)
 
-    context = {"authorships_form": authorships_forms, "work": work}
+    context = {"authorships_form": authorships_forms, "work": work, "max_authors": [1 for i in range(1, 30)]}
     return render(request, "work_edit_authorships.html", context)
 
 
