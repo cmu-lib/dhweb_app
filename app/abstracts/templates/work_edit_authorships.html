@@ -69,7 +69,7 @@ When the user selects an author, fill in the most recent known information about
     var author_select = $("#id_form-{{ forloop.counter0 }}-author");
     var aff_select = $("#id_form-{{ forloop.counter0 }}-affiliation");
     var inst_select = $("#id_form-{{ forloop.counter0 }}-institution");
-    var dept_field = $("#id_form-{{ forloop.counter0 }}-department")
+    var dept_field = $("#id_form-{{ forloop.counter0 }}-department");
 
     author_select.on("select2:select", function (e) {
       $.getJSON("/author-info-json/" + author_select.val(), function (data) {
@@ -78,7 +78,7 @@ When the user selects an author, fill in the most recent known information about
         var affiliation_option = new Option(data.affiliation.name, data.affiliation.id, true, true);
         aff_select.append(affiliation_option).trigger('change');
         aff_select.trigger({
-          type: 'select2:select',
+          type: "select2:select",
           params: {
             data: data
           }
