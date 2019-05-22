@@ -11,5 +11,5 @@
 <p class="mb-1 text-muted">{% firstof affs "No affiliation given" %}
   {% endwith %}
   {% if authorship.has_outdated_affiliations %}<span class="badge badge-warning" data-toggle="tooltip"
-    data-placement="top" title="{{ authorship.author.most_recent_affiliation }}">most recent affiliation is
+    data-placement="top" title="{{ authorship.author.most_recent_affiliation }}">most recent public affiliation is
     different</span></p>{% endif %}
