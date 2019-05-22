@@ -200,7 +200,9 @@ class Work(TextIndexedModel):
     )
     state = models.CharField(max_length=2, choices=WORK_STATE)
     full_text = models.TextField(max_length=50000, blank=True, null=False, default="")
-    full_text_type = models.CharField(max_length=3, choices=FT_TYPE, default="txt")
+    full_text_type = models.CharField(
+        max_length=3, choices=FT_TYPE, blank=True, null=False
+    )
     keywords = models.ManyToManyField(Keyword, related_name="works", blank=True)
     languages = models.ManyToManyField(Language, related_name="works", blank=True)
     disciplines = models.ManyToManyField(Discipline, related_name="works", blank=True)
