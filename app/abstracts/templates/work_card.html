@@ -1,24 +1,39 @@
 <div class="d-flex justify-content-between">
   <h6 class="mb-1 flex-grow-1">
-  <a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a></h6>
-  {% if user.is_authenticated %}<a class="btn btn-warning btn-sm" role="button" href="{% url 'work_edit' work.pk %}">Edit this work</a>{% endif %}
+    <a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a>
+  </h6>
+  {% if user.is_authenticated %}
+  {% if work.state == "su" %}
+  <span class="badge badge-warning">Submission</span>
+  {% endif %}
+  <a class="btn btn-primary btn-sm" role="button" href="{% url 'work_edit' work.pk %}">Edit this work</a>
+  {% endif %}
 </div>
-<small class="text-muted text-right mt-auto"><a href="{% url 'work_list' %}?work_type={{ work.work_type.pk }}">{{ work.work_type }}</a></small>
-<p>{% for authorship in work.authorships.all %}<a href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.appellation.first_name }} {{ authorship.appellation.last_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+<small class="text-muted text-right mt-auto"><a
+    href="{% url 'work_list' %}?work_type={{ work.work_type.pk }}">{{ work.work_type }}</a></small>
+<p>{% for authorship in work.authorships.all %}<a
+    href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.appellation.first_name }}
+    {{ authorship.appellation.last_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 
-{% if work.keywords.exists %}<p>Keywords: {% for kw in work.keywords.all %}<a class="badge badge-info" href="{% url 'work_list' %}?keyword={{ kw.pk }}">{{ kw }}</a>
-{% endfor %}</p>{% endif %}
+{% if work.keywords.exists %}<p>Keywords: {% for kw in work.keywords.all %}<a class="badge badge-info"
+    href="{% url 'work_list' %}?keyword={{ kw.pk }}">{{ kw }}</a>
+  {% endfor %}</p>{% endif %}
 
-{% if work.topics.exists %}<p>Topics: {% for t in work.topics.all %}<a class="badge badge-info" href="{% url 'work_list' %}?topic={{ t.pk }}">{{ t }}</a>
-{% endfor %}</p>{% endif %}
+{% if work.topics.exists %}<p>Topics: {% for t in work.topics.all %}<a class="badge badge-info"
+    href="{% url 'work_list' %}?topic={{ t.pk }}">{{ t }}</a>
+  {% endfor %}</p>{% endif %}
 
-{% if work.languages.exists %}<p>Languages: {% for l in work.languages.all %}<a class="badge badge-info" href="{% url 'work_list' %}?language={{ l.pk }}">{{ l }}</a>
-{% endfor %}</p>{% endif %}
+{% if work.languages.exists %}<p>Languages: {% for l in work.languages.all %}<a class="badge badge-info"
+    href="{% url 'work_list' %}?language={{ l.pk }}">{{ l }}</a>
+  {% endfor %}</p>{% endif %}
 
-{% if work.disciplines.exists %}<p>Disciplines: {% for d in work.disciplines.all %}<a class="badge badge-info" href="{% url 'work_list' %}?discipline={{ d.pk }}">{{ d }}</a>
-{% endfor %}</p>{% endif %}
+{% if work.disciplines.exists %}<p>Disciplines: {% for d in work.disciplines.all %}<a class="badge badge-info"
+    href="{% url 'work_list' %}?discipline={{ d.pk }}">{{ d }}</a>
+  {% endfor %}</p>{% endif %}
 
 <div class="d-flex justify-content-between">
-  <small class="text-muted">Presented at <a href="{% url 'work_list' %}?conference={{ work.conference.pk }}">{{ work.conference }}</a></small>
-  {% if work.full_text and user.is_authenticated %}<span class="badge badge-success">Full Text Available</span>{% endif %}
+  <small class="text-muted">Presented at <a
+      href="{% url 'work_list' %}?conference={{ work.conference.pk }}">{{ work.conference }}</a></small>
+  {% if work.full_text and user.is_authenticated %}<span class="badge badge-success">Full Text
+    Available</span>{% endif %}
 </div>

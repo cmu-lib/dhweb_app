@@ -370,10 +370,9 @@ def work_view(request, work_id):
 def author_view(request, author_id):
     author = get_object_or_404(Author, pk=author_id)
 
-    if (
-        not author.works.filter(state="ac").exists()
-        and not request.user.is_authenticated
-    ):
+    if request.user.is_authenticated:
+        obj_authorships = author.authorships.all()
+    elif not author.works.filter(state="ac".exists()):
         messages.error(
             request,
             f"Author ID {author.pk} isn't public yet. Please <a href='/admin/login'>log in</a> to continue.",
