@@ -4,7 +4,7 @@
   {% endif %}
   <a href=" {% url 'author_detail' authorship.author.pk %}">{{ forloop.counter }}. {{ authorship.appellation }}</a>
   {% if authorship.has_outdated_appellation %}<span class="badge badge-warning" data-toggle="tooltip"
-    data-placement="top" title="{{ authorship.author.most_recent_appellation }}">most recent name is
+    data-placement="top" title="{{ authorship.author.most_recent_appellation }}">most recent public name is
     different</span>{% endif %}
 </h6>
 {% with affs=authorship.affiliations.all|join:", " %}
