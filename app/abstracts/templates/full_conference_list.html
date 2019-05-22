@@ -14,8 +14,8 @@
     <a href="{% url 'work_create' %}?conference={{ conference.pk }}" role="button" class="btn btn-primary">New
       abstract</a>
     <p>Venue: <a href="{% url 'conference_edit' conference.pk %}">{{ conference.venue }}</a></p>
+    <p>Venue abbreviation: {{ conference.venue_abbreviation }}</p>
     <p>Year: {{ conference.year }}</p>
-    <p>Conference abbreviation: {{ conference.abbreviation }}</p>
     <p><a href="{% url 'full_work_list' %}?conference={{ conference.pk }}">Number of works:
         {{ conference.works.count }}</a></p>
     <p>Notes: {{ conference.notes }}</p>
