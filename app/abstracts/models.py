@@ -164,6 +164,14 @@ class WorkType(models.Model):
     def __str__(self):
         return self.title
 
+    def merge(self, target):
+        results = {}
+        affected_works = self.works.all()
+        results["update_results"] = affected_works.update(work_type=target)
+        self.delete()
+
+        return results
+
     class Meta:
         ordering = ["title"]
 
