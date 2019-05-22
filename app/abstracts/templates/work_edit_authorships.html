@@ -27,7 +27,7 @@
       {{ authorships_form.management_form }}
       <ul class="list-group list-group" id="authorship_formset">
         {% for form in authorships_form %}
-        <li class="list-group-item" id="authorship_{{ forloop.coutner0 }}">
+        <li class="list-group-item authorship_form" id="authorship_{{ forloop.counter0 }}">
           <h2>Author {{ form.authorship_order }}</h2>
           <p>{{ form.DELETE|as_crispy_field }}</p>
           <div class="row">
@@ -55,8 +55,6 @@
       </div>
     </form>
   </div>
-  <input class="btn btn-warning" id="add_alert" type="button" value="Add alert">
-
 </div>
 
 {% endblock %}
@@ -82,44 +80,47 @@ When the user selects an author, fill in the most recent known information about
     $("#id_form-TOTAL_FORMS").val(author_count);
   });
 
-  {% for index in max_authors %}
-  $(document).ready(function () {
-    var author_select = $("#id_form-{{ forloop.counter0 }}-author");
-    var aff_select = $("#id_form-{{ forloop.counter0 }}-affiliation");
-    var inst_select = $("#id_form-{{ forloop.counter0 }}-institution");
-    var dept_field = $("#id_form-{{ forloop.counter0 }}-department");
-
-    author_select.on("select2:select", function (e) {
-      $.getJSON("/author-info-json/" + author_select.val(), function (data) {
-        $("#id_form-{{ forloop.counter0 }}-first_name").val(data.first_name);
-        $("#id_form-{{ forloop.counter0 }}-last_name").val(data.last_name);
-        var affiliation_option = new Option(data.affiliation.name, data.affiliation.id, true, true);
-        aff_select.append(affiliation_option).trigger('change');
-        aff_select.trigger({
-          type: "select2:select",
-          params: {
-            data: data
-          }
-        });
+  $("#authorship_formset").on("select2:select", "select[id$='-author']", function () {
+    var parent_li = $(this).parents("li");
+    var fname_field = parent_li.find("input[id$='first_name']");
+    var lname_field = parent_li.find("input[id$='last_name']");
+    var aff_select = parent_li.find("select[id$='affiliation']");
+    $.getJSON("/author-info-json/" + $(this).val(), function (data) {
+      fname_field.val(data.first_name);
+      lname_field.val(data.last_name);
+      var affiliation_option = new Option(data.affiliation.name, data.affiliation.id, true, true);
+      aff_select.append(affiliation_option).trigger('change');
+      aff_select.trigger({
+        type: "select2:select",
+        params: {
+          data: data
+        }
       });
-    });
-
-    aff_select.on("select2:select", function (e) {
-      $.getJSON("/affiliation-info-json/" + aff_select.val(), function (data) {
-        dept_field.val(data.department);
-        var institution_option = new Option(data.institution.name, data.institution.id, true, true);
-        inst_select.append(institution_option).trigger('change');
-      });
-    });
-
-    inst_select.on("select2:select", function (e) {
-      aff_select.val(null).trigger("change");
-    });
-
-    dept_field.on("input", function (e) {
-      aff_select.val(null).trigger("change");
     });
   });
-  {% endfor %}
+
+  $("#authorship_formset").on("select2:select", "select[id$='-affiliation']", function () {
+    var parent_li = $(this).parents("li");
+    var dept_field = parent_li.find("input[id$='department']");
+    var inst_select = parent_li.find("select[id$='institution']");
+    $.getJSON("/affiliation-info-json/" + $(this).val(), function (data) {
+      dept_field.val(data.department);
+      var institution_option = new Option(data.institution.name, data.institution.id, true, true);
+      inst_select.append(institution_option).trigger('change');
+    });
+  });
+
+  $("#authorship_formset").on("select2:select", "select[id$='-institution']", function () {
+    var parent_li = $(this).parents("li");
+    var aff_select = parent_li.find("select[id$='affiliation']");
+    var dept_field = parent_li.find("input[id$='department']");
+    aff_select.val(null).trigger("change");
+  });
+
+  $("#authorship_formset").on("input", "input[id$='-department']", function () {
+    var parent_li = $(this).parents("li");
+    var aff_select = parent_li.find("select[id$='affiliation']");
+    aff_select.val(null).trigger("change");
+  });
 </script>
 {% endblock %}
