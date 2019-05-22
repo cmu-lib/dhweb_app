@@ -1175,12 +1175,12 @@ def wipe_unused(request):
 
 class ConferenceCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Conference
-    template_name = "generic_form.html"
+    template_name = "conference_edit.html"
+    form_class = ConferenceForm
     extra_context = {
         "form_title": "Create conference",
         "cancel_view": "full_conference_list",
     }
-    fields = ["year", "venue", "venue_abbreviation", "series", "notes", "url"]
     success_message = "Conference '%(year)s - %(venue)s' created"
 
 
