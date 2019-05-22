@@ -162,7 +162,7 @@ class WorkForm(forms.ModelForm):
         queryset=Work.objects.filter(state="ac"),
         required=False,
         widget=ModelSelect2(url="unrestricted-work-autocomplete"),
-        help_text='Abstracts with the state "submitted" may be associated with "accepted" abstracts, establishing a link that will be visible in the editing interface. Note: one accepted work may be associated with many submitted works, but a submitted work may only be associated with one final accepted work. TODO: do not show unaccepted works in select interface.',
+        help_text='Abstracts with the state "submitted" may be associated with "final" abstracts, establishing a link that will be visible in the editing interface. Note: one final work may be associated with many submitted works, but a submitted work may only be associated with one final final work. TODO: do not show unfinal works in select interface.',
     )
 
     conference = forms.ModelChoiceField(
@@ -180,7 +180,7 @@ class WorkForm(forms.ModelForm):
     state = forms.ChoiceField(
         choices=Work.WORK_STATE,
         widget=forms.RadioSelect,
-        help_text='Abstracts may be either "Accepted" or "Submitted". Abstracts that aren\'t marked "Accepted" will not display to public viewers, and none of the names or affiliations asserted by those abstracts will be listed publicly in author profiles.',
+        help_text='Abstracts may be either "final" or "Submitted". Abstracts that aren\'t marked "final" will not display to public viewers, and none of the names or affiliations asserted by those abstracts will be listed publicly in author profiles.',
     )
 
     full_text_license = forms.ModelChoiceField(

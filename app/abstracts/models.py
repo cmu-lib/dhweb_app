@@ -179,7 +179,7 @@ class License(models.Model):
 
 
 class Work(TextIndexedModel):
-    WORK_STATE = (("ac", "accpeted"), ("su", "submission"))
+    WORK_STATE = (("ac", "final"), ("su", "submission"))
 
     FT_TYPE = (("xml", "XML"), ("txt", "plain text"))
 
