@@ -94,7 +94,7 @@ class WorkAuthorshipForm(forms.Form):
         help_text="If the author currently exists, select them to auto-populate the fields below. Any edits to the details below will be stored as new assertions about this author.",
     )
     authorship_order = forms.IntegerField(
-        min_value=0,
+        min_value=1,
         help_text="Authorship order must be unique across all the authorships of this work.",
     )
     first_name = forms.CharField(
