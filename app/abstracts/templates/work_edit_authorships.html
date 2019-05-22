@@ -88,14 +88,20 @@ When the user selects an author, fill in the most recent known information about
     $.getJSON("/author-info-json/" + $(this).val(), function (data) {
       fname_field.val(data.first_name);
       lname_field.val(data.last_name);
-      var affiliation_option = new Option(data.affiliation.name, data.affiliation.id, true, true);
-      aff_select.append(affiliation_option).trigger('change');
-      aff_select.trigger({
-        type: "select2:select",
-        params: {
-          data: data
-        }
-      });
+      // If author has no preferred affiliation, then blank out the affiliation field
+      if (typeof data.affiliation == "undefined") {
+        aff_select.val(null).trigger('select2:unselect').trigger('change');
+        // aff_select.trigger('select2:unselect');
+      } else {
+        var affiliation_option = new Option(data.affiliation.name, data.affiliation.id, true, true);
+        aff_select.append(affiliation_option).trigger('change');
+        aff_select.trigger({
+          type: "select2:select",
+          params: {
+            data: data
+          }
+        });
+      }
     });
   });
 
@@ -103,11 +109,21 @@ When the user selects an author, fill in the most recent known information about
     var parent_li = $(this).parents("li");
     var dept_field = parent_li.find("input[id$='department']");
     var inst_select = parent_li.find("select[id$='institution']");
-    $.getJSON("/affiliation-info-json/" + $(this).val(), function (data) {
-      dept_field.val(data.department);
-      var institution_option = new Option(data.institution.name, data.institution.id, true, true);
-      inst_select.append(institution_option).trigger('change');
-    });
+    if ($(this).val() != "") {
+      $.getJSON("/affiliation-info-json/" + $(this).val(), function (data) {
+        dept_field.val(data.department);
+        var institution_option = new Option(data.institution.name, data.institution.id, true, true);
+        inst_select.append(institution_option).trigger('change');
+      });
+    }
+  });
+
+  $("#authorship_formset").on("select2:unselect", "select[id$='-affiliation']", function () {
+    var parent_li = $(this).parents("li");
+    var dept_field = parent_li.find("input[id$='department']");
+    var inst_select = parent_li.find("select[id$='institution']");
+    dept_field.val(null);
+    inst_select.val(null).trigger('change');
   });
 
   $("#authorship_formset").on("select2:select", "select[id$='-institution']", function () {
