@@ -14,7 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from dal.autocomplete import Select2QuerySetView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.forms.models import model_to_dict
 from django.forms import formset_factory, inlineformset_factory, modelformset_factory
 
@@ -372,7 +372,7 @@ def author_view(request, author_id):
 
     if request.user.is_authenticated:
         obj_authorships = author.authorships.all()
-    elif not author.works.filter(state="ac".exists()):
+    elif not author.works.filter(state="ac").exists():
         messages.error(
             request,
             f"Author ID {author.pk} isn't public yet. Please <a href='/admin/login'>log in</a> to continue.",
@@ -696,14 +696,18 @@ def WorkEditAuthorship(request, work_id):
 
                     authorship_order = aform_data["authorship_order"]
 
-                    auth = Authorship.objects.update_or_create(
-                        work=work,
-                        author=aform_data["author"],
-                        defaults={
-                            "authorship_order": authorship_order,
-                            "appellation": appellation,
-                        },
-                    )[0]
+                    try:
+                        auth = Authorship.objects.update_or_create(
+                            work=work,
+                            author=aform_data["author"],
+                            defaults={
+                                "authorship_order": authorship_order,
+                                "appellation": appellation,
+                            },
+                        )[0]
+                    except IntegrityError as e:
+                        messages.error(request, "Ensure authorship order numbers are unique")
+                        return redirect("work_edit_authorship", work.pk)
 
                     auth.affiliations.clear()
                     if affiliation is not None:
@@ -725,7 +729,7 @@ def WorkEditAuthorship(request, work_id):
             for error in authorships_forms.errors:
                 messages.error(request, error)
 
-    context = {"authorships_form": authorships_forms, "work": work, "max_authors": [1 for i in range(1, 30)]}
+    context = {"authorships_form": authorships_forms, "work": work}
     return render(request, "work_edit_authorships.html", context)
 
 
