@@ -1147,3 +1147,121 @@ class DisciplineMergeViewTest(TestCase):
         expected_redirect = reverse("discipline_merge", kwargs={"discipline_id": 1})
         self.assertRedirects(res, expected_redirect)
         self.assertContains(res, "You cannot merge a discipline into itself")
+
+class WorkTypeFullListViewTest(TestCase):
+    """
+    Test full WorkType list page
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "full_work_type_list")
+
+    @as_auth
+    def test_query_filtered_count(self):
+        res = self.client.get(reverse("full_work_type_list"))
+        self.assertEqual(
+            res.context["filtered_tags_count"], len(res.context["tag_list"])
+        )
+
+    @as_auth
+    def test_query_total_count(self):
+        res = self.client.get(reverse("full_work_type_list"))
+        self.assertIsInstance(res.context["available_tags_count"], int)
+
+    @as_auth
+    def test_unique(self):
+        res = self.client.get(reverse("full_work_type_list"))
+        self.assertTrue(is_list_unique(res.context["tag_list"]))
+
+    @as_auth
+    def test_sort(self):
+        res = self.client.get(reverse("full_work_type_list"), data={"ordering": "a"})
+        self.assertTrue(res.context["tag_list"].ordered)
+        res = self.client.get(reverse("full_work_type_list"), data={"ordering": "n_dsc"})
+        self.assertTrue(res.context["tag_list"].ordered)
+        res = self.client.get(reverse("full_work_type_list"), data={"ordering": "n_asc"})
+        self.assertTrue(res.context["tag_list"].ordered)
+
+
+class CreateWorkTypeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "work_type_create")
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("work_type_create"), data={"title": "foo"}, follow=True
+        )
+        self.assertContains(res, "created")
+        self.assertTrue(WorkType.objects.filter(title="foo").exists())
+
+
+class EditWorkTypeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "work_type_edit", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("work_type_edit", kwargs={"pk": 1}),
+            data={"title": "buzz"},
+            follow=True,
+        )
+        self.assertContains(res, "updated")
+        self.assertTrue(WorkType.objects.filter(title="buzz").exists())
+
+
+class DeleteWorkTypeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "work_type_delete", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(reverse("work_type_delete", kwargs={"pk": 1}), follow=True)
+        self.assertFalse(WorkType.objects.filter(pk=1).exists())
+
+
+class WorkTypeMergeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "work_type_merge", kwargs={"work_type_id": 1})
+
+    @as_auth
+    def test_404(self):
+        res = self.client.get(
+            reverse("work_type_merge", kwargs={"work_type_id": 100}), follow=True
+        )
+        self.assertEqual(res.status_code, 404)
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("work_type_merge", kwargs={"work_type_id": 1}),
+            data={"into": 2},
+            follow=True,
+        )
+        expected_redirect = reverse("work_type_edit", kwargs={"pk": 2})
+        self.assertRedirects(res, expected_redirect)
+        self.assertFalse(WorkType.objects.filter(pk=1).exists())
+        self.assertContains(res, "updated")
+        self.assertContains(res, "deleted")
+
+    @as_auth
+    def test_invalid_work_type(self):
+        res = self.client.post(
+            reverse("work_type_merge", kwargs={"work_type_id": 1}),
+            data={"into": 1},
+            follow=True,
+        )
+        expected_redirect = reverse("work_type_merge", kwargs={"work_type_id": 1})
+        self.assertRedirects(res, expected_redirect)
+        self.assertContains(res, "You cannot merge a work_type into itself")
