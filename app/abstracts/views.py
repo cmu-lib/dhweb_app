@@ -381,59 +381,59 @@ def author_view(request, author_id):
     else:
         obj_authorships = author.public_authorships
 
-        public_works = (
-            Work.objects.filter(authorships__in=obj_authorships)
-            .distinct()
-            .order_by("-conference__year")
-        )
+    public_works = (
+        Work.objects.filter(authorships__in=obj_authorships)
+        .distinct()
+        .order_by("-conference__year")
+    )
 
-        split_works = [
-            {"series": c, "works": public_works.filter(conference__series=c).distinct()}
-            for c in ConferenceSeries.objects.filter(
-                conferences__works__in=public_works
-            ).distinct()
-        ]
+    split_works = [
+        {"series": c, "works": public_works.filter(conference__series=c).distinct()}
+        for c in ConferenceSeries.objects.filter(
+            conferences__works__in=public_works
+        ).distinct()
+    ]
 
-        appellation_assertions = [
-            {
-                "appellation": a,
-                "works": public_works.filter(
-                    authorships__in=obj_authorships.filter(appellation=a)
-                ),
-            }
-            for a in Appellation.objects.filter(asserted_by__in=obj_authorships)
-            .distinct()
-            .order_by("last_name")
-        ]
-
-        all_affiliations = Affiliation.objects.filter(asserted_by__in=obj_authorships)
-
-        affiliation_assertions = [
-            {
-                "institution": i,
-                "departments": all_affiliations.filter(institution=i)
-                .values_list("department", flat=True)
-                .distinct(),
-                "works": Work.objects.filter(
-                    authorships__in=obj_authorships.filter(affiliations__institution=i)
-                ).distinct(),
-            }
-            for i in Institution.objects.filter(
-                affiliations__in=all_affiliations
-            ).distinct()
-        ]
-
-        author_admin_page = reverse("admin:abstracts_author_change", args=(author.pk,))
-
-        context = {
-            "author": author,
-            "split_works": split_works,
-            "appellation_assertions": appellation_assertions,
-            "affiliation_assertions": affiliation_assertions,
-            "author_admin_page": author_admin_page,
+    appellation_assertions = [
+        {
+            "appellation": a,
+            "works": public_works.filter(
+                authorships__in=obj_authorships.filter(appellation=a)
+            ),
         }
+        for a in Appellation.objects.filter(asserted_by__in=obj_authorships)
+        .distinct()
+        .order_by("last_name")
+    ]
 
-        return render(request, "author_detail.html", context)
+    all_affiliations = Affiliation.objects.filter(asserted_by__in=obj_authorships)
+
+    affiliation_assertions = [
+        {
+            "institution": i,
+            "departments": all_affiliations.filter(institution=i)
+            .values_list("department", flat=True)
+            .distinct(),
+            "works": Work.objects.filter(
+                authorships__in=obj_authorships.filter(affiliations__institution=i)
+            ).distinct(),
+        }
+        for i in Institution.objects.filter(
+            affiliations__in=all_affiliations
+        ).distinct()
+    ]
+
+    author_admin_page = reverse("admin:abstracts_author_change", args=(author.pk,))
+
+    context = {
+        "author": author,
+        "split_works": split_works,
+        "appellation_assertions": appellation_assertions,
+        "affiliation_assertions": affiliation_assertions,
+        "author_admin_page": author_admin_page,
+    }
+
+    return render(request, "author_detail.html", context)
 
 
 class PublicAuthorList(ListView):
@@ -685,13 +685,12 @@ def WorkEditAuthorship(request, work_id):
                         last_name=aform_data["last_name"],
                     )[0]
 
+                    affiliation = None
                     if aform_data["affiliation"] is not None:
                         affiliation = aform_data["affiliation"]
                     else:
-                        affiliation = Affiliation.objects.get_or_create(
-                            department=aform_data["department"],
-                            institution=aform_data["institution"],
-                        )[0]
+                        if aform_data["department"] is not None and aform_data["institution"] is not None:
+                            affiliation = Affiliation.objects.get_or_create(department=aform_data["department"],institution=aform_data["institution"],)[0]
 
                     genders = aform_data["genders"]
 
@@ -706,8 +705,13 @@ def WorkEditAuthorship(request, work_id):
                         },
                     )[0]
 
-                    auth.affiliations.set([affiliation])
-                    auth.genders.set(genders)
+                    auth.affiliations.clear()
+                    if affiliation is not None:
+                        auth.affiliations.set([affiliation])
+
+                    auth.genders.clear()
+                    if genders is not None:
+                        auth.genders.set(genders)
             messages.success(
                 request, f'"{work.title}" authorships sucessfully updated.'
             )
