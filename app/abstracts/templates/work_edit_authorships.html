@@ -72,11 +72,18 @@ When the user selects an author, fill in the most recent known information about
     author_count++;
 
     var newformid = "authorship_" + author_count;
-    var newform = '<li class="list-group-item" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order }}</h2> <div class="row"> <div class="col"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col"> {{ authorships_form.empty_form.affiliation | as_crispy_field |escapejs}} {{ authorships_form.empty_form.department | as_crispy_field|escapejs }} {{ authorships_form.empty_form.institution | as_crispy_field|escapejs }} {{ authorships_form.empty_form.genders | as_crispy_field |escapejs}} </div> </div> </li>'.replace(/__prefix__/g, author_count - 1);
+    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order }} <input type="button" class="btn btn-danger" id="remove-authorship-' + newformid + '" value="Remove authorship"></h2> <div class="row"> <div class="col"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col"> {{ authorships_form.empty_form.affiliation | as_crispy_field |escapejs}} {{ authorships_form.empty_form.department | as_crispy_field|escapejs }} {{ authorships_form.empty_form.institution | as_crispy_field|escapejs }} {{ authorships_form.empty_form.genders | as_crispy_field |escapejs}} </div> </div> </li>'.replace(/__prefix__/g, author_count - 1);
 
     $("#authorship_formset").append(newform);
 
     $("#id_form-" + (author_count - 1) + "-authorship_order").val(author_count);
+    $("#id_form-TOTAL_FORMS").val(author_count);
+  });
+
+  $("#authorship_formset").on("click", "input[id^='remove-authorship']", function () {
+    var parentform = $(this).parents(".authorship_form");
+    parentform.remove();
+    author_count--;
     $("#id_form-TOTAL_FORMS").val(author_count);
   });
 
