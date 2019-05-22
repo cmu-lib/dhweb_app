@@ -379,6 +379,14 @@ class DisciplineMergeForm(forms.Form):
     )
 
 
+class WorkTypeMergeForm(forms.Form):
+    into = forms.ModelChoiceField(
+        queryset=WorkType.objects.all(),
+        required=True,
+        help_text="Select the type that will be used to replace the one you are deleting.",
+    )
+
+
 class TagForm(forms.Form):
     name = forms.CharField(
         max_length=100, required=False, help_text="Search by tag name"

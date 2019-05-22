@@ -285,4 +285,25 @@ urlpatterns = [
         views.discipline_merge,
         name="discipline_merge",
     ),
+    path("editor/work_types", views.WorkTypeList.as_view(), name="full_work_type_list"),
+    path(
+        "editor/work_types/create",
+        views.WorkTypeCreate.as_view(),
+        name="work_type_create",
+    ),
+    path(
+        "editor/work_types/<int:pk>/delete",
+        views.WorkTypeDelete.as_view(),
+        name="work_type_delete",
+    ),
+    path(
+        "editor/work_types/<int:pk>/edit",
+        views.WorkTypeEdit.as_view(),
+        name="work_type_edit",
+    ),
+    path(
+        "editor/work_types/<int:work_type_id>/merge",
+        views.work_type_merge,
+        name="work_type_merge",
+    ),
 ]

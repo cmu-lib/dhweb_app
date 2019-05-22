@@ -21,6 +21,7 @@ from django.forms import formset_factory, inlineformset_factory, modelformset_fa
 
 from .models import (
     Work,
+    WorkType,
     Author,
     Conference,
     Institution,
@@ -60,6 +61,7 @@ from .forms import (
     ConferenceSeriesInline,
     LanguageMergeForm,
     DisciplineMergeForm,
+    WorkTypeMergeForm,
 )
 
 
@@ -1913,6 +1915,137 @@ def discipline_merge(request, discipline_id):
                     request, f"{merge_results['update_results']} disciplines updated"
                 )
                 return redirect("discipline_edit", pk=target_discipline.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+            return render(request, "tag_merge.html", context)
+
+class WorkTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = WorkType
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Create work_type", "cancel_view": "full_work_type_list"}
+    fields = ["title"]
+    success_message = "Abstract type '%(title)s' created"
+    success_url = reverse_lazy("full_work_type_list")
+
+
+class WorkTypeDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = WorkType
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Delete work_type", "cancel_view": "full_work_type_list"}
+    success_message = "Abstract type '%(title)s' deleted"
+    success_url = reverse_lazy("full_work_type_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(WorkTypeDelete, self).delete(request, *args, **kwargs)
+
+
+class WorkTypeEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = WorkType
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Update abstract type",
+        "cancel_view": "full_work_type_list",
+        "merge_view": "work_type_merge",
+        "delete_view": "work_type_delete",
+    }
+    fields = ["title"]
+    success_message = "Abstract '%(title)s' updated"
+    success_url = reverse_lazy("full_work_type_list")
+
+
+class WorkTypeList(LoginRequiredMixin, ListView):
+    model = WorkType
+    template_name = "tag_list.html"
+    context_object_name = "tag_list"
+    extra_context = {
+        "tag_category": "Abstract Types",
+        "tag_edit_view": "work_type_edit",
+        "tag_create_view": "work_type_create",
+        "tag_filter_form": TagForm,
+        "tag_list_view": "full_work_type_list",
+    }
+
+    def get_queryset(self):
+        base_results_set = WorkType.objects.order_by("title")
+        results_set = base_results_set.annotate(n_works=Count("works"))
+
+        raw_filter_form = TagForm(self.request.GET)
+        if raw_filter_form.is_valid():
+            filter_form = raw_filter_form.cleaned_data
+
+            if filter_form["name"] != "":
+                results_set = results_set.filter(title__icontains=filter_form["name"])
+
+            if filter_form["ordering"] == "a":
+                results_set = results_set.order_by("title")
+            elif filter_form["ordering"] == "n_asc":
+                results_set = results_set.order_by("n_works")
+            elif filter_form["ordering"] == "n_dsc":
+                results_set = results_set.order_by("-n_works")
+
+        return results_set
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filtered_tags_count"] = self.get_queryset().count()
+        context["available_tags_count"] = WorkType.objects.count()
+        return context
+
+
+@login_required
+@transaction.atomic
+def work_type_merge(request, work_type_id):
+    work_type = get_object_or_404(WorkType, pk=work_type_id)
+    affected_elements = work_type.works.all()
+    count_elements = affected_elements.count() - 10
+    sample_elements = affected_elements[:10]
+    context = {
+        "merging": work_type,
+        "tag_merge_form": WorkTypeMergeForm,
+        "tag_category": "Abstract Type",
+        "merge_view": "work_type_merge",
+        "sample_elements": sample_elements,
+        "count_elements": count_elements,
+    }
+
+    if request.method == "GET":
+        """
+        Initial load of the merge form displays all the authors and works associated with this work_type.
+        """
+        return render(request, "tag_merge.html", context)
+
+    elif request.method == "POST":
+        """
+        Posting the new author id causes all of the old author's authorships to be reassigned.
+        """
+
+        raw_form = WorkTypeMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_work_type = raw_form.cleaned_data["into"]
+
+            if work_type == target_work_type:
+                """
+                If the user chooses the existing work_type, don't merge, but instead error out.
+                """
+                messages.error(
+                    request,
+                    f"You cannot merge a work_type into itself. Please select a different work_type.",
+                )
+                return redirect("work_type_merge", work_type_id=work_type_id)
+            else:
+                old_work_type_id = str(work_type)
+                merge_results = work_type.merge(target_work_type)
+
+                messages.success(
+                    request,
+                    f"WorkType {old_work_type_id} has been merged into {target_work_type}, and the old work_type entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} work_types updated"
+                )
+                return redirect("work_type_edit", pk=target_work_type.pk)
         else:
             for error in raw_form.errors:
                 messages.error(request, error)
