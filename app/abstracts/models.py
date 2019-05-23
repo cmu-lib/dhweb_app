@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.db.models import Max
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib.sites.models import Site
@@ -189,7 +190,7 @@ class License(models.Model):
 class Work(TextIndexedModel):
     WORK_STATE = (("ac", "final"), ("su", "submission"))
 
-    FT_TYPE = (("xml", "XML"), ("txt", "plain text"))
+    FT_TYPE = (("", "-----------"), ("xml", "XML"), ("txt", "plain text"))
 
     conference = models.ForeignKey(
         Conference, on_delete=models.CASCADE, related_name="works"
@@ -201,7 +202,7 @@ class Work(TextIndexedModel):
     state = models.CharField(max_length=2, choices=WORK_STATE)
     full_text = models.TextField(max_length=50000, blank=True, null=False, default="")
     full_text_type = models.CharField(
-        max_length=3, choices=FT_TYPE, blank=True, null=False
+        max_length=3, choices=FT_TYPE, blank=True, null=False, default=""
     )
     keywords = models.ManyToManyField(Keyword, related_name="works", blank=True)
     languages = models.ManyToManyField(Language, related_name="works", blank=True)

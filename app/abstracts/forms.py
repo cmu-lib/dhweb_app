@@ -191,9 +191,9 @@ class WorkForm(forms.ModelForm):
 
     full_text_type = forms.ChoiceField(
         choices=Work.FT_TYPE,
-        widget=forms.RadioSelect,
         initial="txt",
         help_text="Currently text can either be plain text, or entered as XML which will then be rendered into HTML.",
+        required=False,
     )
 
     class Meta:
@@ -211,6 +211,28 @@ class WorkForm(forms.ModelForm):
             "disciplines",
             "topics",
         ]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        full_text = cleaned_data.get("full_text")
+        full_text_type = cleaned_data.get("full_text_type")
+        licence_type = cleaned_data.get("full_text_license")
+        if full_text != "" and full_text_type == "":
+            self.add_error(
+                "full_text_type",
+                "When full text is present, you must select a text type.",
+            )
+        if full_text == "" and full_text_type != "":
+            self.add_error(
+                "full_text",
+                "When there is no full text, you may not select a text type.",
+            )
+
+        if full_text == "" and licence_type is not None:
+            self.add_error(
+                "full_text",
+                "When there is no full text, you may not select a license type.",
+            )
 
 
 class AuthorFilter(forms.Form):

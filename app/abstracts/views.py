@@ -628,19 +628,19 @@ def WorkCreate(request):
 def WorkEdit(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
 
-    if request.method == "GET":
-        work_initial_data = model_to_dict(work)
-        context = {"work_form": WorkForm(initial=work_initial_data), "work": work}
-        return render(request, "work_edit.html", context)
-    elif request.method == "POST":
+    if request.method == "POST":
         work_form = WorkForm(request.POST, instance=work)
         if work_form.is_valid():
             work_form.save()
             messages.success(request, f'"{work.title}" sucessfully updated.')
             return redirect("work_detail", work_id=work.pk)
         else:
-            messages.error(request, "This form is invalid.")
-            return redirect("work_edit", work_id=work_id)
+            for f, e in work_form.errors.items():
+                messages.error(request, f"{f}: {e}")
+
+    work_initial_data = model_to_dict(work)
+    context = {"work_form": WorkForm(initial=work_initial_data), "work": work}
+    return render(request, "work_edit.html", context)
 
 
 @login_required
