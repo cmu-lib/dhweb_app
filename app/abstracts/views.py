@@ -1113,6 +1113,14 @@ class AffiliationCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "%(department)s created"
     success_url = reverse_lazy("full_institution_list")
 
+    def get_initial(self, **kwargs):
+        super().get_initial(**kwargs)
+
+        if "institution" in self.request.GET:
+            self.initial = {"institution": int(self.request.GET["institution"])}
+
+        return self.initial
+
 
 @login_required
 @transaction.atomic
