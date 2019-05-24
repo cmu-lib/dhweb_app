@@ -353,6 +353,11 @@ class FullInstitutionForm(forms.Form):
         required=False,
         help_text="Show institutions with at least one affiliation that does not specifiy a department?",
     )
+    affiliation = forms.ModelChoiceField(
+        queryset=Affiliation.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+    )
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
         required=False,

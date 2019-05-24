@@ -949,6 +949,10 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
                         affiliations__department__icontains=department_res
                     )
 
+                affiliation_res = filter_form["affiliation"]
+                if affiliation_res is not None:
+                    result_set = result_set.filter(affiliations=affiliation_res)
+
                 institution_res = filter_form["institution"]
                 if institution_res is not None:
                     result_set = result_set.filter(pk=institution_res.pk)
