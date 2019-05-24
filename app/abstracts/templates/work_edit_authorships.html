@@ -74,7 +74,7 @@ When the user selects an author, fill in the most recent known information about
     author_count++;
 
     var newformid = "authorship_" + author_count;
-    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <input type="button" class="btn btn-danger" id="remove-authorship-' + newformid + '" value="Remove authorship"></h2> <div class="row"> <div class="col"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col"> {{ authorships_form.empty_form.affiliation | as_crispy_field |escapejs}} {{ authorships_form.empty_form.department | as_crispy_field|escapejs }} {{ authorships_form.empty_form.institution | as_crispy_field|escapejs }} {{ authorships_form.empty_form.genders | as_crispy_field |escapejs}} </div> </div> </li>';
+    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <input type="button" class="btn btn-danger" id="remove-authorship-' + newformid + '" value="Remove authorship"></h2> <div class="row"> <div class="col"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col"> {{ authorships_form.empty_form.affiliation | as_crispy_field |escapejs}} {{ authorships_form.empty_form.department | as_crispy_field|escapejs }} {{ authorships_form.empty_form.institution | as_crispy_field|escapejs }} <a href="{% url 'institution_create' %}" class="btn btn-primary btn-small mx-2" role="button" target = "_blank">Create new institution</a>{{ authorships_form.empty_form.genders | as_crispy_field |escapejs}} </div> </div> </li>';
     newform = newform.replace(/__prefix__/g, author_count - 1);
 
     $("#authorship_formset").append(newform);
@@ -111,6 +111,15 @@ When the user selects an author, fill in the most recent known information about
             data: data
           }
         });
+
+        parent_li.find(".author_card").remove();
+        acard = '<div class="card author_card my-2"><div class="card-header">' + data.first_name + ' ' + data.last_name + '</div><div class="card-body"><p>Selected Works (' + data.works_count + ' total): ' + data.work_titles.join(", ") + "</p>";
+        if (typeof data.affiliation != "undefined") {
+          acard = acard + "<p>Affiliation: " + data.affiliation.name + "</p>";
+        }
+        acard = acard + "</div></div >";
+        before_name = parent_li.find(".form-group[id$='first_name']")
+        before_name.before(acard);
       }
     });
   });

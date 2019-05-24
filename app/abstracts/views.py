@@ -743,6 +743,8 @@ def AuthorInfoJSON(request, author_id):
         author_dict = {
             "first_name": author.most_recent_appellation.first_name,
             "last_name": author.most_recent_appellation.last_name,
+            "work_titles": [w.title for w in author.works.all()][:4],
+            "works_count": author.works.count(),
         }
         if author_aff is not None:
             author_dict["affiliation"] = {"name": str(author_aff), "id": author_aff.pk}
@@ -934,27 +936,27 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
         result_set = base_result_set
 
         if self.request.GET:
-        raw_filter_form = FullInstitutionForm(self.request.GET)
-        if raw_filter_form.is_valid():
-            filter_form = raw_filter_form.cleaned_data
+            raw_filter_form = FullInstitutionForm(self.request.GET)
+            if raw_filter_form.is_valid():
+                filter_form = raw_filter_form.cleaned_data
 
 
-            department_res = filter_form["department"]
-            if department_res != "":
-                result_set = result_set.filter(
-                    affiliations__department__icontains=department_res
-                )
+                department_res = filter_form["department"]
+                if department_res != "":
+                    result_set = result_set.filter(
+                        affiliations__department__icontains=department_res
+                    )
 
-            institution_res = filter_form["institution"]
-            if institution_res is not None:
-                result_set = result_set.filter(pk=institution_res.pk)
+                institution_res = filter_form["institution"]
+                if institution_res is not None:
+                    result_set = result_set.filter(pk=institution_res.pk)
 
-            country_res = filter_form["country"]
-            if country_res is not None:
-                result_set = result_set.filter(country=country_res)
+                country_res = filter_form["country"]
+                if country_res is not None:
+                    result_set = result_set.filter(country=country_res)
 
-            if filter_form["no_department"]:
-                result_set = result_set.filter(affiliations__department="")
+                if filter_form["no_department"]:
+                    result_set = result_set.filter(affiliations__department="")
 
                 if filter_form["ordering"] == "n_dsc":
                     result_set = result_set.order_by("-n_works")
@@ -962,10 +964,10 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
                     result_set = result_set.order_by("n_works")
                 elif filter_form["ordering"] == "a":
                     result_set = result_set.order_by("affiliations__institution__name")
-        else:
+            else:
                 for f, e in raw_filter_form.errors.items():
                     messages.error(self.request, f"{f}: {e}")
-            result_set = base_result_set
+                result_set = base_result_set
         else:
             # Otherwise default to sorting by n_dsc
             result_set = result_set.order_by("-n_works")
@@ -1415,28 +1417,31 @@ class KeywordList(LoginRequiredMixin, ListView):
         base_results_set = Keyword.objects.order_by("title")
         results_set = base_results_set.annotate(n_works=Count("works"))
 
-        raw_filter_form = TagForm(self.request.GET)
-        if raw_filter_form.is_valid():
-            filter_form = raw_filter_form.cleaned_data
+        if self.request.GET:
+            raw_filter_form = TagForm(self.request.GET)
+            if raw_filter_form.is_valid():
+                filter_form = raw_filter_form.cleaned_data
 
-            if filter_form["name"] != "":
-                results_set = results_set.filter(title__icontains=filter_form["name"])
+                if filter_form["name"] != "":
+                    results_set = results_set.filter(title__icontains=filter_form["name"])
 
-            if filter_form["ordering"] == "a":
-                results_set = results_set.order_by("title")
-            elif filter_form["ordering"] == "n_asc":
-                results_set = results_set.order_by("n_works")
-            elif filter_form["ordering"] == "n_dsc":
-                results_set = results_set.order_by("-n_works")
+                if filter_form["ordering"] == "a":
+                    results_set = results_set.order_by("title")
+                elif filter_form["ordering"] == "n_asc":
+                    results_set = results_set.order_by("n_works")
+                elif filter_form["ordering"] == "n_dsc":
+                    results_set = results_set.order_by("-n_works")
+            else:
+                for f, e in raw_filter_form.errors.items():
+                    messages.error(self.request, f"{f}: {e}")
+        else:
+            results_set = results_set.order_by("title")
 
         return results_set
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if "ordering" in self.request.GET:
-            context["tag_filter_form"] = TagForm(data=self.request.GET)
-        else:
-            context["tag_filter_form"] = TagForm(initial={"ordering": "a"})
+        context["tag_filter_form"] = TagForm(initial=self.request.GET)
         context["filtered_tags_count"] = self.get_queryset().count()
         context["available_tags_count"] = Keyword.objects.count()
         return context
