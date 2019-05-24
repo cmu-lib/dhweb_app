@@ -929,11 +929,15 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        base_result_set = Institution.objects.all()
+        base_result_set = Institution.objects.annotate(
+            n_works=Count("affiliations__asserted_by__work")).distinct()
+        result_set = base_result_set
+
+        if self.request.GET:
         raw_filter_form = FullInstitutionForm(self.request.GET)
         if raw_filter_form.is_valid():
             filter_form = raw_filter_form.cleaned_data
-            result_set = base_result_set
+
 
             department_res = filter_form["department"]
             if department_res != "":
@@ -952,21 +956,25 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
             if filter_form["no_department"]:
                 result_set = result_set.filter(affiliations__department="")
 
-            result_set = result_set.distinct()
+                if filter_form["ordering"] == "n_dsc":
+                    result_set = result_set.order_by("-n_works")
+                elif filter_form["ordering"] == "n_asc":
+                    result_set = result_set.order_by("n_works")
+                elif filter_form["ordering"] == "a":
+                    result_set = result_set.order_by("affiliations__institution__name")
         else:
-            messages.warning(
-                self.request,
-                "Query parameters not recognized. Check your URL and try again.",
-            )
+                for f, e in raw_filter_form.errors.items():
+                    messages.error(self.request, f"{f}: {e}")
             result_set = base_result_set
+        else:
+            # Otherwise default to sorting by n_dsc
+            result_set = result_set.order_by("-n_works")
 
-        return result_set.annotate(
-            n_works=Count("affiliations__asserted_by__work")
-        ).order_by("-n_works")
+        return result_set.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["institution_filter_form"] = FullInstitutionForm(data=self.request.GET)
+        context["institution_filter_form"] = FullInstitutionForm(initial=self.request.GET)
         context["available_institutions_count"] = Institution.objects.count()
         context["filtered_institutions_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("full_institution_list")

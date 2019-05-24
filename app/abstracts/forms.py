@@ -348,6 +348,15 @@ class FullInstitutionForm(forms.Form):
         required=False,
         widget=ModelSelect2(url="unrestricted-country-autocomplete"),
     )
+    ordering = forms.ChoiceField(
+        choices=(
+            ("a", "A-Z"),
+            ("n_dsc", "By number of abstracts (descending)"),
+            ("n_asc", "By number of abstracts (ascending)"),
+        ),
+        required=True,
+        initial="n_dsc",
+    )
 
 
 class KeywordMergeForm(forms.Form):

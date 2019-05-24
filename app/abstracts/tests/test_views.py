@@ -205,6 +205,19 @@ class InstitutionFullListViewTest(TestCase):
         res = self.client.get(reverse("full_institution_list"))
         self.assertTrue(is_list_unique(res.context["institution_list"]))
 
+    @as_auth
+    def test_sort(self):
+        res = self.client.get(reverse("full_institution_list"), data={"ordering": "a"})
+        self.assertLess(res.context["institution_list"][0].name, res.context["institution_list"][1].name)
+        res = self.client.get(reverse("full_institution_list"), data={"ordering": "n_dsc"})
+        self.assertGreaterEqual(
+            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][0]).count(),
+            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][1]).count())
+        res = self.client.get(reverse("full_institution_list"), data={"ordering": "n_asc"})
+        self.assertLessEqual(
+            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][0]).count(),
+            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][1]).count())
+
 
 class AuthorDetailViewTest(TestCase):
     """
