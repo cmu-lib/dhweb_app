@@ -50,7 +50,11 @@
             <a href="{% url 'language_create' %}" class="btn btn-primary btn-small mx-2" role="button"
               target="_blank">+</a>
           </div>
-          {{ work_form.disciplines | as_crispy_field }}
+          <div class="d-flex align-items-center">
+            {{ work_form.disciplines | as_crispy_field }}
+            <a href="{% url 'discipline_create' %}" class="btn btn-primary btn-small mx-2" role="button"
+              target="_blank">+</a>
+          </div>
         </div>
       </div>
       <h3>Full Text</h3>
