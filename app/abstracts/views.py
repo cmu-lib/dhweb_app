@@ -62,6 +62,7 @@ from .forms import (
     LanguageMergeForm,
     DisciplineMergeForm,
     WorkTypeMergeForm,
+    InstitutionMultiMergeForm,
 )
 
 
@@ -1055,6 +1056,37 @@ def institution_merge(request, institution_id):
             for error in raw_form.errors:
                 messages.error(request, error)
             return render(request, "institution_merge.html", context)
+
+@login_required
+@transaction.atomic
+def institution_multi_merge(request):
+    context = {"form": InstitutionMultiMergeForm}
+
+    if request.method == "POST":
+        raw_form = InstitutionMultiMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_institution = raw_form.cleaned_data["into"]
+            source_institutions = raw_form.cleaned_data["sources"].exclude(
+                pk=target_institution.pk
+            )
+
+            for institution in source_institutions:
+                old_institution_id = str(institution)
+                merge_results = institution.merge(target_institution)
+
+                messages.success(
+                    request,
+                    f"Institution {old_institution_id} has been merged into {target_institution}, and the old institution entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} institutions updated"
+                )
+            return redirect("institution_edit", pk=target_institution.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+
+    return render(request, "institution_multi_merge.html", context)
 
 
 class AffiliationEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):

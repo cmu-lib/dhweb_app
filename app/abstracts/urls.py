@@ -206,6 +206,11 @@ urlpatterns = [
         views.affiliation_multi_merge,
         name="affiliation_multi_merge",
     ),
+    path(
+        "editor/institutions/multi_merge",
+        views.institution_multi_merge,
+        name="institution_multi_merge",
+    ),
     path("editor/keywords", views.KeywordList.as_view(), name="full_keyword_list"),
     path(
         "editor/keywords/create", views.KeywordCreate.as_view(), name="keyword_create"

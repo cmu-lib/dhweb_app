@@ -506,6 +506,26 @@ class AffiliationMultiMergeViewTest(TestCase):
         self.assertFalse(Affiliation.objects.filter(pk=4).exists())
         self.assertContains(res, "updated")
 
+class InstitutionMultiMergeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "institution_multi_merge")
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("institution_multi_merge"),
+            data={"sources": [1, 3], "into": 2},
+            follow=True,
+        )
+        expected_redirect = reverse("institution_edit", kwargs={"pk": 2})
+        self.assertRedirects(res, expected_redirect)
+        self.assertFalse(Institution.objects.filter(pk=1).exists())
+        self.assertTrue(Institution.objects.filter(pk=2).exists())
+        self.assertFalse(Institution.objects.filter(pk=3).exists())
+        self.assertContains(res, "updated")
+
 
 class WipeUnusedViewTest(TestCase):
     fixtures = ["test.json"]
