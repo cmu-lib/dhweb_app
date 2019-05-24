@@ -25,12 +25,16 @@
 
 {% block prefilter %}
 <div class="card my-2">
+  <div class="card-header">
+    Administration
+  </div>
   <div class="card-body">
-    <div class="row">
+    <div class="row d-flex justify-content-between m-2">
       <a href="{% url 'institution_create' %}" class="btn btn-primary" role="button">New institution</a>
       <a href="{% url 'institution_multi_merge' %}" class="btn btn-warning" role="button">Merge institutions</a>
     </div>
-    <div class="row">
+    <div class="row d-flex justify-content-between m-2">
+      <a href="{% url 'affiliation_create' %}" class="btn btn-primary" role="button">New affiliation</a>
       <a class="btn btn-warning" role="button" href="{% url 'affiliation_multi_merge' %}">Merge affiliations</a>
     </div>
   </div>
