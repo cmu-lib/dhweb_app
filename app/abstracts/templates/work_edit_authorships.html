@@ -40,6 +40,8 @@
               {{ form.affiliation|as_crispy_field }}
               {{ form.department|as_crispy_field }}
               {{ form.institution|as_crispy_field }}
+              <a href="{% url 'institution_create' %}" class="btn btn-primary btn-small mx-2" role="button"
+                target="_blank">Create new institution</a>
               {{ form.genders|as_crispy_field }}
             </div>
           </div>
