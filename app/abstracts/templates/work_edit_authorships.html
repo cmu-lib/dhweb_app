@@ -111,16 +111,25 @@ When the user selects an author, fill in the most recent known information about
             data: data
           }
         });
-
-        parent_li.find(".author_card").remove();
-        acard = '<div class="card author_card my-2"><div class="card-header">' + data.first_name + ' ' + data.last_name + '</div><div class="card-body"><p>Selected Works (' + data.works_count + ' total): ' + data.work_titles.join(", ") + "</p>";
-        if (typeof data.affiliation != "undefined") {
-          acard = acard + "<p>Affiliation: " + data.affiliation.name + "</p>";
-        }
-        acard = acard + "</div></div >";
-        before_name = parent_li.find(".form-group[id$='first_name']")
-        before_name.before(acard);
       }
+
+      if (typeof data.genders != "undefined") {
+        parent_li.find("input[id*='genders']").prop("checked", false);
+        var i;
+        for (i = 0; i < data.genders.length; ++i) {
+          gender_box = parent_li.find("input[id*='genders_" + data.genders[i] + "']");
+          gender_box.prop("checked", true);
+        }
+      }
+
+      parent_li.find(".author_card").remove();
+      acard = '<div class="card author_card my-2"><div class="card-header">' + data.first_name + ' ' + data.last_name + '</div><div class="card-body"><p>Selected Works (' + data.works_count + ' total): ' + data.work_titles.join(", ") + "</p>";
+      if (typeof data.affiliation != "undefined") {
+        acard = acard + "<p>Affiliation: " + data.affiliation.name + "</p>";
+      }
+      acard = acard + "</div></div >";
+      before_name = parent_li.find(".form-group[id$='first_name']")
+      before_name.before(acard);
     });
   });
 

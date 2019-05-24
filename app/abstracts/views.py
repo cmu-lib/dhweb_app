@@ -745,6 +745,7 @@ def AuthorInfoJSON(request, author_id):
             "last_name": author.most_recent_appellation.last_name,
             "work_titles": [w.title for w in author.works.all()][:4],
             "works_count": author.works.count(),
+            "genders": [g.pk for g in author.most_recent_genders],
         }
         if author_aff is not None:
             author_dict["affiliation"] = {"name": str(author_aff), "id": author_aff.pk}
