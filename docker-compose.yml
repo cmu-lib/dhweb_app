@@ -33,12 +33,14 @@ services:
       - start_dependencies
 
   dh-nginx:
-    build: nginx
+    image: nginx
     restart: always
     volumes:
+      - ../data/nginx:/etc/nginx/conf.d/.
       - dh_static_files:/vol/static_files
     ports:
       - "${NGINX_PORT}:4000"
+      - "443:443"
     env_file: .env
     links:
       - "dh-web:dh-web"
