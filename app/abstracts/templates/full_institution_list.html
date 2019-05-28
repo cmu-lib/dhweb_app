@@ -17,9 +17,11 @@
   Results: Displaying {{ filtered_institutions_count }} out of {{ available_institutions_count }} institutions
 </div>
 <ul class="list-group list-group-flush">
+  {% block inst_card %}
   {% for institution in institution_list %}
   <li class="list-group-item">{% include "institution_card.html" with institution=institution %}</li>
   {% endfor %}
+  {% endblock %}
 </ul>
 {% endblock %}
 

@@ -127,6 +127,11 @@ urlpatterns = [
     ),
     path("editor/authors", views.FullAuthorList.as_view(), name="full_author_list"),
     path(
+        "editor/authors_institution",
+        views.AuthorInstitutionList.as_view(),
+        name="author_institution_list",
+    ),
+    path(
         "editor/institutions",
         views.FullInstitutionList.as_view(),
         name="full_institution_list",

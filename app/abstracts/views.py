@@ -988,6 +988,60 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
         context["redirect_url"] = reverse("full_institution_list")
         return context
 
+class AuthorInstitutionList(FullInstitutionList):
+    template_name = "author_institution_list.html"
+
+    def get_queryset(self):
+        base_result_set = Institution.objects.annotate(
+            n_authors=Count("affiliations__asserted_by__author")).distinct()
+        result_set = base_result_set
+
+        if self.request.GET:
+            raw_filter_form = FullInstitutionForm(self.request.GET)
+            if raw_filter_form.is_valid():
+                filter_form = raw_filter_form.cleaned_data
+
+                department_res = filter_form["department"]
+                if department_res != "":
+                    result_set = result_set.filter(
+                        affiliations__department__icontains=department_res
+                    )
+
+                affiliation_res = filter_form["affiliation"]
+                if affiliation_res is not None:
+                    result_set = result_set.filter(affiliations=affiliation_res)
+
+                institution_res = filter_form["institution"]
+                if institution_res is not None:
+                    result_set = result_set.filter(pk=institution_res.pk)
+
+                country_res = filter_form["country"]
+                if country_res is not None:
+                    result_set = result_set.filter(country=country_res)
+
+                if filter_form["no_department"]:
+                    result_set = result_set.filter(affiliations__department="")
+
+                if filter_form["ordering"] == "n_dsc":
+                    result_set = result_set.order_by("-n_authors")
+                elif filter_form["ordering"] == "n_asc":
+                    result_set = result_set.order_by("n_authors")
+                elif filter_form["ordering"] == "a":
+                    result_set = result_set.order_by("affiliations__institution__name")
+            else:
+                for f, e in raw_filter_form.errors.items():
+                    messages.error(self.request, f"{f}: {e}")
+                result_set = base_result_set
+        else:
+            # Otherwise default to sorting by n_dsc
+            result_set = result_set.order_by("-n_authors")
+
+        return result_set.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["redirect_url"] = reverse("author_institution_list")
+        return context
 
 class InstitutionEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Institution

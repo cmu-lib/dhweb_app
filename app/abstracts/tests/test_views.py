@@ -218,6 +218,47 @@ class InstitutionFullListViewTest(TestCase):
             Authorship.objects.filter(affiliations__institution=res.context["institution_list"][0]).count(),
             Authorship.objects.filter(affiliations__institution=res.context["institution_list"][1]).count())
 
+class AuthorInstitutionFullListViewTest(TestCase):
+    """
+    Test Author-Institution list page
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "author_institution_list")
+
+    @as_auth
+    def test_query_filtered_count(self):
+        res = self.client.get(reverse("author_institution_list"))
+        self.assertEqual(
+            res.context["filtered_institutions_count"],
+            len(res.context["institution_list"]),
+        )
+
+    @as_auth
+    def test_query_total_count(self):
+        res = self.client.get(reverse("author_institution_list"))
+        self.assertIsInstance(res.context["available_institutions_count"], int)
+
+    @as_auth
+    def test_unique(self):
+        res = self.client.get(reverse("author_institution_list"))
+        self.assertTrue(is_list_unique(res.context["institution_list"]))
+
+    @as_auth
+    def test_sort(self):
+        res = self.client.get(reverse("author_institution_list"), data={"ordering": "a"})
+        self.assertLess(res.context["institution_list"][0].name, res.context["institution_list"][1].name)
+        res = self.client.get(reverse("author_institution_list"), data={"ordering": "n_dsc"})
+        self.assertGreaterEqual(
+            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][0]).count(),
+            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][1]).count())
+        res = self.client.get(reverse("author_institution_list"), data={"ordering": "n_asc"})
+        self.assertLessEqual(
+            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][0]).count(),
+            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][1]).count())
+
 
 class AuthorDetailViewTest(TestCase):
     """

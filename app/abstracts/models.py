@@ -1,7 +1,7 @@
 import datetime
 
 from django.db import models
-from django.db.models import Max
+from django.db.models import Max, Count
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.urls import reverse
@@ -377,6 +377,27 @@ class Institution(models.Model):
         # Finally, delete the old institution
         self.delete()
         return results
+
+    @property
+    def public_affiliated_authors(self):
+        return (
+            Author.objects.filter(
+                authorships__affiliations__institution=self,
+                authorships__work_state="ac",
+            )
+            .annotate(n_works=Count("works"))
+            .distinct()
+            .order_by("-n_works")
+        )
+
+    @property
+    def affiliated_authors(self):
+        return (
+            Author.objects.filter(authorships__affiliations__institution=self)
+            .annotate(n_works=Count("works"))
+            .distinct()
+            .order_by("-n_works")
+        )
 
 
 class Affiliation(Attribute):
