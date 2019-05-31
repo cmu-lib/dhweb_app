@@ -163,6 +163,13 @@
   }
 },
 {
+  "model": "abstracts.language",
+  "pk": 2,
+  "fields": {
+    "title": "German"
+  }
+},
+{
   "model": "abstracts.discipline",
   "pk": 1,
   "fields": {
@@ -638,7 +645,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$150000$jyx79ZbWOi5F$6lCtywFpivhtbm8CEvCYIKDzWO5/0eP0XSVJMZud77U=",
-    "last_login": "2019-05-31T14:53:22.598Z",
+    "last_login": "2019-05-31T15:10:59.446Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",
