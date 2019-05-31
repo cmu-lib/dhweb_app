@@ -10,12 +10,12 @@
 <div class="row">
   <div class="col-md-6">
     <p>Select keywords to merge</p>
-    <form action="{% url 'keyword_multi_merge' %}" method="post">
+    <form action="{% url multi_merge_view %}" method="post">
       {% csrf_token %}
       {{ tag_merge_form | crispy }}
       <div class="alert alert-danger">This action cannot be undone!</div>
       <button type="submit" class="btn btn-primary mb-2">Merge</button>
-      <a href="{% url 'full_keyword_list' %}" class="btn btn-secondary" role="button">Cancel</a>
+      <a href="{% url multi_merge_view %}" class="btn btn-secondary" role="button">Cancel</a>
     </form>
   </div>
 </div>

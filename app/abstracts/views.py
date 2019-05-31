@@ -63,6 +63,7 @@ from .forms import (
     DisciplineMergeForm,
     WorkTypeMergeForm,
     InstitutionMultiMergeForm,
+    TopicMultiMergeForm,
 )
 
 
@@ -1510,6 +1511,7 @@ class KeywordList(LoginRequiredMixin, ListView):
         "tag_edit_view": "keyword_edit",
         "tag_create_view": "keyword_create",
         "tag_list_view": "full_keyword_list",
+        "multi_merge": "keyword_multi_merge",
     }
 
     def get_queryset(self):
@@ -1608,6 +1610,7 @@ def keyword_multi_merge(request):
     context = {
         "tag_merge_form": KeywordMultiMergeForm,
         "tag_category": "Keyword",
+        "multi_merge_view": "keyword_multi_merge",
     }
 
     if request.method == "POST":
@@ -1682,6 +1685,7 @@ class TopicList(LoginRequiredMixin, ListView):
         "tag_create_view": "topic_create",
         "tag_filter_form": TagForm,
         "tag_list_view": "full_topic_list",
+        "multi_merge": "topic_multi_merge",
     }
 
     def get_queryset(self):
@@ -1768,6 +1772,40 @@ def topic_merge(request, topic_id):
                 messages.error(request, error)
             return render(request, "tag_merge.html", context)
 
+@login_required
+@transaction.atomic
+def topic_multi_merge(request):
+    context = {
+        "tag_merge_form": TopicMultiMergeForm,
+        "tag_category": "Topic",
+        "multi_merge_view": "topic_multi_merge"
+    }
+
+    if request.method == "POST":
+        """
+        Posting the new author id causes all of the old author's authorships to be reassigned.
+        """
+        raw_form = TopicMultiMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_topic = raw_form.cleaned_data["into"]
+            source_topics = raw_form.cleaned_data["sources"].exclude(pk=target_topic.pk)
+
+            for topic in source_topics:
+                old_topic_id = topic.title
+                merge_results = topic.merge(target_topic)
+                messages.success(
+                    request,
+                    f"Topic {old_topic_id} has been merged into {target_topic}, and the old topic entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} topics updated"
+                )
+            return redirect("topic_edit", pk=target_topic.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+
+    return render(request, "tag_multi_merge.html", context)
 
 class LanguageCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Language

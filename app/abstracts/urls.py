@@ -249,6 +249,9 @@ urlpatterns = [
     ),
     path("editor/topics/<int:pk>/edit", views.TopicEdit.as_view(), name="topic_edit"),
     path("editor/topics/<int:topic_id>/merge", views.topic_merge, name="topic_merge"),
+    path(
+        "editor/topics/multi_merge", views.topic_multi_merge, name="topic_multi_merge"
+    ),
     path("editor/languages", views.LanguageList.as_view(), name="full_language_list"),
     path(
         "editor/languages/create",
