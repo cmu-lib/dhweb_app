@@ -620,10 +620,17 @@ class EditConferenceViewTest(TestCase):
         res = self.client.post(
             reverse("conference_edit", kwargs={"pk": 1}),
             data={
-                "year": 1987,
+                "year": "1987",
                 "venue": "foo",
                 "venue_abbreviation": "bar",
                 "notes": "buzz",
+                "organizers": ["1"],
+                "form-0-number": [""],
+                "form-0-series": ["1"],
+                "form-INITIAL_FORMS": ["1"],
+                "form-MAX_NUM_FORMS": ["1000"],
+                "form-MIN_NUM_FORMS": ["0"],
+                "form-TOTAL_FORMS": ["1"],
             },
             follow=True,
         )
