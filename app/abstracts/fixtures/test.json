@@ -93,7 +93,8 @@
   "pk": 1,
   "fields": {
     "series": 1,
-    "conference": 1
+    "conference": 1,
+    "number": null
   }
 },
 {
@@ -101,7 +102,8 @@
   "pk": 2,
   "fields": {
     "series": 1,
-    "conference": 2
+    "conference": 2,
+    "number": null
   }
 },
 {
@@ -109,7 +111,8 @@
   "pk": 3,
   "fields": {
     "series": 2,
-    "conference": 3
+    "conference": 3,
+    "number": null
   }
 },
 {
@@ -178,6 +181,27 @@
   "pk": 1,
   "fields": {
     "title": "Webcomics"
+  }
+},
+{
+  "model": "abstracts.topic",
+  "pk": 2,
+  "fields": {
+    "title": "Arms"
+  }
+},
+{
+  "model": "abstracts.topic",
+  "pk": 3,
+  "fields": {
+    "title": "Singing"
+  }
+},
+{
+  "model": "abstracts.topic",
+  "pk": 4,
+  "fields": {
+    "title": "Troy"
   }
 },
 {
@@ -271,7 +295,11 @@
     "disciplines": [
       2
     ],
-    "topics": []
+    "topics": [
+      2,
+      3,
+      4
+    ]
   }
 },
 {
@@ -610,7 +638,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$150000$jyx79ZbWOi5F$6lCtywFpivhtbm8CEvCYIKDzWO5/0eP0XSVJMZud77U=",
-    "last_login": "2019-05-07T13:57:19.056Z",
+    "last_login": "2019-05-31T14:53:22.598Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",

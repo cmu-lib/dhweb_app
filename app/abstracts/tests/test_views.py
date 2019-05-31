@@ -985,6 +985,28 @@ class DeleteTopicViewTest(TestCase):
         res = self.client.post(reverse("topic_delete", kwargs={"pk": 1}), follow=True)
         self.assertFalse(Topic.objects.filter(pk=1).exists())
 
+class TopicMultiMergeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "topic_multi_merge")
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("topic_multi_merge"),
+            data={"sources": [1,3,4], "into": 2},
+            follow=True,
+        )
+        expected_redirect = reverse("topic_edit", kwargs={"pk": 2})
+        self.assertRedirects(res, expected_redirect)
+        self.assertFalse(Topic.objects.filter(pk=1).exists())
+        self.assertTrue(Topic.objects.filter(pk=2).exists())
+        self.assertFalse(Topic.objects.filter(pk=3).exists())
+        self.assertFalse(Topic.objects.filter(pk=4).exists())
+        self.assertContains(res, "updated")
+        self.assertContains(res, "deleted")
+
 class LanguageFullListViewTest(TestCase):
     """
     Test full Language list page
