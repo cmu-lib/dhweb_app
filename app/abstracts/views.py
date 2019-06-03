@@ -1512,6 +1512,7 @@ class KeywordList(LoginRequiredMixin, ListView):
         "tag_create_view": "keyword_create",
         "tag_list_view": "full_keyword_list",
         "multi_merge": "keyword_multi_merge",
+        "filter_param_name": "keyword",
     }
 
     def get_queryset(self):
@@ -1686,6 +1687,7 @@ class TopicList(LoginRequiredMixin, ListView):
         "tag_filter_form": TagForm,
         "tag_list_view": "full_topic_list",
         "multi_merge": "topic_multi_merge",
+        "filter_param_name": "topic",
     }
 
     def get_queryset(self):
@@ -1852,6 +1854,7 @@ class LanguageList(LoginRequiredMixin, ListView):
         "tag_create_view": "language_create",
         "tag_filter_form": TagForm,
         "tag_list_view": "full_language_list",
+        "filter_param_name": "language",
     }
 
     def get_queryset(self):
@@ -1984,6 +1987,7 @@ class DisciplineList(LoginRequiredMixin, ListView):
         "tag_create_view": "discipline_create",
         "tag_filter_form": TagForm,
         "tag_list_view": "full_discipline_list",
+        "filter_param_name": "discipline",
     }
 
     def get_queryset(self):
@@ -2115,6 +2119,7 @@ class WorkTypeList(LoginRequiredMixin, ListView):
         "tag_create_view": "work_type_create",
         "tag_filter_form": TagForm,
         "tag_list_view": "full_work_type_list",
+        "filter_param_name": "work_type",
     }
 
     def get_queryset(self):
