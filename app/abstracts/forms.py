@@ -500,3 +500,24 @@ class ConferenceSeriesInline(forms.Form):
         help_text="Number in the sequence of this conference series.",
     )
 
+
+class AuthorBulkEdit(forms.Form):
+    works = forms.ChoiceField(
+        required=True, widget=forms.CheckboxSelectMultiple(), empty_label=None
+    )
+    affiliation = forms.ModelChoiceField(
+        queryset=Affiliation.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+    )
+    first_name = forms.CharField()
+    genders = forms.ModelMultipleChoiceField(
+        queryset=Gender.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple(),
+        help_text="Gender presentation of the author at this time. This is optional and will not be publicly viewable.",
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        work_choices = []

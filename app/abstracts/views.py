@@ -65,6 +65,7 @@ from .forms import (
     InstitutionMultiMergeForm,
     TopicMultiMergeForm,
     GenderMergeForm,
+    AuthorBulkEdit,
 )
 
 
@@ -2345,3 +2346,23 @@ def gender_merge(request, gender_id):
             for error in raw_form.errors:
                 messages.error(request, error)
             return render(request, "tag_merge.html", context)
+
+
+@login_required
+@transaction.atomic
+def author_bulk_edit(request, author_id):
+    author = get_object_or_404(Author, pk=author_id)
+
+    form = AuthorBulkEdit()
+    form.works = author.works.all()
+    form.first_name = author.most_recent_appellation.first_name
+    form.last_name = author.most_recent_appellation.last_name
+    form.affiliation = author.most_recent_affiliation
+    form.genders = author.most_recent_genders
+
+    context = {
+        "author": author,
+        "form": form,
+    }
+
+    return render(request, "author_bulk_edit.html", context)
