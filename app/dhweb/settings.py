@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.redirects",
     "crispy_forms",
-    "import_export",
     "django.contrib.humanize",
     "debug_toolbar",
 ]
