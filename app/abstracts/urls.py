@@ -197,6 +197,11 @@ urlpatterns = [
         name="affiliation_create",
     ),
     path(
+        "auto-create-affiliation",
+        views.ajax_affiliation_create,
+        name="ajax_affiliation_create",
+    ),
+    path(
         "editor/affiliations/<int:pk>/edit",
         views.AffiliationEdit.as_view(),
         name="affiliation_edit",

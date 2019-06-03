@@ -1,12 +1,18 @@
+span.select2-container {
+    width: 100% !important;
+}
+
 ul li.select2-selection__choice,
 ul li.select2-search {
     /* Cancel out django's style */
     list-style-type: none;
 }
+
 span.select2-selection {
     min-height: 2rem;
     height: auto;
     overflow-wrap: break-word;
+    width: 100%;
 }
 
 li.select2-selection__choice, li.select2-selection__rendered {

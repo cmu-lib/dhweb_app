@@ -4,8 +4,8 @@ django_coverage_plugin>=1.6
 psycopg2-binary
 gunicorn
 django-crispy-forms
-django-import-export
 django-autocomplete-light
 parsel
 django-debug-toolbar
 tblib
+progress
