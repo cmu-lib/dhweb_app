@@ -84,6 +84,11 @@ class FullWorkForm(WorkFilter):
         required=False,
         widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
     )
+    gender = forms.ModelChoiceField(
+        queryset=Gender.objects.all(),
+        required=False,
+        help_text="At least one author of this paper was associated with this gender at submission time.",
+    )
 
 
 class WorkAuthorshipForm(forms.Form):
@@ -266,6 +271,11 @@ class FullAuthorFilter(AuthorFilter):
     last_name = forms.CharField(
         max_length=100, strip=True, required=False, help_text="Search only last names"
     )
+    gender = forms.ModelChoiceField(
+        queryset=Gender.objects.all(),
+        required=False,
+        help_text="This author has been linked to this gender at least once.",
+    )
 
 
 class AuthorMergeForm(forms.Form):
@@ -394,6 +404,7 @@ class KeywordMultiMergeForm(forms.Form):
         help_text="Select the target keyword to merge into",
     )
 
+
 class TopicMultiMergeForm(forms.Form):
     sources = forms.ModelMultipleChoiceField(
         queryset=Topic.objects.all(),
@@ -441,6 +452,14 @@ class WorkTypeMergeForm(forms.Form):
         queryset=WorkType.objects.all(),
         required=True,
         help_text="Select the type that will be used to replace the one you are deleting.",
+    )
+
+
+class GenderMergeForm(forms.Form):
+    into = forms.ModelChoiceField(
+        queryset=Gender.objects.all(),
+        required=True,
+        help_text="Select the gender that will be used to replace the one you are deleting.",
     )
 
 

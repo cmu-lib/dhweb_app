@@ -64,6 +64,7 @@ from .forms import (
     WorkTypeMergeForm,
     InstitutionMultiMergeForm,
     TopicMultiMergeForm,
+    GenderMergeForm,
 )
 
 
@@ -818,6 +819,12 @@ class FullAuthorList(LoginRequiredMixin, ListView):
                     appellations__last_name__icontains=last_name_res
                 )
 
+            gender_res = filter_form["gender"]
+            if gender_res is not None:
+                result_set = result_set.filter(
+                    authorships__genders=gender_res
+                )
+
             return result_set.order_by("id").distinct()
         else:
             messages.warning(
@@ -887,6 +894,10 @@ class FullWorkList(LoginRequiredMixin, ListView):
             discipline_res = filter_form["discipline"]
             if discipline_res is not None:
                 result_set = result_set.filter(disciplines=discipline_res)
+
+            gender_res = filter_form["gender"]
+            if gender_res is not None:
+                result_set = result_set.filter(authorships__genders=gender_res)
 
             if filter_form["full_text_available"]:
                 result_set = result_set.exclude(full_text="")
@@ -2196,6 +2207,139 @@ def work_type_merge(request, work_type_id):
                     request, f"{merge_results['update_results']} work_types updated"
                 )
                 return redirect("work_type_edit", pk=target_work_type.pk)
+        else:
+            for error in raw_form.errors:
+                messages.error(request, error)
+            return render(request, "tag_merge.html", context)
+
+
+class GenderCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Gender
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Create gender", "cancel_view": "full_gender_list"}
+    fields = ["gender"]
+    success_message = "Gender '%(gender)s' created"
+    success_url = reverse_lazy("full_gender_list")
+
+
+class GenderDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Gender
+    template_name = "generic_form.html"
+    extra_context = {"form_title": "Delete gender", "cancel_view": "full_gender_list"}
+    success_message = "Gender '%(gender)s' deleted"
+    success_url = reverse_lazy("full_gender_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(GenderDelete, self).delete(request, *args, **kwargs)
+
+
+class GenderEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Gender
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Update gender",
+        "cancel_view": "full_gender_list",
+        "merge_view": "gender_merge",
+        "delete_view": "gender_delete",
+    }
+    fields = ["gender"]
+    success_message = "Gender '%(gender)s' updated"
+    success_url = reverse_lazy("full_gender_list")
+
+
+class GenderList(LoginRequiredMixin, ListView):
+    model = Gender
+    template_name = "tag_list.html"
+    context_object_name = "tag_list"
+    extra_context = {
+        "tag_category": "Genders",
+        "tag_edit_view": "gender_edit",
+        "tag_create_view": "gender_create",
+        "tag_filter_form": TagForm,
+        "tag_list_view": "full_gender_list",
+        "filter_param_name": "gender",
+    }
+
+    def get_queryset(self):
+        base_results_set = Gender.objects.all()
+        results_set = base_results_set.annotate(n_works=Count("asserted_by__work"))
+
+        raw_filter_form = TagForm(self.request.GET)
+        if raw_filter_form.is_valid():
+            filter_form = raw_filter_form.cleaned_data
+
+            if filter_form["name"] != "":
+                results_set = results_set.filter(gender__icontains=filter_form["gender"])
+
+            if filter_form["ordering"] == "a":
+                results_set = results_set.order_by("gender")
+            elif filter_form["ordering"] == "n_asc":
+                results_set = results_set.order_by("n_works")
+            elif filter_form["ordering"] == "n_dsc":
+                results_set = results_set.order_by("-n_works")
+
+        return results_set
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filtered_tags_count"] = self.get_queryset().count()
+        context["available_tags_count"] = Gender.objects.count()
+        return context
+
+
+@login_required
+@transaction.atomic
+def gender_merge(request, gender_id):
+    gender = get_object_or_404(Gender, pk=gender_id)
+    affected_elements = Work.objects.filter(authorships__genders=gender).distinct()
+    count_elements = affected_elements.count() - 10
+    sample_elements = affected_elements[:10]
+    context = {
+        "merging": gender,
+        "tag_merge_form": GenderMergeForm,
+        "tag_category": "Gender",
+        "merge_view": "gender_merge",
+        "sample_elements": sample_elements,
+        "count_elements": count_elements,
+    }
+
+    if request.method == "GET":
+        """
+        Initial load of the merge form displays all the authors and works associated with this gender.
+        """
+        return render(request, "tag_merge.html", context)
+
+    elif request.method == "POST":
+        """
+        Posting the new author id causes all of the old author's authorships to be reassigned.
+        """
+
+        raw_form = GenderMergeForm(request.POST)
+        if raw_form.is_valid():
+            target_gender = raw_form.cleaned_data["into"]
+
+            if gender == target_gender:
+                """
+                If the user chooses the existing gender, don't merge, but instead error out.
+                """
+                messages.error(
+                    request,
+                    f"You cannot merge a gender into itself. Please select a different gender.",
+                )
+                return redirect("gender_merge", gender_id=gender_id)
+            else:
+                old_gender_id = str(gender)
+                merge_results = gender.merge(target_gender)
+
+                messages.success(
+                    request,
+                    f"Gender {old_gender_id} has been merged into {target_gender}, and the old gender entry has been deleted.",
+                )
+                messages.success(
+                    request, f"{merge_results['update_results']} genders updated"
+                )
+                return redirect("gender_edit", pk=target_gender.pk)
         else:
             for error in raw_form.errors:
                 messages.error(request, error)

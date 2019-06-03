@@ -1368,3 +1368,121 @@ class WorkTypeMergeViewTest(TestCase):
         expected_redirect = reverse("work_type_merge", kwargs={"work_type_id": 1})
         self.assertRedirects(res, expected_redirect)
         self.assertContains(res, "You cannot merge a work_type into itself")
+
+class GenderFullListViewTest(TestCase):
+    """
+    Test full Gender list page
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "full_gender_list")
+
+    @as_auth
+    def test_query_filtered_count(self):
+        res = self.client.get(reverse("full_gender_list"))
+        self.assertEqual(
+            res.context["filtered_tags_count"], len(res.context["tag_list"])
+        )
+
+    @as_auth
+    def test_query_total_count(self):
+        res = self.client.get(reverse("full_gender_list"))
+        self.assertIsInstance(res.context["available_tags_count"], int)
+
+    @as_auth
+    def test_unique(self):
+        res = self.client.get(reverse("full_gender_list"))
+        self.assertTrue(is_list_unique(res.context["tag_list"]))
+
+    @as_auth
+    def test_sort(self):
+        res = self.client.get(reverse("full_gender_list"), data={"ordering": "a"})
+        self.assertTrue(res.context["tag_list"].ordered)
+        res = self.client.get(reverse("full_gender_list"), data={"ordering": "n_dsc"})
+        self.assertTrue(res.context["tag_list"].ordered)
+        res = self.client.get(reverse("full_gender_list"), data={"ordering": "n_asc"})
+        self.assertTrue(res.context["tag_list"].ordered)
+
+
+class CreateGenderViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "gender_create")
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("gender_create"), data={"gender": "red"}, follow=True
+        )
+        self.assertContains(res, "created")
+        self.assertTrue(Gender.objects.filter(gender="red").exists())
+
+
+class EditGenderViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "gender_edit", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("gender_edit", kwargs={"pk": 1}),
+            data={"gender": "blue"},
+            follow=True,
+        )
+        self.assertContains(res, "updated")
+        self.assertTrue(Gender.objects.filter(gender="blue").exists())
+
+
+class DeleteGenderViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "gender_delete", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(reverse("gender_delete", kwargs={"pk": 1}), follow=True)
+        self.assertFalse(Gender.objects.filter(pk=1).exists())
+
+
+class GenderMergeViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "gender_merge", kwargs={"gender_id": 1})
+
+    @as_auth
+    def test_404(self):
+        res = self.client.get(
+            reverse("gender_merge", kwargs={"gender_id": 100}), follow=True
+        )
+        self.assertEqual(res.status_code, 404)
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("gender_merge", kwargs={"gender_id": 1}),
+            data={"into": 2},
+            follow=True,
+        )
+        expected_redirect = reverse("gender_edit", kwargs={"pk": 2})
+        self.assertRedirects(res, expected_redirect)
+        self.assertFalse(Gender.objects.filter(pk=1).exists())
+        self.assertContains(res, "updated")
+        self.assertContains(res, "deleted")
+
+    @as_auth
+    def test_invalid_gender(self):
+        res = self.client.post(
+            reverse("gender_merge", kwargs={"gender_id": 1}),
+            data={"into": 1},
+            follow=True,
+        )
+        expected_redirect = reverse("gender_merge", kwargs={"gender_id": 1})
+        self.assertRedirects(res, expected_redirect)
+        self.assertContains(res, "You cannot merge a gender into itself")

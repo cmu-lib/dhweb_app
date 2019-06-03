@@ -285,7 +285,9 @@ class Gender(Attribute):
         for authorship in affected_authorships:
             authorship.genders.add(target)
             authorship.save()
-        results["updates"] = {"abstracts.Authorhip": affected_authorships.count()}
+        results["update_results"] = {
+            "abstracts.Authorhip": affected_authorships.count()
+        }
 
         deletion_results = self.delete()[1]
         results["deletions"] = deletion_results

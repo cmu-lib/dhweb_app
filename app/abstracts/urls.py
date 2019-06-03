@@ -324,4 +324,17 @@ urlpatterns = [
         views.work_type_merge,
         name="work_type_merge",
     ),
+    path("editor/genders", views.GenderList.as_view(), name="full_gender_list"),
+    path("editor/genders/create", views.GenderCreate.as_view(), name="gender_create"),
+    path(
+        "editor/genders/<int:pk>/delete",
+        views.GenderDelete.as_view(),
+        name="gender_delete",
+    ),
+    path(
+        "editor/genders/<int:pk>/edit", views.GenderEdit.as_view(), name="gender_edit"
+    ),
+    path(
+        "editor/genders/<int:gender_id>/merge", views.gender_merge, name="gender_merge"
+    ),
 ]
