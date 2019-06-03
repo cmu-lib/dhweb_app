@@ -116,6 +116,8 @@ When the user selects an author, fill in the most recent known information about
       success: function (data) {
         var affiliations_option = new Option(data.name, data.id, true, true);
         aff_select.append(affiliations_option).trigger('change');
+        $("#id_department").val(null);
+        $("#id_institution").val(null).trigger('select2:unselect').trigger("change");
         $("#affiliationModal").modal("hide");
       }
 
