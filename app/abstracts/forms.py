@@ -107,19 +107,11 @@ class WorkAuthorshipForm(forms.Form):
         required=False,
         help_text="Last name as it appears in the context of this abstract.",
     )
-    affiliation = forms.ModelChoiceField(
+    affiliations = forms.ModelMultipleChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        widget=ModelSelect2Multiple(url="unrestricted-affiliation-autocomplete"),
         help_text="If the combination of department and institution is not available in this list, then use the fields below to define it.",
-    )
-    department = forms.CharField(
-        max_length=500, required=False, help_text="If given, enter a department name."
-    )
-    institution = forms.ModelChoiceField(
-        queryset=Institution.objects.all(),
-        required=False,
-        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
     )
     genders = forms.ModelMultipleChoiceField(
         queryset=Gender.objects.all(),

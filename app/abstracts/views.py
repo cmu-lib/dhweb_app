@@ -662,14 +662,8 @@ def WorkEditAuthorship(request, work_id):
             "first_name": authorship.appellation.first_name,
             "last_name": authorship.appellation.last_name,
             "genders": [a for a in authorship.genders.all()],
+            "affiliations": [aff for aff in authorship.affiliations.all()],
         }
-
-        if authorship.affiliations.exists():
-            first_affiliation = authorship.affiliations.first()
-            base_data["affiliation"] = first_affiliation
-            base_data["department"] = first_affiliation.department
-            base_data["institution"] = first_affiliation.institution
-            base_data["country"] = first_affiliation.institution.country
 
         initial_data.append(base_data)
 
@@ -689,15 +683,8 @@ def WorkEditAuthorship(request, work_id):
                         last_name=aform_data["last_name"],
                     )[0]
 
-                    affiliation = None
-                    if aform_data["affiliation"] is not None:
-                        affiliation = aform_data["affiliation"]
-                    else:
-                        if aform_data["department"] is not None and aform_data["institution"] is not None:
-                            affiliation = Affiliation.objects.get_or_create(department=aform_data["department"],institution=aform_data["institution"],)[0]
-
+                    affiliations = aform_data["affiliations"]
                     genders = aform_data["genders"]
-
                     authorship_order = aform_data["authorship_order"]
 
                     try:
@@ -714,12 +701,13 @@ def WorkEditAuthorship(request, work_id):
                         return redirect("work_edit_authorship", work.pk)
 
                     auth.affiliations.clear()
-                    if affiliation is not None:
-                        auth.affiliations.set([affiliation])
+                    if affiliations is not None:
+                        auth.affiliations.set(affiliations)
 
                     auth.genders.clear()
                     if genders is not None:
                         auth.genders.set(genders)
+
             messages.success(
                 request, f'"{work.title}" authorships sucessfully updated.'
             )
@@ -733,7 +721,7 @@ def WorkEditAuthorship(request, work_id):
             for error in authorships_forms.errors:
                 messages.error(request, error)
 
-    context = {"authorships_form": authorships_forms, "work": work}
+    context = {"authorships_form": authorships_forms, "work": work, "affiliation_form": AffiliationEditForm}
     return render(request, "work_edit_authorships.html", context)
 
 
@@ -1179,6 +1167,16 @@ class AffiliationCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             self.initial = {"institution": int(self.request.GET["institution"])}
 
         return self.initial
+
+@login_required
+def ajax_affiliation_create(request):
+    aff_form = AffiliationEditForm(request.POST)
+    if aff_form.is_valid():
+        aff_clean = aff_form.cleaned_data
+        newaff = Affiliation.objects.get_or_create(department = aff_clean["department"], institution=aff_clean["institution"])[0]
+        return JsonResponse({"name": str(newaff), "id": newaff.pk})
+    else:
+        return JsonResponse({"error": True})
 
 
 @login_required
