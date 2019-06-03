@@ -56,6 +56,7 @@ class Conference(models.Model):
 
     class Meta:
         ordering = ["-year"]
+        unique_together = ["year", "venue"]
 
     @property
     def public_works(self):
