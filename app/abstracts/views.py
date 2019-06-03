@@ -729,7 +729,7 @@ def WorkEditAuthorship(request, work_id):
 def AuthorInfoJSON(request, author_id):
     if request.method == "GET":
         author = get_object_or_404(Author, pk=author_id)
-        author_aff = author.most_recent_affiliation
+        author_aff = author.most_recent_affiliations
         author_dict = {
             "first_name": author.most_recent_appellation.first_name,
             "last_name": author.most_recent_appellation.last_name,
@@ -738,7 +738,7 @@ def AuthorInfoJSON(request, author_id):
             "genders": [g.pk for g in author.most_recent_genders],
         }
         if author_aff is not None:
-            author_dict["affiliation"] = {"name": str(author_aff), "id": author_aff.pk}
+            author_dict["affiliations"] = [{"name": str(aff), "id": aff.pk} for aff in author_aff]
         return JsonResponse(author_dict)
 
 
@@ -1170,13 +1170,10 @@ class AffiliationCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
 @login_required
 def ajax_affiliation_create(request):
-    aff_form = AffiliationEditForm(request.POST)
-    if aff_form.is_valid():
-        aff_clean = aff_form.cleaned_data
-        newaff = Affiliation.objects.get_or_create(department = aff_clean["department"], institution=aff_clean["institution"])[0]
-        return JsonResponse({"name": str(newaff), "id": newaff.pk})
-    else:
-        return JsonResponse({"error": True})
+    newaff = Affiliation.objects.get_or_create(
+        department=request.POST["department"],
+        institution=Institution.objects.get(pk=int(request.POST["institution"])))[0]
+    return JsonResponse({"name": str(newaff), "id": newaff.pk})
 
 
 @login_required

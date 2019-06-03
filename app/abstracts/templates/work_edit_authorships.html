@@ -39,7 +39,8 @@
             <div class="col">
               {{ form.affiliations|as_crispy_field }}
 
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal" ,
+                id="affiliationModal-trigger-{{ forloop.counter0 }}">
                 Create new affiliation
               </button>
 
@@ -94,9 +95,17 @@ When the user selects an author, fill in the most recent known information about
 {% endcomment %}
 <script>
 
-  $("#affiliationForm").submit(function (e) {
+  var modal_trigger = "";
 
+  $('#affiliationModal').on('shown.bs.modal', function (e) {
+    var clicked_button_id = e.relatedTarget.id;
+    modal_trigger = clicked_button_id;
+  });
+
+  $("#affiliationForm").submit(function (e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
+    var parent_li = $("#" + modal_trigger).parents("li");
+    var aff_select = parent_li.find("select[id$='affiliations']");
     var form = $(this);
     var url = form.attr('action');
     $.ajax({
@@ -105,8 +114,8 @@ When the user selects an author, fill in the most recent known information about
       data: form.serialize(),
 
       success: function (data) {
-        console.log(data);
-
+        var affiliations_option = new Option(data.name, data.id, true, true);
+        aff_select.append(affiliations_option).trigger('change');
         $("#affiliationModal").modal("hide");
       }
 
@@ -119,7 +128,7 @@ When the user selects an author, fill in the most recent known information about
     author_count++;
 
     var newformid = "authorship_" + author_count;
-    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <input type="button" class="btn btn-danger" id="remove-authorship-' + newformid + '" value="Remove authorship"></h2> <div class="row"> <div class="col"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col"> {{ authorships_form.empty_form.affiliations | as_crispy_field |escapejs}} <a href="{% url 'institution_create' %}" class="btn btn-primary btn-small mx-2" role="button" target = "_blank">Create new institution</a>{{ authorships_form.empty_form.genders | as_crispy_field |escapejs}} </div> </div> </li>';
+    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <input type="button" class="btn btn-danger" id="remove-authorship-' + newformid + '" value="Remove authorship"></h2> <div class="row"> <div class="col"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col"> {{ authorships_form.empty_form.affiliations | as_crispy_field |escapejs}} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal">Create new affiliation</button>{{ authorships_form.empty_form.genders | as_crispy_field |escapejs}} </div> </div> </li>';
     newform = newform.replace(/__prefix__/g, author_count - 1);
 
     $("#authorship_formset").append(newform);
@@ -137,18 +146,13 @@ When the user selects an author, fill in the most recent known information about
       fname_field.val(data.first_name);
       lname_field.val(data.last_name);
       // If author has no preferred affiliations, then blank out the affiliations field
-      if (typeof data.affiliations == "undefined") {
-        aff_select.val(null).trigger('select2:unselect').trigger('change');
-        // aff_select.trigger('select2:unselect');
-      } else {
-        var affiliations_option = new Option(data.affiliations.name, data.affiliations.id, true, true);
-        aff_select.append(affiliations_option).trigger('change');
-        aff_select.trigger({
-          type: "select2:select",
-          params: {
-            data: data
-          }
-        });
+      aff_select.val(null).trigger('select2:unselect').trigger("change");
+      if (typeof data.affiliations != "undefined") {
+        var i;
+        for (i = 0; i < data.affiliations.length; ++i) {
+          var affiliations_option = new Option(data.affiliations[i].name, data.affiliations[i].id, true, true);
+          aff_select.append(affiliations_option).trigger('change');
+        }
       }
 
       if (typeof data.genders != "undefined") {
