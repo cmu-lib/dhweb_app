@@ -1,48 +1,28 @@
-{% extends "base.html" %}
-
-{% block header_title %}{{ form_title }}{% endblock %}
-
-{% block content %}
+{% extends "conference_create.html" %}
 
 {% load static %}
 {% load crispy_forms_tags %}
 
-<h1>{{ form_title }}</h1>
-
-{% block form_extra %}{% endblock %}
-
-<form method="post">
-  {% csrf_token %}
-  {{ form | crispy }}
-  <h2>Conference Series</h2>
-  <input class="btn btn-primary btn-sm" type="button" value="New series" id="add_series">
-  {{ series_membership_form.management_form }}
-  <div id="membership_formset">
-    {% for form in series_membership_form.forms %}
-    <div class="row" id="series_{{ forloop.counter0 }}">
-      <div class="col">
-        {{ form.series | as_crispy_field }}
-      </div>
-      <div class="col">
-        {{ form.number | as_crispy_field }}
-        {{ form.DELETE | as_crispy_field }}
-      </div>
+{% block seriesforms %}
+<h2>Conference Series</h2>
+<input class="btn btn-primary btn-sm" type="button" value="New series" id="add_series">
+{{ series_membership_form.management_form }}
+<div id="membership_formset">
+  {% for form in series_membership_form.forms %}
+  <div class="row" id="series_{{ forloop.counter0 }}">
+    <div class="col">
+      {{ form.series | as_crispy_field }}
     </div>
-    {% endfor %}
+    <div class="col">
+      {{ form.number | as_crispy_field }}
+      {{ form.DELETE | as_crispy_field }}
+    </div>
   </div>
-  <div class="form-group">
-    <button type="submit" class="btn btn-primary mb-2">Save</button>
-    {% comment %}<a class="btn btn-secondary mb-2" href="{% url cancel_view %}" role="button">Cancel</a>{% endcomment %}
-    {% if delete_view %}
-    <a class="btn btn-danger mb-2" href="{% url delete_view object.pk %}" role="button">Delete</a>
-    {% endif %}
-  </div>
-</form>
+  {% endfor %}
+</div>
 {% endblock %}
 
 {% block js %}
-{% include 'autocomplete_boilerplate.html' %}
-
 <script>
   var form_count = {{ series_membership_form.total_form_count }};
 
