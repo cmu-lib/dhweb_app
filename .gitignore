@@ -8,7 +8,7 @@ __pycache__/
 *.csv
 
 db/
-nginx/default.conf
+nginx/
 data
 .coverage
 htmlcov/
