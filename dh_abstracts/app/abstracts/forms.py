@@ -94,9 +94,9 @@ class FullWorkForm(WorkFilter):
 class WorkAuthorshipForm(forms.Form):
     author = forms.ModelChoiceField(
         queryset=Author.objects.all(),
-        required=True,
+        required=False,
         widget=ModelSelect2(url="unrestricted-author-autocomplete"),
-        help_text="If the author currently exists, select them to auto-populate the fields below. Any edits to the details below will be stored as new assertions about this author.",
+        help_text="If the author currently exists, select them to auto-populate the fields below. Any edits to the details below will be stored as new assertions about this author. If the author does not yet exist, leave this field blank and they will be created from the information you enter below.",
     )
     authorship_order = forms.IntegerField(
         min_value=1,
@@ -499,4 +499,3 @@ class ConferenceSeriesInline(forms.Form):
         required=False,
         help_text="Number in the sequence of this conference series.",
     )
-

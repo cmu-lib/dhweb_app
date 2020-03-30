@@ -651,7 +651,9 @@ def WorkEdit(request, work_id):
 def WorkEditAuthorship(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
     authorships = work.authorships.all()
-    AuthorshipWorkFormset = formset_factory(WorkAuthorshipForm, can_delete=True, extra=0)
+    AuthorshipWorkFormset = formset_factory(
+        WorkAuthorshipForm, can_delete=True, extra=0
+    )
 
     initial_data = []
 
@@ -689,16 +691,22 @@ def WorkEditAuthorship(request, work_id):
                     authorship_order = aform_data["authorship_order"]
 
                     try:
+                        if aform_data["author"] is None:
+                            author_id = Author.objects.create()
+                        else:
+                            author_id = aform_data["author"]
                         auth = Authorship.objects.update_or_create(
                             work=work,
-                            author=aform_data["author"],
+                            author=author_id,
                             defaults={
                                 "authorship_order": authorship_order,
                                 "appellation": appellation,
                             },
                         )[0]
                     except IntegrityError as e:
-                        messages.error(request, "Ensure authorship order numbers are unique")
+                        messages.error(
+                            request, "Ensure authorship order numbers are unique"
+                        )
                         return redirect("work_edit_authorship", work.pk)
 
                     auth.affiliations.clear()
@@ -722,7 +730,11 @@ def WorkEditAuthorship(request, work_id):
             for error in authorships_forms.errors:
                 messages.error(request, error)
 
-    context = {"authorships_form": authorships_forms, "work": work, "affiliation_form": AffiliationEditForm}
+    context = {
+        "authorships_form": authorships_forms,
+        "work": work,
+        "affiliation_form": AffiliationEditForm,
+    }
     return render(request, "work_edit_authorships.html", context)
 
 
@@ -739,7 +751,9 @@ def AuthorInfoJSON(request, author_id):
             "genders": [g.pk for g in author.most_recent_genders],
         }
         if author_aff is not None:
-            author_dict["affiliations"] = [{"name": str(aff), "id": aff.pk} for aff in author_aff]
+            author_dict["affiliations"] = [
+                {"name": str(aff), "id": aff.pk} for aff in author_aff
+            ]
         return JsonResponse(author_dict)
 
 
@@ -821,9 +835,7 @@ class FullAuthorList(LoginRequiredMixin, ListView):
 
             gender_res = filter_form["gender"]
             if gender_res is not None:
-                result_set = result_set.filter(
-                    authorships__genders=gender_res
-                )
+                result_set = result_set.filter(authorships__genders=gender_res)
 
             return result_set.order_by("id").distinct()
         else:
@@ -934,14 +946,14 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         base_result_set = Institution.objects.annotate(
-            n_works=Count("affiliations__asserted_by__work")).distinct()
+            n_works=Count("affiliations__asserted_by__work")
+        ).distinct()
         result_set = base_result_set
 
         if self.request.GET:
             raw_filter_form = FullInstitutionForm(self.request.GET)
             if raw_filter_form.is_valid():
                 filter_form = raw_filter_form.cleaned_data
-
 
                 department_res = filter_form["department"]
                 if department_res != "":
@@ -982,18 +994,22 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["institution_filter_form"] = FullInstitutionForm(initial=self.request.GET)
+        context["institution_filter_form"] = FullInstitutionForm(
+            initial=self.request.GET
+        )
         context["available_institutions_count"] = Institution.objects.count()
         context["filtered_institutions_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("full_institution_list")
         return context
+
 
 class AuthorInstitutionList(FullInstitutionList):
     template_name = "author_institution_list.html"
 
     def get_queryset(self):
         base_result_set = Institution.objects.annotate(
-            n_authors=Count("affiliations__asserted_by__author")).distinct()
+            n_authors=Count("affiliations__asserted_by__author")
+        ).distinct()
         result_set = base_result_set
 
         if self.request.GET:
@@ -1042,6 +1058,7 @@ class AuthorInstitutionList(FullInstitutionList):
         context = super().get_context_data(**kwargs)
         context["redirect_url"] = reverse("author_institution_list")
         return context
+
 
 class InstitutionEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Institution
@@ -1115,6 +1132,7 @@ def institution_merge(request, institution_id):
                 messages.error(request, error)
             return render(request, "institution_merge.html", context)
 
+
 @login_required
 @transaction.atomic
 def institution_multi_merge(request):
@@ -1179,11 +1197,13 @@ class AffiliationCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
         return self.initial
 
+
 @login_required
 def ajax_affiliation_create(request):
     newaff = Affiliation.objects.get_or_create(
         department=request.POST["department"],
-        institution=Institution.objects.get(pk=int(request.POST["institution"])))[0]
+        institution=Institution.objects.get(pk=int(request.POST["institution"])),
+    )[0]
     return JsonResponse({"name": str(newaff), "id": newaff.pk})
 
 
@@ -1272,16 +1292,22 @@ def affiliation_multi_merge(request):
 def wipe_unused(request):
     deletion_dict = {
         "Author": Author.objects.exclude(authorships__isnull=False).distinct(),
-        "Affiliation": Affiliation.objects.exclude(asserted_by__isnull=False).distinct(),
+        "Affiliation": Affiliation.objects.exclude(
+            asserted_by__isnull=False
+        ).distinct(),
         "Institution": Institution.objects.exclude(
             affiliations__asserted_by__isnull=False
         ).distinct(),
         "Keyword": Keyword.objects.exclude(works__isnull=False).distinct(),
         "Topic": Topic.objects.exclude(works__isnull=False).distinct(),
-        "Appellation": Appellation.objects.exclude(asserted_by__isnull=False).distinct(),
-        "Series": ConferenceSeries.objects.exclude(conferences__isnull=False).distinct(),
+        "Appellation": Appellation.objects.exclude(
+            asserted_by__isnull=False
+        ).distinct(),
+        "Series": ConferenceSeries.objects.exclude(
+            conferences__isnull=False
+        ).distinct(),
         "Conferences": Conference.objects.exclude(works__isnull=False).distinct(),
-        "Genders": Gender.objects.exclude(asserted_by__isnull=False).distinct()
+        "Genders": Gender.objects.exclude(asserted_by__isnull=False).distinct(),
     }
 
     if request.method == "POST":
@@ -1321,12 +1347,11 @@ def ConferenceEdit(request, pk):
     conference_dict = model_to_dict(conference)
     conference_dict["organizers"] = conference.organizers.all()
     form = ConferenceForm(initial=conference_dict)
-    ConferenceSeriesFormSet = formset_factory(ConferenceSeriesInline, can_delete=True, extra=0)
+    ConferenceSeriesFormSet = formset_factory(
+        ConferenceSeriesInline, can_delete=True, extra=0
+    )
     initial_series = [
-        {
-        "series": memb.series,
-        "number": memb.number,
-        }
+        {"series": memb.series, "number": memb.number}
         for memb in SeriesMembership.objects.filter(conference=conference).all()
     ]
     context = {
@@ -1370,7 +1395,7 @@ def ConferenceEdit(request, pk):
                         SeriesMembership.objects.update_or_create(
                             conference=conference,
                             series=s_form_data["series"],
-                            defaults={"number": s_form_data["number"],},
+                            defaults={"number": s_form_data["number"]},
                         )
                 messages.success(request, f"Conference {conference} updated.")
                 return redirect("conference_edit", pk=conference.pk)
@@ -1532,7 +1557,9 @@ class KeywordList(LoginRequiredMixin, ListView):
                 filter_form = raw_filter_form.cleaned_data
 
                 if filter_form["name"] != "":
-                    results_set = results_set.filter(title__icontains=filter_form["name"])
+                    results_set = results_set.filter(
+                        title__icontains=filter_form["name"]
+                    )
 
                 if filter_form["ordering"] == "a":
                     results_set = results_set.order_by("title")
@@ -1612,6 +1639,7 @@ def keyword_merge(request, keyword_id):
                 messages.error(request, error)
             return render(request, "tag_merge.html", context)
 
+
 @login_required
 @transaction.atomic
 def keyword_multi_merge(request):
@@ -1628,7 +1656,9 @@ def keyword_multi_merge(request):
         raw_form = KeywordMultiMergeForm(request.POST)
         if raw_form.is_valid():
             target_keyword = raw_form.cleaned_data["into"]
-            source_keywords = raw_form.cleaned_data["sources"].exclude(pk=target_keyword.pk)
+            source_keywords = raw_form.cleaned_data["sources"].exclude(
+                pk=target_keyword.pk
+            )
 
             for keyword in source_keywords:
                 old_keyword_id = keyword.title
@@ -1781,13 +1811,14 @@ def topic_merge(request, topic_id):
                 messages.error(request, error)
             return render(request, "tag_merge.html", context)
 
+
 @login_required
 @transaction.atomic
 def topic_multi_merge(request):
     context = {
         "tag_merge_form": TopicMultiMergeForm,
         "tag_category": "Topic",
-        "multi_merge_view": "topic_multi_merge"
+        "multi_merge_view": "topic_multi_merge",
     }
 
     if request.method == "POST":
@@ -1816,10 +1847,14 @@ def topic_multi_merge(request):
 
     return render(request, "tag_multi_merge.html", context)
 
+
 class LanguageCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Language
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Create language", "cancel_view": "full_language_list"}
+    extra_context = {
+        "form_title": "Create language",
+        "cancel_view": "full_language_list",
+    }
     fields = ["title"]
     success_message = "Language '%(title)s' created"
     success_url = reverse_lazy("full_language_list")
@@ -1828,7 +1863,10 @@ class LanguageCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 class LanguageDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Language
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Delete language", "cancel_view": "full_language_list"}
+    extra_context = {
+        "form_title": "Delete language",
+        "cancel_view": "full_language_list",
+    }
     success_message = "Language '%(title)s' deleted"
     success_url = reverse_lazy("full_language_list")
 
@@ -1952,7 +1990,10 @@ def language_merge(request, language_id):
 class DisciplineCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Discipline
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Create discipline", "cancel_view": "full_discipline_list"}
+    extra_context = {
+        "form_title": "Create discipline",
+        "cancel_view": "full_discipline_list",
+    }
     fields = ["title"]
     success_message = "Discipline '%(title)s' created"
     success_url = reverse_lazy("full_discipline_list")
@@ -1961,7 +2002,10 @@ class DisciplineCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 class DisciplineDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Discipline
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Delete discipline", "cancel_view": "full_discipline_list"}
+    extra_context = {
+        "form_title": "Delete discipline",
+        "cancel_view": "full_discipline_list",
+    }
     success_message = "Discipline '%(title)s' deleted"
     success_url = reverse_lazy("full_discipline_list")
 
@@ -2081,10 +2125,14 @@ def discipline_merge(request, discipline_id):
                 messages.error(request, error)
             return render(request, "tag_merge.html", context)
 
+
 class WorkTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = WorkType
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Create work_type", "cancel_view": "full_work_type_list"}
+    extra_context = {
+        "form_title": "Create work_type",
+        "cancel_view": "full_work_type_list",
+    }
     fields = ["title"]
     success_message = "Abstract type '%(title)s' created"
     success_url = reverse_lazy("full_work_type_list")
@@ -2093,7 +2141,10 @@ class WorkTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 class WorkTypeDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = WorkType
     template_name = "generic_form.html"
-    extra_context = {"form_title": "Delete work_type", "cancel_view": "full_work_type_list"}
+    extra_context = {
+        "form_title": "Delete work_type",
+        "cancel_view": "full_work_type_list",
+    }
     success_message = "Abstract type '%(title)s' deleted"
     success_url = reverse_lazy("full_work_type_list")
 
@@ -2271,7 +2322,9 @@ class GenderList(LoginRequiredMixin, ListView):
             filter_form = raw_filter_form.cleaned_data
 
             if filter_form["name"] != "":
-                results_set = results_set.filter(gender__icontains=filter_form["gender"])
+                results_set = results_set.filter(
+                    gender__icontains=filter_form["gender"]
+                )
 
             if filter_form["ordering"] == "a":
                 results_set = results_set.order_by("gender")
