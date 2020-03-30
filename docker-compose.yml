@@ -1,53 +1,44 @@
 version: "3"
 
 services:
-
-  dh-postgres:
-    image: postgres:11
+  postgres:
+    image: postgres:12.2
     volumes:
-      - dh_web_testing:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
     expose:
-      - "${POSTGRES_PORT}"
+      - 5432
     env_file: .env
 
-  start_dependencies:
-    image: dadarek/wait-for-dependencies
-    depends_on:
-     - "dh-postgres"
-    command: "dh-postgres:${POSTGRES_PORT}"
-
-  dh-web:
+  app:
     build: .
     restart: always
     command: "bash -c ${SERVE_COMMAND}"
     volumes:
       - .:/vol/dh
-      - dh_static_files:/vol/static_files
-      - ${DATADIR}:/vol/data
+      - static:/vol/static_files
     expose:
       - 8000
     links:
-      - "dh-postgres:dh-postgres"
+      - "postgres:postgres"
     env_file: .env
     depends_on:
-      - start_dependencies
+      - postgres
 
-  dh-nginx:
-    image: nginx
+  nginx:
+    image: nginx:1.16.1
     restart: always
     volumes:
-      - ../data/nginx:/etc/nginx/conf.d/.
-      - dh_static_files:/vol/static_files
+      - ./nginx:/etc/nginx/conf.d/.
+      - static:/vol/static_files
     ports:
-      - "${NGINX_PORT}:4000"
+      - "80:80"
       - "443:443"
     env_file: .env
     links:
-      - "dh-web:dh-web"
+      - "app:app"
     depends_on:
-      - start_dependencies
-      - dh-web
+      - app
 
 volumes:
-  dh_web_testing:
-  dh_static_files:
+  db:
+  static:

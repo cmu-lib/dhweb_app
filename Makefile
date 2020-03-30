@@ -3,32 +3,32 @@ all:
 detached:
 	docker-compose up -d
 stop:
-	docker-compose stop dh-web
+	docker-compose stop app
 down:
 	docker-compose down
 attach:
-	docker-compose exec dh-web bash
+	docker-compose exec app bash
 db:
-	docker-compose exec dh-postgres psql -U dh
+	docker-compose exec postgres psql -U dh
 restart:
-	docker-compose restart dh-web dh-nginx
+	docker-compose restart app nginx
 rebuild:
-	docker-compose build --no-cache dh-web dh-nginx
+	docker-compose build --no-cache app nginx
 wipe: stop
-	docker-compose exec dh-postgres psql -U dh -d postgres -c 'DROP DATABASE dh;'
-	docker-compose exec dh-postgres psql -U dh -d postgres -c 'CREATE DATABASE dh;'
+	docker-compose exec postgres psql -U dh -d postgres -c 'DROP DATABASE dh;'
+	docker-compose exec postgres psql -U dh -d postgres -c 'CREATE DATABASE dh;'
 	$(MAKE) restart
-	docker-compose exec dh-web python manage.py migrate
+	docker-compose exec app python manage.py migrate
 reload: wipe
-	docker-compose exec dh-web python manage.py loaddata /vol/data/json/dh.json
+	docker-compose exec app python manage.py loaddata /vol/data/json/dh.json
 dumptest:
-	docker-compose exec dh-web python manage.py dumpdata --indent 2 -e admin.logentry -e auth.permission -e contenttypes -e sessions -o abstracts/fixtures/test.json
+	docker-compose exec app python manage.py dumpdata --indent 2 -e admin.logentry -e auth.permission -e contenttypes -e sessions -o abstracts/fixtures/test.json
 loadtest: wipe
-	docker-compose exec dh-web python manage.py loaddata abstracts/fixtures/test.json
+	docker-compose exec app python manage.py loaddata abstracts/fixtures/test.json
 test:
-	docker-compose exec dh-web python manage.py test --parallel 4
+	docker-compose exec app python manage.py test --parallel 4
 coverage:
-	-docker-compose exec dh-web coverage run manage.py test
-	docker-compose exec dh-web coverage html
+	-docker-compose exec app coverage run manage.py test
+	docker-compose exec app coverage html
 nightly: wipe
-	docker-compose exec dh-web python manage.py loaddata /vol/data/backups/backup.json
+	docker-compose exec app python manage.py loaddata /vol/data/backups/backup.json

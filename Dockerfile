@@ -1,7 +1,7 @@
-FROM python:3.7.3
-ADD . /vol/dh
+FROM python:3.8.2
 WORKDIR /vol/dh
-RUN apt-get update
+ADD requirements.txt /vol/dh
 RUN pip install -r requirements.txt
+ADD . /vol/dh
 WORKDIR /vol/dh/app
 EXPOSE 8000

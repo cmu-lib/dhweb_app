@@ -1,4 +1,4 @@
-django==2.2.8
+django==3
 coverage>=4.4
 django_coverage_plugin>=1.6
 psycopg2-binary
