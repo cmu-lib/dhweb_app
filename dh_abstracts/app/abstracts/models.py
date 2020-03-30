@@ -615,7 +615,7 @@ class Authorship(models.Model):
         return not given_attrs.issubset(pref_attrs)
 
     class Meta:
-        unique_together = (("work", "authorship_order"), ("author", "work"))
+        unique_together = ("author", "work")
         ordering = ["authorship_order"]
 
 
