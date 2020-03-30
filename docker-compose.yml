@@ -10,12 +10,13 @@ services:
     env_file: .env
 
   app:
-    build: .
+    build: dh_abstracts
     restart: always
     command: "bash -c ${SERVE_COMMAND}"
     volumes:
-      - .:/vol/dh
+      - ./dh_abstracts:/vol/dh
       - static:/vol/static_files
+      - ./data:/vol/data
     expose:
       - 8000
     links:
