@@ -1362,7 +1362,7 @@ def ConferenceEdit(request, pk):
         "cancel_view": "full_conference_list",
     }
     if request.method == "POST":
-        form = ConferenceForm(data=request.POST)
+        form = ConferenceForm(data=request.POST, instance=conference)
         if form.is_valid():
             clean_form = form.cleaned_data
             conference.year = clean_form["year"]
@@ -1400,11 +1400,15 @@ def ConferenceEdit(request, pk):
                 messages.success(request, f"Conference {conference} updated.")
                 return redirect("conference_edit", pk=conference.pk)
             else:
-                for error in series_forms.errors:
-                    messages.error(request, error)
+                for f, e in series_forms.errors.items():
+                    messages.error(request, f"{f}: {e}")
+                # for error in series_forms.errors:
+                #     messages.error(request, error)
         else:
-            for error in form.errors:
-                messages.error(request, error)
+            for f, e in form.errors.items():
+                messages.error(request, f"{f}: {e}")
+            # for error in form.errors:
+            #     messages.error(request, error)
 
     return render(request, "conference_edit.html", context)
 
