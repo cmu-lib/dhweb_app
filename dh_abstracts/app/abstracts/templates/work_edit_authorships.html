@@ -56,7 +56,7 @@
         <button name="submit" type="submit" class="btn btn-primary mb-2">Submit</button>
         <a class="btn btn-secondary mb-2" href="{% url 'work_detail' work.pk %}" role="button">Cancel</a>
         <button type="submit" class="btn btn-secondary mb-2" href="{% url 'work_detail' work.pk %}" name="start_new"
-          value="new_work">Save and start new work</a>
+          value="new_work">Save and start new work</button>
       </div>
     </form>
   </div>
@@ -78,6 +78,9 @@
           {{ affiliation_form|crispy }}
         </div>
         <div class="modal-footer">
+          <a type="button" class="btn btn-info" href="{% url 'institution_create' %}" target="_blank"
+            rel="noopener noreferrer">Create
+            institution (new tab)</a>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="submit" name="submit_affiliation" class="btn btn-primary">Save changes</button>
         </div>
