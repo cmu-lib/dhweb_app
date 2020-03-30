@@ -31,7 +31,7 @@ class ConferenceSeries(models.Model):
         return Organizer.objects.filter(conferences_organized__series=self).distinct()
 
     def __str__(self):
-        if self.abbreviation is not "":
+        if self.abbreviation != "":
             return self.abbreviation
         else:
             return self.title
