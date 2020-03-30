@@ -20,8 +20,8 @@ server {
 #     access_log /var/log/nginx/dh_web.log;
 #     error_log /var/log/nginx/dh_web_error.log warn;
 
-#     ssl_certificate /etc/nginx/conf.d/dh-abstracts-test_hss_cmu_edu_cert.crt;
-#     ssl_certificate_key /etc/nginx/conf.d/myserver.key;
+#     ssl_certificate xxx;
+#     ssl_certificate_key xxx;
 #     keepalive_timeout 70;
 #     ssl_session_cache shared:SSL:10m;
 #     ssl_session_timeout 10m;
