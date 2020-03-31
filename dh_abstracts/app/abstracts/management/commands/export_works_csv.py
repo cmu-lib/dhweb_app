@@ -26,7 +26,6 @@ class Command(BaseCommand):
                     "work_title",
                     "work_authors",
                     "work_type",
-                    "work_state",
                     "work_full_text",
                     "work_full_text_type",
                     "work_full_text_license",
@@ -34,7 +33,6 @@ class Command(BaseCommand):
                     "languages",
                     "disciplines",
                     "topics",
-                    "published_version",
                 ]
             )
             works = models.Work.objects.order_by("pk").prefetch_related(
@@ -68,7 +66,6 @@ class Command(BaseCommand):
                     ";".join([str(k) for k in w.languages.all()]),
                     ";".join([str(k) for k in w.disciplines.all()]),
                     ";".join([str(k) for k in w.topics.all()]),
-                    w.published_version.pk if w.published_version is not None else None,
                 ]
                 writer.writerow(row)
             bar.finish()

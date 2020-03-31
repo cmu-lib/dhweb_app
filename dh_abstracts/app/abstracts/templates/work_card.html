@@ -3,9 +3,6 @@
     <a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a>
   </h6>
   {% if user.is_authenticated %}
-  {% if work.state == "su" %}
-  <span class="badge badge-warning">Submission</span>
-  {% endif %}
   <a class="btn btn-primary btn-sm" role="button" href="{% url 'work_edit' work.pk %}">Edit this work</a>
   {% endif %}
 </div>

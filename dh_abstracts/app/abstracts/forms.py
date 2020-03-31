@@ -29,38 +29,38 @@ class WorkFilter(forms.Form):
     text = forms.CharField(max_length=100, strip=True, required=False)
     full_text_available = forms.BooleanField(required=False)
     work_type = forms.ModelChoiceField(
-        queryset=WorkType.objects.filter(works__state="ac").distinct(), required=False
+        queryset=WorkType.objects.distinct(), required=False
     )
     conference = forms.ModelChoiceField(
-        queryset=Conference.objects.filter(works__state="ac").distinct(),
+        queryset=Conference.objects.all(),
         required=False,
         help_text="Works submitted to a particular conference",
     )
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.filter(
-            affiliations__asserted_by__work__state="ac"
+            affiliations__asserted_by__work__isnull=False
         ).distinct(),
         widget=ModelSelect2(url="institution-autocomplete"),
         required=False,
         help_text="Works submitted with at least one author belonging to that institution.",
     )
     keyword = forms.ModelChoiceField(
-        queryset=Keyword.objects.filter(works__state="ac").distinct(),
+        queryset=Keyword.objects.all(),
         required=False,
         widget=ModelSelect2(url="keyword-autocomplete"),
     )
     topic = forms.ModelChoiceField(
-        queryset=Topic.objects.filter(works__state="ac").distinct(),
+        queryset=Topic.objects.distinct(),
         required=False,
         widget=ModelSelect2(url="topic-autocomplete"),
     )
     language = forms.ModelChoiceField(
-        queryset=Language.objects.filter(works__state="ac").distinct(),
+        queryset=Language.objects.distinct(),
         required=False,
         widget=ModelSelect2(url="language-autocomplete"),
     )
     discipline = forms.ModelChoiceField(
-        queryset=Discipline.objects.filter(works__state="ac").distinct(),
+        queryset=Discipline.objects.distinct(),
         required=False,
         widget=ModelSelect2(url="discipline-autocomplete"),
     )
@@ -72,9 +72,6 @@ class FullWorkForm(WorkFilter):
         required=False,
         widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
         help_text='Search by department+institution combination. This is a more granular search than "Institution" above.',
-    )
-    state = forms.ChoiceField(
-        choices=Work.WORK_STATE, widget=forms.RadioSelect(), required=False
     )
     n_authors = forms.IntegerField(
         label="Number of authors", min_value=0, required=False
@@ -155,13 +152,6 @@ class WorkForm(forms.ModelForm):
         help_text="Optional discipline tag from a controlled vocabulary established by the ADHO DH conferences.",
     )
 
-    published_version = forms.ModelChoiceField(
-        queryset=Work.objects.filter(state="ac"),
-        required=False,
-        widget=ModelSelect2(url="unrestricted-work-autocomplete"),
-        help_text='Abstracts with the state "submitted" may be associated with "final" abstracts, establishing a link that will be visible in the editing interface. Note: one final work may be associated with many submitted works, but a submitted work may only be associated with one final final work. TODO: do not show unfinal works in select interface.',
-    )
-
     conference = forms.ModelChoiceField(
         queryset=Conference.objects.all(),
         help_text="The conference where this abstract was submitted/published.",
@@ -172,12 +162,6 @@ class WorkForm(forms.ModelForm):
     work_type = forms.ModelChoiceField(
         queryset=WorkType.objects.all(),
         help_text='Abstracts may belong to one type that has been defined by editors based on a survey of all the abstracts in this collection, e.g. "poster", "workshop", "long paper".',
-    )
-
-    state = forms.ChoiceField(
-        choices=Work.WORK_STATE,
-        widget=forms.RadioSelect,
-        help_text='Abstracts may be either "final" or "Submitted". Abstracts that aren\'t marked "final" will not display to public viewers, and none of the names or affiliations asserted by those abstracts will be listed publicly in author profiles.',
     )
 
     full_text_license = forms.ModelChoiceField(
@@ -199,7 +183,6 @@ class WorkForm(forms.ModelForm):
             "conference",
             "title",
             "work_type",
-            "state",
             "full_text",
             "full_text_type",
             "full_text_license",
@@ -235,23 +218,19 @@ class WorkForm(forms.ModelForm):
 class AuthorFilter(forms.Form):
     name = forms.CharField(max_length=100, strip=True, required=False)
     affiliation = forms.ModelChoiceField(
-        queryset=Affiliation.objects.filter(asserted_by__work__state="ac").distinct(),
+        queryset=Affiliation.objects.all(),
         required=False,
         widget=ModelSelect2(url="affiliation-autocomplete"),
         help_text="Authors who were once affiliated with this department",
     )
     institution = forms.ModelChoiceField(
-        queryset=Institution.objects.filter(
-            affiliations__asserted_by__work__state="ac"
-        ).distinct(),
+        queryset=Institution.objects.all(),
         required=False,
         widget=ModelSelect2(url="institution-autocomplete"),
         help_text="Authors who were once affiliated with this institution",
     )
     country = forms.ModelChoiceField(
-        queryset=Country.objects.filter(
-            institutions__affiliations__asserted_by__work__state="ac"
-        ).distinct(),
+        queryset=Country.objects.all(),
         required=False,
         help_text="Authors who were once affiliated with an institution in this country",
         widget=ModelSelect2(url="country-autocomplete"),

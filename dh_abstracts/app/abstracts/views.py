@@ -70,9 +70,7 @@ from .forms import (
 
 class InstitutionAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Institution.objects.filter(
-            affiliations__asserted_by__work__state="ac"
-        ).distinct()
+        qs = Institution.objects.all()
 
         if self.q:
             qs = qs.filter(
@@ -84,7 +82,7 @@ class InstitutionAutocomplete(Select2QuerySetView):
 
 class AffiliationAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Affiliation.objects.filter(asserted_by__work__state="ac").distinct()
+        qs = Affiliation.objects.all()
 
         if self.q:
             qs = qs.filter(
@@ -96,17 +94,17 @@ class AffiliationAutocomplete(Select2QuerySetView):
 
 class KeywordAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Keyword.objects.filter(works__state="ac").distinct()
+        qs = Keyword.objects.all()
 
         if self.q:
-            qs = qs.filter(works__state="ac", title__icontains=self.q).distinct()
+            qs = qs.filter(title__icontains=self.q).distinct()
 
         return qs
 
 
 class TopicAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Topic.objects.filter(works__state="ac").distinct()
+        qs = Topic.objects.all()
 
         if self.q:
             qs = qs.filter(title__icontains=self.q).distinct()
@@ -116,7 +114,7 @@ class TopicAutocomplete(Select2QuerySetView):
 
 class LanguageAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Language.objects.filter(works__state="ac").distinct()
+        qs = Language.objects.all()
 
         if self.q:
             qs = qs.filter(title__icontains=self.q).distinct()
@@ -126,7 +124,7 @@ class LanguageAutocomplete(Select2QuerySetView):
 
 class DisciplineAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Discipline.objects.filter(works__state="ac").distinct()
+        qs = Discipline.objects.all()
 
         if self.q:
             qs = qs.filter(title__icontains=self.q).distinct()
@@ -136,9 +134,7 @@ class DisciplineAutocomplete(Select2QuerySetView):
 
 class CountryAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Country.objects.filter(
-            institutions__affiliations__asserted_by__work__state="ac"
-        ).distinct()
+        qs = Country.objects.all()
 
         if self.q:
             qs = qs.filter(names__name__icontains=self.q).distinct()
@@ -148,7 +144,7 @@ class CountryAutocomplete(Select2QuerySetView):
 
 class AuthorAutocomplete(Select2QuerySetView):
     def get_queryset(self):
-        qs = Author.objects.filter(works__state="ac").distinct()
+        qs = Author.objects.all()
 
         if self.q:
             qs = qs.filter(
@@ -296,7 +292,7 @@ class PublicWorkList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        base_result_set = Work.objects.filter(state="ac").order_by("title").distinct()
+        base_result_set = Work.objects.order_by("title").all()
 
         raw_filter_form = WorkFilter(self.request.GET)
 
@@ -350,7 +346,7 @@ class PublicWorkList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["work_filter_form"] = WorkFilter(data=self.request.GET)
-        context["available_works_count"] = Work.objects.filter(state="ac").count()
+        context["available_works_count"] = Work.objects.count()
         context["filtered_works_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("work_list")
         return context
@@ -359,17 +355,9 @@ class PublicWorkList(ListView):
 def work_view(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
 
-    # If work is unaccepted and the user isn't authenticated, boot them back to the homepage
-    if work.state != "ac" and not request.user.is_authenticated:
-        messages.error(
-            request,
-            f"Work ID {work.pk} isn't public yet. Please <a href='/admin/login'>log in</a> to continue.",
-        )
-        return redirect("work_list")
-    else:
-        authorships = work.authorships.order_by("authorship_order")
-        context = {"work": work, "authorships": authorships}
-        return render(request, "work_detail.html", context)
+    authorships = work.authorships.order_by("authorship_order")
+    context = {"work": work, "authorships": authorships}
+    return render(request, "work_detail.html", context)
 
 
 def author_view(request, author_id):
@@ -377,7 +365,7 @@ def author_view(request, author_id):
 
     if request.user.is_authenticated:
         obj_authorships = author.authorships.all()
-    elif not author.works.filter(state="ac").exists():
+    elif not author.works.exists():
         messages.error(
             request,
             f"Author ID {author.pk} isn't public yet. Please <a href='/admin/login'>log in</a> to continue.",
@@ -447,7 +435,7 @@ class PublicAuthorList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        base_result_set = Author.objects.filter(works__state="ac")
+        base_result_set = Author.objects.all()
         raw_filter_form = AuthorFilter(self.request.GET)
 
         if raw_filter_form.is_valid():
@@ -484,22 +472,16 @@ class PublicAuthorList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["author_filter_form"] = AuthorFilter(data=self.request.GET)
-        context["available_authors_count"] = (
-            Author.objects.filter(works__state="ac").distinct().count()
-        )
+        context["available_authors_count"] = Author.objects.count()
         context["filtered_authors_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("author_list")
         return context
 
 
 def PublicConferenceList(request):
-    affiliated_conferences = ConferenceSeries.objects.filter(
-        conferences__works__state="ac"
-    ).distinct()
+    affiliated_conferences = ConferenceSeries.objects.all()
 
-    unaffiliated_conferences = Conference.objects.filter(
-        works__state="ac", series__isnull=True
-    ).distinct()
+    unaffiliated_conferences = Conference.objects.filter(series__isnull=True).distinct()
 
     context = {
         "conference_list": affiliated_conferences,
@@ -510,7 +492,7 @@ def PublicConferenceList(request):
 
 
 def home_view(request):
-    public_works = Work.objects.filter(state="ac").distinct()
+    public_works = Work.objects.all()
 
     conference_count = (
         Conference.objects.filter(works__in=public_works)
@@ -866,10 +848,6 @@ class FullWorkList(LoginRequiredMixin, ListView):
         if raw_filter_form.is_valid():
             result_set = base_result_set
             filter_form = raw_filter_form.cleaned_data
-
-            state_res = filter_form["state"]
-            if state_res != "":
-                result_set = result_set.filter(state=state_res)
 
             work_type_res = filter_form["work_type"]
             if work_type_res is not None:

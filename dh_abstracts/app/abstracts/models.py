@@ -60,7 +60,7 @@ class Conference(models.Model):
 
     @property
     def public_works(self):
-        return self.works.filter(state="ac")
+        return self.works.all()
 
     def public_authors(self):
         return (
@@ -189,8 +189,6 @@ class License(models.Model):
 
 
 class Work(TextIndexedModel):
-    WORK_STATE = (("ac", "final"), ("su", "submission"))
-
     FT_TYPE = (("", "-----------"), ("xml", "XML"), ("txt", "plain text"))
 
     conference = models.ForeignKey(
@@ -200,7 +198,6 @@ class Work(TextIndexedModel):
     work_type = models.ForeignKey(
         WorkType, blank=True, null=True, on_delete=models.SET_NULL, related_name="works"
     )
-    state = models.CharField(max_length=2, choices=WORK_STATE)
     full_text = models.TextField(max_length=50000, blank=True, null=False, default="")
     full_text_type = models.CharField(
         max_length=3, choices=FT_TYPE, blank=True, null=False, default=""
@@ -209,14 +206,6 @@ class Work(TextIndexedModel):
     languages = models.ManyToManyField(Language, related_name="works", blank=True)
     disciplines = models.ManyToManyField(Discipline, related_name="works", blank=True)
     topics = models.ManyToManyField(Topic, related_name="works", blank=True)
-    published_version = models.ForeignKey(
-        "self",
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name="unpublished_versions",
-        limit_choices_to={"state": "ac"},
-    )
     full_text_license = models.ForeignKey(
         License, blank=True, null=True, on_delete=models.SET_NULL
     )
@@ -232,7 +221,7 @@ class Work(TextIndexedModel):
             return self.title
 
     def __str__(self):
-        return f"({self.state}) {self.display_title}"
+        return self.display_title
 
     class Meta(TextIndexedModel.Meta):
         ordering = ["title"]
@@ -384,10 +373,7 @@ class Institution(models.Model):
     @property
     def public_affiliated_authors(self):
         return (
-            Author.objects.filter(
-                authorships__affiliations__institution=self,
-                authorships__work_state="ac",
-            )
+            Author.objects.filter(authorships__affiliations__institution=self)
             .annotate(n_works=Count("works"))
             .distinct()
             .order_by("-n_works")
@@ -472,7 +458,7 @@ class Author(models.Model):
 
     @property
     def public_authorships(self):
-        return self.authorships.filter(work__state="ac").distinct()
+        return self.authorships.all()
 
     @property
     def public_works(self):

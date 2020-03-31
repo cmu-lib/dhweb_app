@@ -107,11 +107,6 @@ class AuthorListViewTest(TestCase):
         res = self.client.get(reverse("author_list"))
         self.assertTrue(is_list_unique(res.context["author_list"]))
 
-    def test_all_accepted(self):
-        res = self.client.get(reverse("author_list"))
-        for author in res.context["author_list"]:
-            self.assertGreaterEqual(author.works.filter(state="ac").count(), 1)
-
 
 class AuthorFullListViewTest(TestCase):
     """
@@ -208,15 +203,33 @@ class InstitutionFullListViewTest(TestCase):
     @as_auth
     def test_sort(self):
         res = self.client.get(reverse("full_institution_list"), data={"ordering": "a"})
-        self.assertLess(res.context["institution_list"][0].name, res.context["institution_list"][1].name)
-        res = self.client.get(reverse("full_institution_list"), data={"ordering": "n_dsc"})
+        self.assertLess(
+            res.context["institution_list"][0].name,
+            res.context["institution_list"][1].name,
+        )
+        res = self.client.get(
+            reverse("full_institution_list"), data={"ordering": "n_dsc"}
+        )
         self.assertGreaterEqual(
-            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][0]).count(),
-            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][1]).count())
-        res = self.client.get(reverse("full_institution_list"), data={"ordering": "n_asc"})
+            Authorship.objects.filter(
+                affiliations__institution=res.context["institution_list"][0]
+            ).count(),
+            Authorship.objects.filter(
+                affiliations__institution=res.context["institution_list"][1]
+            ).count(),
+        )
+        res = self.client.get(
+            reverse("full_institution_list"), data={"ordering": "n_asc"}
+        )
         self.assertLessEqual(
-            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][0]).count(),
-            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][1]).count())
+            Authorship.objects.filter(
+                affiliations__institution=res.context["institution_list"][0]
+            ).count(),
+            Authorship.objects.filter(
+                affiliations__institution=res.context["institution_list"][1]
+            ).count(),
+        )
+
 
 class AuthorInstitutionFullListViewTest(TestCase):
     """
@@ -248,16 +261,35 @@ class AuthorInstitutionFullListViewTest(TestCase):
 
     @as_auth
     def test_sort(self):
-        res = self.client.get(reverse("author_institution_list"), data={"ordering": "a"})
-        self.assertLess(res.context["institution_list"][0].name, res.context["institution_list"][1].name)
-        res = self.client.get(reverse("author_institution_list"), data={"ordering": "n_dsc"})
+        res = self.client.get(
+            reverse("author_institution_list"), data={"ordering": "a"}
+        )
+        self.assertLess(
+            res.context["institution_list"][0].name,
+            res.context["institution_list"][1].name,
+        )
+        res = self.client.get(
+            reverse("author_institution_list"), data={"ordering": "n_dsc"}
+        )
         self.assertGreaterEqual(
-            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][0]).count(),
-            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][1]).count())
-        res = self.client.get(reverse("author_institution_list"), data={"ordering": "n_asc"})
+            Authorship.objects.filter(
+                affiliations__institution=res.context["institution_list"][0]
+            ).count(),
+            Authorship.objects.filter(
+                affiliations__institution=res.context["institution_list"][1]
+            ).count(),
+        )
+        res = self.client.get(
+            reverse("author_institution_list"), data={"ordering": "n_asc"}
+        )
         self.assertLessEqual(
-            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][0]).count(),
-            Authorship.objects.filter(affiliations__institution=res.context["institution_list"][1]).count())
+            Authorship.objects.filter(
+                affiliations__institution=res.context["institution_list"][0]
+            ).count(),
+            Authorship.objects.filter(
+                affiliations__institution=res.context["institution_list"][1]
+            ).count(),
+        )
 
 
 class AuthorDetailViewTest(TestCase):
@@ -342,11 +374,6 @@ class WorkListViewTest(TestCase):
             len(set(res.context["work_list"])), res.context["filtered_works_count"]
         )
 
-    def test_only_accepted(self):
-        res = self.client.get(reverse("work_list"))
-        for work in res.context["work_list"]:
-            self.assertEqual(work.state, "ac")
-
 
 class WorkDetailViewTest(TestCase):
     """
@@ -381,16 +408,10 @@ class ConferenceListViewTest(TestCase):
     def test_render(self):
         publicly_available(self, "conference_list")
 
-    def test_hide_unaccepted_conferences(self):
-        res = self.client.get(reverse("conference_list"))
-        self.assertNotIn(
-            ConferenceSeries.objects.get(pk=2), res.context["conference_list"]
-        )
-
     def test_has_unaffiliated_conferences(self):
         res = self.client.get(reverse("conference_list"))
         self.assertIn(
-            Conference.objects.filter(series__isnull=True, works__state="ac").first(),
+            Conference.objects.filter(series__isnull=True).first(),
             res.context["standalone_conferences"],
         )
 
@@ -404,14 +425,6 @@ class FullConferenceListViewTest(TestCase):
 
     def test_render(self):
         privately_available(self, "full_conference_list")
-
-    @as_auth
-    def test_has_unaccepted_conferences(self):
-        res = self.client.get(reverse("full_conference_list"))
-        self.assertIn(
-            Conference.objects.exclude(works__state="ac").first(),
-            res.context["conference_list"],
-        )
 
 
 class AuthorMergeViewTest(TestCase):
@@ -547,6 +560,7 @@ class AffiliationMultiMergeViewTest(TestCase):
         self.assertFalse(Affiliation.objects.filter(pk=4).exists())
         self.assertContains(res, "updated")
 
+
 class InstitutionMultiMergeViewTest(TestCase):
     fixtures = ["test.json"]
 
@@ -583,6 +597,7 @@ class WipeUnusedViewTest(TestCase):
 
     @as_auth
     def test_post(self):
+        res = self.client.post(reverse("wipe_unused"))
         res = self.client.post(reverse("wipe_unused"))
         self.assertFalse(res.context["hanging_items"])
 
@@ -900,6 +915,7 @@ class KeywordMergeViewTest(TestCase):
         self.assertRedirects(res, expected_redirect)
         self.assertContains(res, "You cannot merge a keyword into itself")
 
+
 class KeywordMultiMergeViewTest(TestCase):
     fixtures = ["test.json"]
 
@@ -910,7 +926,7 @@ class KeywordMultiMergeViewTest(TestCase):
     def test_post(self):
         res = self.client.post(
             reverse("keyword_multi_merge"),
-            data={"sources": [1,3,4], "into": 2},
+            data={"sources": [1, 3, 4], "into": 2},
             follow=True,
         )
         expected_redirect = reverse("keyword_edit", kwargs={"pk": 2})
@@ -992,6 +1008,7 @@ class DeleteTopicViewTest(TestCase):
         res = self.client.post(reverse("topic_delete", kwargs={"pk": 1}), follow=True)
         self.assertFalse(Topic.objects.filter(pk=1).exists())
 
+
 class TopicMultiMergeViewTest(TestCase):
     fixtures = ["test.json"]
 
@@ -1002,7 +1019,7 @@ class TopicMultiMergeViewTest(TestCase):
     def test_post(self):
         res = self.client.post(
             reverse("topic_multi_merge"),
-            data={"sources": [1,3,4], "into": 2},
+            data={"sources": [1, 3, 4], "into": 2},
             follow=True,
         )
         expected_redirect = reverse("topic_edit", kwargs={"pk": 2})
@@ -1013,6 +1030,7 @@ class TopicMultiMergeViewTest(TestCase):
         self.assertFalse(Topic.objects.filter(pk=4).exists())
         self.assertContains(res, "updated")
         self.assertContains(res, "deleted")
+
 
 class LanguageFullListViewTest(TestCase):
     """
@@ -1091,7 +1109,9 @@ class DeleteLanguageViewTest(TestCase):
 
     @as_auth
     def test_post(self):
-        res = self.client.post(reverse("language_delete", kwargs={"pk": 1}), follow=True)
+        res = self.client.post(
+            reverse("language_delete", kwargs={"pk": 1}), follow=True
+        )
         self.assertFalse(Language.objects.filter(pk=1).exists())
 
 
@@ -1164,9 +1184,13 @@ class DisciplineFullListViewTest(TestCase):
     def test_sort(self):
         res = self.client.get(reverse("full_discipline_list"), data={"ordering": "a"})
         self.assertTrue(res.context["tag_list"].ordered)
-        res = self.client.get(reverse("full_discipline_list"), data={"ordering": "n_dsc"})
+        res = self.client.get(
+            reverse("full_discipline_list"), data={"ordering": "n_dsc"}
+        )
         self.assertTrue(res.context["tag_list"].ordered)
-        res = self.client.get(reverse("full_discipline_list"), data={"ordering": "n_asc"})
+        res = self.client.get(
+            reverse("full_discipline_list"), data={"ordering": "n_asc"}
+        )
         self.assertTrue(res.context["tag_list"].ordered)
 
 
@@ -1210,7 +1234,9 @@ class DeleteDisciplineViewTest(TestCase):
 
     @as_auth
     def test_post(self):
-        res = self.client.post(reverse("discipline_delete", kwargs={"pk": 1}), follow=True)
+        res = self.client.post(
+            reverse("discipline_delete", kwargs={"pk": 1}), follow=True
+        )
         self.assertFalse(Discipline.objects.filter(pk=1).exists())
 
 
@@ -1251,6 +1277,7 @@ class DisciplineMergeViewTest(TestCase):
         self.assertRedirects(res, expected_redirect)
         self.assertContains(res, "You cannot merge a discipline into itself")
 
+
 class WorkTypeFullListViewTest(TestCase):
     """
     Test full WorkType list page
@@ -1282,9 +1309,13 @@ class WorkTypeFullListViewTest(TestCase):
     def test_sort(self):
         res = self.client.get(reverse("full_work_type_list"), data={"ordering": "a"})
         self.assertTrue(res.context["tag_list"].ordered)
-        res = self.client.get(reverse("full_work_type_list"), data={"ordering": "n_dsc"})
+        res = self.client.get(
+            reverse("full_work_type_list"), data={"ordering": "n_dsc"}
+        )
         self.assertTrue(res.context["tag_list"].ordered)
-        res = self.client.get(reverse("full_work_type_list"), data={"ordering": "n_asc"})
+        res = self.client.get(
+            reverse("full_work_type_list"), data={"ordering": "n_asc"}
+        )
         self.assertTrue(res.context["tag_list"].ordered)
 
 
@@ -1328,7 +1359,9 @@ class DeleteWorkTypeViewTest(TestCase):
 
     @as_auth
     def test_post(self):
-        res = self.client.post(reverse("work_type_delete", kwargs={"pk": 1}), follow=True)
+        res = self.client.post(
+            reverse("work_type_delete", kwargs={"pk": 1}), follow=True
+        )
         self.assertFalse(WorkType.objects.filter(pk=1).exists())
 
 
@@ -1368,6 +1401,7 @@ class WorkTypeMergeViewTest(TestCase):
         expected_redirect = reverse("work_type_merge", kwargs={"work_type_id": 1})
         self.assertRedirects(res, expected_redirect)
         self.assertContains(res, "You cannot merge a work_type into itself")
+
 
 class GenderFullListViewTest(TestCase):
     """

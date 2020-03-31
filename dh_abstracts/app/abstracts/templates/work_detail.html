@@ -62,27 +62,6 @@
   <div class="card-header">Conference Info</div>
   <div class="card-body">
     {% include "conference_card.html" with conference=work.conference %}
-    {% if user.is_authenticated %}
-    {% if work.state == "su" %}
-    <div class="alert alert-warning">
-      <p>This is a submitted version, and may not reflect the final, accepted paper.</p>
-      {% if work.published_version %}
-      <p><a href="{% url 'work_detail' work.published_version.pk%}">See {{ work.published_version.conference.year }}
-          accepted version</a></p>
-      {% endif %}
-    </div>
-    {% endif %}
-    {% with num_versions=work.unpublished_versions.count%}
-    {% if num_versions > 0 %}
-    <div class="alert alert-info">
-      See submitted version{{ num_versions | pluralize }}:
-      {% for up in work.unpublished_versions.all %}
-      <a class="badge badge-primary" href="{% url 'work_detail' up.pk %}">{{ up.conference.year }}</a>
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-    {% endif %}
   </div>
 </div>
 
