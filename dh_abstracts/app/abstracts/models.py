@@ -22,8 +22,8 @@ class TextIndexedModel(models.Model):
 
 
 class ConferenceSeries(models.Model):
-    title = models.CharField(max_length=100, unique=True)
-    abbreviation = models.CharField(max_length=7, unique=True)
+    title = models.CharField(max_length=200, unique=True)
+    abbreviation = models.CharField(max_length=30, unique=True)
     notes = models.TextField(blank=True, null=False, default="")
 
     @property
@@ -42,8 +42,8 @@ class ConferenceSeries(models.Model):
 
 class Conference(models.Model):
     year = models.IntegerField()
-    venue = models.CharField(max_length=100)
-    venue_abbreviation = models.CharField(max_length=25, blank=True)
+    venue = models.CharField(max_length=200)
+    venue_abbreviation = models.CharField(max_length=50, blank=True)
     series = models.ManyToManyField(
         ConferenceSeries,
         through="SeriesMembership",
@@ -85,7 +85,7 @@ class Conference(models.Model):
 
 
 class Organizer(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
     abbreviation = models.CharField(max_length=7, unique=True)
     conferences_organized = models.ManyToManyField(
         Conference, related_name="organizers", blank=True
