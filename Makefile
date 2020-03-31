@@ -37,3 +37,5 @@ coverage:
 	docker-compose exec app coverage html
 nightly: wipe
 	docker-compose exec app python manage.py loaddata /vol/data/backups/backup.json
+check:
+	docker-compose exec app python manage.py check
