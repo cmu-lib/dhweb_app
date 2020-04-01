@@ -25,13 +25,12 @@ class Command(BaseCommand):
                     "last_name",
                     "authorship_order",
                     "affiliation_ids",
-                    "gender_ids",
                 ]
             )
 
             authorships = models.Authorship.objects.order_by(
                 "work__pk", "authorship_order"
-            ).prefetch_related("author", "affiliations", "genders")
+            ).prefetch_related("author", "affiliations")
 
             bar = Bar("Exporting authorships", max=authorships.count())
             for a in authorships:
@@ -44,7 +43,6 @@ class Command(BaseCommand):
                     a.appellation.last_name,
                     a.authorship_order,
                     ";".join([str(aff.pk) for aff in a.affiliations.all()]),
-                    ";".join([gender.gender for gender in a.genders.all()]),
                 ]
                 writer.writerow(row)
             bar.finish()

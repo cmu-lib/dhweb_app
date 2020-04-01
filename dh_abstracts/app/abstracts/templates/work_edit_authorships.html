@@ -43,9 +43,6 @@
                 id="affiliationModal-trigger-{{ forloop.counter0 }}">
                 Create new affiliation
               </button>
-
-
-              {{ form.genders|as_crispy_field }}
             </div>
           </div>
         </li>
@@ -133,7 +130,7 @@ When the user selects an author, fill in the most recent known information about
     author_count++;
 
     var newformid = "authorship_" + author_count;
-    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <input type="button" class="btn btn-danger" id="remove-authorship-' + newformid + '" value="Remove authorship"></h2> <div class="row"> <div class="col"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col"> {{ authorships_form.empty_form.affiliations | as_crispy_field |escapejs}} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal" id="affiliationModal-trigger-' + newformid + '">Create new affiliation</button>{{ authorships_form.empty_form.genders | as_crispy_field |escapejs}} </div> </div> </li>';
+    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <input type="button" class="btn btn-danger" id="remove-authorship-' + newformid + '" value="Remove authorship"></h2> <div class="row"> <div class="col"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col"> {{ authorships_form.empty_form.affiliations | as_crispy_field |escapejs}} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal" id="affiliationModal-trigger-' + newformid + '">Create new affiliation</button> </div> </div> </li>';
     newform = newform.replace(/__prefix__/g, author_count - 1);
 
     $("#authorship_formset").append(newform);
@@ -157,15 +154,6 @@ When the user selects an author, fill in the most recent known information about
         for (i = 0; i < data.affiliations.length; ++i) {
           var affiliations_option = new Option(data.affiliations[i].name, data.affiliations[i].id, true, true);
           aff_select.append(affiliations_option).trigger('change');
-        }
-      }
-
-      if (typeof data.genders != "undefined") {
-        parent_li.find("input[id*='genders']").prop("checked", false);
-        var i;
-        for (i = 0; i < data.genders.length; ++i) {
-          gender_box = parent_li.find("input[id*='genders_" + data.genders[i] + "']");
-          gender_box.prop("checked", true);
         }
       }
 

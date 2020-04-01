@@ -340,20 +340,6 @@
   }
 },
 {
-  "model": "abstracts.gender",
-  "pk": 1,
-  "fields": {
-    "gender": "Female"
-  }
-},
-{
-  "model": "abstracts.gender",
-  "pk": 2,
-  "fields": {
-    "gender": "Male"
-  }
-},
-{
   "model": "abstracts.country",
   "pk": 1,
   "fields": {
@@ -491,9 +477,6 @@
     "appellation": 1,
     "affiliations": [
       1
-    ],
-    "genders": [
-      1
     ]
   }
 },
@@ -506,9 +489,6 @@
     "authorship_order": 2,
     "appellation": 2,
     "affiliations": [
-      2
-    ],
-    "genders": [
       2
     ]
   }
@@ -523,9 +503,6 @@
     "appellation": 4,
     "affiliations": [
       2
-    ],
-    "genders": [
-      2
     ]
   }
 },
@@ -539,9 +516,6 @@
     "appellation": 2,
     "affiliations": [
       3
-    ],
-    "genders": [
-      2
     ]
   }
 },

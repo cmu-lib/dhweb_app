@@ -17,7 +17,6 @@ from .models import (
     Language,
     Discipline,
     License,
-    Gender,
     Affiliation,
     SeriesMembership,
     ConferenceSeries,
@@ -81,11 +80,6 @@ class FullWorkForm(WorkFilter):
         required=False,
         widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
     )
-    gender = forms.ModelChoiceField(
-        queryset=Gender.objects.all(),
-        required=False,
-        help_text="At least one author of this paper was associated with this gender at submission time.",
-    )
 
 
 class WorkAuthorshipForm(forms.Form):
@@ -114,12 +108,6 @@ class WorkAuthorshipForm(forms.Form):
         required=False,
         widget=ModelSelect2Multiple(url="unrestricted-affiliation-autocomplete"),
         help_text="If the combination of department and institution is not available in this list, then use the fields below to define it.",
-    )
-    genders = forms.ModelMultipleChoiceField(
-        queryset=Gender.objects.all(),
-        required=False,
-        widget=forms.CheckboxSelectMultiple(),
-        help_text="Gender presentation of the author at this time. This is optional and will not be publicly viewable.",
     )
 
 
@@ -249,11 +237,6 @@ class FullAuthorFilter(AuthorFilter):
     )
     last_name = forms.CharField(
         max_length=100, strip=True, required=False, help_text="Search only last names"
-    )
-    gender = forms.ModelChoiceField(
-        queryset=Gender.objects.all(),
-        required=False,
-        help_text="This author has been linked to this gender at least once.",
     )
 
 
@@ -434,12 +417,6 @@ class WorkTypeMergeForm(forms.Form):
     )
 
 
-class GenderMergeForm(forms.Form):
-    into = forms.ModelChoiceField(
-        queryset=Gender.objects.all(),
-        required=True,
-        help_text="Select the gender that will be used to replace the one you are deleting.",
-    )
 
 
 class TagForm(forms.Form):

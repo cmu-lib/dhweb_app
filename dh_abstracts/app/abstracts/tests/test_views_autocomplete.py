@@ -10,7 +10,6 @@ from abstracts.models import (
     SeriesMembership,
     Work,
     Institution,
-    Gender,
     Appellation,
     Author,
     Authorship,

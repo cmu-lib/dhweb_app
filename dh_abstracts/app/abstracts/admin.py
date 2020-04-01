@@ -7,7 +7,6 @@ from .models import (
     SeriesMembership,
     Work,
     Institution,
-    Gender,
     Appellation,
     Author,
     Authorship,
@@ -30,10 +29,6 @@ class KeywordAdmin(admin.ModelAdmin):
     search_fields = ["title"]
 
 
-class GenderAdmin(admin.ModelAdmin):
-    search_fields = ["gender"]
-
-
 class CountryAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
@@ -44,13 +39,13 @@ class InstitutuionAdmin(admin.ModelAdmin):
 
 class AuthorshipAdmin(admin.ModelAdmin):
     search_fields = ["author__appellations__last_name", "work__title"]
-    autocomplete_fields = ["author", "work", "genders", "appellation", "affiliations"]
+    autocomplete_fields = ["author", "work", "appellation", "affiliations"]
 
 
 class AuthorshipInline(admin.StackedInline):
     model = Authorship
     extra = 0
-    autocomplete_fields = ["author", "work", "genders", "appellation", "affiliations"]
+    autocomplete_fields = ["author", "work", "appellation", "affiliations"]
     show_change_link = True
 
 
@@ -71,12 +66,7 @@ class AppellationAdmin(admin.ModelAdmin):
 
 class WorkAdmin(admin.ModelAdmin):
     inlines = [AuthorshipInline]
-    autocomplete_fields = [
-        "keywords",
-        "languages",
-        "topics",
-        "disciplines",
-    ]
+    autocomplete_fields = ["keywords", "languages", "topics", "disciplines"]
     search_fields = ["title", "authorships__appellation__last_name"]
     list_filter = ["work_type", "conference"]
     list_display = ["title", "conference", "work_type"]
@@ -129,7 +119,6 @@ admin.site.register(Conference, ConferenceAdmin)
 admin.site.register(SeriesMembership)
 admin.site.register(Work, WorkAdmin)
 admin.site.register(Institution, InstitutionAdmin)
-admin.site.register(Gender, GenderAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Appellation, AppellationAdmin)
 admin.site.register(Affiliation, AffiliationAdmin)

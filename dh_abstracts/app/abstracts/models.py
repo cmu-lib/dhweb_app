@@ -260,29 +260,6 @@ class Appellation(Attribute):
         ordering = ["last_name", "first_name"]
 
 
-class Gender(Attribute):
-    gender = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.gender
-
-    def merge(self, target):
-        results = {"updates": {}}
-        affected_authorships = (
-            Authorship.objects.filter(genders=self).exclude(genders=target).distinct()
-        )
-
-        for authorship in affected_authorships:
-            authorship.genders.add(target)
-            authorship.save()
-        results["update_results"] = {
-            "abstracts.Authorhip": affected_authorships.count()
-        }
-
-        deletion_results = self.delete()[1]
-        results["deletions"] = deletion_results
-        return results
-
 
 class Country(models.Model):
     tgn_id = models.URLField(max_length=100, unique=True)
@@ -504,10 +481,6 @@ class Author(models.Model):
         return self.most_recent_attribute(Appellation)
 
     @property
-    def most_recent_gender(self):
-        return self.most_recent_attribute(Gender)
-
-    @property
     def most_recent_affiliation(self):
         return self.most_recent_attribute(Affiliation)
 
@@ -515,9 +488,6 @@ class Author(models.Model):
     def most_recent_appellations(self):
         return self.most_recent_attributes(Appellation)
 
-    @property
-    def most_recent_genders(self):
-        return self.most_recent_attributes(Gender)
 
     @property
     def most_recent_affiliations(self):
@@ -525,20 +495,6 @@ class Author(models.Model):
 
     def get_absolute_url(self):
         return reverse("author_detail", kwargs={"author_id": self.pk})
-
-    def merge(self, target):
-        affected_authorships = (
-            Authorship.objects.filter(genders=self).exclude(genders=target).distinct()
-        )
-
-        for authorship in affected_authorships:
-            authorship.genders.add(target)
-            authorship.save()
-        results["updates"] = {"abstracts.Authorhip": affected_authorships.count()}
-
-        deletion_results = self.delete()[1]
-        results["deletions"] = deletion_results
-        return results
 
     def merge(self, target):
         """
@@ -581,7 +537,6 @@ class Authorship(models.Model):
     affiliations = models.ManyToManyField(
         Affiliation, related_name="asserted_by", blank=True
     )
-    genders = models.ManyToManyField(Gender, related_name="asserted_by", blank=True)
 
     def __str__(self):
         return f"{self.author} - {self.work}"
