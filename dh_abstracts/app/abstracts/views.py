@@ -385,6 +385,8 @@ def author_view(request, author_id):
         ).distinct()
     ]
 
+    standalone_works = public_works.filter(conference__series__isnull=True).distinct()
+
     appellation_assertions = [
         {
             "appellation": a,
@@ -419,6 +421,7 @@ def author_view(request, author_id):
     context = {
         "author": author,
         "split_works": split_works,
+        "standalone_works": standalone_works,
         "appellation_assertions": appellation_assertions,
         "affiliation_assertions": affiliation_assertions,
         "author_admin_page": author_admin_page,
