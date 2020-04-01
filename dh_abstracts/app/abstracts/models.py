@@ -9,6 +9,7 @@ from django.contrib.sites.models import Site
 from django.contrib.redirects.models import Redirect
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -211,6 +212,9 @@ class Work(TextIndexedModel):
     )
     url = models.URLField(blank=True, null=False, max_length=500)
     last_updated = models.DateTimeField(auto_now=True, db_index=True)
+    user_last_updated = models.ForeignKey(
+        User, null=True, on_delete=models.SET_NULL, related_name="records_last_updated"
+    )
 
     def get_absolute_url(self):
         return reverse("work_detail", kwargs={"pk": self.pk})
@@ -538,6 +542,12 @@ class Authorship(models.Model):
         Affiliation, related_name="asserted_by", blank=True
     )
     last_updated = models.DateTimeField(auto_now=True, db_index=True)
+    user_last_updated = models.ForeignKey(
+        User,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="authorships_last_updated",
+    )
 
     def __str__(self):
         return f"{self.author} - {self.work}"

@@ -38,17 +38,23 @@ class InstitutuionAdmin(admin.ModelAdmin):
 
 
 class AuthorshipAdmin(admin.ModelAdmin):
-    readonly_fields = ["last_updated"]
+    readonly_fields = ["last_updated", "user_last_updated"]
     search_fields = ["author__appellations__last_name", "work__title"]
     autocomplete_fields = ["author", "work", "appellation", "affiliations"]
-    list_display = ["author", "work", "appellation", "last_updated"]
+    list_display = [
+        "author",
+        "work",
+        "appellation",
+        "last_updated",
+        "user_last_updated",
+    ]
 
 
 class AuthorshipInline(admin.StackedInline):
     model = Authorship
     extra = 0
     autocomplete_fields = ["author", "work", "appellation", "affiliations"]
-    readonly_fields = ["last_updated"]
+    readonly_fields = ["last_updated", "user_last_updated"]
     show_change_link = True
 
 
@@ -68,12 +74,18 @@ class AppellationAdmin(admin.ModelAdmin):
 
 
 class WorkAdmin(admin.ModelAdmin):
-    readonly_fields = ["last_updated"]
+    readonly_fields = ["last_updated", "user_last_updated"]
     inlines = [AuthorshipInline]
     autocomplete_fields = ["keywords", "languages", "topics", "disciplines"]
     search_fields = ["title", "authorships__appellation__last_name"]
     list_filter = ["work_type", "conference"]
-    list_display = ["title", "conference", "work_type", "last_updated"]
+    list_display = [
+        "title",
+        "conference",
+        "work_type",
+        "last_updated",
+        "user_last_updated",
+    ]
 
 
 class InstitutionAdmin(admin.ModelAdmin):

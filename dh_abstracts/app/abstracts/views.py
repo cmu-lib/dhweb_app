@@ -597,6 +597,8 @@ def WorkCreate(request):
         work_form = WorkForm(request.POST)
         if work_form.is_valid():
             new_work = work_form.save()
+            new_work.user_last_updated = request.user
+            new_work.save()
             messages.success(request, f"{new_work} created.")
             return redirect("work_edit_authorship", work_id=new_work.pk)
         else:
@@ -612,8 +614,10 @@ def WorkEdit(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
 
     if request.method == "POST":
+        print(request.user)
         work_form = WorkForm(request.POST, instance=work)
         if work_form.is_valid():
+            work.user_last_updated = request.user
             work_form.save()
             messages.success(request, f'"{work.title}" sucessfully updated.')
             return redirect("work_detail", work_id=work.pk)
@@ -676,6 +680,7 @@ def WorkEditAuthorship(request, work_id):
                         auth = Authorship.objects.update_or_create(
                             work=work,
                             author=author_id,
+                            user_last_updated=request.user,
                             defaults={
                                 "authorship_order": authorship_order,
                                 "appellation": appellation,
@@ -806,7 +811,6 @@ class FullAuthorList(LoginRequiredMixin, ListView):
                     appellations__last_name__icontains=last_name_res
                 )
 
-
             return result_set.order_by("id").distinct()
         else:
             messages.warning(
@@ -872,8 +876,6 @@ class FullWorkList(LoginRequiredMixin, ListView):
             discipline_res = filter_form["discipline"]
             if discipline_res is not None:
                 result_set = result_set.filter(disciplines=discipline_res)
-
-
 
             if filter_form["full_text_available"]:
                 result_set = result_set.exclude(full_text="")
@@ -2225,4 +2227,3 @@ def work_type_merge(request, work_type_id):
             for error in raw_form.errors:
                 messages.error(request, error)
             return render(request, "tag_merge.html", context)
-
