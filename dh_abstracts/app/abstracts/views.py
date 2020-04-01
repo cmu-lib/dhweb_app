@@ -145,10 +145,7 @@ class AuthorAutocomplete(Select2QuerySetView):
         qs = Author.objects.all()
 
         if self.q:
-            qs = qs.filter(
-                Q(appellations__first_name__icontains=self.q)
-                | Q(appellations__last_name__icontains=self.q)
-            ).distinct()
+            qs = qs.filter(appellations_index__icontains=self.q).distinct()
 
         return qs
 
@@ -276,10 +273,7 @@ class UnrestrictedAuthorAutocomplete(LoginRequiredMixin, Select2QuerySetView):
         qs = Author.objects.all()
 
         if self.q:
-            qs = qs.filter(
-                Q(appellations__last_name__icontains=self.q)
-                | Q(appellations__first_name__icontains=self.q)
-            ).distinct()
+            qs = qs.filter(appellations_index__icontains=self.q).distinct()
 
         return qs
 
@@ -457,10 +451,7 @@ class PublicAuthorList(ListView):
 
             name_res = filter_form["name"]
             if name_res is not None:
-                result_set = result_set.filter(
-                    Q(appellations__first_name__icontains=name_res)
-                    | Q(appellations__last_name__icontains=name_res)
-                )
+                result_set = result_set.filter(appellations_index__icontains=name_res)
 
             return result_set.order_by("id").distinct()
         else:
@@ -799,10 +790,7 @@ class FullAuthorList(LoginRequiredMixin, ListView):
 
             name_res = filter_form["name"]
             if name_res is not None:
-                result_set = result_set.filter(
-                    Q(appellations__first_name__icontains=name_res)
-                    | Q(appellations__last_name__icontains=name_res)
-                )
+                result_set = result_set.filter(appellations_index__icontains=name_res)
 
             first_name_res = filter_form["first_name"]
             if first_name_res is not None:

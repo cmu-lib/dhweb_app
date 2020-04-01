@@ -423,6 +423,9 @@ class Author(models.Model):
         through_fields=("author", "appellation"),
         related_name="authors",
     )
+    appellations_index = models.CharField(
+        max_length=4000, blank=True, null=False, db_index=True
+    )
 
     def __str__(self):
         pname = self.most_recent_appellation
@@ -430,6 +433,15 @@ class Author(models.Model):
             return f"{self.pk} - {pname}"
         else:
             return f"{self.pk} - anonymous author"
+
+    def save(self, *args, **kwargs):
+        all_appellations = (
+            Appellation.objects.filter(asserted_by__author=self)
+            .values_list("first_name", "last_name")
+            .distinct()
+        )
+        self.appellations_index = " ".join([f"{a[0]} {a[1]}" for a in all_appellations])
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ["id"]

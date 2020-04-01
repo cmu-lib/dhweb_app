@@ -378,22 +378,30 @@
 {
   "model": "abstracts.author",
   "pk": 1,
-  "fields": {}
+  "fields": {
+    "appellations_index": "Rosalind Franklin Rosalind Krauss"
+  }
 },
 {
   "model": "abstracts.author",
   "pk": 2,
-  "fields": {}
+  "fields": {
+    "appellations_index": "John Watson"
+  }
 },
 {
   "model": "abstracts.author",
   "pk": 3,
-  "fields": {}
+  "fields": {
+    "appellations_index": ""
+  }
 },
 {
   "model": "abstracts.author",
   "pk": 4,
-  "fields": {}
+  "fields": {
+    "appellations_index": ""
+  }
 },
 {
   "model": "auth.user",
