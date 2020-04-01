@@ -799,14 +799,10 @@ class FullAuthorList(LoginRequiredMixin, ListView):
 
             name_res = filter_form["name"]
             if name_res is not None:
-                tokens = name_res.split(" ")
-                filter_clauses = [
-                    Q(appellations__first_name__icontains=tok)
-                    | Q(appellations__last_name__icontains=tok)
-                    for tok in tokens
-                ]
-                for clause in filter_clauses:
-                    result_set = result_set.filter(clause)
+                result_set = result_set.filter(
+                    Q(appellations__first_name__icontains=name_res)
+                    | Q(appellations__last_name__icontains=name_res)
+                )
 
             first_name_res = filter_form["first_name"]
             if first_name_res is not None:
