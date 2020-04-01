@@ -1281,10 +1281,6 @@ def wipe_unused(request):
         "Appellation": Appellation.objects.exclude(
             asserted_by__isnull=False
         ).distinct(),
-        "Series": ConferenceSeries.objects.exclude(
-            conferences__isnull=False
-        ).distinct(),
-        "Conferences": Conference.objects.exclude(works__isnull=False).distinct(),
         "Genders": Gender.objects.exclude(asserted_by__isnull=False).distinct(),
     }
 
