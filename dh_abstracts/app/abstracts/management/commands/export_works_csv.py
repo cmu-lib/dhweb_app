@@ -58,7 +58,6 @@ class Command(BaseCommand):
                     w.title,
                     ";".join([str(a.appellation) for a in w.authorships.all()]),
                     w.work_type,
-                    w.state,
                     w.full_text,
                     w.full_text_type,
                     w.full_text_license,
