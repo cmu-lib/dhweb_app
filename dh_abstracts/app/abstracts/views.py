@@ -658,9 +658,11 @@ def WorkEditAuthorship(request, work_id):
     elif request.method == "POST":
         authorships_forms = AuthorshipWorkFormset(request.POST)
         if authorships_forms.is_valid():
-            for dform in authorships_forms.deleted_forms:
+            for d_form in authorships_forms.deleted_forms:
                 d_form_data = d_form.cleaned_data
-                Authorship.objects.filter(work=work, author=dform["author"]).delete()
+                Authorship.objects.filter(
+                    work=work, author=d_form_data["author"]
+                ).delete()
             for aform in authorships_forms:
                 if aform not in authorships_forms.deleted_forms:
                     aform_data = aform.cleaned_data
@@ -680,15 +682,15 @@ def WorkEditAuthorship(request, work_id):
                         auth = Authorship.objects.update_or_create(
                             work=work,
                             author=author_id,
-                            user_last_updated=request.user,
                             defaults={
                                 "authorship_order": authorship_order,
                                 "appellation": appellation,
+                                "user_last_updated": request.user,
                             },
                         )[0]
                     except IntegrityError as e:
                         messages.error(
-                            request, "Ensure authorship order numbers are unique"
+                            request, f"{e}: Ensure authorship order numbers are unique"
                         )
                         return redirect("work_edit_authorship", work.pk)
 
