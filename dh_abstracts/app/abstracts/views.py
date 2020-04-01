@@ -1277,7 +1277,6 @@ def wipe_unused(request):
             affiliations__asserted_by__isnull=False
         ).distinct(),
         "Keyword": Keyword.objects.exclude(works__isnull=False).distinct(),
-        "Topic": Topic.objects.exclude(works__isnull=False).distinct(),
         "Appellation": Appellation.objects.exclude(
             asserted_by__isnull=False
         ).distinct(),
