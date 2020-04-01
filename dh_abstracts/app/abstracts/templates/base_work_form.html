@@ -20,6 +20,7 @@
           <h3>Conference Info</h3>
           {{ work_form.conference | as_crispy_field }}
           {{ work_form.work_type | as_crispy_field }}
+          {{ work_form.url | as_crispy_field }}
           <div class="d-flex align-items-center">
             {{ work_form.languages | as_crispy_field }}
             <a href="{% url 'language_create' %}" class="btn btn-primary btn-small mx-2" role="button"

@@ -147,6 +147,12 @@ class WorkForm(forms.ModelForm):
 
     title = forms.CharField(max_length=500, help_text="Abstract title")
 
+    url = forms.URLField(
+        max_length=500,
+        help_text="Optional URL pointing directly to this abstract",
+        required=False,
+    )
+
     work_type = forms.ModelChoiceField(
         queryset=WorkType.objects.all(),
         help_text='Abstracts may belong to one type that has been defined by editors based on a survey of all the abstracts in this collection, e.g. "poster", "workshop", "long paper".',
@@ -170,6 +176,7 @@ class WorkForm(forms.ModelForm):
         fields = [
             "conference",
             "title",
+            "url",
             "work_type",
             "full_text",
             "full_text_type",
@@ -415,8 +422,6 @@ class WorkTypeMergeForm(forms.Form):
         required=True,
         help_text="Select the type that will be used to replace the one you are deleting.",
     )
-
-
 
 
 class TagForm(forms.Form):

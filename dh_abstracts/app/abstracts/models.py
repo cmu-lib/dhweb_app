@@ -209,6 +209,7 @@ class Work(TextIndexedModel):
     full_text_license = models.ForeignKey(
         License, blank=True, null=True, on_delete=models.SET_NULL
     )
+    url = models.URLField(blank=True, null=False, max_length=500)
 
     def get_absolute_url(self):
         return reverse("work_detail", kwargs={"pk": self.pk})
@@ -258,7 +259,6 @@ class Appellation(Attribute):
     class Meta:
         unique_together = (("first_name", "last_name"),)
         ordering = ["last_name", "first_name"]
-
 
 
 class Country(models.Model):
@@ -487,7 +487,6 @@ class Author(models.Model):
     @property
     def most_recent_appellations(self):
         return self.most_recent_attributes(Appellation)
-
 
     @property
     def most_recent_affiliations(self):
