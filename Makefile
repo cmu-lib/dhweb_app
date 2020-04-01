@@ -26,6 +26,7 @@ restore: blank
 	docker-compose up -d postgres
 	docker-compose exec -T postgres psql -U dh -d postgres -c 'CREATE DATABASE dh;'
 	docker-compose exec -T postgres psql -U dh dh < data/backup.sql
+	$(MAKE) restart
 dumptest:
 	docker-compose exec app python manage.py dumpdata --indent 2 -e admin.logentry -e auth.permission -e contenttypes -e sessions -o abstracts/fixtures/test.json
 loadtest: wipe
