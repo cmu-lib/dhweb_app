@@ -210,6 +210,7 @@ class Work(TextIndexedModel):
         License, blank=True, null=True, on_delete=models.SET_NULL
     )
     url = models.URLField(blank=True, null=False, max_length=500)
+    last_updated = models.DateTimeField(auto_now=True, db_index=True)
 
     def get_absolute_url(self):
         return reverse("work_detail", kwargs={"pk": self.pk})
@@ -536,6 +537,7 @@ class Authorship(models.Model):
     affiliations = models.ManyToManyField(
         Affiliation, related_name="asserted_by", blank=True
     )
+    last_updated = models.DateTimeField(auto_now=True, db_index=True)
 
     def __str__(self):
         return f"{self.author} - {self.work}"

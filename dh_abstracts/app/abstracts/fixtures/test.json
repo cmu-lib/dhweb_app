@@ -247,6 +247,7 @@
     "full_text_type": "txt",
     "full_text_license": 1,
     "url": "",
+    "last_updated": "2020-04-01T13:47:59.254Z",
     "keywords": [
       2,
       1
@@ -274,6 +275,7 @@
     "full_text_type": "txt",
     "full_text_license": null,
     "url": "http://example.com",
+    "last_updated": "2020-04-01T13:47:59.254Z",
     "keywords": [
       3
     ],
@@ -300,6 +302,7 @@
     "full_text_type": "txt",
     "full_text_license": null,
     "url": "",
+    "last_updated": "2020-04-01T13:47:59.254Z",
     "keywords": [
       3
     ],
@@ -478,6 +481,7 @@
     "work": 1,
     "authorship_order": 1,
     "appellation": 1,
+    "last_updated": "2020-04-01T13:47:59.239Z",
     "affiliations": [
       1
     ]
@@ -491,6 +495,7 @@
     "work": 1,
     "authorship_order": 2,
     "appellation": 2,
+    "last_updated": "2020-04-01T13:47:59.239Z",
     "affiliations": [
       2
     ]
@@ -504,6 +509,7 @@
     "work": 3,
     "authorship_order": 1,
     "appellation": 4,
+    "last_updated": "2020-04-01T13:47:59.239Z",
     "affiliations": [
       2
     ]
@@ -517,6 +523,7 @@
     "work": 5,
     "authorship_order": 1,
     "appellation": 2,
+    "last_updated": "2020-04-01T13:47:59.239Z",
     "affiliations": [
       3
     ]
@@ -527,7 +534,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$180000$tPj49fsbZxwZ$0acMULPg7LIKk4wcMuTgXfTRloYaMStvda8CXpk080I=",
-    "last_login": "2020-04-01T13:18:29.632Z",
+    "last_login": "2020-04-01T13:48:06.839Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",
