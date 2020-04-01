@@ -20,7 +20,7 @@ wipe: blank
 	docker-compose exec postgres psql -U dh -d postgres -c 'CREATE DATABASE dh;'
 	$(MAKE) restart
 	docker-compose exec app python manage.py migrate
-backup: stop
+backup:
 	docker-compose exec postgres pg_dump -U dh -d dh > data/backup.sql
 restore: blank
 	docker-compose up -d postgres
