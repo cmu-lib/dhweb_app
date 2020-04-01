@@ -36,7 +36,8 @@ test:
 coverage:
 	-docker-compose exec app coverage run manage.py test
 	docker-compose exec app coverage html
-nightly: wipe
-	docker-compose exec app python manage.py loaddata /vol/data/backups/backup.json
+nightly:
+	docker-compose exec app python manage.py regenerate_text_indices
+	docker-compose exec app python manage.py export_all_csv
 check:
 	docker-compose exec app python manage.py check
