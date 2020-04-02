@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "django.contrib.humanize",
     "debug_toolbar",
+    "password_reset",
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"

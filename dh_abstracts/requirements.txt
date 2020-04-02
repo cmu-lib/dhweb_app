@@ -9,3 +9,4 @@ parsel
 django-debug-toolbar
 tblib
 progress
+django-password-reset
