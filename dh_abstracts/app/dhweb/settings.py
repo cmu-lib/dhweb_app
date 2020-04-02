@@ -136,3 +136,10 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = "/vol/static_files"
 LOGIN_URL = "/auth/login"
+
+# Email
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", 25)
+EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS")
