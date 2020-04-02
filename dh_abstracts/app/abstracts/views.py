@@ -355,31 +355,13 @@ def work_view(request, work_id):
 def author_view(request, author_id):
     author = get_object_or_404(Author, pk=author_id)
 
-    if request.user.is_authenticated:
-        obj_authorships = author.authorships.all()
-    elif not author.works.exists():
-        messages.error(
-            request,
-            f"Author ID {author.pk} isn't public yet. Please <a href='/admin/login'>log in</a> to continue.",
-        )
-        return redirect("author_list")
-    else:
-        obj_authorships = author.public_authorships
+    obj_authorships = author.public_authorships
 
     public_works = (
         Work.objects.filter(authorships__in=obj_authorships)
         .distinct()
         .order_by("-conference__year")
     )
-
-    split_works = [
-        {"series": c, "works": public_works.filter(conference__series=c).distinct()}
-        for c in ConferenceSeries.objects.filter(
-            conferences__works__in=public_works
-        ).distinct()
-    ]
-
-    standalone_works = public_works.filter(conference__series__isnull=True).distinct()
 
     appellation_assertions = [
         {
@@ -414,8 +396,7 @@ def author_view(request, author_id):
 
     context = {
         "author": author,
-        "split_works": split_works,
-        "standalone_works": standalone_works,
+        "works": public_works,
         "appellation_assertions": appellation_assertions,
         "affiliation_assertions": affiliation_assertions,
         "author_admin_page": author_admin_page,

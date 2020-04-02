@@ -305,11 +305,6 @@ class AuthorDetailViewTest(TestCase):
         res = self.client.get(reverse("author_detail", kwargs={"author_id": 100}))
         self.assertEqual(res.status_code, 404)
 
-    def test_works_unqiue_in_series(self):
-        res = self.client.get(reverse("author_detail", kwargs={"author_id": 1}))
-        for series in res.context["split_works"]:
-            self.assertTrue(is_list_unique(series["works"]))
-
     def test_appellations_unique(self):
         res = self.client.get(reverse("author_detail", kwargs={"author_id": 1}))
         self.assertTrue(
@@ -331,16 +326,6 @@ class AuthorDetailViewTest(TestCase):
         for assertion in res.context["affiliation_assertions"]:
             self.assertGreaterEqual(len(assertion["works"]), 1)
             self.assertTrue(is_list_unique(assertion["works"]))
-
-    def test_unaccepted_author(self):
-        """
-        Authors with only submitted papers should redirect with errors
-        """
-        res = self.client.get(
-            reverse("author_detail", kwargs={"author_id": 3}), follow=True
-        )
-        self.assertRedirects(res, reverse("author_list"))
-        self.assertGreaterEqual(len(res.context["messages"]), 1)
 
 
 class WorkListViewTest(TestCase):
