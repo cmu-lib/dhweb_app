@@ -5,7 +5,7 @@
 
 {% block seriesforms %}
 <h2>Conference Series</h2>
-<input class="btn btn-primary btn-sm" type="button" value="New series" id="add_series">
+<input class="btn btn-primary btn-sm" type="button" value="Add to series" id="add_series">
 {{ series_membership_form.management_form }}
 <div id="membership_formset">
   {% for form in series_membership_form.forms %}
