@@ -338,7 +338,7 @@ class PublicWorkList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["work_filter_form"] = WorkFilter(data=self.request.GET)
-        context["selected_conference_id"] = self.request.GET["conference"]
+        context["selected_conference_id"] = self.request.GET.get("conference", None)
         context["available_works_count"] = Work.objects.count()
         context["filtered_works_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("work_list")
