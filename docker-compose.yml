@@ -19,6 +19,8 @@ services:
       - ./data:/vol/data
     expose:
       - 8000
+    ports:
+      - "25:25"
     links:
       - "postgres:postgres"
     env_file: .env
