@@ -40,9 +40,7 @@
       </div>
       <ul class="list-group list-group-flush">
         {% for conference in series.conferences.all|dictsort:"year" %}
-        {% if conference.public_works.count > 0 %}
         <li class="list-group-item">{% include "conference_card.html" with conference=conference %}</li>
-        {% endif %}
         {% endfor %}
       </ul>
     </div>
