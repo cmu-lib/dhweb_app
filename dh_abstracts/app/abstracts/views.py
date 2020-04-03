@@ -179,48 +179,60 @@ class UnrestrictedKeywordAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Keyword.objects.all()
+        qs = Keyword.objects.annotate(n_works=Count("works")).order_by("-n_works")
 
         if self.q:
             qs = qs.filter(title__icontains=self.q).all()
 
         return qs
+
+    def get_result_label(self, item):
+        return f"{item} ({item.n_works} works)"
 
 
 class UnrestrictedLanguageAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Language.objects.all()
+        qs = Language.objects.annotate(n_works=Count("works")).order_by("-n_works")
 
         if self.q:
             qs = qs.filter(title__icontains=self.q).all()
 
         return qs
+
+    def get_result_label(self, item):
+        return f"{item} ({item.n_works} works)"
 
 
 class UnrestrictedTopicAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Topic.objects.all()
+        qs = Topic.objects.annotate(n_works=Count("works")).order_by("-n_works")
 
         if self.q:
             qs = qs.filter(title__icontains=self.q).all()
 
         return qs
+
+    def get_result_label(self, item):
+        return f"{item} ({item.n_works} works)"
 
 
 class UnrestrictedDisciplineAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Discipline.objects.all()
+        qs = Discipline.objects.annotate(n_works=Count("works")).order_by("-n_works")
 
         if self.q:
             qs = qs.filter(title__icontains=self.q).all()
 
         return qs
+
+    def get_result_label(self, item):
+        return f"{item} ({item.n_works} works)"
 
 
 class UnrestrictedCountryAutocomplete(LoginRequiredMixin, Select2QuerySetView):
