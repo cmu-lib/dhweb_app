@@ -1,0 +1,14 @@
+<h5><a href="{% url 'organizer_edit' organizer.pk %}">{{ organizer.name }} ({{ organizer.abbreviation }})</a></h5>
+<p>Conferences Organized:
+  <ul>
+    {% for conference in organizer.conferences_organized.all %}
+    <li><a href="{% url 'conference_edit' conference.pk %}">{{ conference }}</a></li>
+    {% endfor %}
+  </ul>
+</p>
+{% if organizer.url %}<p>Webiste: <a href="{{ organizer.url }}"></a>{{ organizer.url }}</p>{% endif %}
+{% if organizer.notes %}<p>Notes: {{ organizer.notes }}</p>{% endif %}
+{% if user.is_authenticated %}
+<a href="{% url 'organizer_edit' organizer.pk %}" role="button" class="btn btn-primary btn-sm">Edit</a>
+<a href="{% url 'organizer_delete' organizer.pk %}" role="button" class="btn btn-danger btn-sm">Delete</a>
+{% endif %}

@@ -665,6 +665,21 @@ class EditOrganizerViewTest(TestCase):
         self.assertEquals(res.status_code, 200)
 
 
+class DeleteOrganizerViewTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "organizer_delete", kwargs={"pk": 1})
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("organizer_delete", kwargs={"pk": 1}), follow=True
+        )
+        self.assertContains(res, "deleted")
+        self.assertFalse(Organizer.objects.filter(pk=1).exists())
+
+
 class DeleteWorkViewTest(TestCase):
     fixtures = ["test.json"]
 

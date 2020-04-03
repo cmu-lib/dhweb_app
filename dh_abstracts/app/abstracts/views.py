@@ -490,7 +490,8 @@ def author_merge_view(request, author_id):
             else:
                 old_author_string = str(author)
                 merge_results = author.merge(target_author)
-
+                target_author.user_last_updated = request.user
+                target_author.save()
                 messages.success(
                     request,
                     f"Author {old_author_string} has been merged into {target_author}, and the old author entry has been deleted.",
@@ -619,6 +620,8 @@ def WorkEditAuthorship(request, work_id):
                                 "user_last_updated": request.user,
                             },
                         )[0]
+                        author_id.user_last_updated = request.user
+                        author_id.save()
                     except IntegrityError as e:
                         messages.error(
                             request, f"{e}: Ensure authorship order numbers are unique"
@@ -630,7 +633,7 @@ def WorkEditAuthorship(request, work_id):
                         auth.affiliations.set(affiliations)
 
             messages.success(
-                request, f'"{work.title}" authorships sucessfully updated.'
+                request, f'"{work.title}" authorships successfully updated.'
             )
             if "start_new" in request.POST:
                 return redirect(
@@ -912,6 +915,12 @@ class InstitutionEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     success_message = "%(name)s updated"
     success_url = reverse_lazy("full_institution_list")
 
+    def form_valid(self, form):
+        response = super(InstitutionEdit, self).form_valid(form)
+        self.object.user_last_updated = self.request.user
+        self.object.save()
+        return response
+
 
 class InstitutionCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Institution
@@ -923,6 +932,12 @@ class InstitutionCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     }
     success_message = "%(name)s created"
     success_url = reverse_lazy("full_institution_list")
+
+    def form_valid(self, form):
+        response = super(InstitutionCreate, self).form_valid(form)
+        self.object.user_last_updated = self.request.user
+        self.object.save()
+        return response
 
 
 @login_required
@@ -958,6 +973,8 @@ def institution_merge(request, institution_id):
             else:
                 old_institution_id = str(institution)
                 merge_results = institution.merge(target_institution)
+                target_institution.user_last_updated = request.user
+                target_institution.save()
 
                 messages.success(
                     request,
@@ -989,6 +1006,8 @@ def institution_multi_merge(request):
             for institution in source_institutions:
                 old_institution_id = str(institution)
                 merge_results = institution.merge(target_institution)
+                target_institution.user_last_updated = request.user
+                target_institution.save()
 
                 messages.success(
                     request,
@@ -1312,6 +1331,12 @@ class OrganizerCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "Organizer '%(name)s' created"
     success_url = reverse_lazy("full_organizer_list")
 
+    def form_valid(self, form):
+        response = super(OrganizerCreate, self).form_valid(form)
+        self.object.user_last_updated = self.request.user
+        self.object.save()
+        return response
+
 
 class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Organizer
@@ -1323,6 +1348,27 @@ class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     fields = ["name", "abbreviation", "conferences_organized", "notes", "url"]
     success_message = "Organizer '%(name)s' updated"
     success_url = reverse_lazy("full_organizer_list")
+
+    def form_valid(self, form):
+        response = super(OrganizerEdit, self).form_valid(form)
+        self.object.user_last_updated = self.request.user
+        self.object.save()
+        return response
+
+
+class OrganizerDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Organizer
+    template_name = "generic_form.html"
+    extra_context = {
+        "form_title": "Delete organizer",
+        "cancel_view": "full_organizer_list",
+    }
+    success_message = "Organizer %(name)s deleted."
+    success_url = reverse_lazy("full_organizer_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(OrganizerDelete, self).delete(request, *args, **kwargs)
 
 
 class OrganizerList(LoginRequiredMixin, ListView):

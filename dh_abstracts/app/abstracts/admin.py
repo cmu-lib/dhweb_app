@@ -33,10 +33,6 @@ class CountryAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
 
-class InstitutuionAdmin(admin.ModelAdmin):
-    search_fields = ["name", "city", "country__names__name"]
-
-
 class AuthorshipAdmin(admin.ModelAdmin):
     readonly_fields = ["last_updated", "user_last_updated"]
     search_fields = ["author__appellations__last_name", "work__title"]
@@ -89,13 +85,24 @@ class WorkAdmin(admin.ModelAdmin):
 
 
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ["pk", "name", "city", "country"]
+    list_display = [
+        "pk",
+        "name",
+        "city",
+        "country",
+        "last_updated",
+        "user_last_updated",
+    ]
     search_fields = ["name", "city", "country__names__name"]
+    readonly_fields = ["last_updated", "user_last_updated"]
+    list_display = ["last_updated", "user_last_updated"]
 
 
 class AuthorAdmin(admin.ModelAdmin):
     inlines = [AuthorshipInline]
     search_fields = ["appellations__first_name", "appellations__last_name"]
+    readonly_fields = ["last_updated", "user_last_updated"]
+    list_display = ["pk", "__str__", "last_updated", "user_last_updated"]
 
 
 class ConferenceMembershipInline(admin.TabularInline):
@@ -115,6 +122,8 @@ class OrganizerInline(admin.TabularInline):
 class OrganizerAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     filter_horizontal = ["conferences_organized"]
+    readonly_fields = ["last_updated", "user_last_updated"]
+    list_display = ["pk", "name", "last_updated", "user_last_updated"]
 
 
 class ConferenceAdmin(admin.ModelAdmin):

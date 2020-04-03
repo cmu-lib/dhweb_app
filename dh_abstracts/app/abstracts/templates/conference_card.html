@@ -28,7 +28,7 @@
         Organizers:
         {% for organizer in conference.organizers.all %}
         {% if user.is_authenticated %}
-        <a href="{% url 'admin:abstracts_organizer_change' organizer.pk %}">{{ organizer }}</a>
+        <a href="{% url 'organizer_edit' organizer.pk %}">{{ organizer }}</a>
         {% else %}
         {{ organizer }}
         {% endif %}

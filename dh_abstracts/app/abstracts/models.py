@@ -14,6 +14,19 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
+class ChangeTrackedModel(models.Model):
+    last_updated = models.DateTimeField(auto_now=True, db_index=True)
+    user_last_updated = models.ForeignKey(
+        User,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="%(class)ss_last_updated",
+    )
+
+    class Meta:
+        abstract = True
+
+
 class TextIndexedModel(models.Model):
     search_text = SearchVectorField(null=True, editable=False)
 
@@ -85,7 +98,7 @@ class Conference(models.Model):
         return reverse("conference_edit", kwargs={"pk": self.pk})
 
 
-class Organizer(models.Model):
+class Organizer(ChangeTrackedModel):
     name = models.CharField(max_length=200, unique=True)
     abbreviation = models.CharField(max_length=7, unique=True)
     conferences_organized = models.ManyToManyField(
@@ -189,7 +202,7 @@ class License(models.Model):
         return self.title
 
 
-class Work(TextIndexedModel):
+class Work(TextIndexedModel, ChangeTrackedModel):
     FT_TYPE = (("", "-----------"), ("xml", "XML"), ("txt", "plain text"))
 
     conference = models.ForeignKey(
@@ -211,10 +224,6 @@ class Work(TextIndexedModel):
         License, blank=True, null=True, on_delete=models.SET_NULL
     )
     url = models.URLField(blank=True, null=False, max_length=500)
-    last_updated = models.DateTimeField(auto_now=True, db_index=True)
-    user_last_updated = models.ForeignKey(
-        User, null=True, on_delete=models.SET_NULL, related_name="records_last_updated"
-    )
 
     def get_absolute_url(self):
         return reverse("work_detail", kwargs={"pk": self.pk})
@@ -302,7 +311,7 @@ class CountryLabel(models.Model):
         return self.name
 
 
-class Institution(models.Model):
+class Institution(ChangeTrackedModel):
     name = models.CharField(max_length=500)
     city = models.CharField(max_length=100, blank=True, null=False, default="")
     country = models.ForeignKey(
@@ -410,7 +419,7 @@ class Affiliation(Attribute):
         return results
 
 
-class Author(models.Model):
+class Author(ChangeTrackedModel):
     works = models.ManyToManyField(
         Work,
         through="Authorship",
@@ -541,7 +550,7 @@ class Author(models.Model):
         return results
 
 
-class Authorship(models.Model):
+class Authorship(ChangeTrackedModel):
     author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="authorships"
     )
@@ -552,13 +561,6 @@ class Authorship(models.Model):
     )
     affiliations = models.ManyToManyField(
         Affiliation, related_name="asserted_by", blank=True
-    )
-    last_updated = models.DateTimeField(auto_now=True, db_index=True)
-    user_last_updated = models.ForeignKey(
-        User,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name="authorships_last_updated",
     )
 
     def __str__(self):

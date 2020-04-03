@@ -62,33 +62,6 @@
   }
 },
 {
-  "model": "abstracts.organizer",
-  "pk": 1,
-  "fields": {
-    "name": "Tesco Conferences",
-    "abbreviation": "TeCo",
-    "notes": "Lorem Ipsum Dolor Sit Amet\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \r\n\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. \r\n\r\nDonec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi, facilisis sit amet eleifend nec, pharetra ut augue. Integer quam nunc, consequat nec egestas ac, volutpat ac nisi. \r\n\r\nSed consectetur dignissim dignissim. Donec pretium est sit amet ipsum fringilla feugiat. Aliquam erat volutpat. Maecenas scelerisque, orci sit amet cursus tincidunt, libero nisl eleifend tortor, vitae cursus risus mauris vitae nisi. Cras laoreet ultrices ligula eget tempus. \r\n\r\nAenean metus purus, iaculis ut imperdiet eget, sodales et massa. Duis pellentesque nisl vel massa dapibus non lacinia velit volutpat. Maecenas accumsan interdum sodales. In hac habitasse platea dictumst. Pellentesque ornare blandit orci, eget tristique risus convallis ut. Vivamus a sapien neque. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetu",
-    "url": "https://tesco.com",
-    "conferences_organized": [
-      2,
-      1
-    ]
-  }
-},
-{
-  "model": "abstracts.organizer",
-  "pk": 2,
-  "fields": {
-    "name": "College Art Association",
-    "abbreviation": "CAA",
-    "notes": "",
-    "url": "",
-    "conferences_organized": [
-      3
-    ]
-  }
-},
-{
   "model": "abstracts.seriesmembership",
   "pk": 1,
   "fields": {
@@ -308,42 +281,6 @@
   }
 },
 {
-  "model": "abstracts.institution",
-  "pk": 1,
-  "fields": {
-    "name": "Wood's Hole Institute",
-    "city": "Smithtown, NY",
-    "country": 1
-  }
-},
-{
-  "model": "abstracts.institution",
-  "pk": 2,
-  "fields": {
-    "name": "Stanford University",
-    "city": "Palo Alto, CA",
-    "country": 1
-  }
-},
-{
-  "model": "abstracts.institution",
-  "pk": 3,
-  "fields": {
-    "name": "University of Maryland",
-    "city": "College Park",
-    "country": 1
-  }
-},
-{
-  "model": "abstracts.institution",
-  "pk": 4,
-  "fields": {
-    "name": "Abandoned Institution",
-    "city": "Essex",
-    "country": 2
-  }
-},
-{
   "model": "abstracts.affiliation",
   "pk": 1,
   "fields": {
@@ -376,34 +313,6 @@
   }
 },
 {
-  "model": "abstracts.author",
-  "pk": 1,
-  "fields": {
-    "appellations_index": "Rosalind Franklin Rosalind Krauss"
-  }
-},
-{
-  "model": "abstracts.author",
-  "pk": 2,
-  "fields": {
-    "appellations_index": "John Watson"
-  }
-},
-{
-  "model": "abstracts.author",
-  "pk": 3,
-  "fields": {
-    "appellations_index": ""
-  }
-},
-{
-  "model": "abstracts.author",
-  "pk": 4,
-  "fields": {
-    "appellations_index": ""
-  }
-},
-{
   "model": "auth.user",
   "pk": 1,
   "fields": {
@@ -433,12 +342,12 @@
   "model": "abstracts.authorship",
   "pk": 1,
   "fields": {
+    "last_updated": "2020-04-01T13:47:59.239Z",
+    "user_last_updated": null,
     "author": 1,
     "work": 1,
     "authorship_order": 1,
     "appellation": 1,
-    "last_updated": "2020-04-01T13:47:59.239Z",
-    "user_last_updated": null,
     "affiliations": [
       1
     ]
@@ -448,12 +357,12 @@
   "model": "abstracts.authorship",
   "pk": 2,
   "fields": {
+    "last_updated": "2020-04-01T13:47:59.239Z",
+    "user_last_updated": null,
     "author": 2,
     "work": 1,
     "authorship_order": 2,
     "appellation": 2,
-    "last_updated": "2020-04-01T13:47:59.239Z",
-    "user_last_updated": null,
     "affiliations": [
       2
     ]
@@ -463,12 +372,12 @@
   "model": "abstracts.authorship",
   "pk": 5,
   "fields": {
+    "last_updated": "2020-04-01T13:47:59.239Z",
+    "user_last_updated": null,
     "author": 1,
     "work": 3,
     "authorship_order": 1,
     "appellation": 4,
-    "last_updated": "2020-04-01T13:47:59.239Z",
-    "user_last_updated": null,
     "affiliations": [
       2
     ]
@@ -478,21 +387,103 @@
   "model": "abstracts.authorship",
   "pk": 7,
   "fields": {
+    "last_updated": "2020-04-01T13:47:59.239Z",
+    "user_last_updated": null,
     "author": 2,
     "work": 5,
     "authorship_order": 1,
     "appellation": 2,
-    "last_updated": "2020-04-01T13:47:59.239Z",
-    "user_last_updated": null,
     "affiliations": [
       3
     ]
   }
 },
 {
+  "model": "abstracts.author",
+  "pk": 1,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.582Z",
+    "user_last_updated": null,
+    "appellations_index": "Rosalind Franklin Rosalind Krauss"
+  }
+},
+{
+  "model": "abstracts.author",
+  "pk": 2,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.582Z",
+    "user_last_updated": null,
+    "appellations_index": "John Watson"
+  }
+},
+{
+  "model": "abstracts.author",
+  "pk": 3,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.582Z",
+    "user_last_updated": null,
+    "appellations_index": ""
+  }
+},
+{
+  "model": "abstracts.author",
+  "pk": 4,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.582Z",
+    "user_last_updated": null,
+    "appellations_index": ""
+  }
+},
+{
+  "model": "abstracts.institution",
+  "pk": 1,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.606Z",
+    "user_last_updated": null,
+    "name": "Wood's Hole Institute",
+    "city": "Smithtown, NY",
+    "country": 1
+  }
+},
+{
+  "model": "abstracts.institution",
+  "pk": 2,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.606Z",
+    "user_last_updated": null,
+    "name": "Stanford University",
+    "city": "Palo Alto, CA",
+    "country": 1
+  }
+},
+{
+  "model": "abstracts.institution",
+  "pk": 3,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.606Z",
+    "user_last_updated": null,
+    "name": "University of Maryland",
+    "city": "College Park",
+    "country": 1
+  }
+},
+{
+  "model": "abstracts.institution",
+  "pk": 4,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.606Z",
+    "user_last_updated": null,
+    "name": "Abandoned Institution",
+    "city": "Essex",
+    "country": 2
+  }
+},
+{
   "model": "abstracts.work",
   "pk": 1,
   "fields": {
+    "last_updated": "2020-04-01T13:47:59.254Z",
+    "user_last_updated": null,
     "search_text": null,
     "conference": 1,
     "title": "A Foo Too Far",
@@ -501,8 +492,6 @@
     "full_text_type": "txt",
     "full_text_license": 1,
     "url": "",
-    "last_updated": "2020-04-01T13:47:59.254Z",
-    "user_last_updated": null,
     "keywords": [
       2,
       1
@@ -522,6 +511,8 @@
   "model": "abstracts.work",
   "pk": 3,
   "fields": {
+    "last_updated": "2020-04-01T13:47:59.254Z",
+    "user_last_updated": null,
     "search_text": null,
     "conference": 2,
     "title": "Arma Virumque Cano",
@@ -530,8 +521,6 @@
     "full_text_type": "txt",
     "full_text_license": null,
     "url": "http://example.com",
-    "last_updated": "2020-04-01T13:47:59.254Z",
-    "user_last_updated": null,
     "keywords": [
       3
     ],
@@ -550,6 +539,8 @@
   "model": "abstracts.work",
   "pk": 5,
   "fields": {
+    "last_updated": "2020-04-01T13:47:59.254Z",
+    "user_last_updated": null,
     "search_text": null,
     "conference": 4,
     "title": "Computer Art",
@@ -558,8 +549,6 @@
     "full_text_type": "txt",
     "full_text_license": null,
     "url": "",
-    "last_updated": "2020-04-01T13:47:59.254Z",
-    "user_last_updated": null,
     "keywords": [
       3
     ],
@@ -568,6 +557,37 @@
       1
     ],
     "topics": []
+  }
+},
+{
+  "model": "abstracts.organizer",
+  "pk": 1,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.635Z",
+    "user_last_updated": null,
+    "name": "Tesco Conferences",
+    "abbreviation": "TeCo",
+    "notes": "Lorem Ipsum Dolor Sit Amet\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \r\n\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. \r\n\r\nDonec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi, facilisis sit amet eleifend nec, pharetra ut augue. Integer quam nunc, consequat nec egestas ac, volutpat ac nisi. \r\n\r\nSed consectetur dignissim dignissim. Donec pretium est sit amet ipsum fringilla feugiat. Aliquam erat volutpat. Maecenas scelerisque, orci sit amet cursus tincidunt, libero nisl eleifend tortor, vitae cursus risus mauris vitae nisi. Cras laoreet ultrices ligula eget tempus. \r\n\r\nAenean metus purus, iaculis ut imperdiet eget, sodales et massa. Duis pellentesque nisl vel massa dapibus non lacinia velit volutpat. Maecenas accumsan interdum sodales. In hac habitasse platea dictumst. Pellentesque ornare blandit orci, eget tristique risus convallis ut. Vivamus a sapien neque. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetu",
+    "url": "https://tesco.com",
+    "conferences_organized": [
+      2,
+      1
+    ]
+  }
+},
+{
+  "model": "abstracts.organizer",
+  "pk": 2,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.635Z",
+    "user_last_updated": null,
+    "name": "College Art Association",
+    "abbreviation": "CAA",
+    "notes": "",
+    "url": "",
+    "conferences_organized": [
+      3
+    ]
   }
 }
 ]

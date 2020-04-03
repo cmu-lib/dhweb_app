@@ -185,6 +185,11 @@ urlpatterns = [
         name="organizer_edit",
     ),
     path(
+        "editor/organizers/<int:pk>/delete",
+        views.OrganizerDelete.as_view(),
+        name="organizer_delete",
+    ),
+    path(
         "editor/affiliations/create",
         views.AffiliationCreate.as_view(),
         name="affiliation_create",
