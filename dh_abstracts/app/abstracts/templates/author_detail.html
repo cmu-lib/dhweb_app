@@ -10,15 +10,6 @@
     {% endfor %}
   </ul>
 </div>
-
-<div class="card m-2">
-  <div class="card-header">Other events</div>
-  <ul class="list-group list-group-flush">
-    {% for work in standalone_works %}
-    <li class="list-group-item">{% include "work_card.html" with work=work %}</li>
-    {% endfor %}
-  </ul>
-</div>
 {% endblock %}
 
 {% block context %}
