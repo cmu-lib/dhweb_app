@@ -222,17 +222,11 @@ class AuthorFilter(forms.Form):
         initial="last_name",
     )
     name = forms.CharField(max_length=100, strip=True, required=False)
-    affiliation = forms.ModelChoiceField(
-        queryset=Affiliation.objects.all(),
-        required=False,
-        widget=ModelSelect2(url="affiliation-autocomplete"),
-        help_text="Authors who were once affiliated with this department",
+    first_name = forms.CharField(
+        max_length=100, strip=True, required=False, help_text="Search only first names"
     )
-    institution = forms.ModelChoiceField(
-        queryset=Institution.objects.all(),
-        required=False,
-        widget=ModelSelect2(url="institution-autocomplete"),
-        help_text="Authors who were once affiliated with this institution",
+    last_name = forms.CharField(
+        max_length=100, strip=True, required=False, help_text="Search only last names"
     )
     country = forms.ModelChoiceField(
         queryset=Country.objects.all(),
@@ -240,17 +234,17 @@ class AuthorFilter(forms.Form):
         help_text="Authors who were once affiliated with an institution in this country",
         widget=ModelSelect2(url="country-autocomplete"),
     )
+    institution = forms.ModelChoiceField(
+        queryset=Institution.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="institution-autocomplete"),
+        help_text="Authors who were once affiliated with this institution",
+    )
     affiliation = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
         widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
         help_text='Search by department+institution combination. This is a more granular search than "Institution" above.',
-    )
-    first_name = forms.CharField(
-        max_length=100, strip=True, required=False, help_text="Search only first names"
-    )
-    last_name = forms.CharField(
-        max_length=100, strip=True, required=False, help_text="Search only last names"
     )
 
 
