@@ -11,8 +11,6 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.contrib.auth.models import User
 
-# Create your models here.
-
 
 class ChangeTrackedModel(models.Model):
     last_updated = models.DateTimeField(auto_now=True, db_index=True)
