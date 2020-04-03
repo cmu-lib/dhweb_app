@@ -12,7 +12,7 @@ urlpatterns = [
     path("authors", views.AuthorList.as_view(), name="author_list"),
     path("authors/<int:author_id>", views.author_view, name="author_detail"),
     path("authors/<int:author_id>/merge", views.author_merge_view, name="author_merge"),
-    path("conferences", views.PublicConferenceList, name="conference_list"),
+    path("conferences", views.conference_list, name="conference_list"),
     path("downloads", views.download_data, name="download_data"),
     path(
         "institution-autocomplete",
@@ -163,11 +163,6 @@ urlpatterns = [
     ),
     path(
         "editor/conferences/<int:pk>/edit", views.ConferenceEdit, name="conference_edit"
-    ),
-    path(
-        "editor/conferences",
-        views.ConferenceList.as_view(),
-        name="full_conference_list",
     ),
     path("editor/series", views.SeriesList.as_view(), name="full_series_list"),
     path("editor/series/create", views.SeriesCreate.as_view(), name="series_create"),

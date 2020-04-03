@@ -364,17 +364,6 @@ class ConferenceListViewTest(TestCase):
         )
 
 
-class FullConferenceListViewTest(TestCase):
-    """
-    Test Full Conference list view
-    """
-
-    fixtures = ["test.json"]
-
-    def test_render(self):
-        privately_available(self, "full_conference_list")
-
-
 class AuthorMergeViewTest(TestCase):
     fixtures = ["test.json"]
 

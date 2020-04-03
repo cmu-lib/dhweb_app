@@ -13,7 +13,7 @@
     <a href="{% url 'series_delete' series.pk %}" role="button" class="btn btn-danger">Delete</a>
     <p>Title: <a href="{% url 'series_edit' series.pk %}">{{ series.title }}</a></p>
     <p>Series abbreviation: {{ series.abbreviation }}</p>
-    <p><a href="{% url 'full_conference_list' %}?series={{ series.pk }}">Number of conferences:
+    <p><a href="{% url 'conference_list' %}?series={{ series.pk }}">Number of conferences:
         {{ series.conferences.count }}</a></p>
     <p>Notes: {{ series.notes }}</p>
     {% endfor %}

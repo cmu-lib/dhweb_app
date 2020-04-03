@@ -462,7 +462,7 @@ class AuthorList(ListView):
         return context
 
 
-def PublicConferenceList(request):
+def conference_list(request):
     affiliated_conferences = ConferenceSeries.objects.all()
 
     unaffiliated_conferences = Conference.objects.filter(series__isnull=True).distinct()
@@ -1210,15 +1210,9 @@ class ConferenceCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = ConferenceForm
     extra_context = {
         "form_title": "Create conference",
-        "cancel_view": "full_conference_list",
+        "cancel_view": "conference_list",
     }
     success_message = "Conference '%(year)s - %(venue)s' created"
-
-
-class ConferenceList(LoginRequiredMixin, ListView):
-    model = Conference
-    template_name = "full_conference_list.html"
-    context_object_name = "conference_list"
 
 
 @login_required
@@ -1241,7 +1235,7 @@ def ConferenceEdit(request, pk):
         "form": form,
         "series_membership_form": ConferenceSeriesFormSet(initial=initial_series),
         "form_title": "Edit conference",
-        "cancel_view": "full_conference_list",
+        "cancel_view": "conference_list",
     }
     if request.method == "POST":
         form = ConferenceForm(data=request.POST, instance=conference)
@@ -1300,10 +1294,10 @@ class ConferenceDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     template_name = "conference_delete.html"
     extra_context = {
         "form_title": "Delete conference",
-        "cancel_view": "full_conference_list",
+        "cancel_view": "conference_list",
     }
     success_message = "Conference deleted"
-    success_url = reverse_lazy("full_conference_list")
+    success_url = reverse_lazy("conference_list")
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
