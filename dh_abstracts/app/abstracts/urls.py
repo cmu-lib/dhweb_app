@@ -9,7 +9,7 @@ urlpatterns = [
     path("", views.home_view, name="home_view"),
     path("works", views.PublicWorkList.as_view(), name="work_list"),
     path("works/<int:work_id>", views.work_view, name="work_detail"),
-    path("authors", views.PublicAuthorList.as_view(), name="author_list"),
+    path("authors", views.AuthorList.as_view(), name="author_list"),
     path("authors/<int:author_id>", views.author_view, name="author_detail"),
     path("authors/<int:author_id>/merge", views.author_merge_view, name="author_merge"),
     path("conferences", views.PublicConferenceList, name="conference_list"),
@@ -125,7 +125,6 @@ urlpatterns = [
     path(
         "editor/works/<int:pk>/delete", views.WorkDelete.as_view(), name="work_delete"
     ),
-    path("editor/authors", views.FullAuthorList.as_view(), name="full_author_list"),
     path(
         "editor/authors_institution",
         views.AuthorInstitutionList.as_view(),

@@ -211,6 +211,16 @@ class WorkForm(forms.ModelForm):
 
 
 class AuthorFilter(forms.Form):
+    ordering = forms.ChoiceField(
+        choices=(
+            ("last_name", "Last name (A-Z)"),
+            ("-last_name", "Last name (Z-A)"),
+            ("-n_works", "By number of abstracts (descending)"),
+            ("n_works", "By number of abstracts (ascending)"),
+        ),
+        required=False,
+        initial="last_name",
+    )
     name = forms.CharField(max_length=100, strip=True, required=False)
     affiliation = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
@@ -230,9 +240,6 @@ class AuthorFilter(forms.Form):
         help_text="Authors who were once affiliated with an institution in this country",
         widget=ModelSelect2(url="country-autocomplete"),
     )
-
-
-class FullAuthorFilter(AuthorFilter):
     affiliation = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
