@@ -353,7 +353,7 @@ def author_view(request, author_id):
 class AuthorList(ListView):
     context_object_name = "author_list"
     template_name = "author_list.html"
-    paginate_by = 10
+    paginate_by = 50
 
     def get_queryset(self):
         base_result_set = Author.objects.all()
@@ -362,6 +362,12 @@ class AuthorList(ListView):
         if raw_filter_form.is_valid():
             result_set = base_result_set
             filter_form = raw_filter_form.cleaned_data
+
+            affiliation_res = filter_form["affiliation"]
+            if affiliation_res is not None:
+                result_set = result_set.filter(
+                    authorships__affiliations=affiliation_res
+                )
 
             institution_res = filter_form["institution"]
             if institution_res is not None:
@@ -376,8 +382,20 @@ class AuthorList(ListView):
                 )
 
             name_res = filter_form["name"]
-            if name_res is not None:
+            if name_res is not None or name_res != "":
                 result_set = result_set.filter(appellations_index__icontains=name_res)
+
+            first_name_res = filter_form["first_name"]
+            if first_name_res is not None or first_name_res != "":
+                result_set = result_set.filter(
+                    authorships__appellation__first_name__icontains=first_name_res
+                )
+
+            last_name_res = filter_form["last_name"]
+            if last_name_res is not None or last_name_res != "":
+                result_set = result_set.filter(
+                    authorships__appellation__last_name__icontains=last_name_res
+                )
 
             order_res = filter_form["ordering"]
             if order_res is None or order_res == "":
