@@ -1,10 +1,7 @@
 <h6 class="mb-1">
   <a
     href="{% if editor_view %}{% url 'author_detail' author.pk %}{% else %}{% url 'author_detail' author.pk %}{% endif %}">
-    {{ author.pref_name }}</a></h6>
+    {{ author.pref_name }}</a> <span class="badge badge-info">{{ author.n_works }}</span> works authored</h6>
 {% with affs=author.most_recent_affiliation %}
-<p class="mb-1 text-muted">{% firstof affs "No affiliation given" %}
-  <p>
-    <span class="badge badge-info">{{ author.n_works }}</span> works authored
-  </p>
-  {% endwith %}
+<p class=" mb-0 text-muted">{% firstof affs "No affiliation given" %}</p>
+{% endwith %}
