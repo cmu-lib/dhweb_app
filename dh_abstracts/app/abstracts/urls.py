@@ -7,7 +7,7 @@ urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),
     path("auth/login", auth_views.LoginView.as_view(), name="login"),
     path("", views.home_view, name="home_view"),
-    path("works", views.PublicWorkList.as_view(), name="work_list"),
+    path("works", views.FullWorkList.as_view(), name="work_list"),
     path("works/<int:work_id>", views.work_view, name="work_detail"),
     path("authors", views.AuthorList.as_view(), name="author_list"),
     path("authors/<int:author_id>", views.author_view, name="author_detail"),
@@ -114,7 +114,6 @@ urlpatterns = [
         views.AffiliationInfoJSON,
         name="affiliation-info-json",
     ),
-    path("editor/works", views.FullWorkList.as_view(), name="full_work_list"),
     path("editor/works/create", views.WorkCreate, name="work_create"),
     path("editor/works/<int:work_id>/edit", views.WorkEdit, name="work_edit"),
     path(

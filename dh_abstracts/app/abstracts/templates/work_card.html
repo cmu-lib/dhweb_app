@@ -12,19 +12,19 @@
     href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.appellation.first_name }}
     {{ authorship.appellation.last_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 
-{% if work.keywords.exists %}<p>Keywords: {% for kw in work.keywords.all %}<a class="badge badge-info"
+{% if work.keywords.exists %}<p>Keywords: {% for kw in work.keywords.all %}<a class="badge"
     href="{% url 'work_list' %}?keyword={{ kw.pk }}">{{ kw }}</a>
   {% endfor %}</p>{% endif %}
 
-{% if work.topics.exists %}<p>Topics: {% for t in work.topics.all %}<a class="badge badge-info"
+{% if work.topics.exists %}<p>Topics: {% for t in work.topics.all %}<a class="badge"
     href="{% url 'work_list' %}?topic={{ t.pk }}">{{ t }}</a>
   {% endfor %}</p>{% endif %}
 
-{% if work.languages.exists %}<p>Languages: {% for l in work.languages.all %}<a class="badge badge-info"
+{% if work.languages.exists %}<p>Languages: {% for l in work.languages.all %}<a class="badge"
     href="{% url 'work_list' %}?language={{ l.pk }}">{{ l }}</a>
   {% endfor %}</p>{% endif %}
 
-{% if work.disciplines.exists %}<p>Disciplines: {% for d in work.disciplines.all %}<a class="badge badge-info"
+{% if work.disciplines.exists %}<p>Disciplines: {% for d in work.disciplines.all %}<a class="badge"
     href="{% url 'work_list' %}?discipline={{ d.pk }}">{{ d }}</a>
   {% endfor %}</p>{% endif %}
 

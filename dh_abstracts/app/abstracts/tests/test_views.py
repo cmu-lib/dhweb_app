@@ -107,34 +107,6 @@ class AuthorListViewTest(TestCase):
         self.assertTrue(is_list_unique(res.context["author_list"]))
 
 
-class WorkFullListViewTest(TestCase):
-    """
-    Test full Work list page
-    """
-
-    fixtures = ["test.json"]
-
-    def test_render(self):
-        privately_available(self, "full_work_list")
-
-    @as_auth
-    def test_query_filtered_count(self):
-        res = self.client.get(reverse("full_work_list"))
-        self.assertEqual(
-            res.context["filtered_works_count"], len(res.context["work_list"])
-        )
-
-    @as_auth
-    def test_query_total_count(self):
-        res = self.client.get(reverse("full_work_list"))
-        self.assertIsInstance(res.context["available_works_count"], int)
-
-    @as_auth
-    def test_unique(self):
-        res = self.client.get(reverse("full_work_list"))
-        self.assertTrue(is_list_unique(res.context["work_list"]))
-
-
 class InstitutionFullListViewTest(TestCase):
     """
     Test full Institution list page

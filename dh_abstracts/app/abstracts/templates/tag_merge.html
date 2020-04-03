@@ -22,7 +22,7 @@
     </p>
     {% endfor %}
     {% if count_elements > 0 %}
-    <a href="{% url 'full_work_list' %}?topic={{ merging.pk }}">... and {{ count_elements }} more</a>
+    <a href="{% url 'work_list' %}?topic={{ merging.pk }}">... and {{ count_elements }} more</a>
     {% endif %}
   </div>
   <div class="col-md-6">

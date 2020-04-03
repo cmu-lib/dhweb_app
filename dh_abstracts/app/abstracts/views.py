@@ -289,73 +289,6 @@ class UnrestrictedAuthorAutocomplete(LoginRequiredMixin, Select2QuerySetView):
         return qs
 
 
-class PublicWorkList(ListView):
-    context_object_name = "work_list"
-    template_name = "work_list.html"
-    paginate_by = 10
-
-    def get_queryset(self):
-        base_result_set = Work.objects.order_by("title").all()
-
-        raw_filter_form = WorkFilter(self.request.GET)
-
-        if raw_filter_form.is_valid():
-            result_set = base_result_set
-            filter_form = raw_filter_form.cleaned_data
-
-            work_type_res = filter_form["work_type"]
-            if work_type_res is not None:
-                result_set = result_set.filter(work_type=work_type_res)
-
-            conference_res = filter_form["conference"]
-            if conference_res is not None:
-                result_set = result_set.filter(conference=conference_res)
-
-            institution_res = filter_form["institution"]
-            if institution_res is not None:
-                result_set = result_set.filter(
-                    authorships__affiliations__institution=institution_res
-                )
-
-            keyword_res = filter_form["keyword"]
-            if keyword_res is not None:
-                result_set = result_set.filter(keywords=keyword_res)
-
-            topic_res = filter_form["topic"]
-            if topic_res is not None:
-                result_set = result_set.filter(topics=topic_res)
-
-            language_res = filter_form["language"]
-            if language_res is not None:
-                result_set = result_set.filter(languages=language_res)
-
-            discipline_res = filter_form["discipline"]
-            if discipline_res is not None:
-                result_set = result_set.filter(disciplines=discipline_res)
-
-            if filter_form["full_text_available"]:
-                result_set = result_set.exclude(full_text="")
-
-            text_res = filter_form["text"]
-            if text_res != "":
-                result_set = result_set.filter(search_text=text_res)
-
-            return result_set.distinct()
-        else:
-            for error in raw_filter_form.errors:
-                messages.warning(self.request, error)
-            return base_result_set
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["work_filter_form"] = WorkFilter(data=self.request.GET)
-        context["selected_conference_id"] = self.request.GET.get("conference", None)
-        context["available_works_count"] = Work.objects.count()
-        context["filtered_works_count"] = self.get_queryset().count()
-        context["redirect_url"] = reverse("work_list")
-        return context
-
-
 def work_view(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
 
@@ -753,8 +686,8 @@ def AffiliationInfoJSON(request, affiliation_id):
 class WorkDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Work
     template_name = "work_delete.html"
-    extra_context = {"cancel_view": "full_work_list"}
-    success_url = reverse_lazy("full_work_list")
+    extra_context = {"cancel_view": "work_list"}
+    success_url = reverse_lazy("work_list")
     success_message = "%(id)s deleted."
 
     def delete(self, request, *args, **kwargs):
@@ -762,7 +695,7 @@ class WorkDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         return super(WorkDelete, self).delete(request, *args, **kwargs)
 
 
-class FullWorkList(LoginRequiredMixin, ListView):
+class FullWorkList(ListView):
     context_object_name = "work_list"
     template_name = "work_list.html"
     paginate_by = 10
@@ -832,10 +765,17 @@ class FullWorkList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["work_filter_form"] = FullWorkForm(data=self.request.GET)
+        context["work_filter_form"] = WorkFilter(data=self.request.GET)
+        try:
+            selected_conference = Conference.objects.get(
+                id=self.request.GET.get("conference")
+            )
+        except:
+            selected_conference = None
+        context["selected_conference"] = selected_conference
         context["available_works_count"] = Work.objects.count()
         context["filtered_works_count"] = self.get_queryset().count()
-        context["redirect_url"] = reverse("full_work_list")
+        context["redirect_url"] = reverse("work_list")
         return context
 
 
