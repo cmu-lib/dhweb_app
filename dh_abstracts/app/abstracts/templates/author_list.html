@@ -10,7 +10,8 @@
 <h1>Authors</h1>
 
 {% block results %}
-<div class="card-header">Results: Displaying {{ filtered_authors_count }} out of {{ available_authors_count }} authors
+<div class="card-header">Current filter is returning {{ filtered_authors_count }} out of {{ available_authors_count }}
+  authors
 </div>
 <ul class="list-group list-group-flush">
   {% for author in author_list %}

@@ -6,7 +6,7 @@
 
 {% block results %}
 <div class="card-header d-flex justify-content-between">
-  Results: Displaying {{ filtered_works_count }} out of {{ available_works_count }} works
+  Current filter is return {{ filtered_works_count }} out of {{ available_works_count }} works
   {% if user.is_authenticated %}
   <a class="btn btn-primary" role="button" href="{% url 'work_create' %}?conference={{ selected_conference_id }}">New
     Abstract</a>
