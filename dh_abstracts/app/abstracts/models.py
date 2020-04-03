@@ -75,9 +75,9 @@ class Conference(models.Model):
             display = self.venue_abbreviation
         else:
             display = self.venue
-        # series.first() is still kludgy - need a nice method to concatenate series names
-        if self.series.exists():
-            return f"{self.series.first()} {self.year} - {display}"
+        if self.organizers.exists():
+            org_slug = ", ".join([str(s) for s in self.organizers.all()])
+            return f"{org_slug} {self.year} - {display}"
         else:
             return f"{self.year} - {display}"
 
