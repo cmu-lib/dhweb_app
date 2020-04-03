@@ -6,7 +6,7 @@
     {% endfor %}
   </ul>
 </p>
-{% if organizer.url %}<p>Webiste: <a href="{{ organizer.url }}"></a>{{ organizer.url }}</p>{% endif %}
+{% if organizer.url %}<p>Website: <a href="{{ organizer.url }}">{{ organizer.url }}</a></p>{% endif %}
 {% if organizer.notes %}<p>Notes: {{ organizer.notes }}</p>{% endif %}
 {% if user.is_authenticated %}
 <a href="{% url 'organizer_edit' organizer.pk %}" role="button" class="btn btn-primary btn-sm">Edit</a>
