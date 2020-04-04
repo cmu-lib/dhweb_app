@@ -19,6 +19,21 @@
     </div>
   </div>
   <div class="col-md-9">
+    {% if user.is_authenticated %}
+    <div class="card m-2">
+      <div class="card-body">
+        <a href="{% url 'conference_create' %}" type="button" class="btn
+        btn-primary">Create
+          conference</a>
+        <a href="{% url 'series_create' %}" type="button" class="btn
+                btn-primary">Create
+          series</a>
+        <a href="{% url 'organizer_create' %}" type="button" class="btn
+                btn-primary">Create
+          organizer</a>
+      </div>
+    </div>
+    {% endif %}
     {% for series in conference_list %}
     <div class="card m-2">
       <div class="card-header">
