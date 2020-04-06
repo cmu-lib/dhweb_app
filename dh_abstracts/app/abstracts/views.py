@@ -360,8 +360,15 @@ class AuthorList(ListView):
         raw_filter_form = AuthorFilter(self.request.GET)
 
         if raw_filter_form.is_valid():
-            result_set = base_result_set
             filter_form = raw_filter_form.cleaned_data
+
+            order_res = filter_form["ordering"]
+            if order_res is None or order_res == "":
+                order_res = "last_name"
+
+            result_set = base_result_set.annotate(
+                last_name=Max("appellations__last_name"), n_works=Count("authorships", distinct=True)
+            ).order_by(order_res)
 
             affiliation_res = filter_form["affiliation"]
             if affiliation_res is not None:
@@ -397,18 +404,8 @@ class AuthorList(ListView):
                     authorships__appellation__last_name__icontains=last_name_res
                 )
 
-            order_res = filter_form["ordering"]
-            if order_res is None or order_res == "":
-                order_res = "last_name"
+            return result_set.distinct()
 
-            return (
-                result_set.annotate(
-                    last_name=Max("appellations__last_name"),
-                    n_works=Count("authorships"),
-                )
-                .order_by(order_res)
-                .distinct()
-            )
         else:
             messages.warning(
                 self.request,
