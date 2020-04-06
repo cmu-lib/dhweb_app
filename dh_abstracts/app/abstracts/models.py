@@ -390,7 +390,7 @@ class Affiliation(Attribute):
 
     def __str__(self):
         if self.department == "":
-            return f"(no department) {self.institution}"
+            return f"{self.institution}"
         else:
             return f"{self.department} - {self.institution}"
 

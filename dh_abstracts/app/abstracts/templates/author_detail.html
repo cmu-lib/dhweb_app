@@ -47,11 +47,15 @@
       <p><a
           href="{% url 'author_list' %}?institution={{ affiliation.institution.pk }}">{{ affiliation.institution }}</a>
       </p>
-      {% if affiliation.departments.0 != '' %}
       <ul>
+        {% if affiliation.departments.0 != '' %}
         {% for department in affiliation.departments %}
         <li>{{ department }}</li>
         {% endfor %}
+        {% else %}
+        {% if user.is_authenticated %}
+        <li>No department listed</li>
+        {% endif %}
       </ul>
       {% endif %}
       <small class="text-muted">Given in {% for work in affiliation.works %}
