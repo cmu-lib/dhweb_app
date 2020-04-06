@@ -23,4 +23,4 @@ class Command(BaseCommand):
             indent=2,
             output=f"{dl_dir}/{date.today().strftime('%Y-%m-%d')}_full.json",
         )
-        management.call_command("collectstatic", interactive=False)
+        management.call_command("collectstatic", interactive=False, clear=True)
