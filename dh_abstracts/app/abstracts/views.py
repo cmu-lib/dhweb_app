@@ -426,9 +426,15 @@ class AuthorList(ListView):
 
 
 def conference_list(request):
-    affiliated_conferences = ConferenceSeries.objects.all()
+    affiliated_conferences = ConferenceSeries.objects.prefetch_related(
+        "conferences", "conferences__organizers"
+    ).all()
 
-    unaffiliated_conferences = Conference.objects.filter(series__isnull=True).distinct()
+    unaffiliated_conferences = (
+        Conference.objects.prefetch_related("organizers", "series")
+        .filter(series__isnull=True)
+        .distinct()
+    )
 
     context = {
         "conference_list": affiliated_conferences,
