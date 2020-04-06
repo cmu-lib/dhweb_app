@@ -378,7 +378,7 @@ class Institution(ChangeTrackedModel):
         )
 
 
-class Affiliation(Attribute):
+class Affiliation(Attribute, TextIndexedModel):
     department = models.CharField(max_length=500, blank=True, null=False, default="")
     institution = models.ForeignKey(
         Institution, on_delete=models.CASCADE, related_name="affiliations"

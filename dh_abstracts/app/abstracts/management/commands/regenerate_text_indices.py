@@ -6,7 +6,9 @@ periodically, so it is included here as a management command.
 
 from django.core.management.base import BaseCommand
 from django.contrib.postgres.search import SearchVector
-from abstracts.models import Work, Appellation, Institution
+from django.contrib.postgres.aggregates import StringAgg
+from abstracts.models import Work, Appellation, Institution, Affiliation
+from django.db.models import F, Max
 
 
 class Command(BaseCommand):
@@ -16,4 +18,8 @@ class Command(BaseCommand):
 
         print("Updating index for Works...", end="", flush=True)
         Work.objects.update(search_text=SearchVector("title", "full_text"))
+        print("Updating index for Affiliations...", end="", flush=True)
+        Affiliation.objects.annotate(iname=Max("institution__name")).update(
+            search_text=SearchVector("department", F("iname"))
+        )
         print("done.")
