@@ -731,7 +731,23 @@ class FullWorkList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        base_result_set = Work.objects.order_by("title").all()
+        base_result_set = (
+            Work.objects.prefetch_related(
+                "work_type",
+                "authorships",
+                "authorships__appellation",
+                "authorships__author",
+                "conference",
+                "conference__organizers",
+                "conference__series",
+                "keywords",
+                "topics",
+                "languages",
+                "disciplines",
+            )
+            .order_by("title")
+            .all()
+        )
         raw_filter_form = FullWorkForm(self.request.GET)
 
         if raw_filter_form.is_valid():
@@ -780,12 +796,6 @@ class FullWorkList(ListView):
             text_res = filter_form["text"]
             if text_res != "":
                 result_set = result_set.filter(search_text=text_res)
-
-            n_author_res = filter_form["n_authors"]
-            if n_author_res is not None:
-                result_set = result_set.annotate(n_authors=Count("authorships")).filter(
-                    n_authors=n_author_res
-                )
 
             return result_set.distinct()
         else:
