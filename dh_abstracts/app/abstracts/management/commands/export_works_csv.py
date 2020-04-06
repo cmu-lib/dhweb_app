@@ -6,13 +6,17 @@ from django.core.management.base import BaseCommand
 from abstracts import models
 import csv
 from progress.bar import Bar
+from datetime import date
 
 
 class Command(BaseCommand):
     help = "Dump a CSV of all Works"
 
     def handle(self, *args, **options):
-        with open("abstracts/static/downloads/works.csv", "w") as csvfile:
+        with open(
+            f"abstracts/static/downloads/{date.today().strftime('%Y-%m-%d')}_works.csv",
+            "w",
+        ) as csvfile:
             writer = csv.writer(
                 csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL
             )

@@ -17,7 +17,9 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.db import transaction, IntegrityError
 from django.forms.models import model_to_dict
 from django.forms import formset_factory, inlineformset_factory, modelformset_factory
-
+from django.conf import settings
+import glob
+from os.path import basename
 
 from .models import (
     Work,
@@ -367,7 +369,8 @@ class AuthorList(ListView):
                 order_res = "last_name"
 
             result_set = base_result_set.annotate(
-                last_name=Max("appellations__last_name"), n_works=Count("authorships", distinct=True)
+                last_name=Max("appellations__last_name"),
+                n_works=Count("authorships", distinct=True),
             ).order_by(order_res)
 
             affiliation_res = filter_form["affiliation"]
@@ -523,10 +526,19 @@ def author_merge_view(request, author_id):
 
 @login_required
 def download_data(request):
+    download_base = [
+        r"*works.csv",
+        r"*authorships.csv",
+        r"*affiliations.csv",
+        r"*full.json",
+    ]
 
-    context = {
-        "downloads": ["works.csv", "authorships.csv", "affiliations.csv", "full.json"]
-    }
+    actual_downloads = [
+        basename(glob.glob(f"{settings.STATIC_ROOT}/downloads/{dlf}")[0])
+        for dlf in download_base
+    ]
+
+    context = {"downloads": actual_downloads}
 
     return render(request, "downloads.html", context)
 
