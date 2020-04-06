@@ -16,9 +16,7 @@
         <a href="{% url 'series_edit' membership.series.pk %}">{{ membership.series }}</a>
         {% else %}
         {{ membership.series }}
-        {% endif %}
-        {% if not forloop.last %},
-        {% endif %}{% endfor %}
+        {% endif %}({{ membership.number }}){% if not forloop.last %},{% endif %}{% endfor %}
       </small>
     </p>
     {% endif %}
@@ -30,10 +28,7 @@
         {% if user.is_authenticated %}
         <a href="{% url 'organizer_edit' organizer.pk %}">{{ organizer }}</a>
         {% else %}
-        {{ organizer }}
-        {% endif %}
-        {% if not forloop.last %},
-        {% endif %}{% endfor %}
+        {{ organizer }}{% endif %}{% if not forloop.last %},{% endif %}{% endfor %}
       </small>
     </p>
     {% endif %}
