@@ -72,7 +72,7 @@ def is_staff(user):
 
 
 class StaffRequiredMixin(UserPassesTestMixin):
-    def test_fun(self):
+    def test_func(self):
         return self.request.user.is_staff
 
 
@@ -1227,7 +1227,7 @@ def wipe_unused(request):
     return render(request, "wipe_unused.html", context)
 
 
-class ConferenceCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class ConferenceCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     model = Conference
     template_name = "conference_create.html"
     form_class = ConferenceForm
@@ -1312,7 +1312,7 @@ def ConferenceEdit(request, pk):
     return render(request, "conference_edit.html", context)
 
 
-class ConferenceDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class ConferenceDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Conference
     template_name = "conference_delete.html"
     extra_context = {
@@ -1327,7 +1327,7 @@ class ConferenceDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         return super(ConferenceDelete, self).delete(request, *args, **kwargs)
 
 
-class SeriesCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class SeriesCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     model = ConferenceSeries
     template_name = "generic_form.html"
     extra_context = {
@@ -1339,7 +1339,7 @@ class SeriesCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy("full_series_list")
 
 
-class SeriesEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class SeriesEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
     model = ConferenceSeries
     template_name = "generic_form.html"
     extra_context = {
@@ -1351,7 +1351,7 @@ class SeriesEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy("full_series_list")
 
 
-class SeriesDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class SeriesDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     model = ConferenceSeries
     template_name = "generic_form.html"
     extra_context = {
@@ -1372,7 +1372,7 @@ class SeriesList(LoginRequiredMixin, ListView):
     context_object_name = "series_list"
 
 
-class OrganizerCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class OrganizerCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     model = Organizer
     template_name = "generic_form.html"
     extra_context = {
@@ -1390,7 +1390,7 @@ class OrganizerCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return response
 
 
-class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class OrganizerEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Organizer
     template_name = "generic_form.html"
     extra_context = {
@@ -1408,7 +1408,7 @@ class OrganizerEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return response
 
 
-class OrganizerDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class OrganizerDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Organizer
     template_name = "generic_form.html"
     extra_context = {
@@ -1429,7 +1429,7 @@ class OrganizerList(LoginRequiredMixin, ListView):
     context_object_name = "organizer_list"
 
 
-class KeywordCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class KeywordCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     model = Keyword
     template_name = "generic_form.html"
     extra_context = {"form_title": "Create keyword", "cancel_view": "full_keyword_list"}
@@ -1438,7 +1438,7 @@ class KeywordCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy("full_keyword_list")
 
 
-class KeywordDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class KeywordDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Keyword
     template_name = "generic_form.html"
     extra_context = {"form_title": "Delete keyword", "cancel_view": "full_keyword_list"}
@@ -1450,7 +1450,7 @@ class KeywordDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         return super(KeywordDelete, self).delete(request, *args, **kwargs)
 
 
-class KeywordEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class KeywordEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Keyword
     template_name = "generic_form.html"
     extra_context = {
@@ -1608,7 +1608,7 @@ def keyword_multi_merge(request):
     return render(request, "tag_multi_merge.html", context)
 
 
-class TopicCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class TopicCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     model = Topic
     template_name = "generic_form.html"
     extra_context = {"form_title": "Create topic", "cancel_view": "full_topic_list"}
@@ -1617,7 +1617,7 @@ class TopicCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy("full_topic_list")
 
 
-class TopicDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class TopicDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Topic
     template_name = "generic_form.html"
     extra_context = {"form_title": "Delete topic", "cancel_view": "full_topic_list"}
@@ -1629,7 +1629,7 @@ class TopicDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         return super(TopicDelete, self).delete(request, *args, **kwargs)
 
 
-class TopicEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class TopicEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Topic
     template_name = "generic_form.html"
     extra_context = {
@@ -1790,7 +1790,7 @@ class LanguageCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy("full_language_list")
 
 
-class LanguageDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class LanguageDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Language
     template_name = "generic_form.html"
     extra_context = {
@@ -1805,7 +1805,7 @@ class LanguageDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         return super(LanguageDelete, self).delete(request, *args, **kwargs)
 
 
-class LanguageEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class LanguageEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Language
     template_name = "generic_form.html"
     extra_context = {
@@ -1917,7 +1917,7 @@ def language_merge(request, language_id):
             return render(request, "tag_merge.html", context)
 
 
-class DisciplineCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class DisciplineCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     model = Discipline
     template_name = "generic_form.html"
     extra_context = {
@@ -1929,7 +1929,7 @@ class DisciplineCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy("full_discipline_list")
 
 
-class DisciplineDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class DisciplineDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Discipline
     template_name = "generic_form.html"
     extra_context = {
@@ -1944,7 +1944,7 @@ class DisciplineDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         return super(DisciplineDelete, self).delete(request, *args, **kwargs)
 
 
-class DisciplineEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class DisciplineEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Discipline
     template_name = "generic_form.html"
     extra_context = {
@@ -2056,7 +2056,7 @@ def discipline_merge(request, discipline_id):
             return render(request, "tag_merge.html", context)
 
 
-class WorkTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class WorkTypeCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     model = WorkType
     template_name = "generic_form.html"
     extra_context = {
@@ -2068,7 +2068,7 @@ class WorkTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy("full_work_type_list")
 
 
-class WorkTypeDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class WorkTypeDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     model = WorkType
     template_name = "generic_form.html"
     extra_context = {
@@ -2083,7 +2083,7 @@ class WorkTypeDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         return super(WorkTypeDelete, self).delete(request, *args, **kwargs)
 
 
-class WorkTypeEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class WorkTypeEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
     model = WorkType
     template_name = "generic_form.html"
     extra_context = {
