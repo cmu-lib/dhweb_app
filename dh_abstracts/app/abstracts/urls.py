@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),
     path("auth/login", auth_views.LoginView.as_view(), name="login"),
+    path("auth/logout", auth_views.LogoutView.as_view(), name="logout"),
     path("", views.home_view, name="home_view"),
     path("works", views.FullWorkList.as_view(), name="work_list"),
     path("works/<int:work_id>", views.work_view, name="work_detail"),
