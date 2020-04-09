@@ -67,13 +67,33 @@ from .forms import (
 )
 
 
-def is_staff(user):
-    return user.is_staff
+PERMISSIONS_ERROR_TEXT = (
+    "Please contact the lead project editors to edit this part of the database."
+)
 
 
-class StaffRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.is_staff
+def user_is_staff(func):
+    def wrap(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(f"{reverse('login')}?next={request.path}")
+        if request.user.is_staff:
+            return func(request, *args, **kwargs)
+        else:
+            messages.warning(request, PERMISSIONS_ERROR_TEXT)
+            return redirect("home_view")
+
+    return wrap
+
+
+class StaffRequiredMixin:
+    def dispatch(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return redirect(f"{reverse('login')}?next={self.request.path}")
+        if self.request.user.is_staff:
+            return super().dispatch(*args, **kwargs)
+        else:
+            messages.warning(self.request, PERMISSIONS_ERROR_TEXT)
+            return redirect("home_view")
 
 
 class InstitutionAutocomplete(Select2QuerySetView):
@@ -489,7 +509,7 @@ def home_view(request):
     return render(request, "index.html", context)
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def author_merge_view(request, author_id):
 
@@ -539,7 +559,7 @@ def author_merge_view(request, author_id):
             return render(request, "author_merge.html", context)
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 def download_data(request):
     download_base = [
         r"*works.csv",
@@ -992,7 +1012,7 @@ class InstitutionCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return response
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def institution_merge(request, institution_id):
     institution = get_object_or_404(Institution, pk=institution_id)
@@ -1042,7 +1062,7 @@ def institution_merge(request, institution_id):
             return render(request, "institution_merge.html", context)
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def institution_multi_merge(request):
     context = {"form": InstitutionMultiMergeForm}
@@ -1118,7 +1138,7 @@ def ajax_affiliation_create(request):
     return JsonResponse({"name": str(newaff), "id": newaff.pk})
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def affiliation_merge(request, affiliation_id):
     affiliation = get_object_or_404(Affiliation, pk=affiliation_id)
@@ -1166,7 +1186,7 @@ def affiliation_merge(request, affiliation_id):
             return render(request, "affiliation_merge.html", context)
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def affiliation_multi_merge(request):
     context = {"form": AffiliationMultiMergeForm}
@@ -1198,7 +1218,7 @@ def affiliation_multi_merge(request):
     return render(request, "affiliation_multi_merge.html", context)
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def wipe_unused(request):
     deletion_dict = {
@@ -1238,7 +1258,7 @@ class ConferenceCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "Conference '%(year)s - %(venue)s' created"
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def ConferenceEdit(request, pk):
     conference = get_object_or_404(Conference, pk=pk)
@@ -1513,7 +1533,7 @@ class KeywordList(LoginRequiredMixin, ListView):
         return context
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def keyword_merge(request, keyword_id):
     keyword = get_object_or_404(Keyword, pk=keyword_id)
@@ -1570,7 +1590,7 @@ def keyword_merge(request, keyword_id):
             return render(request, "tag_merge.html", context)
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def keyword_multi_merge(request):
     context = {
@@ -1684,7 +1704,7 @@ class TopicList(LoginRequiredMixin, ListView):
         return context
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def topic_merge(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
@@ -1742,7 +1762,7 @@ def topic_merge(request, topic_id):
             return render(request, "tag_merge.html", context)
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def topic_multi_merge(request):
     context = {
@@ -1859,7 +1879,7 @@ class LanguageList(LoginRequiredMixin, ListView):
         return context
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def language_merge(request, language_id):
     language = get_object_or_404(Language, pk=language_id)
@@ -1998,7 +2018,7 @@ class DisciplineList(LoginRequiredMixin, ListView):
         return context
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def discipline_merge(request, discipline_id):
     discipline = get_object_or_404(Discipline, pk=discipline_id)
@@ -2137,7 +2157,7 @@ class WorkTypeList(LoginRequiredMixin, ListView):
         return context
 
 
-@user_passes_test(is_staff)
+@user_is_staff
 @transaction.atomic
 def work_type_merge(request, work_type_id):
     work_type = get_object_or_404(WorkType, pk=work_type_id)
