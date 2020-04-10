@@ -31,7 +31,7 @@ class WorkFilter(forms.Form):
         queryset=WorkType.objects.distinct(), required=False
     )
     conference = forms.ModelChoiceField(
-        queryset=Conference.objects.all(),
+        queryset=Conference.objects.all().prefetch_related("organizers"),
         required=False,
         help_text="Works submitted to a particular conference",
     )
@@ -141,7 +141,7 @@ class WorkForm(forms.ModelForm):
     )
 
     conference = forms.ModelChoiceField(
-        queryset=Conference.objects.all(),
+        queryset=Conference.objects.all().prefetch_related("organizers"),
         help_text="The conference where this abstract was submitted/published.",
     )
 

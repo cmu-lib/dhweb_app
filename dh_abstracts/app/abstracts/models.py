@@ -92,6 +92,18 @@ class Conference(models.Model):
         else:
             return f"{self.year} - {display}"
 
+    @property
+    def n_works(self):
+        return self.works.count()
+
+    @property
+    def n_authors(self):
+        return (
+            Conference.objects.filter(id=self.id)
+            .annotate(n_authors=Count("works__authors", distinct=True))
+            .values_list("n_authors")[0][0]
+        )
+
     def get_absolute_url(self):
         return reverse("conference_edit", kwargs={"pk": self.pk})
 

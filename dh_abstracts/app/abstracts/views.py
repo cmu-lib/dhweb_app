@@ -917,21 +917,7 @@ class FullWorkList(ListView):
 
     def get_queryset(self):
         base_result_set = (
-            Work.objects.prefetch_related(
-                "work_type",
-                "authorships",
-                "authorships__appellation",
-                "authorships__author",
-                "conference",
-                "conference__organizers",
-                "conference__series",
-                "keywords",
-                "topics",
-                "languages",
-                "disciplines",
-            )
-            .order_by("title")
-            .all()
+            Work.objects.select_related("work_type").order_by("title").all()
         )
         raw_filter_form = FullWorkForm(self.request.GET)
 
@@ -982,7 +968,17 @@ class FullWorkList(ListView):
             if text_res != "":
                 result_set = result_set.filter(search_text=text_res)
 
-            return result_set.distinct()
+            return result_set.distinct().prefetch_related(
+                "authorships",
+                "authorships__appellation",
+                "authorships__author",
+                "conference",
+                "conference__organizers",
+                "keywords",
+                "topics",
+                "languages",
+                "disciplines",
+            )
         else:
             for error in raw_filter_form.errors:
                 messages.warning(self.request, error)
