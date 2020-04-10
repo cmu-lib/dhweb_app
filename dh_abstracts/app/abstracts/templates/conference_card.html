@@ -1,34 +1,34 @@
 <h5 class="mb-1">
-  <a href="{% url 'work_list' %}?conference={{ conference.pk }}">{{ conference.year }} -
+  <a href="{% url 'work_list' %}?conference={{ conference.id }}">{{ conference.year }} -
     {{ conference.venue }}</a>
 </h5>
 <div class="d-flex justify-content-between">
   <div>
-    <p>{{ conference.public_works.count }} works by {{ conference.public_authors }} authors</p>
+    <p>{{ conference.n_works }} works by {{ conference.n_authors }} authors</p>
   </div>
   <div>
-    {% if conference.series_memberships.exists %}
+    {% if conference.series_memberships %}
     <p class="my-0">
       <small class="text-muted">
         Series:
-        {% for membership in conference.series_memberships.all %}
+        {% for membership in conference.series_memberships %}
         {% if user.is_authenticated %}
-        <a href="{% url 'series_edit' membership.series.pk %}">{{ membership.series }}</a>
+        <a href="{% url 'series_edit' membership.series.id %}">{{ membership.series.abbreviation }}</a>
         {% else %}
-        {{ membership.series }}
+        {{ membership.series.abbreviation }}
         {% endif %}({{ membership.number }}){% if not forloop.last %},{% endif %}{% endfor %}
       </small>
     </p>
     {% endif %}
-    {% if conference.organizers.exists %}
+    {% if conference.organizers %}
     <p class="my-0">
       <small class="text-muted">
         Organizers:
-        {% for organizer in conference.organizers.all %}
+        {% for organizer in conference.organizers %}
         {% if user.is_authenticated %}
-        <a href="{% url 'organizer_edit' organizer.pk %}">{{ organizer }}</a>
+        <a href="{% url 'organizer_edit' organizer.id %}">{{ organizer.abbreviation }}</a>
         {% else %}
-        {{ organizer }}{% endif %}{% if not forloop.last %},{% endif %}{% endfor %}
+        {{ organizer.abbreviation }}{% endif %}{% if not forloop.last %},{% endif %}{% endfor %}
       </small>
     </p>
     {% endif %}
@@ -39,8 +39,8 @@
 {% if conference.url %}<p>Conference website: <a href="{{ conference.url }}">{{ conference.url }}</a></p>{% endif %}
 {% endif %}
 {% if user.is_authenticated %}
-<a href="{% url 'conference_edit' conference.pk %}" role="button" class="btn btn-primary btn-sm">Edit</a>
-<a href="{% url 'conference_delete' conference.pk %}" role="button" class="btn btn-danger btn-sm">Delete</a>
-<a href="{% url 'work_create' %}?conference={{ conference.pk }}" role="button" class="btn btn-primary btn-sm">New
+<a href="{% url 'conference_edit' conference.id %}" role="button" class="btn btn-primary btn-sm">Edit</a>
+<a href="{% url 'conference_delete' conference.id %}" role="button" class="btn btn-danger btn-sm">Delete</a>
+<a href="{% url 'work_create' %}?conference={{ conference.id }}" role="button" class="btn btn-primary btn-sm">New
   abstract</a>
 {% endif %}

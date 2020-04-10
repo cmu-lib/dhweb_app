@@ -9,7 +9,7 @@
     <div class="card m-2">
       <div class="card-header">Conference Series</div>
       <ul class="list-group list-group-flush">
-        {% for series in conference_list %}
+        {% for series in series_list %}
         <li class="list-group-item"><a href="#{{ series.abbreviation }}">{{ series.title }}</a></li>
         {% endfor %}
         {% if standalone_conferences %}
@@ -34,7 +34,7 @@
       </div>
     </div>
     {% endif %}
-    {% for series in conference_list %}
+    {% for series in series_list %}
     <div class="card m-2">
       <div class="card-header">
         <div class="d-flex justify-content-between">
@@ -54,7 +54,7 @@
           {% endfor %}
       </div>
       <ul class="list-group list-group-flush">
-        {% for conference in series.conferences.all|dictsort:"year" %}
+        {% for conference in series.conferences %}
         <li class="list-group-item">{% include "conference_card.html" with conference=conference %}</li>
         {% endfor %}
       </ul>
