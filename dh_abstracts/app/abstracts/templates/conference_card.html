@@ -7,7 +7,7 @@
     <p>{{ conference.n_works }} works by {{ conference.n_authors }} authors</p>
   </div>
   <div>
-    {% if conference.series_memberships %}
+    {% if conference.series_memberships.length > 0 %}
     <p class="my-0">
       <small class="text-muted">
         Series:
@@ -20,7 +20,7 @@
       </small>
     </p>
     {% endif %}
-    {% if conference.organizers %}
+    {% if conference.organizers.length > 0 %}
     <p class="my-0">
       <small class="text-muted">
         Organizers:

@@ -459,10 +459,7 @@ class AuthorList(ListView):
 
 def conference_list(request):
     affiliated_conferences = (
-        ConferenceSeries.objects.prefetch_related(
-            "conferences", "conferences__organizers", "conferences__series_memberships"
-        )
-        .annotate(
+        ConferenceSeries.objects.annotate(
             conference_n_works=Count("conferences__works", distinct=True),
             conference_n_authors=Count("conferences__works__authors", distinct=True),
         )
@@ -568,15 +565,60 @@ def conference_list(request):
         series_list.append(series_item)
 
     unaffiliated_conferences = (
-        Conference.objects.prefetch_related("organizers", "series")
-        .filter(series__isnull=True)
+        Conference.objects.filter(series__isnull=True)
         .distinct()
+        .annotate(
+            conference_n_works=Count("works", distinct=True),
+            conference_n_authors=Count("works__authors", distinct=True),
+        )
+        .values(
+            "id",
+            "year",
+            "venue",
+            "url",
+            "organizers",
+            "organizers__name",
+            "organizers__abbreviation",
+            "organizers__notes",
+            "organizers__url",
+            "conference_n_works",
+            "conference_n_authors",
+        )
+        .order_by("year")
     )
 
-    context = {
-        "series_list": series_list,
-        "standalone_conferences": unaffiliated_conferences,
-    }
+    unaffiliated_list = []
+
+    for conference, conference_items_group in itertools.groupby(
+        sorted(unaffiliated_conferences, key=lambda x: x["id"]), lambda x: x["id"]
+    ):
+        conference_items = list(conference_items_group)
+        first_conference = conference_items[0]
+        conference_organizers = []
+        for organizer_id, organizer_items_group in itertools.groupby(
+            sorted(conference_items, key=lambda x: x["organizers"]),
+            lambda x: x["organizers"],
+        ):
+            organizer_items = list(organizer_items_group)
+            organizer = organizer_items[0]
+            organizer_item = {
+                "id": organizer_id,
+                "abbreviation": organizer["organizers__abbreviation"],
+            }
+            conference_organizers.append(organizer_item)
+        conference_item = {
+            "id": conference,
+            "year": first_conference["year"],
+            "venue": first_conference["venue"],
+            "organizers": conference_organizers,
+            "notes": first_conference["organizers__notes"],
+            "url": first_conference["url"],
+            "n_works": first_conference["conference_n_works"],
+            "n_authors": first_conference["conference_n_authors"],
+        }
+        unaffiliated_list.append(conference_item)
+
+    context = {"series_list": series_list, "standalone_conferences": unaffiliated_list}
 
     return render(request, "conference_list.html", context)
 
