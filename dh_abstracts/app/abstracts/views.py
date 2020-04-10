@@ -338,6 +338,16 @@ def author_view(request, author_id):
         Work.objects.filter(authorships__in=obj_authorships)
         .distinct()
         .order_by("-conference__year")
+        .select_related("work_type", "conference")
+        .prefetch_related(
+            "authorships__appellation",
+            "authorships__author",
+            "keywords",
+            "topics",
+            "languages",
+            "disciplines",
+            "conference__organizers",
+        )
     )
 
     appellation_assertions = [
@@ -345,6 +355,16 @@ def author_view(request, author_id):
             "appellation": a,
             "works": public_works.filter(
                 authorships__in=obj_authorships.filter(appellation=a)
+                .select_related("work_type", "conference")
+                .prefetch_related(
+                    "authorships__appellation",
+                    "authorships__author",
+                    "keywords",
+                    "topics",
+                    "languages",
+                    "disciplines",
+                    "conference__organizers",
+                )
             ),
         }
         for a in Appellation.objects.filter(asserted_by__in=obj_authorships)
@@ -362,6 +382,16 @@ def author_view(request, author_id):
             .distinct(),
             "works": Work.objects.filter(
                 authorships__in=obj_authorships.filter(affiliations__institution=i)
+                .select_related("work_type", "conference")
+                .prefetch_related(
+                    "authorships__appellation",
+                    "authorships__author",
+                    "keywords",
+                    "topics",
+                    "languages",
+                    "disciplines",
+                    "conference__organizers",
+                )
             )
             .distinct()
             .order_by("conference__year"),
