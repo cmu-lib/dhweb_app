@@ -92,12 +92,6 @@ class AuthorListViewTest(TestCase):
     def test_render(self):
         publicly_available(self, "author_list")
 
-    def test_query_filtered_count(self):
-        res = self.client.get(reverse("author_list"))
-        self.assertEqual(
-            res.context["filtered_authors_count"], len(res.context["author_list"])
-        )
-
     def test_query_total_count(self):
         res = self.client.get(reverse("author_list"))
         self.assertIsInstance(res.context["available_authors_count"], int)
@@ -331,8 +325,8 @@ class ConferenceListViewTest(TestCase):
     def test_has_unaffiliated_conferences(self):
         res = self.client.get(reverse("conference_list"))
         self.assertIn(
-            Conference.objects.filter(series__isnull=True).first(),
-            res.context["standalone_conferences"],
+            Conference.objects.filter(series__isnull=True).first().id,
+            [item["id"] for item in res.context["standalone_conferences"]],
         )
 
 
