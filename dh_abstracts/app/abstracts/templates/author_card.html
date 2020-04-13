@@ -5,8 +5,7 @@
       class="badge badge-info">{{ author.n_works }}</span> works
     authored</a></h6>
 {% if author.main_affiliation_institution %}
-<p class=" mb-0 text-muted">{% if author.main_affiliation_department %}{{ author.main_affiliation_department }} -
-  {% endif %}{{ author.main_affiliation_institution }}
-  ({% if author.main_affiliation_institution_city %}{{ author.main_affiliation_institution_city }},
-  {% endif %}{{ author.main_affiliation_institution_country }})</p>
+<p class=" mb-0 text-muted">
+  {% include "affiliation_string.html" with department=author.main_affiliation_department institution=author.main_affiliation_institution city=author.main_affiliation_institution_city country=author.main_affiliation_institution_country %}
+</p>
 {% endif %}
