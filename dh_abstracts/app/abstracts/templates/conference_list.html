@@ -12,11 +12,15 @@
         {% for series in series_list %}
         <li class="list-group-item"><a href="#{{ series.abbreviation }}">{{ series.title }}</a></li>
         {% endfor %}
-        {% if standalone_conferences %}
-        <li class="list-group-item"><a href="#standalone">Standalone Events</a></li>
-        {% endif %}
       </ul>
     </div>
+    {% if standalone_conferences %}
+    <div class="card m-2">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="#standalone">Standalone Events</a></li>
+      </ul>
+    </div>
+    {% endif %}
   </div>
   <div class="col-md-9">
     {% if user.is_authenticated %}
