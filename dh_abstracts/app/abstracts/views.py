@@ -3,7 +3,19 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DetailView, ListView
-from django.db.models import Count, Max, Min, Q, Prefetch
+from django.db.models import (
+    Count,
+    Max,
+    Min,
+    F,
+    Q,
+    Prefetch,
+    Subquery,
+    OuterRef,
+    CharField,
+    Value,
+)
+from django.db.models.functions import Concat
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector
@@ -469,7 +481,37 @@ class AuthorList(ListView):
                     authorships__appellation__last_name__icontains=last_name_res
                 )
 
-            return result_set.distinct()
+            # Newest affiliations
+
+            newest_authorship = Authorship.objects.filter(
+                author=OuterRef("pk")
+            ).order_by("-work__conference__year")
+
+            annotated_authors = result_set.annotate(
+                main_affiliation_department=Subquery(
+                    newest_authorship.values("affiliations__department")[:1]
+                ),
+                main_affiliation_institution=Subquery(
+                    newest_authorship.values("affiliations__institution__name")[:1]
+                ),
+                main_affiliation_institution_city=Subquery(
+                    newest_authorship.values("affiliations__institution__city")[:1]
+                ),
+                main_affiliation_institution_country=Subquery(
+                    newest_authorship.values(
+                        "affiliations__institution__country__pref_name"
+                    )[:1]
+                ),
+                most_recent_first_name=Subquery(
+                    newest_authorship.values("appellation__first_name")[:1]
+                ),
+                most_recent_last_name=Subquery(
+                    newest_authorship.values("appellation__last_name")[:1]
+                ),
+                n_works=Count("works", distinct=True),
+            )
+
+            return annotated_authors
 
         else:
             messages.warning(
@@ -482,7 +524,6 @@ class AuthorList(ListView):
         context = super().get_context_data(**kwargs)
         context["author_filter_form"] = AuthorFilter(data=self.request.GET)
         context["available_authors_count"] = Author.objects.count()
-        context["filtered_authors_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("author_list")
         return context
 
