@@ -344,12 +344,8 @@ def work_view(request, work_id):
 def author_view(request, author_id):
     author = get_object_or_404(Author, pk=author_id)
 
-    obj_authorships = author.public_authorships
-
-    public_works = (
-        Work.objects.filter(authorships__in=obj_authorships)
-        .distinct()
-        .order_by("-conference__year")
+    obj_authorships = (
+        Authorship.objects.filter(author=author)
         .select_related("work_type", "conference")
         .prefetch_related(
             "authorships__appellation",
@@ -360,64 +356,76 @@ def author_view(request, author_id):
             "disciplines",
             "conference__organizers",
         )
+    ).order_by("-work__conference__year")
+
+    appellation_assertions = []
+
+    appellation_groups = itertools.groupby(
+        obj_authorships.values(
+            "appellation",
+            "appellation__first_name",
+            "appellation__last_name",
+            "work",
+            "work__conference__year",
+        ).order_by("appellation"),
+        lambda x: x["appellation"],
     )
 
-    appellation_assertions = [
-        {
-            "appellation": a,
-            "works": public_works.filter(
-                authorships__in=obj_authorships.filter(appellation=a)
-                .select_related("work_type", "conference")
-                .prefetch_related(
-                    "authorships__appellation",
-                    "authorships__author",
-                    "keywords",
-                    "topics",
-                    "languages",
-                    "disciplines",
-                    "conference__organizers",
-                )
-            ),
+    for app_id, app_data_group in appellation_groups:
+        app_data = list(app_data_group)
+        app_dict = {
+            "first_name": app_data[0]["appellation__first_name"],
+            "last_name": app_data[0]["appellation__last_name"],
+            "works": [
+                {"id": app["work"], "year": app["work__conference__year"]}
+                for app in app_data
+            ],
         }
-        for a in Appellation.objects.filter(asserted_by__in=obj_authorships)
+        appellation_assertions.append(app_dict)
+
+    affiliation_assertions = []
+
+    affiliation_groups = itertools.groupby(
+        obj_authorships.values(
+            "affiliations",
+            "affiliations__department",
+            "affiliations__institution",
+            "affiliations__institution__name",
+            "affiliations__institution__city",
+            "affiliations__institution__country__pref_name",
+            "work",
+            "work__conference__year",
+        ).order_by("affiliations", "-work__conference__year"),
+        lambda x: x["affiliations"],
+    )
+
+    for aff_id, aff_data_group in affiliation_groups:
+        aff_data = list(aff_data_group)
+        aff_dict = {
+            "id": aff_data[0]["affiliations"],
+            "department": aff_data[0]["affiliations__department"],
+            "institution": aff_data[0]["affiliations__institution__name"],
+            "city": aff_data[0]["affiliations__institution__city"],
+            "country": aff_data[0]["affiliations__institution__country__pref_name"],
+            "works": [
+                {"id": aff["work"], "year": aff["work__conference__year"]}
+                for aff in aff_data
+            ],
+        }
+        affiliation_assertions.append(aff_dict)
+
+    works = (
+        Work.objects.filter(authorships__author=author)
         .distinct()
-        .order_by("last_name")
-    ]
-
-    all_affiliations = Affiliation.objects.filter(asserted_by__in=obj_authorships)
-
-    affiliation_assertions = [
-        {
-            "institution": i,
-            "departments": all_affiliations.filter(institution=i)
-            .values_list("department", flat=True)
-            .distinct(),
-            "works": Work.objects.filter(
-                authorships__in=obj_authorships.filter(affiliations__institution=i)
-                .select_related("work_type", "conference")
-                .prefetch_related(
-                    "authorships__appellation",
-                    "authorships__author",
-                    "keywords",
-                    "topics",
-                    "languages",
-                    "disciplines",
-                    "conference__organizers",
-                )
-            )
-            .distinct()
-            .order_by("conference__year"),
-        }
-        for i in Institution.objects.filter(
-            affiliations__in=all_affiliations
-        ).distinct()
-    ]
+        .order_by("-conference__year")
+    )
 
     author_admin_page = reverse("admin:abstracts_author_change", args=(author.pk,))
 
     context = {
         "author": author,
-        "works": public_works,
+        "works": works,
+        "authorships": obj_authorships,
         "appellation_assertions": appellation_assertions,
         "affiliation_assertions": affiliation_assertions,
         "author_admin_page": author_admin_page,
