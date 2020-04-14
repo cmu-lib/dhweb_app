@@ -1,4 +1,4 @@
 {% if department %}{{ department }} -
 {% endif %}{{ institution }}
-({% if institution_city %}{{ institution_city }},
-{% endif %}{{ institution_country|default:"" }})
+{% if institution_country %}({% if institution_city %}{{ institution_city }},
+{% endif %}{{ institution_country }}){% endif %}

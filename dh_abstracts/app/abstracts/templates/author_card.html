@@ -6,6 +6,6 @@
     authored</a></h6>
 {% if author.main_affiliation_institution %}
 <p class=" mb-0 text-muted">
-  {% include "affiliation_string.html" with department=author.main_affiliation_department institution=author.main_affiliation_institution city=author.main_affiliation_institution_city country=author.main_affiliation_institution_country %}
+  {% include "affiliation_string.html" with department=author.main_affiliation_department institution=author.main_affiliation_institution institution_city=author.main_affiliation_institution_city institution_country=author.main_affiliation_institution_country %}
 </p>
 {% endif %}
