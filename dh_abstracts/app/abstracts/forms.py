@@ -95,12 +95,12 @@ class WorkAuthorshipForm(forms.Form):
     )
     first_name = forms.CharField(
         max_length=100,
-        required=False,
+        required=True,
         help_text="First name as it appears in the context of this abstract.",
     )
     last_name = forms.CharField(
         max_length=100,
-        required=False,
+        required=True,
         help_text="Last name as it appears in the context of this abstract.",
     )
     affiliations = forms.ModelMultipleChoiceField(
