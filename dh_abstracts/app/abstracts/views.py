@@ -571,111 +571,25 @@ class AuthorList(ListView):
 
 
 def conference_list(request):
-    affiliated_conferences = (
-        ConferenceSeries.objects.annotate(
-            conference_n_works=Count("conferences__works", distinct=True),
-            conference_n_authors=Count("conferences__works__authors", distinct=True),
-        )
-        .values(
-            "id",
-            "title",
-            "abbreviation",
-            "notes",
-            "conferences",
-            "conferences__series_memberships__number",
-            "conferences__series_memberships__series",
-            "conferences__series_memberships__series__abbreviation",
-            "conferences__year",
-            "conferences__venue",
-            "conferences__url",
-            "conferences__organizers",
-            "conferences__organizers__name",
-            "conferences__organizers__abbreviation",
-            "conferences__organizers__notes",
-            "conferences__organizers__url",
-            "conference_n_works",
-            "conference_n_authors",
-        )
-        .order_by(
-            "title",
-            "conferences__organizers",
-            "conferences__series_memberships__number",
-        )
+    membership_number = SeriesMembership.objects.filter(
+        conference=OuterRef("pk"), series=OuterRef(OuterRef("pk"))
     )
 
-    series_list = []
-    sg = itertools.groupby(affiliated_conferences, lambda x: x["title"])
-    for title, series_items_group in sg:
-        series_items = list(series_items_group)
-        first_series = series_items[0]
-        series_item = {
-            "title": title,
-            "abbreviation": first_series["abbreviation"],
-            "notes": first_series["notes"],
-            "all_organizers": [],
-            "conferences": [],
-        }
-        og = itertools.groupby(series_items, lambda x: x["conferences__organizers"])
-        for organizer, organizer_items_group in og:
-            organizer_items = list(organizer_items_group)
-            first_organizer = list(organizer_items)[0]
-            organizer_item = {
-                "name": first_organizer["conferences__organizers__name"],
-                "notes": first_organizer["conferences__organizers__notes"],
-                "url": first_organizer["conferences__organizers__url"],
-            }
-            series_item["all_organizers"].append(organizer_item)
-        for conference, conference_items_group in itertools.groupby(
-            sorted(series_items, key=lambda x: x["conferences"]),
-            lambda x: x["conferences"],
-        ):
-            conference_items = list(conference_items_group)
-            first_conference = conference_items[0]
-            series_memberships = []
-            for membership_id, membership_items_group in itertools.groupby(
-                sorted(
-                    conference_items,
-                    key=lambda x: x["conferences__series_memberships__series"],
-                ),
-                lambda x: x["conferences__series_memberships__series"],
-            ):
-                membership_items = list(membership_items_group)
-                membership = membership_items[0]
-                membership_item = {
-                    "series": {
-                        "id": membership_id,
-                        "abbreviation": membership[
-                            "conferences__series_memberships__series__abbreviation"
-                        ],
-                    },
-                    "number": membership["conferences__series_memberships__number"],
-                }
-                series_memberships.append(membership_item)
-            conference_organizers = []
-            for organizer_id, organizer_items_group in itertools.groupby(
-                sorted(conference_items, key=lambda x: x["conferences__organizers"]),
-                lambda x: x["conferences__organizers"],
-            ):
-                organizer_items = list(organizer_items_group)
-                organizer = organizer_items[0]
-                organizer_item = {
-                    "id": organizer_id,
-                    "abbreviation": organizer["conferences__organizers__abbreviation"],
-                }
-                conference_organizers.append(organizer_item)
-            conference_item = {
-                "id": conference,
-                "year": first_conference["conferences__year"],
-                "venue": first_conference["conferences__venue"],
-                "series_memberships": series_memberships,
-                "organizers": conference_organizers,
-                "notes": first_conference["conferences__organizers__notes"],
-                "url": first_conference["conferences__url"],
-                "n_works": first_conference["conference_n_works"],
-                "n_authors": first_conference["conference_n_authors"],
-            }
-            series_item["conferences"].append(conference_item)
-        series_list.append(series_item)
+    conference_list = Conference.objects.annotate(
+        n_works=Count("works", distinct=True),
+        n_authors=Count("works__authors", distinct=True),
+    ).select_related("country")
+
+    series_list = ConferenceSeries.objects.prefetch_related(
+        Prefetch(
+            "conferences",
+            queryset=conference_list.order_by("series_memberships__number"),
+        ),
+        "conferences__organizers",
+        "conferences__series_memberships",
+        "conferences__series_memberships__series",
+        "conferences__hosting_institutions",
+    ).all()
 
     unaffiliated_conferences = (
         Conference.objects.filter(series__isnull=True)
