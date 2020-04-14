@@ -374,6 +374,7 @@ def author_view(request, author_id):
     for app_id, app_data_group in appellation_groups:
         app_data = list(app_data_group)
         app_dict = {
+            "appellation": app_id,
             "first_name": app_data[0]["appellation__first_name"],
             "last_name": app_data[0]["appellation__last_name"],
             "works": [

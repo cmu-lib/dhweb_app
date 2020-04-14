@@ -251,12 +251,6 @@ class AuthorDetailViewTest(TestCase):
             )
         )
 
-    def test_affiliations_each_has_value(self):
-        res = self.client.get(reverse("author_detail", kwargs={"author_id": 1}))
-        for assertion in res.context["affiliation_assertions"]:
-            self.assertGreaterEqual(len(assertion["works"]), 1)
-            self.assertTrue(is_list_unique(assertion["works"]))
-
 
 class WorkListViewTest(TestCase):
     """
