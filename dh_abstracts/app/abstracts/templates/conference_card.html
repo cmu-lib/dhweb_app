@@ -2,6 +2,15 @@
   <a href="{% url 'work_list' %}?conference={{ conference.id }}">{{ conference.year }} -
     {{ conference.venue }}</a>
 </h5>
+{% if conference.theme_title %}
+<h6>"{{ conference.theme_title }}"</h6>
+{% endif %}
+<small class="text-muted">{% if conference.hosting_institutions.exists %}Hosted at
+  {{ conference.hosting_institutions.all|join:", "}}{% endif %}
+  {% if conference.start_date %}{{ conference.start_date }}
+  -
+  {{ conference.end_date }}{% endif %}</small>
+
 <div class="d-flex justify-content-between">
   <div>
     <p>{{ conference.n_works }} works by {{ conference.n_authors }} authors</p>
