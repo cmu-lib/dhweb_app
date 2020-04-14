@@ -43,6 +43,7 @@
   <ul class="list-group list-group-flush">
     {% for affiliation in affiliation_assertions %}
     <li class="list-group-item">
+      {% if affiliation.institution %}
       <p><a
           href="{% url 'author_list' %}?affiliation={{ affiliation.id }}">{% include "affiliation_string.html" with department=affiliation.department institution=affiliation.institution institution_city=affiliation.city institution_country=affiliation.country %}</a>
       </p>
@@ -50,6 +51,9 @@
         <a href="{% url 'work_detail' work.id %}">{{ work.year }}</a>{% if not forloop.last %},
         {% endif %}
         {% endfor %}</small>
+      {% else %}
+      No affiliations given
+      {% endif %}
       {% endfor %}
   </ul>
 </div>
