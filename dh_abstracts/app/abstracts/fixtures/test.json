@@ -25,7 +25,14 @@
     "venue": "New York",
     "venue_abbreviation": "NYC",
     "notes": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. Donec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi,",
-    "url": "https://example.com"
+    "url": "https://example.com",
+    "theme_title": "",
+    "start_date": null,
+    "end_date": null,
+    "city": "",
+    "state_province_region": "",
+    "country": null,
+    "hosting_institutions": []
   }
 },
 {
@@ -36,7 +43,14 @@
     "venue": "University of Toronto",
     "venue_abbreviation": "Toronto",
     "notes": "\u2022 Lorem ipsum dolor\r\n\u2022 Sit amet, consectetur\r\n\u2022 Adipisicing elit, sed\r\n\u2022 Do eiusmod tempor\r\n\u2022 Incididunt ut labore\r\n\u2022 Et dolore magna\r\n\u2022 Aliqua. Ut enim\r\n\u2022 Ad minim veniam,\r\n\u2022 Quis nostrud exercitation\r\n\u2022 Ullamco laboris nisi\r\n\u2022 Ut aliquip ex\r\n\u2022 Ea commodo consequat.",
-    "url": ""
+    "url": "",
+    "theme_title": "",
+    "start_date": null,
+    "end_date": null,
+    "city": "",
+    "state_province_region": "",
+    "country": null,
+    "hosting_institutions": []
   }
 },
 {
@@ -47,7 +61,17 @@
     "venue": "Los Angeles",
     "venue_abbreviation": "LA",
     "notes": "",
-    "url": ""
+    "url": "",
+    "theme_title": "",
+    "start_date": "2019-01-04",
+    "end_date": "2019-01-07",
+    "city": "Los Angeles",
+    "state_province_region": "Calilfornia",
+    "country": 1,
+    "hosting_institutions": [
+      2,
+      1
+    ]
   }
 },
 {
@@ -58,7 +82,14 @@
     "venue": "Computers and Their Potential Applications in Museums: A Conference (Metropolitan Museum of Art)",
     "venue_abbreviation": "IBM & The Met",
     "notes": "Computers and Their Potential Applications in Museums: A Conference",
-    "url": ""
+    "url": "",
+    "theme_title": "",
+    "start_date": null,
+    "end_date": null,
+    "city": "",
+    "state_province_region": "",
+    "country": null,
+    "hosting_institutions": []
   }
 },
 {
@@ -317,7 +348,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$180000$tPj49fsbZxwZ$0acMULPg7LIKk4wcMuTgXfTRloYaMStvda8CXpk080I=",
-    "last_login": "2020-04-08T20:04:08.987Z",
+    "last_login": "2020-04-14T15:32:35.062Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",

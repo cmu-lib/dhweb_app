@@ -23,6 +23,7 @@
 {% endblock %}
 
 {% block js %}
+{% include "autocomplete_boilerplate.html" %}
 <script>
   var form_count = {{ series_membership_form.total_form_count }};
 

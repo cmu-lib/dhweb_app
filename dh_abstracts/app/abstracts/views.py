@@ -1553,6 +1553,9 @@ def ConferenceEdit(request, pk):
             conference.organizers.clear()
             for organizer in clean_form["organizers"]:
                 conference.organizers.add(organizer)
+            conference.hosting_institutions.clear()
+            for hosting_institution in clean_form["hosting_institutions"]:
+                conference.hosting_institutions.add(hosting_institution)
 
             conference.save()
 

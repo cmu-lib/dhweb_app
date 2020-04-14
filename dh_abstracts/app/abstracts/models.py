@@ -65,6 +65,19 @@ class Conference(models.Model):
     )
     notes = models.TextField(blank=True, null=False, default="")
     url = models.URLField(blank=True)
+    theme_title = models.CharField(max_length=1000, blank=True, null=False, default="")
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    city = models.CharField(max_length=1000, blank=True, null=False, default="")
+    hosting_institutions = models.ManyToManyField(
+        "Institution", related_name="conferences"
+    )
+    state_province_region = models.CharField(
+        max_length=1000, blank=True, null=False, default=""
+    )
+    country = models.ForeignKey(
+        "Country", related_name="conferences", null=True, on_delete=models.SET_NULL
+    )
 
     class Meta:
         ordering = ["-year"]

@@ -446,10 +446,34 @@ class ConferenceForm(forms.ModelForm):
         required=False,
         help_text="Organizers of the conference",
     )
+    hosting_institutions = forms.ModelMultipleChoiceField(
+        queryset=Institution.objects.all(),
+        required=False,
+        widget=ModelSelect2Multiple(url="unrestricted-institution-autocomplete"),
+    )
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="unrestricted-country-autocomplete"),
+    )
 
     class Meta:
         model = Conference
-        fields = ["year", "venue", "venue_abbreviation", "notes", "url", "organizers"]
+        fields = [
+            "year",
+            "venue",
+            "venue_abbreviation",
+            "notes",
+            "url",
+            "organizers",
+            "theme_title",
+            "start_date",
+            "end_date",
+            "city",
+            "hosting_institutions",
+            "state_province_region",
+            "country",
+        ]
 
 
 class ConferenceSeriesInline(forms.Form):
