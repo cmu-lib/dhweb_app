@@ -13,7 +13,7 @@
     {% endif %}
   </div>
   <ol class="list-group list-group-flush">
-    {% for authorship in authorships.all %}
+    {% for authorship in authorships %}
     <li class="list-group-item">{% include "authorship_card.html" with authorship=authorship %}</li>
     {% endfor %}
   </ol>

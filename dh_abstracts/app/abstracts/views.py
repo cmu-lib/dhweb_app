@@ -14,6 +14,7 @@ from django.db.models import (
     OuterRef,
     CharField,
     Value,
+    prefetch_related_objects,
 )
 from django.db.models.functions import Concat
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -334,9 +335,29 @@ class UnrestrictedAuthorAutocomplete(LoginRequiredMixin, Select2QuerySetView):
 
 
 def work_view(request, work_id):
-    work = get_object_or_404(Work, pk=work_id)
+    work = get_object_or_404(
+        Work.objects.select_related("work_type", "conference").prefetch_related(
+            "conference__series",
+            "conference__organizers",
+            "keywords",
+            "topics",
+            "disciplines",
+            "languages",
+        ),
+        pk=work_id,
+    )
 
-    authorships = work.authorships.order_by("authorship_order")
+    authorships = (
+        Authorship.objects.filter(work__id=work_id)
+        .order_by("authorship_order")
+        .distinct()
+        .select_related("work", "author", "appellation")
+        .prefetch_related(
+            "affiliations",
+            "affiliations__institution",
+            "affiliations__institution__country",
+        )
+    )
     context = {"work": work, "authorships": authorships}
     return render(request, "work_detail.html", context)
 
