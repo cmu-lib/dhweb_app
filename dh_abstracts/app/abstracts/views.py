@@ -416,8 +416,20 @@ def author_view(request, author_id):
 
     works = (
         Work.objects.filter(authorships__author=author)
-        .distinct()
         .order_by("-conference__year")
+        .distinct()
+        .select_related("conference", "work_type")
+        .prefetch_related(
+            "conference__series",
+            "conference__organizers",
+            "keywords",
+            "topics",
+            "disciplines",
+            "languages",
+            "authorships",
+            "authorships__appellation",
+            "authorships__author__appellations",
+        )
     )
 
     author_admin_page = reverse("admin:abstracts_author_change", args=(author.pk,))
