@@ -319,8 +319,8 @@ class ConferenceListViewTest(TestCase):
     def test_has_unaffiliated_conferences(self):
         res = self.client.get(reverse("conference_list"))
         self.assertIn(
-            Conference.objects.filter(series__isnull=True).first().id,
-            [item["id"] for item in res.context["standalone_conferences"]],
+            Conference.objects.filter(series__isnull=True).first(),
+            res.context["standalone_conferences"],
         )
 
 
