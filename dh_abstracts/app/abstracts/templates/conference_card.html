@@ -5,11 +5,20 @@
 {% if conference.theme_title %}
 <h6>"{{ conference.theme_title }}"</h6>
 {% endif %}
-<small class="text-muted">{% if conference.hosting_institutions.exists %}Hosted at
-  {{ conference.hosting_institutions.all|join:", "}}{% endif %}
-  {% if conference.start_date %}{{ conference.start_date }}
+{% if conference.hosting_institutions.exists %}
+<small class="text-muted">
+  Hosted at {{ conference.hosting_institutions.all|join:", "}},
+  {% if conference.city %}{{ conference.city }},
+  {% endif %}{% if conference.state_province_region %}}{{ conference.state_province_region }},
+  {% endif %}{% if conference.country %}{{ conference.country }}{% endif %}
+</small>
+<br>
+{% endif %}
+{% if conference.start_date %}
+<small class="text-muted">{{ conference.start_date }}
   -
-  {{ conference.end_date }}{% endif %}</small>
+  {{ conference.end_date }}</small>
+{% endif %}
 
 <div class="d-flex justify-content-between">
   <div>
