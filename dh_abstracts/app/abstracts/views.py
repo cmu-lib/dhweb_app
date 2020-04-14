@@ -3,19 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DetailView, ListView
-from django.db.models import (
-    Count,
-    Max,
-    Min,
-    F,
-    Q,
-    Prefetch,
-    Subquery,
-    OuterRef,
-    CharField,
-    Value,
-    prefetch_related_objects,
-)
+from django.db.models import Count, Max, Min, Q, Prefetch, Subquery, OuterRef
 from django.db.models.functions import Concat
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
