@@ -58,7 +58,7 @@
           {% endfor %}
       </div>
       <ul class="list-group list-group-flush">
-        {% for conference in series.conferences %}
+        {% for conference in series.conferences.all %}
         <li class="list-group-item">{% include "conference_card.html" with conference=conference %}</li>
         {% endfor %}
       </ul>
@@ -73,7 +73,7 @@
         </div>
       </div>
       <ul class="list-group list-group-flush">
-        {% for conference in standalone_conferences %}
+        {% for conference in standalone_conferences.all %}
         <li class="list-group-item">{% include "conference_card.html" with conference=conference %}</li>
         {% endfor %}
       </ul>

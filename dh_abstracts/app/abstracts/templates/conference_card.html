@@ -16,11 +16,11 @@
     <p>{{ conference.n_works }} works by {{ conference.n_authors }} authors</p>
   </div>
   <div>
-    {% if conference.series_memberships.length > 0 %}
+    {% if conference.series_memberships.exists %}
     <p class="my-0">
       <small class="text-muted">
         Series:
-        {% for membership in conference.series_memberships %}
+        {% for membership in conference.series_memberships.all %}
         {% if user.is_authenticated %}
         <a href="{% url 'series_edit' membership.series.id %}">{{ membership.series.abbreviation }}</a>
         {% else %}
@@ -29,11 +29,11 @@
       </small>
     </p>
     {% endif %}
-    {% if conference.organizers.length > 0 %}
+    {% if conference.organizers.exists %}
     <p class="my-0">
       <small class="text-muted">
         Organizers:
-        {% for organizer in conference.organizers %}
+        {% for organizer in conference.organizers.all %}
         {% if user.is_authenticated %}
         <a href="{% url 'organizer_edit' organizer.id %}">{{ organizer.abbreviation }}</a>
         {% else %}
