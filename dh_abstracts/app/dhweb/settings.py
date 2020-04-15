@@ -137,6 +137,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = "/vol/static_files"
 LOGIN_URL = "/auth/login"
+LOGIN_REDIRECT_URL = "/"
 
 # Email
 
