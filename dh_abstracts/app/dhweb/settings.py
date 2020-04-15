@@ -144,3 +144,5 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", 25)
 DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_ADDRESS")
+
+PASSWORD_RESET_TOKEN_EXPIRES = 600
