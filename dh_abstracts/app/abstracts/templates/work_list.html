@@ -2,15 +2,15 @@
 
 {% block header_title %}Abstracts{% endblock %}
 
-{% block results_title %}Abstracts search results{% if selected_conference %}
-({{ selected_conference }}){% endif %}{% endblock %}
+{% block results_title %}Abstracts search results{% for conference in selected_conference %}
+({{ selected_conference }}){% endfor %}{% endblock %}
 
 {% block head %}
-{% if selected_conference %}
+{% for conference in selected_conferences %}
 <div class="card p-3 list-group-item">
-  {% include "conference_card.html" with conference=selected_conference %}
+  {% include "conference_card.html" with conference=conference %}
 </div>
-{% endif %}
+{% endfor %}
 {% endblock %}
 
 {% block results %}

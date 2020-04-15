@@ -323,8 +323,13 @@ class UnrestrictedAuthorAutocomplete(LoginRequiredMixin, Select2QuerySetView):
 
 
 def work_view(request, work_id):
+    related_conference = Conference.objects.annotate(
+        n_works=Count("works", distinct=True),
+        n_authors=Count("works__authors", distinct=True),
+    )
     work = get_object_or_404(
-        Work.objects.select_related("work_type", "conference").prefetch_related(
+        Work.objects.select_related("work_type").prefetch_related(
+            Prefetch("conference", queryset=related_conference),
             "conference__series",
             "conference__organizers",
             "keywords",
@@ -890,9 +895,7 @@ class FullWorkList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        base_result_set = (
-            Work.objects.select_related("work_type").order_by("title").all()
-        )
+        base_result_set = Work.objects.select_related("work_type").order_by("title")
         raw_filter_form = FullWorkForm(self.request.GET)
 
         if raw_filter_form.is_valid():
@@ -942,7 +945,7 @@ class FullWorkList(ListView):
             if text_res != "":
                 result_set = result_set.filter(search_text=text_res)
 
-            return result_set.distinct().prefetch_related(
+            return result_set.prefetch_related(
                 "authorships",
                 "authorships__appellation",
                 "authorships__author",
@@ -952,7 +955,7 @@ class FullWorkList(ListView):
                 "topics",
                 "languages",
                 "disciplines",
-            )
+            ).all()
         else:
             for error in raw_filter_form.errors:
                 messages.warning(self.request, error)
@@ -960,14 +963,24 @@ class FullWorkList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["work_filter_form"] = WorkFilter(data=self.request.GET)
-        try:
-            selected_conference = Conference.objects.get(
-                id=self.request.GET.get("conference")
+
+        selected_conferences = self.request.GET.get("conference", None)
+
+        conference_subquery = (
+            Conference.objects.annotate(
+                n_works=Count("works", distinct=True),
+                n_authors=Count("works__authors", distinct=True),
             )
-        except:
-            selected_conference = None
-        context["selected_conference"] = selected_conference
+            .select_related("country")
+            .prefetch_related(
+                "organizers", "series_memberships", "series_memberships__series"
+            )
+        )
+
+        conferences_data = conference_subquery.filter(id=selected_conferences).all()
+
+        context["work_filter_form"] = WorkFilter(data=self.request.GET)
+        context["selected_conferences"] = conferences_data
         context["available_works_count"] = Work.objects.count()
         context["filtered_works_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("work_list")
