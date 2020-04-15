@@ -514,11 +514,20 @@ class CreateConferenceViewTest(TestCase):
                 "venue": "foo",
                 "venue_abbreviation": "bar",
                 "notes": "buzz",
+                "organizers": [1, 2],
             },
             follow=True,
         )
         self.assertContains(res, "created")
         self.assertTrue(Conference.objects.filter(year=1987, venue="foo").exists())
+        self.assertEquals(
+            list(
+                Conference.objects.filter(year=1987, venue="foo").values_list(
+                    "organizers__id", flat=True
+                )
+            ),
+            [1, 2],
+        )
 
 
 class EditConferenceViewTest(TestCase):

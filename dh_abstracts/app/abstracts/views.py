@@ -1390,6 +1390,16 @@ class ConferenceCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     }
     success_message = "Conference '%(year)s - %(venue)s' created"
 
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        form_instance = self.get_form()
+        form_instance.is_valid()
+        for organizer in form_instance.cleaned_data["organizers"]:
+            self.object.organizers.add(organizer)
+        self.object.save()
+        return response
+
 
 @user_is_staff
 @transaction.atomic
