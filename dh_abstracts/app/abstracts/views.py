@@ -970,10 +970,14 @@ class FullWorkList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        selected_conferences = self.request.GET.get("conference", None)
-
-        conference_subquery = (
-            Conference.objects.annotate(
+        raw_filter_form = FullWorkForm(self.request.GET)
+        if raw_filter_form.is_valid():
+            filter_form = raw_filter_form.cleaned_data
+            conference_res = filter_form["conference"]
+            if conference_res is not None:
+                conferences_data = (
+                    Conference.objects.filter(id=conference_res.id)
+                    .annotate(
                 n_works=Count("works", distinct=True),
                 n_authors=Count("works__authors", distinct=True),
             )
@@ -981,12 +985,11 @@ class FullWorkList(ListView):
             .prefetch_related(
                 "organizers", "series_memberships", "series_memberships__series"
             )
+                    .all()
         )
-
-        conferences_data = conference_subquery.filter(id=selected_conferences).all()
+                context["selected_conferences"] = conferences_data
 
         context["work_filter_form"] = WorkFilter(data=self.request.GET)
-        context["selected_conferences"] = conferences_data
         context["available_works_count"] = Work.objects.count()
         context["filtered_works_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("work_list")
