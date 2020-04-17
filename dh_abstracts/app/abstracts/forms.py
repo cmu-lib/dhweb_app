@@ -88,7 +88,9 @@ class WorkAuthorshipForm(forms.Form):
     author = forms.ModelChoiceField(
         queryset=Author.objects.all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-author-autocomplete"),
+        widget=ModelSelect2(
+            url="unrestricted-author-autocomplete", attrs={"data-html": True}
+        ),
         help_text="If the author currently exists, select them to auto-populate the fields below. Any edits to the details below will be stored as new assertions about this author. If the author does not yet exist, leave this field blank and they will be created from the information you enter below.",
     )
     authorship_order = forms.IntegerField(
@@ -255,7 +257,9 @@ class AuthorFilter(forms.Form):
 class AuthorMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Author.objects.all(),
-        widget=ModelSelect2(url="unrestricted-author-autocomplete"),
+        widget=ModelSelect2(
+            url="unrestricted-author-autocomplete", attrs={"data-html": True}
+        ),
         required=True,
         help_text="Select the author that will be used to replace the one you are merging.",
     )

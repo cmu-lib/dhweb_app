@@ -19,6 +19,7 @@ from django.db import transaction, IntegrityError
 from django.forms.models import model_to_dict
 from django.forms import formset_factory, inlineformset_factory, modelformset_factory
 from django.conf import settings
+from django.utils.html import format_html
 import glob
 from os.path import basename
 import itertools
@@ -320,6 +321,11 @@ class UnrestrictedAuthorAutocomplete(LoginRequiredMixin, Select2QuerySetView):
             qs = qs.filter(appellations_index__icontains=self.q).distinct()
 
         return qs
+
+    def get_result_label(self, item):
+        return format_html(
+            f"{item} <small text-class='muted'>(All names: {item.appellations_index})</small>"
+        )
 
 
 def work_view(request, work_id):
