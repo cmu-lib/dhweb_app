@@ -226,7 +226,11 @@ class AuthorFilter(forms.Form):
     )
     name = forms.CharField(max_length=100, strip=True, required=False)
     first_name = forms.CharField(
-        max_length=100, strip=True, required=False, help_text="Search only first names"
+        max_length=100,
+        strip=True,
+        required=False,
+        label="First/middle name",
+        help_text="Search only first and middle names",
     )
     last_name = forms.CharField(
         max_length=100, strip=True, required=False, help_text="Search only last names"
