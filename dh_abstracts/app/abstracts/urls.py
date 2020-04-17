@@ -14,46 +14,6 @@ urlpatterns = [
     path("conferences", views.conference_list, name="conference_list"),
     path("downloads", views.download_data, name="download_data"),
     path(
-        "institution-autocomplete",
-        views.InstitutionAutocomplete.as_view(),
-        name="institution-autocomplete",
-    ),
-    path(
-        "affiliation-autocomplete",
-        views.AffiliationAutocomplete.as_view(),
-        name="affiliation-autocomplete",
-    ),
-    path(
-        "topic-autocomplete",
-        views.TopicAutocomplete.as_view(),
-        name="topic-autocomplete",
-    ),
-    path(
-        "keyword-autocomplete",
-        views.KeywordAutocomplete.as_view(),
-        name="keyword-autocomplete",
-    ),
-    path(
-        "language-autocomplete",
-        views.LanguageAutocomplete.as_view(),
-        name="language-autocomplete",
-    ),
-    path(
-        "discipline-autocomplete",
-        views.DisciplineAutocomplete.as_view(),
-        name="discipline-autocomplete",
-    ),
-    path(
-        "country-autocomplete",
-        views.CountryAutocomplete.as_view(),
-        name="country-autocomplete",
-    ),
-    path(
-        "author-autocomplete",
-        views.AuthorAutocomplete.as_view(),
-        name="author-autocomplete",
-    ),
-    path(
         "unrestricted-keyword-autocomplete",
         views.UnrestrictedKeywordAutocomplete.as_view(),
         name="unrestricted-keyword-autocomplete",

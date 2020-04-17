@@ -41,29 +41,29 @@ class WorkFilter(forms.Form):
         queryset=Institution.objects.filter(
             affiliations__asserted_by__work__isnull=False
         ).distinct(),
-        widget=ModelSelect2(url="institution-autocomplete"),
+        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
         required=False,
         help_text="Works submitted with at least one author belonging to that institution.",
     )
     keyword = forms.ModelChoiceField(
         queryset=Keyword.objects.all(),
         required=False,
-        widget=ModelSelect2(url="keyword-autocomplete"),
+        widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
     )
     topic = forms.ModelChoiceField(
         queryset=Topic.objects.distinct(),
         required=False,
-        widget=ModelSelect2(url="topic-autocomplete"),
+        widget=ModelSelect2(url="unrestricted-topic-autocomplete"),
     )
     language = forms.ModelChoiceField(
         queryset=Language.objects.distinct(),
         required=False,
-        widget=ModelSelect2(url="language-autocomplete"),
+        widget=ModelSelect2(url="unrestricted-language-autocomplete"),
     )
     discipline = forms.ModelChoiceField(
         queryset=Discipline.objects.distinct(),
         required=False,
-        widget=ModelSelect2(url="discipline-autocomplete"),
+        widget=ModelSelect2(url="unrestricted-discipline-autocomplete"),
     )
 
 
@@ -238,12 +238,12 @@ class AuthorFilter(forms.Form):
         queryset=Country.objects.all(),
         required=False,
         help_text="Authors who were once affiliated with an institution in this country",
-        widget=ModelSelect2(url="country-autocomplete"),
+        widget=ModelSelect2(url="unrestricted-country-autocomplete"),
     )
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
         required=False,
-        widget=ModelSelect2(url="institution-autocomplete"),
+        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
         help_text="Authors who were once affiliated with this institution",
     )
     affiliation = forms.ModelChoiceField(
