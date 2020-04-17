@@ -62,6 +62,11 @@ urlpatterns = [
         name="author-autocomplete",
     ),
     path(
+        "conference-autocomplete",
+        views.ConferenceAutocomplete.as_view(),
+        name="conference-autocomplete",
+    ),
+    path(
         "author-info-json/<int:author_id>",
         views.AuthorInfoJSON,
         name="author-info-json",

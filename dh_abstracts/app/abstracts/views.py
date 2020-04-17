@@ -226,6 +226,19 @@ class AffiliationAutocomplete(LoginRequiredMixin, Select2QuerySetView):
 
         return qs
 
+class ConferenceAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+    raise_exception = True
+
+    def get_queryset(self):
+        qs = Conference.objects.order_by(
+            "year", "venue"
+        )
+
+        if self.q:
+            qs = qs.filter(venue__icontains=self.q).distinct()
+
+        return qs
+
 
 class AuthorAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True

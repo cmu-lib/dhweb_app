@@ -378,3 +378,41 @@ class CountryAutocompleteTest(TestCase):
             res["id"] for res in json.loads(auth_country_ac_response.content)["results"]
         ]
         self.assertTrue(is_list_unique(result_vals))
+
+
+class ConferenceAutocompleteTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_no_public(self):
+        conference_ac_response = self.client.get(reverse("conference-autocomplete"))
+        self.assertEqual(conference_ac_response.status_code, 403)
+
+    def test_render(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_conference_ac_response = self.client.get(
+            reverse("conference-autocomplete")
+        )
+        self.assertEqual(auth_conference_ac_response.status_code, 200)
+
+    def test_unqiue(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_conference_ac_response = self.client.get(
+            reverse("conference-autocomplete")
+        )
+        result_vals = [
+            res["id"]
+            for res in json.loads(auth_conference_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_conference_ac_response = self.client.get(
+            reverse("conference-autocomplete"), data={"q": "Toronto"}
+        )
+        self.assertRegex(str(auth_conference_ac_response.json()), "Toronto")
+        result_vals = [
+            res["id"]
+            for res in json.loads(auth_conference_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))

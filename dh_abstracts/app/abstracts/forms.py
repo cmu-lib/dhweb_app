@@ -31,10 +31,9 @@ class WorkFilter(forms.Form):
         queryset=WorkType.objects.distinct(), required=False
     )
     conference = forms.ModelChoiceField(
-        queryset=Conference.objects.order_by("year")
-        .all()
-        .prefetch_related("organizers"),
+        queryset=Conference.objects.all(),
         required=False,
+        widget=ModelSelect2(url="conference-autocomplete"),
         help_text="Works submitted to a particular conference",
     )
     institution = forms.ModelChoiceField(
@@ -143,9 +142,8 @@ class WorkForm(forms.ModelForm):
     )
 
     conference = forms.ModelChoiceField(
-        queryset=Conference.objects.order_by("year")
-        .all()
-        .prefetch_related("organizers"),
+        queryset=Conference.objects.all(),
+        widget=ModelSelect2(url="conference-autocomplete"),
         help_text="The conference where this abstract was submitted/published.",
     )
 
