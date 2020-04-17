@@ -97,7 +97,8 @@ class WorkAuthorshipForm(forms.Form):
     first_name = forms.CharField(
         max_length=100,
         required=True,
-        help_text="First name as it appears in the context of this abstract.",
+        label="First and middle names",
+        help_text="First and middle names/initials as it appears in the context of this abstract.",
     )
     last_name = forms.CharField(
         max_length=100,
