@@ -437,7 +437,7 @@ def author_view(request, author_id):
 
     works = (
         Work.objects.filter(authorships__author=author)
-        .order_by("-conference__year")
+        .order_by("conference__year")
         .distinct()
         .select_related("conference", "work_type")
         .prefetch_related(
