@@ -34,26 +34,24 @@ def is_list_unique(x):
     return len(x) == len(set(x))
 
 
-class UnrestrictedAppellationAutocompleteTest(TestCase):
+class AppellationAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
     def test_no_public(self):
-        appellation_ac_response = self.client.get(
-            reverse("unrestricted-appellation-autocomplete")
-        )
+        appellation_ac_response = self.client.get(reverse("appellation-autocomplete"))
         self.assertEqual(appellation_ac_response.status_code, 403)
 
     def test_render(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_appellation_ac_response = self.client.get(
-            reverse("unrestricted-appellation-autocomplete")
+            reverse("appellation-autocomplete")
         )
         self.assertEqual(auth_appellation_ac_response.status_code, 200)
 
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_appellation_ac_response = self.client.get(
-            reverse("unrestricted-appellation-autocomplete")
+            reverse("appellation-autocomplete")
         )
         result_vals = [
             res["id"]
@@ -64,7 +62,7 @@ class UnrestrictedAppellationAutocompleteTest(TestCase):
     def test_q(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_appellation_ac_response = self.client.get(
-            reverse("unrestricted-appellation-autocomplete"), data={"q": "franklin"}
+            reverse("appellation-autocomplete"), data={"q": "franklin"}
         )
         self.assertRegex(str(auth_appellation_ac_response.content), "Franklin")
         result_vals = [
@@ -74,25 +72,21 @@ class UnrestrictedAppellationAutocompleteTest(TestCase):
         self.assertTrue(is_list_unique(result_vals))
 
 
-class UnrestrictedWorkAutocompleteTest(TestCase):
+class WorkAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
     def test_no_public(self):
-        work_ac_response = self.client.get(reverse("unrestricted-work-autocomplete"))
+        work_ac_response = self.client.get(reverse("work-autocomplete"))
         self.assertEqual(work_ac_response.status_code, 403)
 
     def test_render(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_work_ac_response = self.client.get(
-            reverse("unrestricted-work-autocomplete")
-        )
+        auth_work_ac_response = self.client.get(reverse("work-autocomplete"))
         self.assertEqual(auth_work_ac_response.status_code, 200)
 
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_work_ac_response = self.client.get(
-            reverse("unrestricted-work-autocomplete")
-        )
+        auth_work_ac_response = self.client.get(reverse("work-autocomplete"))
         result_vals = [
             res["id"] for res in json.loads(auth_work_ac_response.content)["results"]
         ]
@@ -101,7 +95,7 @@ class UnrestrictedWorkAutocompleteTest(TestCase):
     def test_q(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_work_ac_response = self.client.get(
-            reverse("unrestricted-work-autocomplete"), data={"q": "foo"}
+            reverse("work-autocomplete"), data={"q": "foo"}
         )
         self.assertRegex(str(auth_work_ac_response.content), "Foo")
         result_vals = [
@@ -110,27 +104,21 @@ class UnrestrictedWorkAutocompleteTest(TestCase):
         self.assertTrue(is_list_unique(result_vals))
 
 
-class UnrestrictedKeywordAutocompleteTest(TestCase):
+class KeywordAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
     def test_no_public(self):
-        keyword_ac_response = self.client.get(
-            reverse("unrestricted-keyword-autocomplete")
-        )
+        keyword_ac_response = self.client.get(reverse("keyword-autocomplete"))
         self.assertEqual(keyword_ac_response.status_code, 403)
 
     def test_render(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_keyword_ac_response = self.client.get(
-            reverse("unrestricted-keyword-autocomplete")
-        )
+        auth_keyword_ac_response = self.client.get(reverse("keyword-autocomplete"))
         self.assertEqual(auth_keyword_ac_response.status_code, 200)
 
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_keyword_ac_response = self.client.get(
-            reverse("unrestricted-keyword-autocomplete")
-        )
+        auth_keyword_ac_response = self.client.get(reverse("keyword-autocomplete"))
         result_vals = [
             res["id"] for res in json.loads(auth_keyword_ac_response.content)["results"]
         ]
@@ -139,7 +127,7 @@ class UnrestrictedKeywordAutocompleteTest(TestCase):
     def test_q(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_keyword_ac_response = self.client.get(
-            reverse("unrestricted-keyword-autocomplete"), data={"q": "lat"}
+            reverse("keyword-autocomplete"), data={"q": "lat"}
         )
         self.assertRegex(str(auth_keyword_ac_response.content), "Latin")
         result_vals = [
@@ -148,27 +136,21 @@ class UnrestrictedKeywordAutocompleteTest(TestCase):
         self.assertTrue(is_list_unique(result_vals))
 
 
-class UnrestrictedLanguageAutocompleteTest(TestCase):
+class LanguageAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
     def test_no_public(self):
-        language_ac_response = self.client.get(
-            reverse("unrestricted-language-autocomplete")
-        )
+        language_ac_response = self.client.get(reverse("language-autocomplete"))
         self.assertEqual(language_ac_response.status_code, 403)
 
     def test_render(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_language_ac_response = self.client.get(
-            reverse("unrestricted-language-autocomplete")
-        )
+        auth_language_ac_response = self.client.get(reverse("language-autocomplete"))
         self.assertEqual(auth_language_ac_response.status_code, 200)
 
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_language_ac_response = self.client.get(
-            reverse("unrestricted-language-autocomplete")
-        )
+        auth_language_ac_response = self.client.get(reverse("language-autocomplete"))
         result_vals = [
             res["id"]
             for res in json.loads(auth_language_ac_response.content)["results"]
@@ -178,7 +160,7 @@ class UnrestrictedLanguageAutocompleteTest(TestCase):
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_language_ac_response = self.client.get(
-            reverse("unrestricted-language-autocomplete"), data={"q": "dut"}
+            reverse("language-autocomplete"), data={"q": "dut"}
         )
         self.assertRegex(str(auth_language_ac_response.content), "Dutch")
         result_vals = [
@@ -188,26 +170,24 @@ class UnrestrictedLanguageAutocompleteTest(TestCase):
         self.assertTrue(is_list_unique(result_vals))
 
 
-class UnrestrictedDisciplineAutocompleteTest(TestCase):
+class DisciplineAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
     def test_no_public(self):
-        discipline_ac_response = self.client.get(
-            reverse("unrestricted-discipline-autocomplete")
-        )
+        discipline_ac_response = self.client.get(reverse("discipline-autocomplete"))
         self.assertEqual(discipline_ac_response.status_code, 403)
 
     def test_render(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_discipline_ac_response = self.client.get(
-            reverse("unrestricted-discipline-autocomplete")
+            reverse("discipline-autocomplete")
         )
         self.assertEqual(auth_discipline_ac_response.status_code, 200)
 
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_discipline_ac_response = self.client.get(
-            reverse("unrestricted-discipline-autocomplete")
+            reverse("discipline-autocomplete")
         )
         result_vals = [
             res["id"]
@@ -218,7 +198,7 @@ class UnrestrictedDisciplineAutocompleteTest(TestCase):
     def test_q(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_discipline_ac_response = self.client.get(
-            reverse("unrestricted-discipline-autocomplete"), data={"q": "art"}
+            reverse("discipline-autocomplete"), data={"q": "art"}
         )
         self.assertRegex(str(auth_discipline_ac_response.content), "Art")
         result_vals = [
@@ -228,25 +208,21 @@ class UnrestrictedDisciplineAutocompleteTest(TestCase):
         self.assertTrue(is_list_unique(result_vals))
 
 
-class UnrestrictedTopicAutocompleteTest(TestCase):
+class TopicAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
     def test_no_public(self):
-        topic_ac_response = self.client.get(reverse("unrestricted-topic-autocomplete"))
+        topic_ac_response = self.client.get(reverse("topic-autocomplete"))
         self.assertEqual(topic_ac_response.status_code, 403)
 
     def test_render(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_topic_ac_response = self.client.get(
-            reverse("unrestricted-topic-autocomplete")
-        )
+        auth_topic_ac_response = self.client.get(reverse("topic-autocomplete"))
         self.assertEqual(auth_topic_ac_response.status_code, 200)
 
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_topic_ac_response = self.client.get(
-            reverse("unrestricted-topic-autocomplete")
-        )
+        auth_topic_ac_response = self.client.get(reverse("topic-autocomplete"))
         result_vals = [
             res["id"] for res in json.loads(auth_topic_ac_response.content)["results"]
         ]
@@ -255,7 +231,7 @@ class UnrestrictedTopicAutocompleteTest(TestCase):
     def test_q(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_topic_ac_response = self.client.get(
-            reverse("unrestricted-topic-autocomplete"), data={"q": "comic"}
+            reverse("topic-autocomplete"), data={"q": "comic"}
         )
         self.assertRegex(str(auth_topic_ac_response.content), "Webcomics")
         result_vals = [
@@ -264,27 +240,21 @@ class UnrestrictedTopicAutocompleteTest(TestCase):
         self.assertTrue(is_list_unique(result_vals))
 
 
-class UnrestrictedAuthorAutocompleteTest(TestCase):
+class AuthorAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
     def test_no_public(self):
-        author_ac_response = self.client.get(
-            reverse("unrestricted-author-autocomplete")
-        )
+        author_ac_response = self.client.get(reverse("author-autocomplete"))
         self.assertEqual(author_ac_response.status_code, 403)
 
     def test_render(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_author_ac_response = self.client.get(
-            reverse("unrestricted-author-autocomplete")
-        )
+        auth_author_ac_response = self.client.get(reverse("author-autocomplete"))
         self.assertEqual(auth_author_ac_response.status_code, 200)
 
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_author_ac_response = self.client.get(
-            reverse("unrestricted-author-autocomplete")
-        )
+        auth_author_ac_response = self.client.get(reverse("author-autocomplete"))
         result_vals = [
             res["id"] for res in json.loads(auth_author_ac_response.content)["results"]
         ]
@@ -293,7 +263,7 @@ class UnrestrictedAuthorAutocompleteTest(TestCase):
     def test_q(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_author_ac_response = self.client.get(
-            reverse("unrestricted-author-autocomplete"), data={"q": "frank"}
+            reverse("author-autocomplete"), data={"q": "frank"}
         )
         self.assertRegex(str(auth_author_ac_response.content), "Rosalind")
         result_vals = [
@@ -302,26 +272,24 @@ class UnrestrictedAuthorAutocompleteTest(TestCase):
         self.assertTrue(is_list_unique(result_vals))
 
 
-class UnrestrictedAffiliationAutocompleteTest(TestCase):
+class AffiliationAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
     def test_no_public(self):
-        affiliation_ac_response = self.client.get(
-            reverse("unrestricted-affiliation-autocomplete")
-        )
+        affiliation_ac_response = self.client.get(reverse("affiliation-autocomplete"))
         self.assertEqual(affiliation_ac_response.status_code, 403)
 
     def test_render(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_affiliation_ac_response = self.client.get(
-            reverse("unrestricted-affiliation-autocomplete")
+            reverse("affiliation-autocomplete")
         )
         self.assertEqual(auth_affiliation_ac_response.status_code, 200)
 
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_affiliation_ac_response = self.client.get(
-            reverse("unrestricted-affiliation-autocomplete")
+            reverse("affiliation-autocomplete")
         )
         result_vals = [
             res["id"]
@@ -332,7 +300,7 @@ class UnrestrictedAffiliationAutocompleteTest(TestCase):
     def test_q(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_affiliation_ac_response = self.client.get(
-            reverse("unrestricted-affiliation-autocomplete"), data={"q": "libr"}
+            reverse("affiliation-autocomplete"), data={"q": "libr"}
         )
         self.assertRegex(str(auth_affiliation_ac_response.content), "Stanford")
         result_vals = [
@@ -342,26 +310,24 @@ class UnrestrictedAffiliationAutocompleteTest(TestCase):
         self.assertTrue(is_list_unique(result_vals))
 
 
-class UnrestrictedInstitutionAutocompleteTest(TestCase):
+class InstitutionAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
     def test_no_public(self):
-        institution_ac_response = self.client.get(
-            reverse("unrestricted-institution-autocomplete")
-        )
+        institution_ac_response = self.client.get(reverse("institution-autocomplete"))
         self.assertEqual(institution_ac_response.status_code, 403)
 
     def test_render(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_institution_ac_response = self.client.get(
-            reverse("unrestricted-institution-autocomplete")
+            reverse("institution-autocomplete")
         )
         self.assertEqual(auth_institution_ac_response.status_code, 200)
 
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_institution_ac_response = self.client.get(
-            reverse("unrestricted-institution-autocomplete")
+            reverse("institution-autocomplete")
         )
         result_vals = [
             res["id"]
@@ -372,7 +338,7 @@ class UnrestrictedInstitutionAutocompleteTest(TestCase):
     def test_q(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_institution_ac_response = self.client.get(
-            reverse("unrestricted-institution-autocomplete"), data={"q": "wood"}
+            reverse("institution-autocomplete"), data={"q": "wood"}
         )
         self.assertRegex(str(auth_institution_ac_response.json()), "Wood")
         result_vals = [
@@ -382,27 +348,21 @@ class UnrestrictedInstitutionAutocompleteTest(TestCase):
         self.assertTrue(is_list_unique(result_vals))
 
 
-class UnrestrictedCountryAutocompleteTest(TestCase):
+class CountryAutocompleteTest(TestCase):
     fixtures = ["test.json"]
 
     def test_no_public(self):
-        country_ac_response = self.client.get(
-            reverse("unrestricted-country-autocomplete")
-        )
+        country_ac_response = self.client.get(reverse("country-autocomplete"))
         self.assertEqual(country_ac_response.status_code, 403)
 
     def test_render(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_country_ac_response = self.client.get(
-            reverse("unrestricted-country-autocomplete")
-        )
+        auth_country_ac_response = self.client.get(reverse("country-autocomplete"))
         self.assertEqual(auth_country_ac_response.status_code, 200)
 
     def test_unqiue(self):
         self.client.login(username="root", password="dh-abstracts")
-        auth_country_ac_response = self.client.get(
-            reverse("unrestricted-country-autocomplete")
-        )
+        auth_country_ac_response = self.client.get(reverse("country-autocomplete"))
         result_vals = [
             res["id"] for res in json.loads(auth_country_ac_response.content)["results"]
         ]
@@ -411,7 +371,7 @@ class UnrestrictedCountryAutocompleteTest(TestCase):
     def test_q(self):
         self.client.login(username="root", password="dh-abstracts")
         auth_country_ac_response = self.client.get(
-            reverse("unrestricted-country-autocomplete"), data={"q": "uni"}
+            reverse("country-autocomplete"), data={"q": "uni"}
         )
         self.assertRegex(str(auth_country_ac_response.json()), "United")
         result_vals = [

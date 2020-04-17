@@ -99,7 +99,7 @@ class StaffRequiredMixin:
             return redirect("home_view")
 
 
-class UnrestrictedWorkAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+class WorkAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
@@ -111,7 +111,7 @@ class UnrestrictedWorkAutocomplete(LoginRequiredMixin, Select2QuerySetView):
         return qs
 
 
-class UnrestrictedAppellationAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+class AppellationAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
@@ -125,7 +125,7 @@ class UnrestrictedAppellationAutocomplete(LoginRequiredMixin, Select2QuerySetVie
         return qs
 
 
-class UnrestrictedKeywordAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+class KeywordAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
@@ -140,7 +140,7 @@ class UnrestrictedKeywordAutocomplete(LoginRequiredMixin, Select2QuerySetView):
         return f"{item} ({item.n_works} works)"
 
 
-class UnrestrictedLanguageAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+class LanguageAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
@@ -155,7 +155,7 @@ class UnrestrictedLanguageAutocomplete(LoginRequiredMixin, Select2QuerySetView):
         return f"{item} ({item.n_works} works)"
 
 
-class UnrestrictedTopicAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+class TopicAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
@@ -170,7 +170,7 @@ class UnrestrictedTopicAutocomplete(LoginRequiredMixin, Select2QuerySetView):
         return f"{item} ({item.n_works} works)"
 
 
-class UnrestrictedDisciplineAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+class DisciplineAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
@@ -185,7 +185,7 @@ class UnrestrictedDisciplineAutocomplete(LoginRequiredMixin, Select2QuerySetView
         return f"{item} ({item.n_works} works)"
 
 
-class UnrestrictedCountryAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+class CountryAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
@@ -199,7 +199,7 @@ class UnrestrictedCountryAutocomplete(LoginRequiredMixin, Select2QuerySetView):
         return qs
 
 
-class UnrestrictedInstitutionAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+class InstitutionAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
@@ -211,7 +211,7 @@ class UnrestrictedInstitutionAutocomplete(LoginRequiredMixin, Select2QuerySetVie
         return qs
 
 
-class UnrestrictedAffiliationAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+class AffiliationAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
@@ -227,7 +227,7 @@ class UnrestrictedAffiliationAutocomplete(LoginRequiredMixin, Select2QuerySetVie
         return qs
 
 
-class UnrestrictedAuthorAutocomplete(LoginRequiredMixin, Select2QuerySetView):
+class AuthorAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):

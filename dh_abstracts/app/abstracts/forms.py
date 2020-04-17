@@ -41,29 +41,29 @@ class WorkFilter(forms.Form):
         queryset=Institution.objects.filter(
             affiliations__asserted_by__work__isnull=False
         ).distinct(),
-        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete"),
         required=False,
         help_text="Works submitted with at least one author belonging to that institution.",
     )
     keyword = forms.ModelChoiceField(
         queryset=Keyword.objects.all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
+        widget=ModelSelect2(url="keyword-autocomplete"),
     )
     topic = forms.ModelChoiceField(
         queryset=Topic.objects.distinct(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-topic-autocomplete"),
+        widget=ModelSelect2(url="topic-autocomplete"),
     )
     language = forms.ModelChoiceField(
         queryset=Language.objects.distinct(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-language-autocomplete"),
+        widget=ModelSelect2(url="language-autocomplete"),
     )
     discipline = forms.ModelChoiceField(
         queryset=Discipline.objects.distinct(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-discipline-autocomplete"),
+        widget=ModelSelect2(url="discipline-autocomplete"),
     )
 
 
@@ -71,7 +71,7 @@ class FullWorkForm(WorkFilter):
     affiliation = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        widget=ModelSelect2(url="affiliation-autocomplete"),
         help_text='Search by department+institution combination. This is a more granular search than "Institution" above.',
     )
     n_authors = forms.IntegerField(
@@ -80,7 +80,7 @@ class FullWorkForm(WorkFilter):
     keyword = forms.ModelChoiceField(
         queryset=Keyword.objects.distinct(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
+        widget=ModelSelect2(url="keyword-autocomplete"),
     )
 
 
@@ -88,9 +88,7 @@ class WorkAuthorshipForm(forms.Form):
     author = forms.ModelChoiceField(
         queryset=Author.objects.all(),
         required=False,
-        widget=ModelSelect2(
-            url="unrestricted-author-autocomplete", attrs={"data-html": True}
-        ),
+        widget=ModelSelect2(url="author-autocomplete", attrs={"data-html": True}),
         help_text="If the author currently exists, select them to auto-populate the fields below. Any edits to the details below will be stored as new assertions about this author. If the author does not yet exist, leave this field blank and they will be created from the information you enter below.",
     )
     authorship_order = forms.IntegerField(
@@ -110,7 +108,7 @@ class WorkAuthorshipForm(forms.Form):
     affiliations = forms.ModelMultipleChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
-        widget=ModelSelect2Multiple(url="unrestricted-affiliation-autocomplete"),
+        widget=ModelSelect2Multiple(url="affiliation-autocomplete"),
         help_text="If the combination of department and institution is not available in this list, then use the fields below to define it.",
     )
 
@@ -119,28 +117,28 @@ class WorkForm(forms.ModelForm):
     keywords = forms.ModelMultipleChoiceField(
         queryset=Keyword.objects.all(),
         required=False,
-        widget=ModelSelect2Multiple(url="unrestricted-keyword-autocomplete"),
+        widget=ModelSelect2Multiple(url="keyword-autocomplete"),
         help_text="Optional keywords that are supplied by authors during submission in the modern ADHO DH conferences.",
     )
 
     topics = forms.ModelMultipleChoiceField(
         queryset=Topic.objects.all(),
         required=False,
-        widget=ModelSelect2Multiple(url="unrestricted-topic-autocomplete"),
+        widget=ModelSelect2Multiple(url="topic-autocomplete"),
         help_text="Optional topics from a controlled vocabulary established by the ADHO DH conferences.",
     )
 
     languages = forms.ModelMultipleChoiceField(
         queryset=Language.objects.all(),
         required=False,
-        widget=ModelSelect2Multiple(url="unrestricted-language-autocomplete"),
+        widget=ModelSelect2Multiple(url="language-autocomplete"),
         help_text="Optional language tag to indicate the language(s) of the text of an abstract (not to be confused with e.g. 'English' as a keyword, where the topic of the abstract concerns English.)",
     )
 
     disciplines = forms.ModelMultipleChoiceField(
         queryset=Discipline.objects.all(),
         required=False,
-        widget=ModelSelect2Multiple(url="unrestricted-discipline-autocomplete"),
+        widget=ModelSelect2Multiple(url="discipline-autocomplete"),
         help_text="Optional discipline tag from a controlled vocabulary established by the ADHO DH conferences.",
     )
 
@@ -238,18 +236,18 @@ class AuthorFilter(forms.Form):
         queryset=Country.objects.all(),
         required=False,
         help_text="Authors who were once affiliated with an institution in this country",
-        widget=ModelSelect2(url="unrestricted-country-autocomplete"),
+        widget=ModelSelect2(url="country-autocomplete"),
     )
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete"),
         help_text="Authors who were once affiliated with this institution",
     )
     affiliation = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        widget=ModelSelect2(url="affiliation-autocomplete"),
         help_text='Search by department+institution combination. This is a more granular search than "Institution" above.',
     )
 
@@ -257,9 +255,7 @@ class AuthorFilter(forms.Form):
 class AuthorMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Author.objects.all(),
-        widget=ModelSelect2(
-            url="unrestricted-author-autocomplete", attrs={"data-html": True}
-        ),
+        widget=ModelSelect2(url="author-autocomplete", attrs={"data-html": True}),
         required=True,
         help_text="Select the author that will be used to replace the one you are merging.",
     )
@@ -268,7 +264,7 @@ class AuthorMergeForm(forms.Form):
 class InstitutionMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
-        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete"),
         required=True,
         help_text="Select the institution that will be used to replace the one you are deleting.",
     )
@@ -277,7 +273,7 @@ class InstitutionMergeForm(forms.Form):
 class AffiliationMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
-        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        widget=ModelSelect2(url="affiliation-autocomplete"),
         required=True,
         help_text="Select the affiliation that will be used to replace the one you are deleting.",
     )
@@ -286,13 +282,13 @@ class AffiliationMergeForm(forms.Form):
 class AffiliationMultiMergeForm(forms.Form):
     sources = forms.ModelMultipleChoiceField(
         queryset=Affiliation.objects.all(),
-        widget=ModelSelect2Multiple(url="unrestricted-affiliation-autocomplete"),
+        widget=ModelSelect2Multiple(url="affiliation-autocomplete"),
         required=True,
         help_text="Select the affiliations that you want to merge together",
     )
     into = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
-        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        widget=ModelSelect2(url="affiliation-autocomplete"),
         required=True,
         help_text="Select the target affiliation to merge into",
     )
@@ -301,13 +297,13 @@ class AffiliationMultiMergeForm(forms.Form):
 class InstitutionMultiMergeForm(forms.Form):
     sources = forms.ModelMultipleChoiceField(
         queryset=Institution.objects.all(),
-        widget=ModelSelect2Multiple(url="unrestricted-institution-autocomplete"),
+        widget=ModelSelect2Multiple(url="institution-autocomplete"),
         required=True,
         help_text="Select the institutions that you want to merge together",
     )
     into = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
-        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete"),
         required=True,
         help_text="Select the target institution to merge into",
     )
@@ -316,7 +312,7 @@ class InstitutionMultiMergeForm(forms.Form):
 class AffiliationEditForm(forms.ModelForm):
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
-        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete"),
         required=True,
     )
 
@@ -336,17 +332,17 @@ class FullInstitutionForm(forms.Form):
     affiliation = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-affiliation-autocomplete"),
+        widget=ModelSelect2(url="affiliation-autocomplete"),
     )
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete"),
     )
     country = forms.ModelChoiceField(
         queryset=Country.objects.filter().all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-country-autocomplete"),
+        widget=ModelSelect2(url="country-autocomplete"),
     )
     ordering = forms.ChoiceField(
         choices=(
@@ -362,7 +358,7 @@ class FullInstitutionForm(forms.Form):
 class KeywordMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Keyword.objects.all(),
-        widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
+        widget=ModelSelect2(url="keyword-autocomplete"),
         required=True,
         help_text="Select the keyword that will be used to replace the one you are deleting.",
     )
@@ -371,13 +367,13 @@ class KeywordMergeForm(forms.Form):
 class KeywordMultiMergeForm(forms.Form):
     sources = forms.ModelMultipleChoiceField(
         queryset=Keyword.objects.all(),
-        widget=ModelSelect2Multiple(url="unrestricted-keyword-autocomplete"),
+        widget=ModelSelect2Multiple(url="keyword-autocomplete"),
         required=True,
         help_text="Select the keywords that you want to merge together",
     )
     into = forms.ModelChoiceField(
         queryset=Keyword.objects.all(),
-        widget=ModelSelect2(url="unrestricted-keyword-autocomplete"),
+        widget=ModelSelect2(url="keyword-autocomplete"),
         required=True,
         help_text="Select the target keyword to merge into",
     )
@@ -386,13 +382,13 @@ class KeywordMultiMergeForm(forms.Form):
 class TopicMultiMergeForm(forms.Form):
     sources = forms.ModelMultipleChoiceField(
         queryset=Topic.objects.all(),
-        widget=ModelSelect2Multiple(url="unrestricted-topic-autocomplete"),
+        widget=ModelSelect2Multiple(url="topic-autocomplete"),
         required=True,
         help_text="Select the topics that you want to merge together",
     )
     into = forms.ModelChoiceField(
         queryset=Topic.objects.all(),
-        widget=ModelSelect2(url="unrestricted-topic-autocomplete"),
+        widget=ModelSelect2(url="topic-autocomplete"),
         required=True,
         help_text="Select the target topic to merge into",
     )
@@ -401,7 +397,7 @@ class TopicMultiMergeForm(forms.Form):
 class TopicMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Topic.objects.all(),
-        widget=ModelSelect2(url="unrestricted-topic-autocomplete"),
+        widget=ModelSelect2(url="topic-autocomplete"),
         required=True,
         help_text="Select the topic that will be used to replace the one you are deleting.",
     )
@@ -410,7 +406,7 @@ class TopicMergeForm(forms.Form):
 class LanguageMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Language.objects.all(),
-        widget=ModelSelect2(url="unrestricted-language-autocomplete"),
+        widget=ModelSelect2(url="language-autocomplete"),
         required=True,
         help_text="Select the language that will be used to replace the one you are deleting.",
     )
@@ -419,7 +415,7 @@ class LanguageMergeForm(forms.Form):
 class DisciplineMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Discipline.objects.all(),
-        widget=ModelSelect2(url="unrestricted-discipline-autocomplete"),
+        widget=ModelSelect2(url="discipline-autocomplete"),
         required=True,
         help_text="Select the discipline that will be used to replace the one you are deleting.",
     )
@@ -457,12 +453,12 @@ class ConferenceForm(forms.ModelForm):
     hosting_institutions = forms.ModelMultipleChoiceField(
         queryset=Institution.objects.all(),
         required=False,
-        widget=ModelSelect2Multiple(url="unrestricted-institution-autocomplete"),
+        widget=ModelSelect2Multiple(url="institution-autocomplete"),
     )
     country = forms.ModelChoiceField(
         queryset=Country.objects.all(),
         required=False,
-        widget=ModelSelect2(url="unrestricted-country-autocomplete"),
+        widget=ModelSelect2(url="country-autocomplete"),
     )
 
     class Meta:
