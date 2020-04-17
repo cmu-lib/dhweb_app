@@ -15,5 +15,8 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
 
         print("Updating index for Works...", end="", flush=True)
-        Work.objects.update(search_text=SearchVector("title", "full_text"))
+        Work.objects.update(
+            search_text=SearchVector("title", weight="A")
+            + SearchVector("full_text", weight="B")
+        )
         print("done.")

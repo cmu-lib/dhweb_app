@@ -3,11 +3,11 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DetailView, ListView
-from django.db.models import Count, Max, Min, Q, Prefetch, Subquery, OuterRef
+from django.db.models import Count, Max, Min, Q, F, Prefetch, Subquery, OuterRef
 from django.db.models.functions import Concat
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
-from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
@@ -949,7 +949,11 @@ class FullWorkList(ListView):
 
             text_res = filter_form["text"]
             if text_res != "":
-                result_set = result_set.filter(search_text=text_res)
+                result_set = (
+                    result_set.filter(search_text=text_res)
+                    .annotate(rank=SearchRank(F("search_text"), SearchQuery(text_res)))
+                    .order_by("-rank")
+                )
 
             return result_set.prefetch_related(
                 "authorships",
@@ -978,15 +982,15 @@ class FullWorkList(ListView):
                 conferences_data = (
                     Conference.objects.filter(id=conference_res.id)
                     .annotate(
-                n_works=Count("works", distinct=True),
-                n_authors=Count("works__authors", distinct=True),
-            )
-            .select_related("country")
-            .prefetch_related(
-                "organizers", "series_memberships", "series_memberships__series"
-            )
+                        n_works=Count("works", distinct=True),
+                        n_authors=Count("works__authors", distinct=True),
+                    )
+                    .select_related("country")
+                    .prefetch_related(
+                        "organizers", "series_memberships", "series_memberships__series"
+                    )
                     .all()
-        )
+                )
                 context["selected_conferences"] = conferences_data
 
         context["work_filter_form"] = WorkFilter(data=self.request.GET)
