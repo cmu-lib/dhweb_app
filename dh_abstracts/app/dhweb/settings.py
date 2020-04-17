@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     "crispy_forms",
     "django.contrib.humanize",
     "debug_toolbar",
-    "password_reset",
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
@@ -136,7 +135,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = "/vol/static_files"
-LOGIN_URL = "/auth/login"
+LOGIN_URL = "/accounts/login"
 LOGIN_REDIRECT_URL = "/"
 
 # Email
@@ -145,5 +144,3 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", 25)
 DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_ADDRESS")
-
-PASSWORD_RESET_TOKEN_EXPIRES = 600

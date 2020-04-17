@@ -11,8 +11,7 @@ django-autocomplete-light==3.5.1  # via -r dh_abstracts/requirements.txt
 django-coverage-plugin==1.8.0  # via -r dh_abstracts/requirements.txt
 django-crispy-forms==1.9.0  # via -r dh_abstracts/requirements.txt
 django-debug-toolbar==2.2  # via -r dh_abstracts/requirements.txt
-django-password-reset==2.0  # via -r dh_abstracts/requirements.txt
-django==3.0.5             # via -r dh_abstracts/requirements.txt, django-debug-toolbar, django-password-reset
+django==3.0.5             # via -r dh_abstracts/requirements.txt, django-debug-toolbar
 gunicorn==20.0.4          # via -r dh_abstracts/requirements.txt
 lxml==4.5.0               # via -r dh_abstracts/requirements.txt, parsel
 parsel==1.5.2             # via -r dh_abstracts/requirements.txt
