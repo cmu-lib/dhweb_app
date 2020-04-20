@@ -287,6 +287,11 @@ class WorkListViewTest(TestCase):
         all_titles = [w.title for w in res.context["work_list"]]
         self.assertEquals("A Foo Too Far", all_titles[0])
 
+    def test_ft_available(self):
+        res = self.client.get(reverse("work_list"), data={"full_text_available": True})
+        for w in res.context["work_list"]:
+            self.assertTrue(w.full_text != "")
+
 
 class WorkDetailViewTest(TestCase):
     """
