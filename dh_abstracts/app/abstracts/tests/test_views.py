@@ -282,7 +282,7 @@ class WorkListViewTest(TestCase):
             len(set(res.context["work_list"])), res.context["filtered_works_count"]
         )
 
-    def test_search_test(self):
+    def test_search_text(self):
         res = self.client.get(reverse("work_list"), data={"text": "lorem ipsum"})
         all_titles = [w.title for w in res.context["work_list"]]
         self.assertEquals("A Foo Too Far", all_titles[0])
