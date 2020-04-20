@@ -219,14 +219,24 @@
   "model": "abstracts.worktype",
   "pk": 1,
   "fields": {
-    "title": "Type 1"
+    "title": "Type 1",
+    "is_parent": false
   }
 },
 {
   "model": "abstracts.worktype",
   "pk": 2,
   "fields": {
-    "title": "Type 2"
+    "title": "Type 2",
+    "is_parent": false
+  }
+},
+{
+  "model": "abstracts.worktype",
+  "pk": 3,
+  "fields": {
+    "title": "Session",
+    "is_parent": true
   }
 },
 {
@@ -269,6 +279,14 @@
   "fields": {
     "first_name": "Rosalind",
     "last_name": "Krauss"
+  }
+},
+{
+  "model": "abstracts.appellation",
+  "pk": 5,
+  "fields": {
+    "first_name": "Hotshot",
+    "last_name": "Session-Chair"
   }
 },
 {
@@ -348,7 +366,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$180000$tPj49fsbZxwZ$0acMULPg7LIKk4wcMuTgXfTRloYaMStvda8CXpk080I=",
-    "last_login": "2020-04-14T15:32:35.062Z",
+    "last_login": "2020-04-20T15:25:12.442Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",
@@ -448,6 +466,32 @@
   }
 },
 {
+  "model": "abstracts.authorship",
+  "pk": 8,
+  "fields": {
+    "last_updated": "2020-04-20T15:34:10.111Z",
+    "user_last_updated": 1,
+    "author": 5,
+    "work": 6,
+    "authorship_order": 1,
+    "appellation": 5,
+    "affiliations": []
+  }
+},
+{
+  "model": "abstracts.authorship",
+  "pk": 9,
+  "fields": {
+    "last_updated": "2020-04-20T16:12:49.174Z",
+    "user_last_updated": 1,
+    "author": 5,
+    "work": 7,
+    "authorship_order": 1,
+    "appellation": 5,
+    "affiliations": []
+  }
+},
+{
   "model": "abstracts.author",
   "pk": 1,
   "fields": {
@@ -481,6 +525,15 @@
     "last_updated": "2020-04-03T19:23:27.582Z",
     "user_last_updated": null,
     "appellations_index": ""
+  }
+},
+{
+  "model": "abstracts.author",
+  "pk": 5,
+  "fields": {
+    "last_updated": "2020-04-20T16:12:49.220Z",
+    "user_last_updated": 1,
+    "appellations_index": "Hotshot Session-Chair"
   }
 },
 {
@@ -531,9 +584,9 @@
   "model": "abstracts.work",
   "pk": 1,
   "fields": {
-    "last_updated": "2020-04-01T13:47:59.254Z",
-    "user_last_updated": null,
-    "search_text": null,
+    "last_updated": "2020-04-20T15:42:37.254Z",
+    "user_last_updated": 1,
+    "search_text": "'ac':120B,122B,262B,288B,292B 'accumsan':183B,217B,362B 'ad':32B,398B 'adip':327B 'adipi':438B 'adipis':17B,383B 'adipisc':242B,289B 'aenean':162B 'aliqua':29B,395B 'aliquam':136B,273B,320B,354B,429B 'aliquet':281B,319B 'aliquip':42B 'amet':9B,15B,108B,132B,143B,241B,325B,352B,356B,364B,381B,411B,436B 'anim':76B 'arcu':330B 'auctor':257B,287B 'augu':113B 'aut':48B 'bibendum':367B 'blandit':193B,259B 'cillum':57B 'commodo':45B,271B 'condimentum':91B 'congu':334B 'consec':10B 'consectetur':16B,125B,234B,326B,382B,412B,437B 'consequat':46B,85B,117B 'conval':198B,275B 'cras':156B,328B 'culpa':71B 'cupidatat':66B 'cursus':144B,151B 'dapibus':98B,177B,365B 'deserunt':74B 'diam':344B 'dictum':249B 'dictumst':190B 'dignissim':126B,127B,251B 'dolor':7B,13B,27B,50B,58B,89B,206B,323B,379B,393B,409B,420B,434B 'donec':80B,87B,128B,254B,274B 'dui':47B,172B,239B,286B 'ea':44B 'egesta':119B,227B,346B 'eget':160B,168B,195B,218B,260B 'eiusmod':21B,387B 'eleifend':86B,109B,148B,280B 'elementum':81B 'elit':18B,384B 'enim':31B,243B,397B,416B 'erat':90B,137B,221B,297B,430B 'ero':266B,282B 'ess':56B 'est':78B,130B,285B 'et':26B,102B,170B,226B,232B,392B 'eu':59B,83B,250B,302B 'euismod':421B 'ex':43B 'excepteur':63B 'exercit':37B,403B 'facilisi':106B,291B,299B,309B,419B 'far':4A 'feli':300B 'feugiat':135B,279B 'foo':2A 'fringilla':134B,237B,347B 'fugiat':60B 'gravida':101B,311B,423B 'habitass':188B 'hac':187B 'iaculi':165B,253B,296B 'id':77B,368B 'imperdiet':167B 'incididunt':23B,389B 'integ':103B,114B 'interdum':184B,333B 'ipsum':6B,12B,100B,133B,205B,322B,378B,408B,433B 'irur':49B 'justo':246B,369B 'labor':25B,391B 'labori':39B,405B 'laborum':79B 'lacinia':179B 'lacus':332B 'laoreet':157B,342B 'lectus':104B,263B,268B,307B 'leo':231B,272B,373B 'libero':146B,252B,276B 'ligula':82B,159B,213B,376B 'loborti':215B,261B 'lorem':5B,11B,204B,238B,321B,377B,407B,432B 'luctus':245B,338B 'maecena':139B,182B,414B 'magna':28B,256B,293B,340B,394B 'malesuada':312B,424B 'massa':171B,176B,372B 'matti':219B 'mauri':153B,294B,345B 'metus':163B,358B 'minim':33B,399B 'molli':313B 'mollit':75B 'nam':208B 'nec':88B,110B,118B,216B,236B,371B 'nequ':203B,353B 'nibh':278B 'nisi':40B,105B,123B,155B,406B 'nisl':147B,174B 'non':67B,178B,306B,317B,331B,426B 'nostrud':36B,402B 'nulla':61B,318B,361B 'nunc':116B,228B,337B,425B 'occaecat':65B 'odio':224B 'officia':73B 'orci':141B,194B,211B,233B,305B,316B,428B 'ornar':192B,308B 'pariatur':62B 'pellentesqu':173B,191B,222B 'pharetra':111B 'phasellus':212B,303B 'platea':189B 'porttitor':95B,96B,235B 'potenti':336B 'praesent':94B,264B,314B 'pretium':129B 'proident':68B 'proin':343B 'pulvinar':348B,350B,375B 'purus':164B 'quam':115B,225B 'qui':35B,72B,209B,230B,267B,401B 'quisqu':284B 'reprehenderit':52B 'rhoncus':265B 'risus':97B,152B,197B,248B,357B 'rutrum':99B,315B 'sagitti':92B 'sapien':84B,202B 'scelerisqu':140B,329B 'sed':19B,124B,229B,247B,298B,370B,385B 'sem':93B,210B,417B,427B 'semper':295B 'si':207B 'sint':64B 'sit':8B,14B,107B,131B,142B,240B,324B,351B,355B,363B,380B,410B,435B 'sodal':169B,185B 'sunt':69B 'suspendiss':244B,310B,335B 'tellus':214B 'tempor':22B,269B,388B 'tempus':161B 'tincidunt':145B 'tortor':149B 'tristiqu':196B 'turpi':422B 'ullamco':38B,404B 'ullamcorp':258B,339B 'ultric':158B,301B 'urna':360B 'ut':24B,30B,41B,112B,166B,199B,304B,359B,390B,396B 'vehicula':283B 'vel':175B,366B 'velit':55B,180B,255B 'veniam':34B,400B 'vita':150B,154B,349B 'vivamus':200B,418B 'volupt':54B 'volutpat':121B,138B,181B,431B",
     "conference": 1,
     "title": "A Foo Too Far",
     "work_type": 1,
@@ -541,6 +594,7 @@
     "full_text_type": "txt",
     "full_text_license": 1,
     "url": "",
+    "parent_session": 6,
     "keywords": [
       2,
       1
@@ -570,6 +624,7 @@
     "full_text_type": "txt",
     "full_text_license": null,
     "url": "http://example.com",
+    "parent_session": null,
     "keywords": [
       3
     ],
@@ -598,6 +653,7 @@
     "full_text_type": "txt",
     "full_text_license": null,
     "url": "",
+    "parent_session": null,
     "keywords": [
       3
     ],
@@ -605,6 +661,69 @@
     "disciplines": [
       1
     ],
+    "topics": []
+  }
+},
+{
+  "model": "abstracts.work",
+  "pk": 6,
+  "fields": {
+    "last_updated": "2020-04-20T15:33:55.852Z",
+    "user_last_updated": 1,
+    "search_text": "'big':2A 'panel':3A 'session':4A",
+    "conference": 1,
+    "title": "A big panel session",
+    "work_type": 3,
+    "full_text": "",
+    "full_text_type": "",
+    "full_text_license": null,
+    "url": "",
+    "parent_session": null,
+    "keywords": [],
+    "languages": [],
+    "disciplines": [],
+    "topics": []
+  }
+},
+{
+  "model": "abstracts.work",
+  "pk": 7,
+  "fields": {
+    "last_updated": "2020-04-20T16:12:42.735Z",
+    "user_last_updated": 1,
+    "search_text": "'far':6A 'foo':4A 'respons':1A",
+    "conference": 1,
+    "title": "Response to a Foo too Far",
+    "work_type": 2,
+    "full_text": "",
+    "full_text_type": "",
+    "full_text_license": null,
+    "url": "",
+    "parent_session": 6,
+    "keywords": [],
+    "languages": [],
+    "disciplines": [],
+    "topics": []
+  }
+},
+{
+  "model": "abstracts.work",
+  "pk": 8,
+  "fields": {
+    "last_updated": "2020-04-20T16:15:39.563Z",
+    "user_last_updated": 1,
+    "search_text": "'art':4A 'histori':5A 'session':2A",
+    "conference": 4,
+    "title": "A session on art history",
+    "work_type": 3,
+    "full_text": "",
+    "full_text_type": "",
+    "full_text_license": null,
+    "url": "",
+    "parent_session": null,
+    "keywords": [],
+    "languages": [],
+    "disciplines": [],
     "topics": []
   }
 },

@@ -174,6 +174,13 @@ class WorkForm(forms.ModelForm):
         required=False,
     )
 
+    parent_session = forms.ModelChoiceField(
+        queryset=Work.objects.all(),
+        required=False,
+        help_text="Parent panel or multipaper session during which this work was presented",
+        widget=ModelSelect2(url="work-autocomplete", forward=["conference"]),
+    )
+
     class Meta:
         model = Work
         fields = [
@@ -188,6 +195,7 @@ class WorkForm(forms.ModelForm):
             "languages",
             "disciplines",
             "topics",
+            "parent_session",
         ]
 
     def clean(self):

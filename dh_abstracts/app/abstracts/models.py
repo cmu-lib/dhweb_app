@@ -187,6 +187,11 @@ class Topic(Tag):
 
 class WorkType(models.Model):
     title = models.CharField(max_length=100, unique=True)
+    is_parent = models.BooleanField(
+        default=False,
+        db_index=True,
+        help_text="Works of this type are considered multi-paper panels/sessions and may contain 'child' abstracts",
+    )
 
     def __str__(self):
         return self.title
@@ -235,6 +240,9 @@ class Work(TextIndexedModel, ChangeTrackedModel):
         License, blank=True, null=True, on_delete=models.SET_NULL
     )
     url = models.URLField(blank=True, null=False, max_length=500)
+    parent_session = models.ForeignKey(
+        "Work", null=True, on_delete=models.SET_NULL, related_name="session_papers"
+    )
 
     def get_absolute_url(self):
         return reverse("work_detail", kwargs={"pk": self.pk})

@@ -103,12 +103,16 @@ class WorkAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Work.objects.all()
 
+        qs = Work.objects.filter(work_type__is_parent=True)
+        conference = self.forwarded.get("conference", None)
+
+        if conference:
+            qs = qs.filter(conference=conference)
         if self.q:
-            qs = qs.filter(title__icontains=self.q).all()
+            qs = qs.filter(title__icontains=self.q)
 
-        return qs
+        return qs.all()
 
 
 class AppellationAutocomplete(LoginRequiredMixin, Select2QuerySetView):
@@ -226,13 +230,12 @@ class AffiliationAutocomplete(LoginRequiredMixin, Select2QuerySetView):
 
         return qs
 
+
 class ConferenceAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Conference.objects.order_by(
-            "year", "venue"
-        )
+        qs = Conference.objects.order_by("year", "venue")
 
         if self.q:
             qs = qs.filter(venue__icontains=self.q).distinct()
@@ -263,7 +266,7 @@ def work_view(request, work_id):
         n_authors=Count("works__authors", distinct=True),
     )
     work = get_object_or_404(
-        Work.objects.select_related("work_type").prefetch_related(
+        Work.objects.select_related("work_type", "parent_session").prefetch_related(
             Prefetch("conference", queryset=related_conference),
             "conference__series",
             "conference__organizers",
@@ -271,6 +274,9 @@ def work_view(request, work_id):
             "topics",
             "disciplines",
             "languages",
+            "session_papers",
+            "session_papers__authorships__appellation",
+            "parent_session__authorships__appellation",
         ),
         pk=work_id,
     )
@@ -2171,7 +2177,7 @@ class WorkTypeCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
         "form_title": "Create work_type",
         "cancel_view": "full_work_type_list",
     }
-    fields = ["title"]
+    fields = ["title", "is_parent"]
     success_message = "Abstract type '%(title)s' created"
     success_url = reverse_lazy("full_work_type_list")
 
@@ -2200,7 +2206,7 @@ class WorkTypeEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
         "merge_view": "work_type_merge",
         "delete_view": "work_type_delete",
     }
-    fields = ["title"]
+    fields = ["title", "is_parent"]
     success_message = "Abstract '%(title)s' updated"
     success_url = reverse_lazy("full_work_type_list")
 
