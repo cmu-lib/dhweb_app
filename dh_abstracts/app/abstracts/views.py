@@ -226,13 +226,12 @@ class AffiliationAutocomplete(LoginRequiredMixin, Select2QuerySetView):
 
         return qs
 
+
 class ConferenceAutocomplete(LoginRequiredMixin, Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Conference.objects.order_by(
-            "year", "venue"
-        )
+        qs = Conference.objects.order_by("year", "venue")
 
         if self.q:
             qs = qs.filter(venue__icontains=self.q).distinct()
@@ -1537,7 +1536,7 @@ class OrganizerList(LoginRequiredMixin, ListView):
     context_object_name = "organizer_list"
 
 
-class KeywordCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+class KeywordCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Keyword
     template_name = "generic_form.html"
     extra_context = {"form_title": "Create keyword", "cancel_view": "full_keyword_list"}
