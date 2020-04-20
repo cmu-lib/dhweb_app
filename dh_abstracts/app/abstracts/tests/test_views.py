@@ -292,6 +292,11 @@ class WorkListViewTest(TestCase):
         for w in res.context["work_list"]:
             self.assertTrue(w.full_text != "")
 
+    def test_work_type(self):
+        res = self.client.get(reverse("work_list"), data={"work_type": 1})
+        for w in res.context["work_list"]:
+            self.assertEqual(w.work_type.id, 1)
+
 
 class WorkDetailViewTest(TestCase):
     """
