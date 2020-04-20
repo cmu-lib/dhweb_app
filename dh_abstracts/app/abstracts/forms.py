@@ -223,6 +223,13 @@ class WorkForm(forms.ModelForm):
                 "full_text",
                 "When there is no full text, you may not select a license type.",
             )
+        work_type = cleaned_data.get("work_type")
+        parent_session = cleaned_data.get("parent_session")
+        if work_type.is_parent and parent_session is not None:
+            self.add_error(
+                "parent_session",
+                f"Works of type '{work_type}' cannot have parent sessions.",
+            )
 
 
 class AuthorFilter(forms.Form):
