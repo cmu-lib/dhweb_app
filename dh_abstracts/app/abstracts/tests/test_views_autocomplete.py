@@ -103,6 +103,29 @@ class WorkAutocompleteTest(TestCase):
         ]
         self.assertTrue(is_list_unique(result_vals))
 
+    def test_conf_q(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_work_ac_response = self.client.get(
+            reverse("work-autocomplete"),
+            data={"forward": '{"conference": 1, "parents_only": true}'},
+        )
+        self.assertRegex(str(auth_work_ac_response.content), "big panel session")
+        result_vals = [
+            res["id"] for res in json.loads(auth_work_ac_response.content)["results"]
+        ]
+        self.assertTrue(is_list_unique(result_vals))
+
+    def test_no_non_parent(self):
+        self.client.login(username="root", password="dh-abstracts")
+        auth_work_ac_response = self.client.get(
+            reverse("work-autocomplete"),
+            data={"forward": '{"conference": 1, "parents_only": true}'},
+        )
+        titles = [
+            res["text"] for res in json.loads(auth_work_ac_response.content)["results"]
+        ]
+        self.assertNotIn("A Foo Too Far", titles)
+
 
 class KeywordAutocompleteTest(TestCase):
     fixtures = ["test.json"]
