@@ -302,6 +302,14 @@ class WorkListViewTest(TestCase):
         for w in res.context["work_list"]:
             self.assertEqual(w.conference.id, 1)
 
+    def test_institution(self):
+        res = self.client.get(reverse("work_list"), data={"institution": 1})
+        for w in res.context["work_list"]:
+            all_institutions = Institution.objects.filter(
+                affiliations__asserted_by__work=w.id
+            ).values_list("id", flat=True)
+            self.assertIn(1, all_institutions)
+
 
 class WorkDetailViewTest(TestCase):
     """
