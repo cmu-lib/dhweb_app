@@ -297,6 +297,11 @@ class WorkListViewTest(TestCase):
         for w in res.context["work_list"]:
             self.assertEqual(w.work_type.id, 1)
 
+    def test_conference(self):
+        res = self.client.get(reverse("work_list"), data={"conference": 1})
+        for w in res.context["work_list"]:
+            self.assertEqual(w.conference.id, 1)
+
 
 class WorkDetailViewTest(TestCase):
     """
