@@ -104,11 +104,16 @@ class WorkAutocomplete(LoginRequiredMixin, Select2QuerySetView):
 
     def get_queryset(self):
 
-        qs = Work.objects.filter(work_type__is_parent=True)
-        conference = self.forwarded.get("conference", None)
+        qs = Work.objects.all()
 
+        parents_only = self.forwarded.get("parents_only", None)
+        if parents_only:
+            qs = qs.filter(work_type__is_parent=True)
+
+        conference = self.forwarded.get("conference", None)
         if conference:
             qs = qs.filter(conference=conference)
+
         if self.q:
             qs = qs.filter(title__icontains=self.q)
 

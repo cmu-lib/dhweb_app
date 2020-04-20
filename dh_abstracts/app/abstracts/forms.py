@@ -1,4 +1,5 @@
 from django import forms
+from dal import forward
 from dal.autocomplete import ModelSelect2, ModelSelect2Multiple
 from django.forms import formset_factory, inlineformset_factory, modelformset_factory
 from crispy_forms.helper import FormHelper
@@ -178,7 +179,10 @@ class WorkForm(forms.ModelForm):
         queryset=Work.objects.all(),
         required=False,
         help_text="Parent panel or multipaper session during which this work was presented",
-        widget=ModelSelect2(url="work-autocomplete", forward=["conference"]),
+        widget=ModelSelect2(
+            url="work-autocomplete",
+            forward=["conference", forward.Const(True, "parents_only")],
+        ),
     )
 
     class Meta:
