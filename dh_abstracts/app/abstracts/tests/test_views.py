@@ -320,6 +320,11 @@ class WorkListViewTest(TestCase):
         for w in res.context["work_list"]:
             self.assertIn(1, w.topics.values_list("id", flat=True))
 
+    def test_language(self):
+        res = self.client.get(reverse("work_list"), data={"language": 1})
+        for w in res.context["work_list"]:
+            self.assertIn(1, w.languages.values_list("id", flat=True))
+
 
 class WorkDetailViewTest(TestCase):
     """
