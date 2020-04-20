@@ -1322,3 +1322,19 @@ class WorkTypeMergeViewTest(TestCase):
         expected_redirect = reverse("work_type_merge", kwargs={"work_type_id": 1})
         self.assertRedirects(res, expected_redirect)
         self.assertContains(res, "You cannot merge a work_type into itself")
+
+
+class CreateWorkTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        privately_available(self, "work_create")
+
+    @as_auth
+    def test_post(self):
+        res = self.client.post(
+            reverse("work_create"),
+            data={"title": "fizzbuzz", "work_type": 3},
+            follow=True,
+        )
+        self.assertContains(res, "created")

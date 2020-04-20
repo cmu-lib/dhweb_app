@@ -19,8 +19,32 @@
   </ol>
 </div>
 
-{% if work.url %}
+{% if work.parent_session %}
 <div class="card my-2">
+  <div class="card-header">Parent session</div>
+  <div class="card-body">
+    <a href="{% url 'work_detail' work.parent_session.id %}">{{ work.parent_session.title }}<a>{% for author in work.parent_session.authorships.all %},
+        {{ author.appellation.first_name }} {{ author.appellation.last_name }}{% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if work.session_papers.exists %}
+<div class=" card my-2">
+  <div class="card-header">Children sessions</div>
+  <ol class="list-group list-group-flush">
+    {% for child in work.session_papers.all %}
+    <li class="list-group-item">
+      <a href="{% url 'work_detail' child.id %}">{{ child.title }}</a>{% for author in child.authorships.all %},
+      {{ author.appellation.first_name }} {{ author.appellation.last_name }}{% endfor %}
+    </li>
+    {% endfor %}
+  </ol>
+</div>
+{% endif %}
+
+{% if work.url %}
+<div class=" card my-2">
   <div class="card-header">Original URL</div>
   <div class="card-body">
     <a href="{{ work.url }}">{{ work.url }}</a>

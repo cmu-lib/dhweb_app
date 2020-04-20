@@ -1,4 +1,5 @@
 from django import forms
+from dal import forward
 from dal.autocomplete import ModelSelect2, ModelSelect2Multiple
 from django.forms import formset_factory, inlineformset_factory, modelformset_factory
 from crispy_forms.helper import FormHelper
@@ -174,6 +175,16 @@ class WorkForm(forms.ModelForm):
         required=False,
     )
 
+    parent_session = forms.ModelChoiceField(
+        queryset=Work.objects.all(),
+        required=False,
+        help_text="Parent panel or multipaper session during which this work was presented",
+        widget=ModelSelect2(
+            url="work-autocomplete",
+            forward=["conference", forward.Const(True, "parents_only")],
+        ),
+    )
+
     class Meta:
         model = Work
         fields = [
@@ -188,6 +199,7 @@ class WorkForm(forms.ModelForm):
             "languages",
             "disciplines",
             "topics",
+            "parent_session",
         ]
 
     def clean(self):
@@ -210,6 +222,13 @@ class WorkForm(forms.ModelForm):
             self.add_error(
                 "full_text",
                 "When there is no full text, you may not select a license type.",
+            )
+        work_type = cleaned_data.get("work_type")
+        parent_session = cleaned_data.get("parent_session")
+        if work_type.is_parent and parent_session is not None:
+            self.add_error(
+                "parent_session",
+                f"Works of type '{work_type}' cannot have parent sessions.",
             )
 
 
