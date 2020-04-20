@@ -310,6 +310,11 @@ class WorkListViewTest(TestCase):
             ).values_list("id", flat=True)
             self.assertIn(1, all_institutions)
 
+    def test_keyword(self):
+        res = self.client.get(reverse("work_list"), data={"keyword": 1})
+        for w in res.context["work_list"]:
+            self.assertIn(1, w.keywords.values_list("id", flat=True))
+
 
 class WorkDetailViewTest(TestCase):
     """
