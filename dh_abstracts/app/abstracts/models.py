@@ -249,6 +249,14 @@ class Work(TextIndexedModel, ChangeTrackedModel):
     def __str__(self):
         return self.display_title
 
+    def save(self, *args, **kwargs):
+        res = super().save(*args, **kwargs)
+        Work.objects.filter(id=self.id).update(
+            search_text=SearchVector("title", weight="A")
+            + SearchVector("full_text", weight="B")
+        )
+        return res
+
     class Meta(TextIndexedModel.Meta):
         ordering = ["title"]
 
