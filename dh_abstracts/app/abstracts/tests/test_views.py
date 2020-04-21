@@ -100,6 +100,25 @@ class AuthorListViewTest(TestCase):
         res = self.client.get(reverse("author_list"))
         self.assertTrue(is_list_unique(res.context["author_list"]))
 
+    def test_name(self):
+        res = self.client.get(reverse("author_list"), data={"name": "rosa"})
+        for w in res.context["author_list"]:
+            self.assertRegex(w.appellations_index, "Rosalind")
+
+    def test_first_name(self):
+        res = self.client.get(reverse("author_list"), data={"name": "rosa"})
+        for fn in res.context["author_list"].values_list(
+            "authorships__appellation__first_name", flat=True
+        ):
+            self.assertRegex(fn, "Rosalind")
+
+    def test_last_name(self):
+        res = self.client.get(reverse("author_list"), data={"name": "watson"})
+        for fn in res.context["author_list"].values_list(
+            "authorships__appellation__last_name", flat=True
+        ):
+            self.assertRegex(fn, "Watson")
+
 
 class InstitutionFullListViewTest(TestCase):
     """
