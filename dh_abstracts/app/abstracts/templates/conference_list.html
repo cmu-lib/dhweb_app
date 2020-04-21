@@ -43,8 +43,9 @@
       <div class="card m-2">
         <div class="card-header" id="series{{ series.id }}">
           <div class="d-flex justify-content-between">
-            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{ series.id }}"
-              aria-expanded="true" aria-controls="collapse{{ series.id }}">
+            <button class="btn btn-link text-left" type="button" data-toggle="collapse"
+              data-target="#collapse{{ series.id }}" aria-expanded="{{ forloop.first|lower }}"
+              aria-controls="collapse{{ series.id }}">
               <h2 id="{{ series.abbreviation }}">{{ series.title }}</h2>
             </button>
             {% if not forloop.first %}<a href="#"><small>back to top</small></a>{% endif %}
