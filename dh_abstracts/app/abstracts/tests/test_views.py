@@ -119,6 +119,16 @@ class AuthorListViewTest(TestCase):
         ):
             self.assertRegex(fn, "Watson")
 
+    def test_country(self):
+        res = self.client.get(reverse("author_list"), data={"country": 1})
+        for fn in res.context["author_list"]:
+            self.assertIn(
+                1,
+                Country.objects.filter(
+                    institutions__affiliations__asserted_by__author=fn
+                ).values_list("id", flat=True),
+            )
+
 
 class InstitutionFullListViewTest(TestCase):
     """
