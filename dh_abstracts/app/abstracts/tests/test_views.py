@@ -129,6 +129,26 @@ class AuthorListViewTest(TestCase):
                 ).values_list("id", flat=True),
             )
 
+    def test_institution(self):
+        res = self.client.get(reverse("author_list"), data={"institution": 1})
+        for fn in res.context["author_list"]:
+            self.assertIn(
+                1,
+                Institution.objects.filter(
+                    affiliations__asserted_by__author=fn
+                ).values_list("id", flat=True),
+            )
+
+    def test_affiliation(self):
+        res = self.client.get(reverse("author_list"), data={"affiliation": 1})
+        for fn in res.context["author_list"]:
+            self.assertIn(
+                1,
+                Affiliation.objects.filter(asserted_by__author=fn).values_list(
+                    "id", flat=True
+                ),
+            )
+
 
 class InstitutionFullListViewTest(TestCase):
     """
