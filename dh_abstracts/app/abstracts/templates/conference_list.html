@@ -38,32 +38,40 @@
       </div>
     </div>
     {% endif %}
-    {% for series in series_list %}
-    <div class="card m-2">
-      <div class="card-header">
-        <div class="d-flex justify-content-between">
-          <h2 id="{{ series.abbreviation }}">{{ series.title }}</h2>
-          {% if not forloop.first %}<a href="#"><small>back to top</small></a>{% endif %}
+    <div class="accordion" id="series_accordion">
+      {% for series in series_list %}
+      <div class="card m-2">
+        <div class="card-header" id="series{{ series.id }}">
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{ series.id }}"
+              aria-expanded="true" aria-controls="collapse{{ series.id }}">
+              <h2 id="{{ series.abbreviation }}">{{ series.title }}</h2>
+            </button>
+            {% if not forloop.first %}<a href="#"><small>back to top</small></a>{% endif %}
+          </div>
+          {% if series.notes  %}
+          <p>{{ series.notes | safe }}</p>
+          {% endif %}
+          <hr>
+          <p>Organizers:</p>
+          <ul>
+            {% for organizer in series.all_organizers %}
+            <li><strong>{{ organizer.name }}</strong>{% if organizer.name %}{% if organizer.notes %}:
+              {{ organizer.notes | safe }}{% endif %}{% endif %}{% if organizer.url %} (Website: <a
+                href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</li>
+            {% endfor %}
         </div>
-        {% if series.notes  %}
-        <p>{{ series.notes | safe }}</p>
-        {% endif %}
-        <hr>
-        <p>Organizers:</p>
-        <ul>
-          {% for organizer in series.all_organizers %}
-          <li><strong>{{ organizer.name }}</strong>{% if organizer.name %}{% if organizer.notes %}:
-            {{ organizer.notes | safe }}{% endif %}{% endif %}{% if organizer.url %} (Website: <a
-              href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</li>
-          {% endfor %}
+        <div id="collapse{{ series.id }}" class="collapse{% if forloop.first %} show{% endif %}"
+          aria-labelledby="heading{{ series.id }}" data-parent="#series_accordion">
+          <ul class="list-group list-group-flush">
+            {% for conference in series.conferences.all %}
+            <li class=" list-group-item">{% include "conference_card.html" with conference=conference %}</li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
-      <ul class="list-group list-group-flush">
-        {% for conference in series.conferences.all %}
-        <li class="list-group-item">{% include "conference_card.html" with conference=conference %}</li>
-        {% endfor %}
-      </ul>
+      {% endfor %}
     </div>
-    {% endfor %}
     {% if standalone_conferences %}
     <div class="card m-2">
       <div class="card-header">
