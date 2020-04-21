@@ -31,6 +31,11 @@ class WorkFilter(forms.Form):
     work_type = forms.ModelChoiceField(
         queryset=WorkType.objects.distinct(), required=False
     )
+    author = forms.ModelChoiceField(
+        queryset=Author.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="author-autocomplete", attrs={"data-html": True}),
+    )
     conference = forms.ModelChoiceField(
         queryset=Conference.objects.all(),
         required=False,

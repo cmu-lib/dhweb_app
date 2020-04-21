@@ -868,6 +868,10 @@ class FullWorkList(ListView):
                     authorships__affiliations__institution=institution_res
                 )
 
+            author_res = filter_form["author"]
+            if author_res is not None:
+                result_set = result_set.filter(authorships__author=author_res)
+
             keyword_res = filter_form["keyword"]
             if keyword_res is not None:
                 result_set = result_set.filter(keywords=keyword_res)

@@ -407,6 +407,13 @@ class WorkListViewTest(TestCase):
         for w in res.context["work_list"]:
             self.assertIn(1, w.disciplines.values_list("id", flat=True))
 
+    def test_author(self):
+        res = self.client.get(reverse("work_list"), data={"author": 1})
+        for w in res.context["work_list"]:
+            self.assertIn(
+                1, Author.objects.filter(works=w).values_list("id", flat=True)
+            )
+
 
 class WorkDetailViewTest(TestCase):
     """
