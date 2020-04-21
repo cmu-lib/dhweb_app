@@ -149,6 +149,22 @@ class AuthorListViewTest(TestCase):
                 ),
             )
 
+    def test_ordering_name_asc(self):
+        res = self.client.get(reverse("author_list"), data={"ordering": "last_name"})
+        a1 = res.context["author_list"][0]
+        a2 = res.context["author_list"][1]
+        self.assertLessEqual(
+            a1.appellations.all()[0].last_name, a2.appellations.all()[0].last_name
+        )
+
+    def test_ordering_name_asc(self):
+        res = self.client.get(reverse("author_list"), data={"ordering": "-last_name"})
+        a1 = res.context["author_list"][0]
+        a2 = res.context["author_list"][1]
+        self.assertGreaterEqual(
+            a1.appellations.all()[0].last_name, a2.appellations.all()[0].last_name
+        )
+
 
 class InstitutionFullListViewTest(TestCase):
     """
