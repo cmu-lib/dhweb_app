@@ -46,12 +46,11 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <p class="text-muted m-3">Full database listings, including unpublished data.</p>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{% url 'author_institution_list' %}">Affiliations (Institutions &
-                Departments)</a>
-              <a class="dropdown-item" href="{% url 'full_work_type_list' %}">Abstract Types</a>
-              <a class="dropdown-item" href="{% url 'full_institution_list' %}">Affiliations</a>
+              <a class="dropdown-item" href="{% url 'full_institution_list' %}">Departments and Institutions</a>
+              <a class="dropdown-item" href="{% url 'author_institution_list' %}">Authors by institution</a>
               <a class="dropdown-item" href="{% url 'full_series_list' %}">Conference Series</a>
               <a class="dropdown-item" href="{% url 'full_organizer_list' %}">Organizers</a>
+              <a class="dropdown-item" href="{% url 'full_work_type_list' %}">Abstract Types</a>
               <a class="dropdown-item" href="{% url 'full_keyword_list' %}">Keywords</a>
               <a class="dropdown-item" href="{% url 'full_topic_list' %}">Topics</a>
               <a class="dropdown-item" href="{% url 'full_language_list' %}">Languages</a>
