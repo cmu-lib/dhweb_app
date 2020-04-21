@@ -131,7 +131,7 @@ When the user selects an author, fill in the most recent known information about
     author_count++;
 
     var newformid = "authorship_" + author_count;
-    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <input type="button" class="btn btn-danger" id="remove-authorship-' + newformid + '" value="Remove authorship"></h2> <div class="row"> <div class="col"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col"> {{ authorships_form.empty_form.affiliations | as_crispy_field |escapejs}} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal" id="affiliationModal-trigger-' + newformid + '">Create new affiliation</button> </div> </div> </li>';
+    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <input type="button" class="btn btn-danger" id="remove-authorship-' + newformid + '" value="Remove authorship"></h2> <div class="row"> <div class="col-6"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col-6"> {{ authorships_form.empty_form.affiliations | as_crispy_field |escapejs}} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal" id="affiliationModal-trigger-' + newformid + '">Create new affiliation</button> </div> </div> </li>';
     newform = newform.replace(/__prefix__/g, author_count - 1);
 
     $("#authorship_formset").append(newform);
@@ -159,9 +159,10 @@ When the user selects an author, fill in the most recent known information about
       }
 
       parent_li.find(".author_card").remove();
+      var concat_affiliations = $.map(data.affiliations, function (x) { return x["name"] }).join("\n")
       acard = '<div class="card author_card my-2"><div class="card-header">' + data.first_name + ' ' + data.last_name + '</div><div class="card-body"><p>Selected Works (' + data.works_count + ' total): ' + data.work_titles.join(", ") + "</p>";
       if (typeof data.affiliations != "undefined") {
-        acard = acard + "<p>affiliations: " + data.affiliations.name + "</p>";
+        acard = acard + "<p>affiliations: " + concat_affiliations + "</p>";
       }
       acard = acard + "</div></div >";
       before_name = parent_li.find(".form-group[id$='first_name']")

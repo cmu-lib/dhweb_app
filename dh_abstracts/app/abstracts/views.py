@@ -794,7 +794,7 @@ def WorkEditAuthorship(request, work_id):
 def AuthorInfoJSON(request, author_id):
     if request.method == "GET":
         author = get_object_or_404(Author, pk=author_id)
-        author_aff = author.most_recent_affiliations
+        author_aff = Affiliation.objects.filter(asserted_by__author=author).distinct()
         author_dict = {
             "first_name": author.most_recent_appellation.first_name,
             "last_name": author.most_recent_appellation.last_name,
