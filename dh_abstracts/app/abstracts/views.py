@@ -949,7 +949,11 @@ class FullWorkList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        raw_filter_form = FullWorkForm(self.request.GET)
+        base_form_data = self.request.GET.copy()
+        if base_form_data.get("text", None) is not None:
+            base_form_data["ordering"] = "rank"
+
+        raw_filter_form = FullWorkForm(base_form_data)
         if raw_filter_form.is_valid():
             filter_form = raw_filter_form.cleaned_data
             conference_res = filter_form["conference"]
@@ -968,7 +972,7 @@ class FullWorkList(ListView):
                 )
                 context["selected_conferences"] = conferences_data
 
-        context["work_filter_form"] = WorkFilter(data=self.request.GET)
+        context["work_filter_form"] = WorkFilter(data=base_form_data)
         context["available_works_count"] = Work.objects.count()
         context["filtered_works_count"] = self.get_queryset().count()
         context["redirect_url"] = reverse("work_list")
