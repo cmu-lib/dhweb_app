@@ -485,6 +485,16 @@ class ConferenceForm(forms.ModelForm):
     state_province_region = forms.CharField(
         label="State / Province / Region", required=False
     )
+    start_date = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={"type": "date"}),
+        help_text="MM/DD/YYYY",
+    )
+    end_date = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={"type": "date"}),
+        help_text="MM/DD/YYYY",
+    )
 
     class Meta:
         model = Conference
