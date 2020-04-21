@@ -482,6 +482,9 @@ class ConferenceForm(forms.ModelForm):
         required=False,
         widget=ModelSelect2(url="country-autocomplete"),
     )
+    state_province_region = forms.CharField(
+        label="State / Province / Region", required=False
+    )
 
     class Meta:
         model = Conference
