@@ -4,7 +4,7 @@ from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import DetailView, ListView
 from django.db.models import Count, Max, Min, Q, F, Prefetch, Subquery, OuterRef
-from django.db.models.functions import Concat
+from django.db.models.functions import Concat, FirstValue
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
@@ -841,7 +841,7 @@ class FullWorkList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        base_result_set = Work.objects.select_related("work_type").order_by("title")
+        base_result_set = Work.objects.select_related("work_type")
         raw_filter_form = FullWorkForm(self.request.GET)
 
         if raw_filter_form.is_valid():
@@ -896,8 +896,39 @@ class FullWorkList(ListView):
                 result_set = (
                     result_set.filter(search_text=text_res)
                     .annotate(rank=SearchRank(F("search_text"), SearchQuery(text_res)))
+                    .filter(rank__gte=0)
                     .order_by("-rank")
                 )
+                order_res = "rank"
+
+            # To find the last name of the first author, we develop a subquery that will pull the first authorship for a given work. We can then call the appellation__last_name
+            first_author_subquery = Authorship.objects.filter(
+                work=OuterRef("pk")
+            ).order_by("authorship_order")
+
+            order_res = filter_form["ordering"]
+            if order_res is None or order_res == "":
+                order_res = "year"
+            if order_res == "year":
+                result_set = result_set.order_by("conference__year", "title")
+            elif order_res == "-year":
+                result_set = result_set.order_by("-conference__year", "title")
+            elif order_res == "title":
+                result_set = result_set.order_by("title")
+            elif order_res == "-title":
+                result_set = result_set.order_by("-title")
+            elif order_res == "last_name":
+                result_set = result_set.annotate(
+                    first_author_last_name=Subquery(
+                        first_author_subquery.values("appellation__last_name")[:1]
+                    )
+                ).order_by("first_author_last_name", "title")
+            elif order_res == "-last_name":
+                result_set = result_set.annotate(
+                    first_author_last_name=Subquery(
+                        first_author_subquery.values("appellation__last_name")[:1]
+                    )
+                ).order_by("-first_author_last_name", "title")
 
             return result_set.prefetch_related(
                 "authorships",
@@ -909,7 +940,7 @@ class FullWorkList(ListView):
                 "topics",
                 "languages",
                 "disciplines",
-            ).all()
+            )
         else:
             for error in raw_filter_form.errors:
                 messages.warning(self.request, error)

@@ -26,6 +26,19 @@ from .models import (
 
 
 class WorkFilter(forms.Form):
+    ordering = forms.ChoiceField(
+        choices=(
+            ("year", "Conference year (ascending)"),
+            ("-year", "Conference year (descending)"),
+            ("rank", "Text search relevance"),
+            ("title", "Title (A-Z)"),
+            ("-title", "Title (Z-A)"),
+            ("last_name", "First author, last name (A-Z)"),
+            ("-last_name", "First author, last name (Z-A)"),
+        ),
+        required=False,
+        initial="year",
+    )
     text = forms.CharField(max_length=100, strip=True, required=False)
     full_text_available = forms.BooleanField(required=False)
     work_type = forms.ModelChoiceField(

@@ -366,7 +366,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$180000$tPj49fsbZxwZ$0acMULPg7LIKk4wcMuTgXfTRloYaMStvda8CXpk080I=",
-    "last_login": "2020-04-20T15:25:12.442Z",
+    "last_login": "2020-04-21T20:22:14.672Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",
@@ -492,11 +492,27 @@
   }
 },
 {
+  "model": "abstracts.authorship",
+  "pk": 10,
+  "fields": {
+    "last_updated": "2020-04-21T20:23:44.627Z",
+    "user_last_updated": 1,
+    "author": 1,
+    "work": 8,
+    "authorship_order": 1,
+    "appellation": 4,
+    "affiliations": [
+      2,
+      1
+    ]
+  }
+},
+{
   "model": "abstracts.author",
   "pk": 1,
   "fields": {
-    "last_updated": "2020-04-03T19:23:27.582Z",
-    "user_last_updated": null,
+    "last_updated": "2020-04-21T20:23:44.669Z",
+    "user_last_updated": 1,
     "appellations_index": "Rosalind Franklin Rosalind Krauss"
   }
 },

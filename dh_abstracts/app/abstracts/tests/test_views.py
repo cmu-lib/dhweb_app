@@ -414,6 +414,48 @@ class WorkListViewTest(TestCase):
                 1, Author.objects.filter(works=w).values_list("id", flat=True)
             )
 
+    def test_ordering_year_asc(self):
+        res = self.client.get(reverse("work_list"), data={"ordering": "year"})
+        a1 = res.context["work_list"][0]
+        a2 = res.context["work_list"][1]
+        self.assertLessEqual(a1.conference.year, a2.conference.year)
+
+    def test_ordering_year_dsc(self):
+        res = self.client.get(reverse("work_list"), data={"ordering": "-year"})
+        a1 = res.context["work_list"][0]
+        a2 = res.context["work_list"][1]
+        self.assertGreaterEqual(a1.conference.year, a2.conference.year)
+
+    def test_ordering_title_asc(self):
+        res = self.client.get(reverse("work_list"), data={"ordering": "title"})
+        a1 = res.context["work_list"][0]
+        a2 = res.context["work_list"][1]
+        self.assertLessEqual(a1.title.lower(), a2.title.lower())
+
+    def test_ordering_title_dsc(self):
+        res = self.client.get(reverse("work_list"), data={"ordering": "-title"})
+        a1 = res.context["work_list"][0]
+        a2 = res.context["work_list"][1]
+        self.assertGreaterEqual(a1.title.lower(), a2.title.lower())
+
+    def test_ordering_name_asc(self):
+        res = self.client.get(reverse("work_list"), data={"ordering": "last_name"})
+        a1 = res.context["work_list"][0]
+        a2 = res.context["work_list"][1]
+        self.assertLessEqual(
+            a1.authorships.order_by("authorship_order").first().appellation.last_name,
+            a2.authorships.order_by("authorship_order").first().appellation.last_name,
+        )
+
+    def test_ordering_name_dsc(self):
+        res = self.client.get(reverse("work_list"), data={"ordering": "-last_name"})
+        a1 = res.context["work_list"][0]
+        a2 = res.context["work_list"][1]
+        self.assertGreaterEqual(
+            a1.authorships.order_by("authorship_order").first().appellation.last_name,
+            a2.authorships.order_by("authorship_order").first().appellation.last_name,
+        )
+
 
 class WorkDetailViewTest(TestCase):
     """

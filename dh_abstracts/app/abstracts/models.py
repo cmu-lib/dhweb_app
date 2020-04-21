@@ -223,7 +223,7 @@ class Work(TextIndexedModel, ChangeTrackedModel):
     conference = models.ForeignKey(
         Conference, on_delete=models.CASCADE, related_name="works"
     )
-    title = models.CharField(max_length=500)
+    title = models.CharField(max_length=500, db_index=True)
     work_type = models.ForeignKey(
         WorkType, blank=True, null=True, on_delete=models.SET_NULL, related_name="works"
     )
