@@ -42,28 +42,33 @@
       {% for series in series_list %}
       <div class="card m-2">
         <div class="card-header" id="series{{ series.id }}">
-          <div class="d-flex justify-content-between">
-            <button class="btn btn-link text-left" type="button" data-toggle="collapse"
-              data-target="#collapse{{ series.id }}" aria-expanded="{{ forloop.first|lower }}"
-              aria-controls="collapse{{ series.id }}">
-              <h2 id="{{ series.abbreviation }}">{{ series.title }}</h2>
-            </button>
+          <div class="d-flex justify-content-between align-content-center">
+            <span>
+              <h2 id="{{ series.abbreviation }}"><button class="btn btn-lg btn-link" type="button"
+                  data-toggle="collapse" data-target="#collapse{{ series.id }}"
+                  aria-expanded="{{ forloop.first|lower }}" aria-controls="collapse{{ series.id }}"><i
+                    id="toggle{{ series.id }}"
+                    class="fas fa-caret-{% if forloop.first %}down{% else %}right{% endif %}"></i></button>
+                {{ series.title }}</h2>
+            </span>
             {% if not forloop.first %}<a href="#"><small>back to top</small></a>{% endif %}
           </div>
-          {% if series.notes  %}
-          <p>{{ series.notes | safe }}</p>
-          {% endif %}
-          <hr>
-          <p>Organizers:</p>
-          <ul>
-            {% for organizer in series.all_organizers %}
-            <li><strong>{{ organizer.name }}</strong>{% if organizer.name %}{% if organizer.notes %}:
-              {{ organizer.notes | safe }}{% endif %}{% endif %}{% if organizer.url %} (Website: <a
-                href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</li>
-            {% endfor %}
         </div>
         <div id="collapse{{ series.id }}" class="collapse{% if forloop.first %} show{% endif %}"
           aria-labelledby="heading{{ series.id }}" data-parent="#series_accordion">
+          <div class="card-header">
+            {% if series.notes  %}
+            <p>{{ series.notes | safe }}</p>
+            {% endif %}
+            <hr>
+            <p>Organizers:</p>
+            <ul>
+              {% for organizer in series.all_organizers %}
+              <li><strong>{{ organizer.name }}</strong>{% if organizer.name %}{% if organizer.notes %}:
+                {{ organizer.notes | safe }}{% endif %}{% endif %}{% if organizer.url %} (Website: <a
+                  href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</li>
+              {% endfor %}
+          </div>
           <ul class="list-group list-group-flush">
             {% for conference in series.conferences.all %}
             <li class=" list-group-item">{% include "conference_card.html" with conference=conference %}</li>
@@ -89,5 +94,20 @@
       {% endif %}
     </div>
   </div>
+</div>
 
-  {% endblock %}
+{% endblock %}
+
+{% block js %}
+<script>
+  {% for series in series_list %}
+  $('#collapse{{ series.id }}').on('show.bs.collapse', function () {
+    $("#toggle{{ series.id }}").removeClass('fa-caret-right').addClass('fa-caret-down');
+  });
+
+  $('#collapse{{ series.id }}').on('hide.bs.collapse', function () {
+    $("#toggle{{ series.id }}").removeClass('fa-caret-down').addClass('fa-caret-right');
+  });
+  {% endfor %}
+</script>
+{% endblock %}
