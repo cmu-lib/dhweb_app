@@ -42,7 +42,7 @@
       {% for series in series_list %}
       <div class="card m-2">
         <div class="card-header" id="series{{ series.id }}">
-          <div class="d-flex justify-content-between align-content-center">
+          <div class="d-flex justify-content-between align-content-center align-items-start">
             <span>
               <h2 id="{{ series.abbreviation }}"><button class="btn btn-lg btn-link" type="button"
                   data-toggle="collapse" data-target="#collapse{{ series.id }}"
@@ -51,7 +51,6 @@
                     class="fas fa-caret-{% if forloop.first %}down{% else %}right{% endif %}"></i></button>
                 {{ series.title }}</h2>
             </span>
-            {% if not forloop.first %}<a href="#"><small>back to top</small></a>{% endif %}
           </div>
         </div>
         <div id="collapse{{ series.id }}" class="collapse{% if forloop.first %} show{% endif %}"
@@ -83,7 +82,6 @@
       <div class="card-header">
         <div class="d-flex justify-content-between">
           <h2 id="standalone">Standalone Events</h2>
-          <a href="#"><small>back to top</small></a>
         </div>
       </div>
       <ul class="list-group list-group-flush">
