@@ -58,8 +58,8 @@
           <div class="card-header">
             {% if series.notes  %}
             <p>{{ series.notes | safe }}</p>
-            {% endif %}
             <hr>
+            {% endif %}
             <p>Organizers:</p>
             <ul>
               {% for organizer in series.all_organizers %}
