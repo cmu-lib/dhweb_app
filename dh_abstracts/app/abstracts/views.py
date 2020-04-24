@@ -324,6 +324,8 @@ def author_view(request, author_id):
     appellations = (
         Appellation.objects.filter(asserted_by__author=author)
         .distinct()
+        .annotate(latest_year=Max("asserted_by__work__conference__year"))
+        .order_by("-latest_year")
         .prefetch_related(
             Prefetch("asserted_by", queryset=sorted_authorships),
             "asserted_by__work",
@@ -334,6 +336,8 @@ def author_view(request, author_id):
     affiliations = (
         Affiliation.objects.filter(asserted_by__author=author)
         .distinct()
+        .annotate(latest_year=Max("asserted_by__work__conference__year"))
+        .order_by("-latest_year")
         .prefetch_related(
             Prefetch("asserted_by", queryset=sorted_authorships),
             "asserted_by__work",
