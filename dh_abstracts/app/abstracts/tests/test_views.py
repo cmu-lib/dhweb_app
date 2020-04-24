@@ -314,19 +314,11 @@ class AuthorDetailViewTest(TestCase):
 
     def test_appellations_unique(self):
         res = self.client.get(reverse("author_detail", kwargs={"author_id": 1}))
-        self.assertTrue(
-            is_list_unique(
-                [d["appellation"] for d in res.context["appellation_assertions"]]
-            )
-        )
+        self.assertTrue(is_list_unique([d.id for d in res.context["appellations"]]))
 
     def test_affiliations_unique_institutions(self):
         res = self.client.get(reverse("author_detail", kwargs={"author_id": 1}))
-        self.assertTrue(
-            is_list_unique(
-                [d["institution"] for d in res.context["affiliation_assertions"]]
-            )
-        )
+        self.assertTrue(is_list_unique([d.id for d in res.context["affiliations"]]))
 
 
 class WorkListViewTest(TestCase):
