@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% load markdownify %}
+
+{% block header_title %}{{ flatpage.title }}{% endblock %}
+
+{% block content %}
+{{ flatpage.content | markdownify }}
+{% endblock %}
