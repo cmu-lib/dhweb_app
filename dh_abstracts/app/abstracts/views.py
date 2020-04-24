@@ -524,6 +524,7 @@ def conference_list(request):
         "conferences__series_memberships",
         "conferences__series_memberships__series",
         "conferences__hosting_institutions",
+        "conferences__documents",
     ).all()
 
     unaffiliated_list = (
@@ -539,6 +540,7 @@ def conference_list(request):
             "series_memberships",
             "series_memberships__series",
             "hosting_institutions",
+            "conferences__documents",
         )
         .all()
     )

@@ -20,6 +20,20 @@
   </div>
   {% endfor %}
 </div>
+<h2>Conference Documents</h2>
+<a href="{% url 'admin:abstracts_conference_change' conference.id %}" rel="noopener noreferrer" target="_blank"
+  type="button" class="btn btn-info my-2">
+  Upload/edit documents (opens new tab)
+</a>
+{% if conference.documents.exists %}
+<ul class="list-group my-2">
+  {% for document in conference.documents.all %}
+  <li class="list-group-item"><i class="far fa-file mr-1"></i> <a href="{{ document.url }}">{{ document.basename }}
+      ({{ document.size|filesizeformat }})</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}
 
 {% block js %}

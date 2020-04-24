@@ -4,6 +4,7 @@ from .models import (
     Organizer,
     ConferenceSeries,
     Conference,
+    ConferenceDocument,
     SeriesMembership,
     Work,
     Institution,
@@ -30,7 +31,8 @@ class KeywordAdmin(admin.ModelAdmin):
 
 
 class CountryAdmin(admin.ModelAdmin):
-    search_fields = ["name"]
+    search_fields = ["pref_name"]
+    ordering = ["pref_name"]
 
 
 class AuthorshipAdmin(admin.ModelAdmin):
@@ -93,9 +95,10 @@ class InstitutionAdmin(admin.ModelAdmin):
         "last_updated",
         "user_last_updated",
     ]
-    search_fields = ["name", "city", "country__names__name"]
+    search_fields = ["name", "city", "country__pref_name"]
     readonly_fields = ["last_updated", "user_last_updated"]
     list_display = ["last_updated", "user_last_updated"]
+    ordering = ["name"]
 
 
 class AuthorAdmin(admin.ModelAdmin):
@@ -126,10 +129,15 @@ class OrganizerAdmin(admin.ModelAdmin):
     list_display = ["pk", "name", "last_updated", "user_last_updated"]
 
 
+class ConferenceDocumentInline(admin.TabularInline):
+    model = ConferenceDocument
+    extra = 1
+
+
 class ConferenceAdmin(admin.ModelAdmin):
-    inlines = [ConferenceMembershipInline, OrganizerInline]
+    inlines = [ConferenceDocumentInline, ConferenceMembershipInline, OrganizerInline]
     search_fields = ["venue"]
-    autocomplete = ["organizer"]
+    autocomplete_fields = ["organizers", "hosting_institutions", "country"]
 
 
 class FileImportMessagesAdmin(admin.ModelAdmin):

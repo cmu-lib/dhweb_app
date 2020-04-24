@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     "django.contrib.redirects",
     "crispy_forms",
     "django.contrib.humanize",
+    "easy_thumbnails",
+    "filer",
+    "mptt",
     "debug_toolbar",
 ]
 
@@ -137,6 +140,31 @@ STATIC_URL = "/static/"
 STATIC_ROOT = "/vol/static_files"
 LOGIN_URL = "/accounts/login"
 LOGIN_REDIRECT_URL = "/"
+
+FILER_STORAGES = {
+    "public": {
+        "main": {
+            "ENGINE": "filer.storage.PublicFileSystemStorage",
+            "OPTIONS": {
+                "location": f"{STATIC_ROOT}/media",
+                "base_url": f"{STATIC_URL}/media",
+            },
+            "UPLOAD_TO": "filer.utils.generate_filename.randomized",
+            "UPLOAD_TO_PREFIX": "filer_public",
+        },
+        "thumbnails": {
+            "ENGINE": "filer.storage.PublicFileSystemStorage",
+            "OPTIONS": {
+                "location": f"{STATIC_ROOT}/media/thumbnails",
+                "base_url": f"{STATIC_URL}/media/thumbnails",
+            },
+        },
+    }
+}
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 262144000
+
+FILER_CANONICAL_URL = "files/"
 
 # Email
 

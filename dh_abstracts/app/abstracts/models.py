@@ -9,6 +9,8 @@ from django.contrib.redirects.models import Redirect
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.contrib.auth.models import User
+from filer.fields.file import FilerFileField
+from os.path import basename
 
 
 class ChangeTrackedModel(models.Model):
@@ -69,13 +71,17 @@ class Conference(models.Model):
     end_date = models.DateField(null=True, blank=True)
     city = models.CharField(max_length=1000, blank=True, null=False, default="")
     hosting_institutions = models.ManyToManyField(
-        "Institution", related_name="conferences"
+        "Institution", related_name="conferences", blank=True
     )
     state_province_region = models.CharField(
         max_length=1000, blank=True, null=False, default=""
     )
     country = models.ForeignKey(
-        "Country", related_name="conferences", null=True, on_delete=models.SET_NULL
+        "Country",
+        related_name="conferences",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
     )
 
     class Meta:
@@ -106,6 +112,30 @@ class Conference(models.Model):
 
     def get_absolute_url(self):
         return reverse("conference_edit", kwargs={"pk": self.pk})
+
+
+class ConferenceDocument(models.Model):
+    document = FilerFileField(
+        null=True,
+        blank=True,
+        related_name="document_conference",
+        on_delete=models.CASCADE,
+    )
+    conference = models.ForeignKey(
+        Conference, on_delete=models.CASCADE, related_name="documents"
+    )
+
+    @property
+    def basename(self):
+        return basename(self.document.file.name)
+
+    @property
+    def url(self):
+        return self.document.url
+
+    @property
+    def size(self):
+        return self.document.file.size
 
 
 class Organizer(ChangeTrackedModel):
