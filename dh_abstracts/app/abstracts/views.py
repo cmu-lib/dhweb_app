@@ -22,7 +22,6 @@ from django.conf import settings
 from django.utils.html import format_html
 import glob
 from os.path import basename
-import itertools
 
 from .models import (
     Work,
@@ -318,62 +317,31 @@ def author_view(request, author_id):
         )
     ).order_by("-work__conference__year")
 
-    appellation_assertions = []
-
-    appellation_groups = itertools.groupby(
-        obj_authorships.values(
-            "appellation",
-            "appellation__first_name",
-            "appellation__last_name",
-            "work",
-            "work__conference__year",
-        ).order_by("appellation"),
-        lambda x: x["appellation"],
+    sorted_authorships = Authorship.objects.filter(author=author).order_by(
+        "work__conference__year"
     )
 
-    for app_id, app_data_group in appellation_groups:
-        app_data = list(app_data_group)
-        app_dict = {
-            "appellation": app_id,
-            "first_name": app_data[0]["appellation__first_name"],
-            "last_name": app_data[0]["appellation__last_name"],
-            "works": [
-                {"id": app["work"], "year": app["work__conference__year"]}
-                for app in app_data
-            ],
-        }
-        appellation_assertions.append(app_dict)
-
-    affiliation_assertions = []
-
-    affiliation_groups = itertools.groupby(
-        obj_authorships.values(
-            "affiliations",
-            "affiliations__department",
-            "affiliations__institution",
-            "affiliations__institution__name",
-            "affiliations__institution__city",
-            "affiliations__institution__country__pref_name",
-            "work",
-            "work__conference__year",
-        ).order_by("affiliations", "-work__conference__year"),
-        lambda x: x["affiliations"],
+    appellations = (
+        Appellation.objects.filter(asserted_by__author=author)
+        .distinct()
+        .prefetch_related(
+            Prefetch("asserted_by", queryset=sorted_authorships),
+            "asserted_by__work",
+            "asserted_by__work__conference",
+        )
     )
 
-    for aff_id, aff_data_group in affiliation_groups:
-        aff_data = list(aff_data_group)
-        aff_dict = {
-            "id": aff_data[0]["affiliations"],
-            "department": aff_data[0]["affiliations__department"],
-            "institution": aff_data[0]["affiliations__institution__name"],
-            "city": aff_data[0]["affiliations__institution__city"],
-            "country": aff_data[0]["affiliations__institution__country__pref_name"],
-            "works": [
-                {"id": aff["work"], "year": aff["work__conference__year"]}
-                for aff in aff_data
-            ],
-        }
-        affiliation_assertions.append(aff_dict)
+    affiliations = (
+        Affiliation.objects.filter(asserted_by__author=author)
+        .distinct()
+        .prefetch_related(
+            Prefetch("asserted_by", queryset=sorted_authorships),
+            "asserted_by__work",
+            "asserted_by__work__conference",
+            "institution",
+            "institution__country",
+        )
+    )
 
     works = (
         Work.objects.filter(authorships__author=author)
@@ -399,8 +367,8 @@ def author_view(request, author_id):
         "author": author,
         "works": works,
         "authorships": obj_authorships,
-        "appellation_assertions": appellation_assertions,
-        "affiliation_assertions": affiliation_assertions,
+        "appellations": appellations,
+        "affiliations": affiliations,
         "author_admin_page": author_admin_page,
     }
 

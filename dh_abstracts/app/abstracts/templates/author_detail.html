@@ -25,13 +25,14 @@
 <div class="card my-2">
   <div class="card-header">All Names</div>
   <ul class="list-group list-group-flush">
-    {% for appellation in appellation_assertions %}
+    {% for appellation in appellations.all %}
     <li class="list-group-item">
       <div class="d-flex justify-content-between">
         <p>{{ appellation.first_name }} {{ appellation.last_name }}</p>
       </div>
-      <small class="text-muted">Given in {% for work in appellation.works %}
-        <a href="{% url 'work_detail' work.id %}">{{ work.year }}</a>{% if not forloop.last %},
+      <small class="text-muted">Given in {% for authorship in appellation.asserted_by.all %}
+        <a
+          href="{% url 'work_detail' authorship.work.id %}">{{ authorship.work.conference.year }}</a>{% if not forloop.last %},
         {% endif %}
         {% endfor %}</small>
     </li>
@@ -41,19 +42,16 @@
 <div class="card my-2">
   <div class="card-header">All Affiliations</div>
   <ul class="list-group list-group-flush">
-    {% for affiliation in affiliation_assertions %}
+    {% for affiliation in affiliations %}
     <li class="list-group-item">
-      {% if affiliation.institution %}
       <p><a
-          href="{% url 'author_list' %}?affiliation={{ affiliation.id }}">{% include "affiliation_string.html" with department=affiliation.department institution=affiliation.institution institution_city=affiliation.city institution_country=affiliation.country %}</a>
+          href="{% url 'author_list' %}?affiliation={{ affiliation.id }}">{% include "affiliation_string.html" with department=affiliation.department institution=affiliation.institution.name institution_city=affiliation.institution.city institution_country=affiliation.institution.country.pref_name %}</a>
       </p>
-      <small class="text-muted">Given in {% for work in affiliation.works %}
-        <a href="{% url 'work_detail' work.id %}">{{ work.year }}</a>{% if not forloop.last %},
+      <small class="text-muted">Given in {% for authorship in affiliation.asserted_by.all %}
+        <a
+          href="{% url 'work_detail' authorship.work.id %}">{{ authorship.work.conference.year }}</a>{% if not forloop.last %},
         {% endif %}
         {% endfor %}</small>
-      {% else %}
-      No affiliations given
-      {% endif %}
       {% endfor %}
   </ul>
 </div>
