@@ -512,7 +512,7 @@ def conference_list(request):
             "series_memberships",
             "series_memberships__series",
             "hosting_institutions",
-            "conferences__documents",
+            "documents",
         )
         .all()
     )
