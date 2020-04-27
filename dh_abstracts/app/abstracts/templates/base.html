@@ -1,4 +1,6 @@
 {% load static %}
+{% load flatpages %}
+{% get_flatpages as flatpages %}
 
 <!doctype html>
 <html lang="en">
@@ -47,9 +49,9 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">About</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/pages/about">About the project</a>
-              <a class="dropdown-item" href="/pages/team">Team</a>
-              <a class="dropdown-item" href="/pages/colophon">Technical Colophon</a>
+              {% for page in  flatpages %}
+              <a class="dropdown-item" href="/pages{{ page.url }}">{{ page.title }}</a>
+              {% endfor %}
             </div>
           </li>
           {% if user.is_authenticated %}
