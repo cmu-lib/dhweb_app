@@ -419,17 +419,17 @@ class AuthorList(ListView):
                 )
 
             name_res = filter_form["name"]
-            if name_res is not None or name_res != "":
+            if name_res != "":
                 result_set = result_set.filter(appellations_index__icontains=name_res)
 
             first_name_res = filter_form["first_name"]
-            if first_name_res is not None or first_name_res != "":
+            if first_name_res != "":
                 result_set = result_set.filter(
                     authorships__appellation__first_name__icontains=first_name_res
                 )
 
             last_name_res = filter_form["last_name"]
-            if last_name_res is not None or last_name_res != "":
+            if last_name_res != "":
                 result_set = result_set.filter(
                     authorships__appellation__last_name__icontains=last_name_res
                 )
@@ -461,7 +461,6 @@ class AuthorList(ListView):
                 most_recent_last_name=Subquery(
                     newest_authorship.values("appellation__last_name")[:1]
                 ),
-                n_works=Count("works", distinct=True),
             )
 
             return annotated_authors
