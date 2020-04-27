@@ -290,6 +290,14 @@
   }
 },
 {
+  "model": "abstracts.appellation",
+  "pk": 6,
+  "fields": {
+    "first_name": "Jackie",
+    "last_name": "Fiddle"
+  }
+},
+{
   "model": "abstracts.country",
   "pk": 1,
   "fields": {
@@ -366,7 +374,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$180000$tPj49fsbZxwZ$0acMULPg7LIKk4wcMuTgXfTRloYaMStvda8CXpk080I=",
-    "last_login": "2020-04-21T20:22:14.672Z",
+    "last_login": "2020-04-27T15:21:37.444Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",
@@ -495,7 +503,7 @@
   "model": "abstracts.authorship",
   "pk": 10,
   "fields": {
-    "last_updated": "2020-04-21T20:23:44.627Z",
+    "last_updated": "2020-04-27T15:22:04.683Z",
     "user_last_updated": 1,
     "author": 1,
     "work": 8,
@@ -508,10 +516,25 @@
   }
 },
 {
+  "model": "abstracts.authorship",
+  "pk": 11,
+  "fields": {
+    "last_updated": "2020-04-27T15:22:04.892Z",
+    "user_last_updated": 1,
+    "author": 3,
+    "work": 8,
+    "authorship_order": 2,
+    "appellation": 6,
+    "affiliations": [
+      2
+    ]
+  }
+},
+{
   "model": "abstracts.author",
   "pk": 1,
   "fields": {
-    "last_updated": "2020-04-21T20:23:44.669Z",
+    "last_updated": "2020-04-27T15:22:04.779Z",
     "user_last_updated": 1,
     "appellations_index": "Rosalind Franklin Rosalind Krauss"
   }
@@ -529,9 +552,9 @@
   "model": "abstracts.author",
   "pk": 3,
   "fields": {
-    "last_updated": "2020-04-03T19:23:27.582Z",
-    "user_last_updated": null,
-    "appellations_index": ""
+    "last_updated": "2020-04-27T15:22:04.933Z",
+    "user_last_updated": 1,
+    "appellations_index": "Jackie Fiddle"
   }
 },
 {

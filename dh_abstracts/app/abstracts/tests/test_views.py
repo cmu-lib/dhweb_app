@@ -355,52 +355,62 @@ class WorkListViewTest(TestCase):
         res = self.client.get(reverse("work_list"), data={"text": "lorem ipsum"})
         all_titles = [w.title for w in res.context["work_list"]]
         self.assertEquals("A Foo Too Far", all_titles[0])
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
 
     def test_ft_available(self):
         res = self.client.get(reverse("work_list"), data={"full_text_available": True})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertTrue(w.full_text != "")
 
     def test_work_type(self):
         res = self.client.get(reverse("work_list"), data={"work_type": 1})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertEqual(w.work_type.id, 1)
 
     def test_conference(self):
         res = self.client.get(reverse("work_list"), data={"conference": 1})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertEqual(w.conference.id, 1)
 
     def test_institution(self):
-        res = self.client.get(reverse("work_list"), data={"institution": 1})
+        res = self.client.get(reverse("work_list"), data={"institution": 2})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             all_institutions = Institution.objects.filter(
                 affiliations__asserted_by__work=w.id
             ).values_list("id", flat=True)
-            self.assertIn(1, all_institutions)
+            self.assertIn(2, all_institutions)
 
     def test_keyword(self):
         res = self.client.get(reverse("work_list"), data={"keyword": 1})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertIn(1, w.keywords.values_list("id", flat=True))
 
     def test_topic(self):
         res = self.client.get(reverse("work_list"), data={"topic": 1})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertIn(1, w.topics.values_list("id", flat=True))
 
     def test_language(self):
         res = self.client.get(reverse("work_list"), data={"language": 1})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertIn(1, w.languages.values_list("id", flat=True))
 
     def test_discipline(self):
         res = self.client.get(reverse("work_list"), data={"discipline": 1})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertIn(1, w.disciplines.values_list("id", flat=True))
 
     def test_author(self):
         res = self.client.get(reverse("work_list"), data={"author": 1})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertIn(
                 1, Author.objects.filter(works=w).values_list("id", flat=True)
@@ -408,30 +418,35 @@ class WorkListViewTest(TestCase):
 
     def test_ordering_year_asc(self):
         res = self.client.get(reverse("work_list"), data={"ordering": "year"})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         a1 = res.context["work_list"][0]
         a2 = res.context["work_list"][1]
         self.assertLessEqual(a1.conference.year, a2.conference.year)
 
     def test_ordering_year_dsc(self):
         res = self.client.get(reverse("work_list"), data={"ordering": "-year"})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         a1 = res.context["work_list"][0]
         a2 = res.context["work_list"][1]
         self.assertGreaterEqual(a1.conference.year, a2.conference.year)
 
     def test_ordering_title_asc(self):
         res = self.client.get(reverse("work_list"), data={"ordering": "title"})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         a1 = res.context["work_list"][0]
         a2 = res.context["work_list"][1]
         self.assertLessEqual(a1.title.lower(), a2.title.lower())
 
     def test_ordering_title_dsc(self):
         res = self.client.get(reverse("work_list"), data={"ordering": "-title"})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         a1 = res.context["work_list"][0]
         a2 = res.context["work_list"][1]
         self.assertGreaterEqual(a1.title.lower(), a2.title.lower())
 
     def test_ordering_name_asc(self):
         res = self.client.get(reverse("work_list"), data={"ordering": "last_name"})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         a1 = res.context["work_list"][0]
         a2 = res.context["work_list"][1]
         self.assertLessEqual(
@@ -441,6 +456,7 @@ class WorkListViewTest(TestCase):
 
     def test_ordering_name_dsc(self):
         res = self.client.get(reverse("work_list"), data={"ordering": "-last_name"})
+        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         a1 = res.context["work_list"][0]
         a2 = res.context["work_list"][1]
         self.assertGreaterEqual(

@@ -830,17 +830,11 @@ class FullWorkList(ListView):
             if conference_res is not None:
                 result_set = result_set.filter(conference=conference_res)
 
-            affiliation_res = filter_form["affiliation"]
-            if affiliation_res is not None:
-                result_set = result_set.filter(
-                    authorships__affiliations=affiliation_res
-                )
-
             institution_res = filter_form["institution"]
             if institution_res is not None:
                 result_set = result_set.filter(
                     authorships__affiliations__institution=institution_res
-                )
+                ).distinct()
 
             author_res = filter_form["author"]
             if author_res is not None:
