@@ -385,7 +385,7 @@ class AuthorList(ListView):
     paginate_by = 50
 
     def get_queryset(self):
-        base_result_set = Author.objects.all()
+        base_result_set = Author.objects.exclude(appellations__isnull=True)
         raw_filter_form = AuthorFilter(self.request.GET)
 
         if raw_filter_form.is_valid():
