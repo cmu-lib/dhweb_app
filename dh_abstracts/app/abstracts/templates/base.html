@@ -43,6 +43,15 @@
               <a class="dropdown-item" href="{% url 'author_list' %}">Authors</a>
             </div>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">About</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/pages/about">About the project</a>
+              <a class="dropdown-item" href="/pages/team">Team</a>
+              <a class="dropdown-item" href="/pages/colophon">Technical Colophon</a>
+            </div>
+          </li>
           {% if user.is_authenticated %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.flatpages",
     "django.contrib.postgres",
     "django.contrib.sites",
     "django.contrib.redirects",
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     "easy_thumbnails",
     "filer",
     "mptt",
+    "markdownify",
     "debug_toolbar",
 ]
 
@@ -172,3 +174,18 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", 25)
 DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_ADDRESS")
+
+MARKDOWNIFY_WHITELIST_TAGS = [
+    "a",
+    "abbr",
+    "acronym",
+    "b",
+    "blockquote",
+    "em",
+    "i",
+    "li",
+    "ol",
+    "p",
+    "strong",
+    "ul",
+]
