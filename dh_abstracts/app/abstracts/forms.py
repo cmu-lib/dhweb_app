@@ -56,9 +56,7 @@ class WorkFilter(forms.Form):
         help_text="Works submitted to a particular conference",
     )
     institution = forms.ModelChoiceField(
-        queryset=Institution.objects.filter(
-            affiliations__asserted_by__work__isnull=False
-        ).distinct(),
+        queryset=Institution.objects.all(),
         widget=ModelSelect2(url="institution-autocomplete"),
         required=False,
         help_text="Works submitted with at least one author belonging to that institution.",
