@@ -52,33 +52,34 @@
 </div>
 {% endif %}
 
+{% if work.full_text %}
 <div class="card my-2">
-  <div class="card-header d-flex justify-content-between">Abstract{% if work.full_text %}<small
-      class="text-muted">.{{ work.full_text_type }}</small>{% endif %}</div>
+  <div class="card-header d-flex justify-content-between">Abstract</div>
   <div class="card-body">
-    {% if work.full_text and user.is_authenticated %}
+    {% if user.is_authenticated or work.conference.full_text_public %}
     {% if work.full_text_type == "txt" %}
     <p>{{ work.full_text | linebreaks }}</p>
     {% elif work.full_text_type == "xml" %}
     {{ work.full_text | safe }}
     {% endif %}
     {% else %}
-    <div class="alert alert-warning">No abstract available for this work.</div>
+    <div class="alert alert-warning">The full text for this abstract has been indexed, but we cannot display it here
+      because it is protected by copyright. If you would like access to the full text, please {% if work.url %} use the
+      URL above, or {% endif %} locate the conference proceedings through your institution's library.</div>
     {% endif %}
   </div>
-  {% if work.full_text and user.is_authenticated %}
   {% with license=work.full_text_license %}
   <div class="card-footer">
     {% if license %}
     This full text is licensed <a href="{{ license.url }}"><abbr
-        title="{{ license.title }}">{{ license.display_abbreviation }}</a>
+        title="{{ license.title }}">{{ license.display_abbreviation }}</abbr></a>
     {% else %}
     The license for this full text is unknown.
     {% endif %}
     {% endwith %}
   </div>
-  {% endif %}
 </div>
+{% endif %}
 {% endblock %}
 
 {% block context %}

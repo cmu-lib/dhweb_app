@@ -32,6 +32,7 @@
     "city": "",
     "state_province_region": "",
     "country": null,
+    "full_text_public": true,
     "hosting_institutions": []
   }
 },
@@ -50,6 +51,7 @@
     "city": "",
     "state_province_region": "",
     "country": null,
+    "full_text_public": false,
     "hosting_institutions": []
   }
 },
@@ -68,6 +70,7 @@
     "city": "Los Angeles",
     "state_province_region": "Calilfornia",
     "country": 1,
+    "full_text_public": false,
     "hosting_institutions": [
       2,
       1
@@ -89,6 +92,7 @@
     "city": "",
     "state_province_region": "",
     "country": null,
+    "full_text_public": false,
     "hosting_institutions": []
   }
 },
@@ -374,7 +378,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$180000$tPj49fsbZxwZ$0acMULPg7LIKk4wcMuTgXfTRloYaMStvda8CXpk080I=",
-    "last_login": "2020-04-27T15:21:37.444Z",
+    "last_login": "2020-04-28T20:10:37.169Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",

@@ -520,6 +520,7 @@ class ConferenceForm(forms.ModelForm):
             "venue_abbreviation",
             "notes",
             "url",
+            "full_text_public",
             "organizers",
             "theme_title",
             "start_date",

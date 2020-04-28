@@ -83,6 +83,11 @@ class Conference(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
     )
+    full_text_public = models.BooleanField(
+        default=False,
+        db_index=True,
+        help_text="Should the full text for this conference's abstracts be publicly available?",
+    )
 
     class Meta:
         ordering = ["-year"]
