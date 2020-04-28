@@ -23,9 +23,17 @@ services:
       - "25:25"
     links:
       - "postgres:postgres"
+      - "memcached:memcached"
     env_file: .env
     depends_on:
       - postgres
+      - memcached
+
+  memcached:
+    image: memcached:1.6.5
+    restart: always
+    expose:
+      - 11211
 
   nginx:
     image: nginx:1.16.1

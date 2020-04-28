@@ -24,6 +24,7 @@ tblib==1.6.0              # via -r dh_abstracts/requirements.txt
 w3lib==1.21.0             # via -r dh_abstracts/requirements.txt, parsel
 django-filer
 django-markdownify
+python-memcached
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

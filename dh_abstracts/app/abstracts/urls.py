@@ -5,13 +5,25 @@ from . import views
 
 urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),
-    path("", views.home_view, name="home_view"),
-    path("works", views.FullWorkList.as_view(), name="work_list"),
-    path("works/<int:work_id>", views.work_view, name="work_detail"),
-    path("authors", views.AuthorList.as_view(), name="author_list"),
-    path("authors/<int:author_id>", views.author_view, name="author_detail"),
+    path("", views.cache_for_anon(views.home_view), name="home_view"),
+    path("works", views.cache_for_anon(views.FullWorkList.as_view()), name="work_list"),
+    path(
+        "works/<int:work_id>", views.cache_for_anon(views.work_view), name="work_detail"
+    ),
+    path(
+        "authors", views.cache_for_anon(views.AuthorList.as_view()), name="author_list"
+    ),
+    path(
+        "authors/<int:author_id>",
+        views.cache_for_anon(views.author_view),
+        name="author_detail",
+    ),
     path("authors/<int:author_id>/merge", views.author_merge_view, name="author_merge"),
-    path("conferences", views.conference_list, name="conference_list"),
+    path(
+        "conferences",
+        views.cache_for_anon(views.conference_list),
+        name="conference_list",
+    ),
     path("downloads", views.download_data, name="download_data"),
     path(
         "keyword-autocomplete",

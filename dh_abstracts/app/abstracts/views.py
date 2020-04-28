@@ -20,6 +20,7 @@ from django.forms.models import model_to_dict
 from django.forms import formset_factory, inlineformset_factory, modelformset_factory
 from django.conf import settings
 from django.utils.html import format_html
+from django.views.decorators.cache import cache_page
 import glob
 from os.path import basename
 
@@ -72,6 +73,20 @@ from .forms import (
 PERMISSIONS_ERROR_TEXT = (
     "Please contact the lead project editors to edit this part of the database."
 )
+
+
+def cache_for_anon(func):
+    """
+    On these views, call the cache if the user is not authenticated
+    """
+
+    def wrap(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return func(request, *args, **kwargs)
+        else:
+            return cache_page(60)(func)(request, *args, **kwargs)
+
+    return wrap
 
 
 def user_is_staff(func):
