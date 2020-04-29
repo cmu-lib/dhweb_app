@@ -118,6 +118,14 @@ class Conference(models.Model):
     def get_absolute_url(self):
         return reverse("conference_edit", kwargs={"pk": self.pk})
 
+    def save(self, *args, **kwargs):
+        response = super().save(*args, **kwargs)
+        # If this conference is set so all full texts are public, assign the default public license to all works that don't already have a specific license
+        default_license = License.objects.filter(default=True).first()
+        Work.objects.filter(conference=self, full_text_license__isnull=True).update(
+            full_text_license=default_license
+        )
+
 
 class ConferenceDocument(models.Model):
     document = FilerFileField(
@@ -245,8 +253,12 @@ class WorkType(models.Model):
 class License(models.Model):
     title = models.CharField(max_length=100, unique=True)
     full_text = models.TextField(max_length=100_000)
-    display_abbreviation = models.CharField(max_length=50, unique=True)
+    display_abbreviation = models.CharField(max_length=100, unique=True)
     url = models.URLField(max_length=200, blank=True, null=True)
+    default = models.BooleanField(
+        default=False,
+        help_text="Make this license the default license applied to any work whose conference has been set to show all full texts.",
+    )
 
     def __str__(self):
         return self.title
@@ -293,10 +305,15 @@ class Work(TextIndexedModel, ChangeTrackedModel):
 
     def save(self, *args, **kwargs):
         res = super().save(*args, **kwargs)
+        # Update the search index
         Work.objects.filter(id=self.id).update(
             search_text=SearchVector("title", weight="A")
             + SearchVector("full_text", weight="B")
         )
+        # If no license is supplied but the parent conference has public text, assign the default license
+        if self.full_text_license is None and self.conference.full_text_public:
+            public_license = License.objects.filter(default=True).first()
+            Work.objects.filter(id=self.id).update(full_text_license=public_license)
         return res
 
     class Meta(TextIndexedModel.Meta):
