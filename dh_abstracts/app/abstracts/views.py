@@ -506,16 +506,18 @@ def conference_list(request):
     series_list = (
         ConferenceSeries.objects.annotate(n_conferences=Count("conferences"))
         .prefetch_related(
-        Prefetch(
-            "conferences",
-            queryset=conference_list.order_by("series_memberships__number"),
-        ),
-        "conferences__organizers",
-        "conferences__series_memberships",
-        "conferences__series_memberships__series",
-        "conferences__hosting_institutions",
-        "conferences__documents",
-    ).all()
+            Prefetch(
+                "conferences",
+                queryset=conference_list.order_by("series_memberships__number"),
+            ),
+            "conferences__organizers",
+            "conferences__series_memberships",
+            "conferences__series_memberships__series",
+            "conferences__hosting_institutions",
+            "conferences__documents",
+        )
+        .order_by("title")
+    )
 
     unaffiliated_list = (
         Conference.objects.filter(series__isnull=True)
