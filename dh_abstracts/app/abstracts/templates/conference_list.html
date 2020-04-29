@@ -44,11 +44,11 @@
         <div class="card-header" id="series{{ series.id }}">
           <div class="d-flex justify-content-between align-content-center align-items-start">
             <span>
-              <h2 id="{{ series.abbreviation }}"><button class="btn" type="button" data-toggle="collapse"
+              <h3 id="{{ series.abbreviation }}"><button class="btn" type="button" data-toggle="collapse"
                   data-target="#collapse{{ series.id }}" aria-expanded="{{ forloop.first|lower }}"
                   aria-controls="collapse{{ series.id }}"><i id="toggle{{ series.id }}"
                     class="fas fa-lg fa-caret-{% if forloop.first %}down{% else %}right{% endif %}"></i></button>
-                {{ series.title }} ({{ series.n_conferences }})</h2>
+                {{ series.title }} ({{ series.n_conferences }})</h3>
             </span>
           </div>
         </div>
