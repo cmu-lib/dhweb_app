@@ -285,7 +285,9 @@ def work_view(request, work_id):
         n_authors=Count("works__authors", distinct=True),
     )
     work = get_object_or_404(
-        Work.objects.select_related("work_type", "parent_session").prefetch_related(
+        Work.objects.select_related(
+            "work_type", "parent_session", "full_text_license"
+        ).prefetch_related(
             Prefetch("conference", queryset=related_conference),
             "conference__series",
             "conference__organizers",
