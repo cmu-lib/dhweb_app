@@ -860,19 +860,19 @@ class FullWorkList(ListView):
             if author_res is not None:
                 result_set = result_set.filter(authorships__author=author_res)
 
-            keyword_res = filter_form["keyword"]
+            keyword_res = filter_form["keywords"]
             if keyword_res is not None:
                 result_set = result_set.filter(keywords=keyword_res)
 
-            topic_res = filter_form["topic"]
+            topic_res = filter_form["topics"]
             if topic_res is not None:
                 result_set = result_set.filter(topics=topic_res)
 
-            language_res = filter_form["language"]
+            language_res = filter_form["languages"]
             if language_res is not None:
                 result_set = result_set.filter(languages=language_res)
 
-            discipline_res = filter_form["discipline"]
+            discipline_res = filter_form["disciplines"]
             if discipline_res is not None:
                 result_set = result_set.filter(disciplines=discipline_res)
 

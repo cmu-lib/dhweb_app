@@ -269,26 +269,72 @@ class Work(TextIndexedModel, ChangeTrackedModel):
     FT_TYPE = (("", "-----------"), ("xml", "XML"), ("txt", "plain text"))
 
     conference = models.ForeignKey(
-        Conference, on_delete=models.CASCADE, related_name="works"
+        Conference,
+        on_delete=models.CASCADE,
+        related_name="works",
+        help_text="The conference where this abstract was submitted/published.",
     )
-    title = models.CharField(max_length=500, db_index=True)
+    title = models.CharField(max_length=500, db_index=True, help_text="Abstract title")
     work_type = models.ForeignKey(
-        WorkType, blank=True, null=True, on_delete=models.SET_NULL, related_name="works"
+        WorkType,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="works",
+        help_text='Abstracts may belong to one type that has been defined by editors based on a survey of all the abstracts in this collection, e.g. "poster", "workshop", "long paper".',
     )
     full_text = models.TextField(max_length=50000, blank=True, null=False, default="")
     full_text_type = models.CharField(
-        max_length=3, choices=FT_TYPE, blank=True, null=False, default=""
+        max_length=3,
+        choices=FT_TYPE,
+        blank=True,
+        null=False,
+        default="",
+        help_text="Format of the full text (currently either plain text, or XML)",
     )
-    keywords = models.ManyToManyField(Keyword, related_name="works", blank=True)
-    languages = models.ManyToManyField(Language, related_name="works", blank=True)
-    disciplines = models.ManyToManyField(Discipline, related_name="works", blank=True)
-    topics = models.ManyToManyField(Topic, related_name="works", blank=True)
+    keywords = models.ManyToManyField(
+        Keyword,
+        related_name="works",
+        blank=True,
+        help_text="Optional keywords that are supplied by authors during submission.",
+    )
+    languages = models.ManyToManyField(
+        Language,
+        related_name="works",
+        blank=True,
+        help_text="The language(s) of the text of an abstract (not to be confused with e.g. 'English' as a keyword, where the topic of the abstract concerns English.)",
+    )
+    disciplines = models.ManyToManyField(
+        Discipline,
+        related_name="works",
+        blank=True,
+        help_text="Optional discipline tag from a controlled vocabulary established by the ADHO DH conferences.",
+    )
+    topics = models.ManyToManyField(
+        Topic,
+        related_name="works",
+        blank=True,
+        help_text="Optional topics from a controlled vocabulary established by the ADHO DH conferences.",
+    )
     full_text_license = models.ForeignKey(
-        License, blank=True, null=True, on_delete=models.SET_NULL
+        License,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        help_text="License of this full text, when known",
     )
-    url = models.URLField(blank=True, null=False, max_length=500)
+    url = models.URLField(
+        blank=True,
+        null=False,
+        max_length=500,
+        help_text="URL where the full text of this specific abstract can be freely accessed",
+    )
     parent_session = models.ForeignKey(
-        "Work", null=True, on_delete=models.SET_NULL, related_name="session_papers"
+        "Work",
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="session_papers",
+        help_text="If this work was part of a multi-paper organized session, this is the entry for the parent session",
     )
 
     def get_absolute_url(self):

@@ -25,7 +25,7 @@ from .models import (
 )
 
 
-class WorkFilter(forms.Form):
+class WorkFilter(forms.ModelForm):
     ordering = forms.ChoiceField(
         choices=(
             ("year", "Conference year (ascending)"),
@@ -60,34 +60,49 @@ class WorkFilter(forms.Form):
         queryset=Conference.objects.all(),
         required=False,
         widget=ModelSelect2(url="conference-autocomplete"),
-        help_text="Works submitted to a particular conference",
     )
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
         widget=ModelSelect2(url="institution-autocomplete"),
         required=False,
-        help_text="Works submitted with at least one author belonging to that institution.",
+        help_text="Works having at least one author belonging to that institution.",
     )
-    keyword = forms.ModelChoiceField(
+    keywords = forms.ModelChoiceField(
         queryset=Keyword.objects.all(),
         required=False,
         widget=ModelSelect2(url="keyword-autocomplete"),
     )
-    topic = forms.ModelChoiceField(
+    topics = forms.ModelChoiceField(
         queryset=Topic.objects.distinct(),
         required=False,
         widget=ModelSelect2(url="topic-autocomplete"),
     )
-    language = forms.ModelChoiceField(
+    languages = forms.ModelChoiceField(
         queryset=Language.objects.distinct(),
         required=False,
         widget=ModelSelect2(url="language-autocomplete"),
     )
-    discipline = forms.ModelChoiceField(
+    disciplines = forms.ModelChoiceField(
         queryset=Discipline.objects.distinct(),
         required=False,
         widget=ModelSelect2(url="discipline-autocomplete"),
     )
+
+    class Meta:
+        model = Work
+        fields = [
+            "ordering",
+            "text",
+            "conference",
+            "full_text_available",
+            "work_type",
+            "author",
+            "institution",
+            "keywords",
+            "languages",
+            "disciplines",
+            "topics",
+        ]
 
 
 class FullWorkForm(WorkFilter):
@@ -142,66 +157,46 @@ class WorkForm(forms.ModelForm):
         queryset=Keyword.objects.all(),
         required=False,
         widget=ModelSelect2Multiple(url="keyword-autocomplete"),
-        help_text="Optional keywords that are supplied by authors during submission in the modern ADHO DH conferences.",
     )
 
     topics = forms.ModelMultipleChoiceField(
         queryset=Topic.objects.all(),
         required=False,
         widget=ModelSelect2Multiple(url="topic-autocomplete"),
-        help_text="Optional topics from a controlled vocabulary established by the ADHO DH conferences.",
     )
 
     languages = forms.ModelMultipleChoiceField(
         queryset=Language.objects.all(),
         required=False,
         widget=ModelSelect2Multiple(url="language-autocomplete"),
-        help_text="Optional language tag to indicate the language(s) of the text of an abstract (not to be confused with e.g. 'English' as a keyword, where the topic of the abstract concerns English.)",
     )
 
     disciplines = forms.ModelMultipleChoiceField(
         queryset=Discipline.objects.all(),
         required=False,
         widget=ModelSelect2Multiple(url="discipline-autocomplete"),
-        help_text="Optional discipline tag from a controlled vocabulary established by the ADHO DH conferences.",
     )
 
     conference = forms.ModelChoiceField(
         queryset=Conference.objects.all(),
         widget=ModelSelect2(url="conference-autocomplete"),
-        help_text="The conference where this abstract was submitted/published.",
     )
 
-    title = forms.CharField(max_length=500, help_text="Abstract title")
+    title = forms.CharField(max_length=500)
 
-    url = forms.URLField(
-        max_length=500,
-        help_text="Optional URL pointing directly to this abstract",
-        required=False,
-    )
+    url = forms.URLField(max_length=500, required=False)
 
-    work_type = forms.ModelChoiceField(
-        queryset=WorkType.objects.all(),
-        help_text='Abstracts may belong to one type that has been defined by editors based on a survey of all the abstracts in this collection, e.g. "poster", "workshop", "long paper".',
-    )
+    work_type = forms.ModelChoiceField(queryset=WorkType.objects.all())
 
     full_text_license = forms.ModelChoiceField(
-        queryset=License.objects.all(),
-        required=False,
-        help_text="License information to be displayed with the full text of the abstract.",
+        queryset=License.objects.all(), required=False
     )
 
-    full_text_type = forms.ChoiceField(
-        choices=Work.FT_TYPE,
-        initial="",
-        help_text="Currently text can either be plain text, or entered as XML which will then be rendered into HTML.",
-        required=False,
-    )
+    full_text_type = forms.ChoiceField(choices=Work.FT_TYPE, initial="", required=False)
 
     parent_session = forms.ModelChoiceField(
         queryset=Work.objects.all(),
         required=False,
-        help_text="Parent panel or multipaper session during which this work was presented",
         widget=ModelSelect2(
             url="work-autocomplete",
             forward=["conference", forward.Const(True, "parents_only")],
