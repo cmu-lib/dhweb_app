@@ -39,8 +39,15 @@ class WorkFilter(forms.Form):
         required=False,
         initial="year",
     )
-    text = forms.CharField(max_length=100, strip=True, required=False)
-    full_text_available = forms.BooleanField(required=False)
+    text = forms.CharField(
+        max_length=100,
+        strip=True,
+        required=False,
+        help_text="Search abstracts by title and full text content (when available)",
+    )
+    full_text_available = forms.BooleanField(
+        required=False, label="Full text has been indexed"
+    )
     work_type = forms.ModelChoiceField(
         queryset=WorkType.objects.distinct(), required=False
     )
