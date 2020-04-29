@@ -71,8 +71,8 @@
   {% with license=work.full_text_license %}
   <div class="card-footer">
     {% if license %}
-    This full text is licensed <a href="{{ license.url }}"><abbr
-        title="{{ license.title }}">{{ license.display_abbreviation }}</abbr></a>
+    Full text license: {% if license.url %}<a href="{{ license.url }}">{% endif %}<abbr
+        title="{{ license.title }}">{{ license.display_abbreviation }}</abbr>{% if license.url %}</a>{% endif %}
     {% else %}
     The license for this full text is unknown.
     {% endif %}
