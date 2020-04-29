@@ -5,26 +5,35 @@
 #    pip-compile dh_abstracts/requirements.txt
 #
 asgiref==3.2.7            # via -r dh_abstracts/requirements.txt, django
+bleach==3.1.4             # via django-markdownify
 coverage==5.0.4           # via -r dh_abstracts/requirements.txt, django-coverage-plugin
 cssselect==1.1.0          # via -r dh_abstracts/requirements.txt, parsel
 django-autocomplete-light==3.5.1  # via -r dh_abstracts/requirements.txt
 django-coverage-plugin==1.8.0  # via -r dh_abstracts/requirements.txt
 django-crispy-forms==1.9.0  # via -r dh_abstracts/requirements.txt
 django-debug-toolbar==2.2  # via -r dh_abstracts/requirements.txt
-django==3.0.5             # via -r dh_abstracts/requirements.txt, django-debug-toolbar
+django-filer==1.7.1       # via -r dh_abstracts/requirements.txt
+django-js-asset==1.2.2    # via django-mptt
+django-markdownify==0.8.0  # via -r dh_abstracts/requirements.txt
+django-mptt==0.11.0       # via django-filer
+django-polymorphic==2.1.2  # via django-filer
+django==3.0.5             # via -r dh_abstracts/requirements.txt, django-debug-toolbar, django-filer, django-markdownify, django-mptt, django-polymorphic, easy-thumbnails
+easy-thumbnails==2.7      # via django-filer
 gunicorn==20.0.4          # via -r dh_abstracts/requirements.txt
 lxml==4.5.0               # via -r dh_abstracts/requirements.txt, parsel
+markdown==3.2.1           # via django-markdownify
 parsel==1.5.2             # via -r dh_abstracts/requirements.txt
+pillow==7.1.2             # via easy-thumbnails
 progress==1.5             # via -r dh_abstracts/requirements.txt
 psycopg2-binary==2.8.4    # via -r dh_abstracts/requirements.txt
+python-memcached==1.59    # via -r dh_abstracts/requirements.txt
 pytz==2019.3              # via -r dh_abstracts/requirements.txt, django
-six==1.14.0               # via -r dh_abstracts/requirements.txt, django-autocomplete-light, django-coverage-plugin, parsel, w3lib
+six==1.14.0               # via -r dh_abstracts/requirements.txt, bleach, django-autocomplete-light, django-coverage-plugin, django-filer, parsel, python-memcached, w3lib
 sqlparse==0.3.1           # via -r dh_abstracts/requirements.txt, django, django-debug-toolbar
 tblib==1.6.0              # via -r dh_abstracts/requirements.txt
+unidecode==1.1.1          # via django-filer
 w3lib==1.21.0             # via -r dh_abstracts/requirements.txt, parsel
-django-filer
-django-markdownify
-python-memcached
+webencodings==0.5.1       # via bleach
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

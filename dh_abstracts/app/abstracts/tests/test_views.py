@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.core.cache import cache
 import json
 
 from abstracts.models import (
@@ -30,6 +31,16 @@ from abstracts.models import (
 from abstracts.forms import WorkFilter
 
 
+class CachelessTestCase(TestCase):
+    """
+    Extends the base Django TestCase _setup_and_call method so that it first clears the cache
+    """
+
+    def __call__(self, *args, **kwargs):
+        cache.clear()
+        return super().__call__(*args, **kwargs)
+
+
 def is_list_unique(x):
     return len(x) == len(set(x))
 
@@ -57,7 +68,7 @@ def as_auth(func):
     return auth_client
 
 
-class EmptyListViewTest(TestCase):
+class EmptyListViewTest(CachelessTestCase):
     """
     Test pages when the database is empty
     """
@@ -75,14 +86,14 @@ class EmptyListViewTest(TestCase):
         publicly_available(self, "conference_list")
 
 
-class DownloadPageTest(TestCase):
+class DownloadPageTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
         privately_available(self, "download_data")
 
 
-class AuthorListViewTest(TestCase):
+class AuthorListViewTest(CachelessTestCase):
     """
     Test Author list page
     """
@@ -178,7 +189,7 @@ class AuthorListViewTest(TestCase):
         self.assertGreaterEqual(a1.n_works, a2.n_works)
 
 
-class InstitutionFullListViewTest(TestCase):
+class InstitutionFullListViewTest(CachelessTestCase):
     """
     Test full Institution list page
     """
@@ -237,7 +248,7 @@ class InstitutionFullListViewTest(TestCase):
         )
 
 
-class AuthorInstitutionFullListViewTest(TestCase):
+class AuthorInstitutionFullListViewTest(CachelessTestCase):
     """
     Test Author-Institution list page
     """
@@ -298,7 +309,7 @@ class AuthorInstitutionFullListViewTest(TestCase):
         )
 
 
-class AuthorDetailViewTest(TestCase):
+class AuthorDetailViewTest(CachelessTestCase):
     """
     Test Author detail page
     """
@@ -321,7 +332,7 @@ class AuthorDetailViewTest(TestCase):
         self.assertTrue(is_list_unique([d.id for d in res.context["affiliations"]]))
 
 
-class WorkListViewTest(TestCase):
+class WorkListViewTest(CachelessTestCase):
     """
     Test Work list page
     """
@@ -465,7 +476,7 @@ class WorkListViewTest(TestCase):
         )
 
 
-class WorkDetailViewTest(TestCase):
+class WorkDetailViewTest(CachelessTestCase):
     """
     Test Work detail view
     """
@@ -488,7 +499,7 @@ class WorkDetailViewTest(TestCase):
         self.assertTrue(is_list_unique(res.context["authorships"]))
 
 
-class ConferenceListViewTest(TestCase):
+class ConferenceListViewTest(CachelessTestCase):
     """
     Test Conference list view
     """
@@ -506,7 +517,7 @@ class ConferenceListViewTest(TestCase):
         )
 
 
-class AuthorMergeViewTest(TestCase):
+class AuthorMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -544,7 +555,7 @@ class AuthorMergeViewTest(TestCase):
         self.assertContains(res, "You cannot merge an author into themselves")
 
 
-class InstitutionMergeViewTest(TestCase):
+class InstitutionMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -581,7 +592,7 @@ class InstitutionMergeViewTest(TestCase):
         self.assertContains(res, "You cannot merge an institution into itself")
 
 
-class AffiliationMergeViewTest(TestCase):
+class AffiliationMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -618,7 +629,7 @@ class AffiliationMergeViewTest(TestCase):
         self.assertContains(res, "You cannot merge an affiliation into itself")
 
 
-class AffiliationMultiMergeViewTest(TestCase):
+class AffiliationMultiMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -640,7 +651,7 @@ class AffiliationMultiMergeViewTest(TestCase):
         self.assertContains(res, "updated")
 
 
-class InstitutionMultiMergeViewTest(TestCase):
+class InstitutionMultiMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -661,7 +672,7 @@ class InstitutionMultiMergeViewTest(TestCase):
         self.assertContains(res, "updated")
 
 
-class WipeUnusedViewTest(TestCase):
+class WipeUnusedViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -681,7 +692,7 @@ class WipeUnusedViewTest(TestCase):
         self.assertFalse(res.context["hanging_items"])
 
 
-class CreateConferenceViewTest(TestCase):
+class CreateConferenceViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -712,7 +723,7 @@ class CreateConferenceViewTest(TestCase):
         )
 
 
-class EditConferenceViewTest(TestCase):
+class EditConferenceViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -740,7 +751,7 @@ class EditConferenceViewTest(TestCase):
         self.assertContains(res, "updated")
 
 
-class DeleteConferenceViewTest(TestCase):
+class DeleteConferenceViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -755,7 +766,7 @@ class DeleteConferenceViewTest(TestCase):
         self.assertFalse(Conference.objects.filter(pk=1).exists())
 
 
-class CreateSeriesViewTest(TestCase):
+class CreateSeriesViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -771,7 +782,7 @@ class CreateSeriesViewTest(TestCase):
         self.assertContains(res, "created")
 
 
-class EditSeriesViewTest(TestCase):
+class EditSeriesViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -787,7 +798,7 @@ class EditSeriesViewTest(TestCase):
         self.assertContains(res, "updated")
 
 
-class DeleteSeriesViewTest(TestCase):
+class DeleteSeriesViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -800,7 +811,7 @@ class DeleteSeriesViewTest(TestCase):
         self.assertFalse(ConferenceSeries.objects.filter(pk=1).exists())
 
 
-class OrganizerListViewTest(TestCase):
+class OrganizerListViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -812,7 +823,7 @@ class OrganizerListViewTest(TestCase):
         self.assertTrue(is_list_unique(res.context["organizer_list"]))
 
 
-class CreateOrganizerViewTest(TestCase):
+class CreateOrganizerViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -828,7 +839,7 @@ class CreateOrganizerViewTest(TestCase):
         self.assertContains(res, "created")
 
 
-class EditOrganizerViewTest(TestCase):
+class EditOrganizerViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -844,7 +855,7 @@ class EditOrganizerViewTest(TestCase):
         self.assertEquals(res.status_code, 200)
 
 
-class DeleteOrganizerViewTest(TestCase):
+class DeleteOrganizerViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -859,7 +870,7 @@ class DeleteOrganizerViewTest(TestCase):
         self.assertFalse(Organizer.objects.filter(pk=1).exists())
 
 
-class DeleteWorkViewTest(TestCase):
+class DeleteWorkViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -871,7 +882,7 @@ class DeleteWorkViewTest(TestCase):
         self.assertFalse(Work.objects.filter(pk=1).exists())
 
 
-class AuthorJSONViewTest(TestCase):
+class AuthorJSONViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -885,7 +896,7 @@ class AuthorJSONViewTest(TestCase):
         self.assertTrue("affiliation" in json.dumps(str(res.content)))
 
 
-class AffiliationJSONViewTest(TestCase):
+class AffiliationJSONViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -900,7 +911,7 @@ class AffiliationJSONViewTest(TestCase):
         self.assertTrue("institution" in json.dumps(str(res.content)))
 
 
-class KeywordFullListViewTest(TestCase):
+class KeywordFullListViewTest(CachelessTestCase):
     """
     Test full Keyword list page
     """
@@ -937,7 +948,7 @@ class KeywordFullListViewTest(TestCase):
         self.assertTrue(res.context["tag_list"].ordered)
 
 
-class CreateKeywordViewTest(TestCase):
+class CreateKeywordViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -952,7 +963,7 @@ class CreateKeywordViewTest(TestCase):
         self.assertTrue(Keyword.objects.filter(title="foo").exists())
 
 
-class EditKeywordViewTest(TestCase):
+class EditKeywordViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -969,7 +980,7 @@ class EditKeywordViewTest(TestCase):
         self.assertTrue(Keyword.objects.filter(title="buzz").exists())
 
 
-class DeleteKeywordViewTest(TestCase):
+class DeleteKeywordViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -981,7 +992,7 @@ class DeleteKeywordViewTest(TestCase):
         self.assertFalse(Keyword.objects.filter(pk=1).exists())
 
 
-class KeywordMergeViewTest(TestCase):
+class KeywordMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1019,7 +1030,7 @@ class KeywordMergeViewTest(TestCase):
         self.assertContains(res, "You cannot merge a keyword into itself")
 
 
-class KeywordMultiMergeViewTest(TestCase):
+class KeywordMultiMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1042,7 +1053,7 @@ class KeywordMultiMergeViewTest(TestCase):
         self.assertContains(res, "deleted")
 
 
-class TopicFullListViewTest(TestCase):
+class TopicFullListViewTest(CachelessTestCase):
     """
     Test full Topic list page
     """
@@ -1070,7 +1081,7 @@ class TopicFullListViewTest(TestCase):
         self.assertTrue(is_list_unique(res.context["tag_list"]))
 
 
-class CreateTopicViewTest(TestCase):
+class CreateTopicViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1085,7 +1096,7 @@ class CreateTopicViewTest(TestCase):
         self.assertTrue(Topic.objects.filter(title="foo").exists())
 
 
-class EditTopicViewTest(TestCase):
+class EditTopicViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1100,7 +1111,7 @@ class EditTopicViewTest(TestCase):
         self.assertTrue(Topic.objects.filter(title="buzz").exists())
 
 
-class DeleteTopicViewTest(TestCase):
+class DeleteTopicViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1112,7 +1123,7 @@ class DeleteTopicViewTest(TestCase):
         self.assertFalse(Topic.objects.filter(pk=1).exists())
 
 
-class TopicMultiMergeViewTest(TestCase):
+class TopicMultiMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1135,7 +1146,7 @@ class TopicMultiMergeViewTest(TestCase):
         self.assertContains(res, "deleted")
 
 
-class LanguageFullListViewTest(TestCase):
+class LanguageFullListViewTest(CachelessTestCase):
     """
     Test full Language list page
     """
@@ -1172,7 +1183,7 @@ class LanguageFullListViewTest(TestCase):
         self.assertTrue(res.context["tag_list"].ordered)
 
 
-class CreateLanguageViewTest(TestCase):
+class CreateLanguageViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1187,7 +1198,7 @@ class CreateLanguageViewTest(TestCase):
         self.assertTrue(Language.objects.filter(title="foo").exists())
 
 
-class EditLanguageViewTest(TestCase):
+class EditLanguageViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1204,7 +1215,7 @@ class EditLanguageViewTest(TestCase):
         self.assertTrue(Language.objects.filter(title="buzz").exists())
 
 
-class DeleteLanguageViewTest(TestCase):
+class DeleteLanguageViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1218,7 +1229,7 @@ class DeleteLanguageViewTest(TestCase):
         self.assertFalse(Language.objects.filter(pk=1).exists())
 
 
-class LanguageMergeViewTest(TestCase):
+class LanguageMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1256,7 +1267,7 @@ class LanguageMergeViewTest(TestCase):
         self.assertContains(res, "You cannot merge a language into itself")
 
 
-class DisciplineFullListViewTest(TestCase):
+class DisciplineFullListViewTest(CachelessTestCase):
     """
     Test full Discipline list page
     """
@@ -1297,7 +1308,7 @@ class DisciplineFullListViewTest(TestCase):
         self.assertTrue(res.context["tag_list"].ordered)
 
 
-class CreateDisciplineViewTest(TestCase):
+class CreateDisciplineViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1312,7 +1323,7 @@ class CreateDisciplineViewTest(TestCase):
         self.assertTrue(Discipline.objects.filter(title="foo").exists())
 
 
-class EditDisciplineViewTest(TestCase):
+class EditDisciplineViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1329,7 +1340,7 @@ class EditDisciplineViewTest(TestCase):
         self.assertTrue(Discipline.objects.filter(title="buzz").exists())
 
 
-class DeleteDisciplineViewTest(TestCase):
+class DeleteDisciplineViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1343,7 +1354,7 @@ class DeleteDisciplineViewTest(TestCase):
         self.assertFalse(Discipline.objects.filter(pk=1).exists())
 
 
-class DisciplineMergeViewTest(TestCase):
+class DisciplineMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1381,7 +1392,7 @@ class DisciplineMergeViewTest(TestCase):
         self.assertContains(res, "You cannot merge a discipline into itself")
 
 
-class WorkTypeFullListViewTest(TestCase):
+class WorkTypeFullListViewTest(CachelessTestCase):
     """
     Test full WorkType list page
     """
@@ -1422,7 +1433,7 @@ class WorkTypeFullListViewTest(TestCase):
         self.assertTrue(res.context["tag_list"].ordered)
 
 
-class CreateWorkTypeViewTest(TestCase):
+class CreateWorkTypeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1437,7 +1448,7 @@ class CreateWorkTypeViewTest(TestCase):
         self.assertTrue(WorkType.objects.filter(title="foo").exists())
 
 
-class EditWorkTypeViewTest(TestCase):
+class EditWorkTypeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1454,7 +1465,7 @@ class EditWorkTypeViewTest(TestCase):
         self.assertTrue(WorkType.objects.filter(title="buzz").exists())
 
 
-class DeleteWorkTypeViewTest(TestCase):
+class DeleteWorkTypeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1468,7 +1479,7 @@ class DeleteWorkTypeViewTest(TestCase):
         self.assertFalse(WorkType.objects.filter(pk=1).exists())
 
 
-class WorkTypeMergeViewTest(TestCase):
+class WorkTypeMergeViewTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
@@ -1506,7 +1517,7 @@ class WorkTypeMergeViewTest(TestCase):
         self.assertContains(res, "You cannot merge a work_type into itself")
 
 
-class CreateWorkTest(TestCase):
+class CreateWorkTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
