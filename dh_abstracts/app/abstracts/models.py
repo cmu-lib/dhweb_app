@@ -121,10 +121,11 @@ class Conference(models.Model):
     def save(self, *args, **kwargs):
         response = super().save(*args, **kwargs)
         # If this conference is set so all full texts are public, assign the default public license to all works that don't already have a specific license
-        default_license = License.objects.filter(default=True).first()
-        Work.objects.filter(conference=self, full_text_license__isnull=True).update(
-            full_text_license=default_license
-        )
+        if self.full_text_public:
+            default_license = License.objects.filter(default=True).first()
+            Work.objects.filter(conference=self, full_text_license__isnull=True).update(
+                full_text_license=default_license
+            )
 
 
 class ConferenceDocument(models.Model):
