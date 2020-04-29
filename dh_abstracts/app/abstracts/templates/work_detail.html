@@ -56,7 +56,7 @@
 <div class="card my-2">
   <div class="card-header d-flex justify-content-between">Abstract</div>
   <div class="card-body">
-    {% if user.is_authenticated or work.conference.full_text_public %}
+    {% if user.is_authenticated or work.conference.full_text_public or work.full_text_license %}
     {% if work.full_text_type == "txt" %}
     <p>{{ work.full_text | linebreaks }}</p>
     {% elif work.full_text_type == "xml" %}
