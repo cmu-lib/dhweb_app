@@ -498,6 +498,14 @@ class WorkDetailViewTest(CachelessTestCase):
         res = self.client.get(reverse("work_detail", kwargs={"work_id": 1}))
         self.assertTrue(is_list_unique(res.context["authorships"]))
 
+    def test_hide_private_full_text(self):
+        res = self.client.get(reverse("work_detail", kwargs={"work_id": 3}))
+        self.assertContains(res, "cannot display")
+
+    def test_show_public_full_text(self):
+        res = self.client.get(reverse("work_detail", kwargs={"work_id": 1}))
+        self.assertContains(res, "Lorem Ipsum Dolor")
+
 
 class ConferenceListViewTest(CachelessTestCase):
     """
