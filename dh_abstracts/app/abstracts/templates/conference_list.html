@@ -48,7 +48,7 @@
                   data-target="#collapse{{ series.id }}" aria-expanded="{{ forloop.first|lower }}"
                   aria-controls="collapse{{ series.id }}"><i id="toggle{{ series.id }}"
                     class="fas fa-lg fa-caret-{% if forloop.first %}down{% else %}right{% endif %}"></i></button>
-                {{ series.title }}</h2>
+                {{ series.title }} ({{ series.n_conferences }})</h2>
             </span>
           </div>
         </div>

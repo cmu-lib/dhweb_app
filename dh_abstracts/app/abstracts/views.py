@@ -503,7 +503,9 @@ def conference_list(request):
         n_authors=Count("works__authors", distinct=True),
     ).select_related("country")
 
-    series_list = ConferenceSeries.objects.prefetch_related(
+    series_list = (
+        ConferenceSeries.objects.annotate(n_conferences=Count("conferences"))
+        .prefetch_related(
         Prefetch(
             "conferences",
             queryset=conference_list.order_by("series_memberships__number"),
