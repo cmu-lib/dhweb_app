@@ -136,7 +136,7 @@ class ConferenceDocumentInline(admin.TabularInline):
 
 class ConferenceAdmin(admin.ModelAdmin):
     inlines = [ConferenceDocumentInline, ConferenceMembershipInline, OrganizerInline]
-    search_fields = ["venue"]
+    search_fields = ["short_title"]
     autocomplete_fields = ["organizers", "hosting_institutions", "country"]
 
 

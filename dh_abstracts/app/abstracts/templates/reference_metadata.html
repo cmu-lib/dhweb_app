@@ -4,6 +4,6 @@
 {% endfor %}
 <meta name="citation_publication_date" content="{{ conference.year }}" />
 <meta name="citation_conference_title"
-  content="{{ conference.series.first.title }} {{ conference.year }} - {{ conference.venue }}" />
-<meta name="citation_conference_place" content="{{ conference.venue }}" />
+  content="{{ conference.series.first.title }} {{ conference.year }} - {{ conference.short_title }}" />
+<meta name="citation_conference_place" content="{{ conference.short_title }}" />
 <meta name="citation_public_url" content="https://dh-abstracts.library.cmu.edu{% url 'work_detail' id %}" />

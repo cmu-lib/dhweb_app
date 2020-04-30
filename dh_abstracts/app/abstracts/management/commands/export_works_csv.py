@@ -23,7 +23,7 @@ class Command(BaseCommand):
             writer.writerow(
                 [
                     "work_id",
-                    "conference_venue",
+                    "conference_short_title",
                     "conference_year",
                     "conference_organizers",
                     "conference_series",
@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 bar.next()
                 row = [
                     w.pk,
-                    w.conference.venue,
+                    w.conference.short_title,
                     w.conference.year,
                     ";".join([str(o) for o in w.conference.organizers.all()]),
                     ";".join([str(s) for s in w.conference.series.all()]),

@@ -55,7 +55,7 @@ class ConferenceSeries(models.Model):
 
 class Conference(models.Model):
     year = models.IntegerField()
-    venue = models.CharField(max_length=200)
+    short_title = models.CharField(max_length=200)
     venue_abbreviation = models.CharField(max_length=50, blank=True)
     series = models.ManyToManyField(
         ConferenceSeries,
@@ -91,7 +91,7 @@ class Conference(models.Model):
 
     class Meta:
         ordering = ["-year"]
-        unique_together = ["year", "venue"]
+        unique_together = ["year", "short_title"]
 
     @property
     def public_works(self):
@@ -108,7 +108,7 @@ class Conference(models.Model):
         if self.venue_abbreviation:
             display = self.venue_abbreviation
         else:
-            display = self.venue
+            display = self.year
         if self.organizers.exists():
             org_slug = ", ".join([str(s) for s in self.organizers.all()])
             return f"{org_slug} {self.year} - {display}"

@@ -253,10 +253,16 @@ class ConferenceAutocomplete(Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Conference.objects.order_by("year", "venue")
+        qs = Conference.objects.annotate(main_series=Max("series__title")).order_by(
+            "year", "short_title", "theme_title"
+        )
 
         if self.q:
-            qs = qs.filter(venue__icontains=self.q).distinct()
+            qs = qs.filter(
+                Q(short_title__icontains=self.q)
+                | Q(theme_title__icontains=self.q)
+                | Q(main_series=self.q)
+            ).distinct()
 
         return qs
 
@@ -1363,7 +1369,7 @@ class ConferenceCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
         "form_title": "Create conference",
         "cancel_view": "conference_list",
     }
-    success_message = "Conference '%(year)s - %(venue)s' created"
+    success_message = "Conference '%(year)s - %(short_title)s' created"
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
@@ -1403,7 +1409,7 @@ def ConferenceEdit(request, pk):
         if form.is_valid():
             clean_form = form.cleaned_data
             conference.year = clean_form["year"]
-            conference.venue = clean_form["venue"]
+            conference.short_title = clean_form["short_title"]
             conference.venue_abbreviation = clean_form["venue_abbreviation"]
             conference.notes = clean_form["notes"]
             conference.url = clean_form["url"]

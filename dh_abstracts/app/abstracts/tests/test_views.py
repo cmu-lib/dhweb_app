@@ -712,7 +712,7 @@ class CreateConferenceViewTest(CachelessTestCase):
             reverse("conference_create"),
             data={
                 "year": 1987,
-                "venue": "foo",
+                "short_title": "foo",
                 "venue_abbreviation": "bar",
                 "notes": "buzz",
                 "organizers": [1, 2],
@@ -720,10 +720,12 @@ class CreateConferenceViewTest(CachelessTestCase):
             follow=True,
         )
         self.assertContains(res, "created")
-        self.assertTrue(Conference.objects.filter(year=1987, venue="foo").exists())
+        self.assertTrue(
+            Conference.objects.filter(year=1987, short_title="foo").exists()
+        )
         self.assertEquals(
             list(
-                Conference.objects.filter(year=1987, venue="foo").values_list(
+                Conference.objects.filter(year=1987, short_title="foo").values_list(
                     "organizers__id", flat=True
                 )
             ),
@@ -743,7 +745,7 @@ class EditConferenceViewTest(CachelessTestCase):
             reverse("conference_edit", kwargs={"pk": 1}),
             data={
                 "year": "1987",
-                "venue": "foo",
+                "short_title": "foo",
                 "venue_abbreviation": "bar",
                 "notes": "buzz",
                 "organizers": ["1"],
