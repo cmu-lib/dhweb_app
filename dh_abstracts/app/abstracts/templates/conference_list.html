@@ -63,13 +63,6 @@
             <p>{{ series.notes | safe }}</p>
             <hr>
             {% endif %}
-            <p>Organizers:</p>
-            <ul>
-              {% for organizer in series.all_organizers %}
-              <li><strong>{{ organizer.name }}</strong>{% if organizer.name %}{% if organizer.notes %}:
-                {{ organizer.notes | safe }}{% endif %}{% endif %}{% if organizer.url %} (Website: <a
-                  href="{{ organizer.url }}">{{ organizer.url }}</a>){% endif %}</li>
-              {% endfor %}
           </div>
           <ul class="list-group list-group-flush">
             {% for conference in series.conferences.all %}
