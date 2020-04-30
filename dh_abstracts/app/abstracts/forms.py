@@ -121,23 +121,6 @@ class WorkFilter(forms.ModelForm):
         }
 
 
-class FullWorkForm(WorkFilter):
-    affiliation = forms.ModelChoiceField(
-        queryset=Affiliation.objects.all(),
-        required=False,
-        widget=ModelSelect2(url="affiliation-autocomplete"),
-        help_text='Search by department+institution combination. This is a more granular search than "Institution" above.',
-    )
-    n_authors = forms.IntegerField(
-        label="Number of authors", min_value=0, required=False
-    )
-    keyword = forms.ModelChoiceField(
-        queryset=Keyword.objects.distinct(),
-        required=False,
-        widget=ModelSelect2(url="keyword-autocomplete"),
-    )
-
-
 class WorkAuthorshipForm(forms.Form):
     author = forms.ModelChoiceField(
         queryset=Author.objects.all(),

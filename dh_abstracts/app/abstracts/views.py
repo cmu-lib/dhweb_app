@@ -50,7 +50,6 @@ from .forms import (
     AuthorMergeForm,
     WorkForm,
     WorkAuthorshipForm,
-    FullWorkForm,
     FullInstitutionForm,
     InstitutionMergeForm,
     AffiliationEditForm,
@@ -836,7 +835,7 @@ class FullWorkList(ListView):
 
     def get_queryset(self):
         base_result_set = Work.objects.select_related("work_type")
-        raw_filter_form = FullWorkForm(self.request.GET)
+        raw_filter_form = WorkFilter(self.request.GET)
 
         if raw_filter_form.is_valid():
             result_set = base_result_set
@@ -937,7 +936,7 @@ class FullWorkList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        raw_filter_form = FullWorkForm(self.request.GET)
+        raw_filter_form = WorkFilter(self.request.GET)
         if raw_filter_form.is_valid():
             filter_form = raw_filter_form.cleaned_data
             conference_res = filter_form["conference"]
