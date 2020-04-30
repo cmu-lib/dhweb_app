@@ -49,17 +49,21 @@ class WorkFilter(forms.ModelForm):
         required=False, label="Full text has been indexed"
     )
     work_type = forms.ModelChoiceField(
-        queryset=WorkType.objects.distinct(), required=False
+        queryset=WorkType.objects.distinct(),
+        required=False,
+        help_text='Abstracts may belong to one type that has been defined by editors based on a survey of all the abstracts in this collection, e.g. "poster", "workshop", "long paper".',
     )
     author = forms.ModelChoiceField(
         queryset=Author.objects.all(),
         required=False,
         widget=ModelSelect2(url="author-autocomplete", attrs={"data-html": True}),
+        help_text="Abstract authorship must include this person",
     )
     conference = forms.ModelChoiceField(
         queryset=Conference.objects.all(),
         required=False,
         widget=ModelSelect2(url="conference-autocomplete"),
+        help_text="The conference where this abstract was submitted/published.",
     )
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
@@ -67,26 +71,26 @@ class WorkFilter(forms.ModelForm):
         required=False,
         help_text="Works having at least one author belonging to that institution.",
     )
-    keywords = forms.ModelChoiceField(
-        queryset=Keyword.objects.all(),
-        required=False,
-        widget=ModelSelect2(url="keyword-autocomplete"),
-    )
-    topics = forms.ModelChoiceField(
-        queryset=Topic.objects.distinct(),
-        required=False,
-        widget=ModelSelect2(url="topic-autocomplete"),
-    )
-    languages = forms.ModelChoiceField(
-        queryset=Language.objects.distinct(),
-        required=False,
-        widget=ModelSelect2(url="language-autocomplete"),
-    )
-    disciplines = forms.ModelChoiceField(
-        queryset=Discipline.objects.distinct(),
-        required=False,
-        widget=ModelSelect2(url="discipline-autocomplete"),
-    )
+    # keywords = forms.ModelChoiceField(
+    #     queryset=Keyword.objects.all(),
+    #     required=False,
+    #     widget=ModelSelect2(url="keyword-autocomplete"),
+    # )
+    # topics = forms.ModelChoiceField(
+    #     queryset=Topic.objects.distinct(),
+    #     required=False,
+    #     widget=ModelSelect2(url="topic-autocomplete"),
+    # )
+    # languages = forms.ModelChoiceField(
+    #     queryset=Language.objects.distinct(),
+    #     required=False,
+    #     widget=ModelSelect2(url="language-autocomplete"),
+    # )
+    # disciplines = forms.ModelChoiceField(
+    #     queryset=Discipline.objects.distinct(),
+    #     required=False,
+    #     widget=ModelSelect2(url="discipline-autocomplete"),
+    # )
 
     class Meta:
         model = Work
@@ -103,6 +107,18 @@ class WorkFilter(forms.ModelForm):
             "disciplines",
             "topics",
         ]
+        field_classes = {
+            "keywords": forms.ModelChoiceField,
+            "topics": forms.ModelChoiceField,
+            "languages": forms.ModelChoiceField,
+            "disciplines": forms.ModelChoiceField,
+        }
+        widgets = {
+            "keywords": ModelSelect2(url="keyword-autocomplete"),
+            "topics": ModelSelect2(url="topic-autocomplete"),
+            "languages": ModelSelect2(url="language-autocomplete"),
+            "disciplines": ModelSelect2(url="discipline-autocomplete"),
+        }
 
 
 class FullWorkForm(WorkFilter):
