@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 
+{% block title %}Home{% endblock %}
+
 {% block content %}
 
 {% load humanize %}
 
 <div class=jumbotron>
   <h1 class="display-4">Browse {{ site.work_count | intcomma }} digital humanities conference abstracts</h1>
-  <p class="lead">Covering {{ site.conference_count | intcomma }} years of conferences, with {{ site.author_count | intcomma }} different authors hailing from {{ site.institution_count | intcomma }} institutions and {{ site.country_count | intcomma }} countries.</p>
+  <p class="lead">Covering {{ site.conference_count | intcomma }} years of conferences, with
+    {{ site.author_count | intcomma }} different authors hailing from {{ site.institution_count | intcomma }}
+    institutions and {{ site.country_count | intcomma }} countries.</p>
   <hr class="my-4">
   <p>Browse by:</p>
   <a class="btn btn-primary btn-lg" href="{% url 'work_list' %}">Abstracts</a>
