@@ -50,6 +50,10 @@
                     class="fas fa-lg fa-caret-{% if forloop.first %}down{% else %}right{% endif %}"></i></button>
                 {{ series.title }} ({{ series.n_conferences }})</h3>
             </span>
+            {% if user.is_authenticated %}
+            <a href="{% url 'series_edit' series.id %}" class="btn btn-secondary" type="button"
+              rel="noopener noreferrer" target="_blank">Edit series</a>
+            {% endif %}
           </div>
         </div>
         <div id="collapse{{ series.id }}" class="collapse{% if forloop.first %} show{% endif %}"
