@@ -548,6 +548,7 @@ def conference_list(request):
             "series_memberships",
             "series_memberships__series",
             "hosting_institutions",
+            "hosting_institutions__country",
             "documents",
         )
         .all()
