@@ -54,7 +54,7 @@ class ConferenceSeries(models.Model):
 
 
 class Conference(models.Model):
-    year = models.IntegerField()
+    year = models.PositiveIntegerField()
     short_title = models.CharField(max_length=200)
     series = models.ManyToManyField(
         ConferenceSeries,
