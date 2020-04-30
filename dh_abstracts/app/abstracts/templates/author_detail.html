@@ -1,10 +1,12 @@
 {% extends "detail.html" %}
 
 {% block metadata %}
-{% include "twitter_card.html" with title=author.pref_name content="Abstracts submitted by this author" %}
+{% include "twitter_card.html" with title=appellations.first content="Abstracts submitted by this author" %}
 {% endblock %}
 
-{% block title %}{{ author.pref_name }}{% endblock %}
+{% block header_title %}{{ appellations.first }}{% endblock %}
+
+{% block title %}{{ appellations.first }}{% endblock %}
 
 {% block main %}
 <div class="card m-2">
@@ -30,7 +32,7 @@
 <div class="card my-2">
   <div class="card-header">All Names</div>
   <ul class="list-group list-group-flush">
-    {% for appellation in appellations.all %}
+    {% for appellation in appellations %}
     <li class="list-group-item">
       <div class="d-flex justify-content-between">
         <p>{{ appellation.first_name }} {{ appellation.last_name }}</p>
