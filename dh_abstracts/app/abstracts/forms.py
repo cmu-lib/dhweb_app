@@ -450,47 +450,32 @@ class ConferenceForm(forms.ModelForm):
         required=False,
         help_text="Organizers of the conference",
     )
-    hosting_institutions = forms.ModelMultipleChoiceField(
-        queryset=Institution.objects.all(),
-        required=False,
-        widget=ModelSelect2Multiple(url="institution-autocomplete"),
-    )
-    country = forms.ModelChoiceField(
-        queryset=Country.objects.all(),
-        required=False,
-        widget=ModelSelect2(url="country-autocomplete"),
-    )
-    state_province_region = forms.CharField(
-        label="State / Province / Region", required=False
-    )
-    start_date = forms.DateField(
-        required=False,
-        widget=forms.DateInput(attrs={"type": "date"}),
-        help_text="MM/DD/YYYY",
-    )
-    end_date = forms.DateField(
-        required=False,
-        widget=forms.DateInput(attrs={"type": "date"}),
-        help_text="MM/DD/YYYY",
-    )
 
     class Meta:
         model = Conference
         fields = [
+            "full_text_public",
             "year",
             "short_title",
-            "notes",
-            "url",
-            "full_text_public",
-            "organizers",
             "theme_title",
-            "start_date",
-            "end_date",
-            "city",
             "hosting_institutions",
+            "url",
+            "city",
             "state_province_region",
             "country",
+            "organizers",
+            "start_date",
+            "end_date",
+            "notes",
         ]
+        widgets = {
+            "start_date": forms.DateInput(attrs={"type": "date"}),
+            "end_date": forms.DateInput(attrs={"type": "date"}),
+            "country": ModelSelect2(url="country-autocomplete"),
+            "hosting_institutions": ModelSelect2Multiple(
+                url="institution-autocomplete"
+            ),
+        }
 
 
 class ConferenceSeriesInline(forms.Form):

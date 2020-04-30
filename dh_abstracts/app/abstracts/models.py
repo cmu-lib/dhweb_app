@@ -54,26 +54,56 @@ class ConferenceSeries(models.Model):
 
 
 class Conference(models.Model):
-    year = models.PositiveIntegerField()
-    short_title = models.CharField(max_length=200)
+    year = models.PositiveIntegerField(help_text="Year the conference was held")
+    short_title = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="A location-based short title for the conference",
+    )
     series = models.ManyToManyField(
         ConferenceSeries,
         through="SeriesMembership",
         through_fields=("conference", "series"),
         related_name="conferences",
         blank=True,
+        help_text="Conference series which this event belongs to",
     )
-    notes = models.TextField(blank=True, null=False, default="")
-    url = models.URLField(blank=True)
-    theme_title = models.CharField(max_length=1000, blank=True, null=False, default="")
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-    city = models.CharField(max_length=1000, blank=True, null=False, default="")
+    notes = models.TextField(
+        blank=True, null=False, default="", help_text="Further descriptive information"
+    )
+    url = models.URLField(
+        blank=True,
+        verbose_name="URL",
+        help_text="Public URL for the conference and/or conference program",
+    )
+    theme_title = models.CharField(
+        max_length=1000,
+        blank=True,
+        null=False,
+        default="",
+        help_text="Optional thematic title (e.g. 'Big Tent Digital Humanities')",
+    )
+    start_date = models.DateField(null=True, blank=True, help_text="MM/DD/YYY")
+    end_date = models.DateField(null=True, blank=True, help_text="MM/DD/YYY")
+    city = models.CharField(
+        max_length=1000,
+        blank=True,
+        null=False,
+        default="",
+        help_text="City where the conference took place",
+    )
     hosting_institutions = models.ManyToManyField(
-        "Institution", related_name="conferences", blank=True
+        "Institution",
+        related_name="conferences",
+        blank=True,
+        help_text="Institutions that organized the conference",
     )
     state_province_region = models.CharField(
-        max_length=1000, blank=True, null=False, default=""
+        max_length=1000,
+        blank=True,
+        null=False,
+        default="",
+        verbose_name="State / Province / Region",
     )
     country = models.ForeignKey(
         "Country",
