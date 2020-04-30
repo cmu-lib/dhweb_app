@@ -277,13 +277,19 @@ class Work(TextIndexedModel, ChangeTrackedModel):
     title = models.CharField(max_length=500, db_index=True, help_text="Abstract title")
     work_type = models.ForeignKey(
         WorkType,
-        blank=True,
+        blank=False,
         null=True,
         on_delete=models.SET_NULL,
         related_name="works",
         help_text='Abstracts may belong to one type that has been defined by editors based on a survey of all the abstracts in this collection, e.g. "poster", "workshop", "long paper".',
     )
-    full_text = models.TextField(max_length=50000, blank=True, null=False, default="")
+    full_text = models.TextField(
+        max_length=50000,
+        blank=True,
+        null=False,
+        default="",
+        help_text="Full text content of the abstract, including references, but excluding authorship information.",
+    )
     full_text_type = models.CharField(
         max_length=3,
         choices=FT_TYPE,
@@ -332,6 +338,7 @@ class Work(TextIndexedModel, ChangeTrackedModel):
     parent_session = models.ForeignKey(
         "Work",
         null=True,
+        blank=True,
         on_delete=models.SET_NULL,
         related_name="session_papers",
         help_text="If this work was part of a multi-paper organized session, this is the entry for the parent session",

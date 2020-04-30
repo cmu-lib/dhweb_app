@@ -152,56 +152,6 @@ class WorkAuthorshipForm(forms.Form):
 
 
 class WorkForm(forms.ModelForm):
-    keywords = forms.ModelMultipleChoiceField(
-        queryset=Keyword.objects.all(),
-        required=False,
-        widget=ModelSelect2Multiple(url="keyword-autocomplete"),
-    )
-
-    topics = forms.ModelMultipleChoiceField(
-        queryset=Topic.objects.all(),
-        required=False,
-        widget=ModelSelect2Multiple(url="topic-autocomplete"),
-    )
-
-    languages = forms.ModelMultipleChoiceField(
-        queryset=Language.objects.all(),
-        required=False,
-        widget=ModelSelect2Multiple(url="language-autocomplete"),
-    )
-
-    disciplines = forms.ModelMultipleChoiceField(
-        queryset=Discipline.objects.all(),
-        required=False,
-        widget=ModelSelect2Multiple(url="discipline-autocomplete"),
-    )
-
-    conference = forms.ModelChoiceField(
-        queryset=Conference.objects.all(),
-        widget=ModelSelect2(url="conference-autocomplete"),
-    )
-
-    title = forms.CharField(max_length=500)
-
-    url = forms.URLField(max_length=500, required=False)
-
-    work_type = forms.ModelChoiceField(queryset=WorkType.objects.all())
-
-    full_text_license = forms.ModelChoiceField(
-        queryset=License.objects.all(), required=False
-    )
-
-    full_text_type = forms.ChoiceField(choices=Work.FT_TYPE, initial="", required=False)
-
-    parent_session = forms.ModelChoiceField(
-        queryset=Work.objects.all(),
-        required=False,
-        widget=ModelSelect2(
-            url="work-autocomplete",
-            forward=["conference", forward.Const(True, "parents_only")],
-        ),
-    )
-
     class Meta:
         model = Work
         fields = [
@@ -218,6 +168,17 @@ class WorkForm(forms.ModelForm):
             "topics",
             "parent_session",
         ]
+        widgets = {
+            "keywords": ModelSelect2Multiple(url="keyword-autocomplete"),
+            "topics": ModelSelect2Multiple(url="topic-autocomplete"),
+            "languages": ModelSelect2Multiple(url="language-autocomplete"),
+            "disciplines": ModelSelect2Multiple(url="discipline-autocomplete"),
+            "conference": ModelSelect2(url="conference-autocomplete"),
+            "parent_session": ModelSelect2(
+                url="work-autocomplete",
+                forward=["conference", forward.Const(True, "parents_only")],
+            ),
+        }
 
     def clean(self):
         cleaned_data = super().clean()
