@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "django.contrib.sites",
     "django.contrib.redirects",
+    "django.contrib.sitemaps",
     "crispy_forms",
     "django.contrib.humanize",
     "easy_thumbnails",

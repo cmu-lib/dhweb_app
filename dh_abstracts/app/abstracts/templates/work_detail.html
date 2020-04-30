@@ -1,6 +1,11 @@
 {% extends "detail.html" %}
 
-{% block header_title %}Work {{ work.pk }} - "{{ work.title }}"{% endblock %}
+{% block metadata %}
+{% include "twitter_card.html" with title=work.title content=work.full_text %}
+{% include "reference_metadata.html" with title=work.title authorships=authorships conference=work.conference id=work.id %}
+{% endblock %}
+
+{% block header_title %}"{{ work.title }}"{% endblock %}
 
 {% block title %}{{ work.title }}{% endblock %}
 

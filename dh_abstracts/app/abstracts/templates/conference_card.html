@@ -1,6 +1,6 @@
 <h5 class="mb-1">
   <a href="{% url 'work_list' %}?conference={{ conference.id }}">{{ conference.year }} -
-    {{ conference.venue }}</a>
+    {{ conference.venue_abbreviation|default:conference.venue }}</a>
 </h5>
 {% if conference.theme_title %}
 <h6>"{{ conference.theme_title }}"</h6>
@@ -9,7 +9,7 @@
 <small class="text-muted">
   Hosted at {{ conference.hosting_institutions.all|join:", "}},
   {% if conference.city %}{{ conference.city }},
-  {% endif %}{% if conference.state_province_region %}}{{ conference.state_province_region }},
+  {% endif %}{% if conference.state_province_region %}{{ conference.state_province_region }},
   {% endif %}{% if conference.country %}{{ conference.country }}{% endif %}
 </small>
 <br>

@@ -154,7 +154,7 @@ class ConferenceDocument(models.Model):
 
 class Organizer(ChangeTrackedModel):
     name = models.CharField(max_length=200, unique=True)
-    abbreviation = models.CharField(max_length=7, unique=True)
+    abbreviation = models.CharField(max_length=30, unique=True)
     conferences_organized = models.ManyToManyField(
         Conference, related_name="organizers", blank=True
     )
@@ -338,7 +338,7 @@ class Work(TextIndexedModel, ChangeTrackedModel):
     )
 
     def get_absolute_url(self):
-        return reverse("work_detail", kwargs={"pk": self.pk})
+        return reverse("work_detail", kwargs={"work_id": self.id})
 
     @property
     def display_title(self):

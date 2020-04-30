@@ -1,4 +1,9 @@
 {% extends "detail.html" %}
+
+{% block metadata %}
+{% include "twitter_card.html" with title=author.pref_name content="Abstracts submitted by this author" %}
+{% endblock %}
+
 {% block title %}{{ author.pref_name }}{% endblock %}
 
 {% block main %}
