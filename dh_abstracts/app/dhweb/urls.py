@@ -22,6 +22,7 @@ from abstracts import models
 
 
 class CoreViewSitemap(Sitemap):
+    protocol = "https"
     priority = 0.5
     changefreq = "monthly"
 
@@ -38,14 +39,16 @@ dh_sitemaps = {
             {"queryset": models.Work.objects.all(), "date_field": "last_updated"},
             changefreq="monthly",
             priority=1.0,
+            protocol="https",
         ),
         "author": GenericSitemap(
             {"queryset": models.Author.objects.all(), "date_field": "last_updated"},
             changefreq="monthly",
             priority=0.9,
+            protocol="https",
         ),
         "flatpages": GenericSitemap(
-            {"queryset": FlatPage.objects.all()}, changefreq="monthly"
+            {"queryset": FlatPage.objects.all()}, changefreq="monthly", protocol="https"
         ),
         "core": CoreViewSitemap,
     }
