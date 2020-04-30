@@ -36,7 +36,7 @@ class TextIndexedModel(models.Model):
 
 class ConferenceSeries(models.Model):
     title = models.CharField(max_length=200, unique=True)
-    abbreviation = models.CharField(max_length=30, unique=True)
+    abbreviation = models.CharField(max_length=100, unique=True)
     notes = models.TextField(blank=True, null=False, default="")
 
     @property
@@ -72,6 +72,7 @@ class Conference(models.Model):
         blank=True, null=False, default="", help_text="Further descriptive information"
     )
     url = models.URLField(
+        max_length=500,
         blank=True,
         verbose_name="URL",
         help_text="Public URL for the conference and/or conference program",
@@ -117,10 +118,30 @@ class Conference(models.Model):
         db_index=True,
         help_text="Should the full text for this conference's abstracts be publicly available?",
     )
+    references = models.CharField(
+        max_length=2000,
+        blank=True,
+        default="",
+        help_text="Citations to conference proceedings",
+    )
+    contributors = models.CharField(
+        max_length=2000,
+        blank=True,
+        default="",
+        help_text="Individuals or organizations who contributed data about this conference",
+    )
+    attendance = models.CharField(
+        max_length=2000,
+        blank=True,
+        default="",
+        help_text="Summary information about conference attendance, with source links",
+    )
+    primary_contact = models.CharField(
+        max_length=2000, blank=True, default="", help_text=""
+    )
 
     class Meta:
         ordering = ["-year"]
-        unique_together = ["year", "short_title"]
 
     @property
     def public_works(self):
@@ -178,7 +199,7 @@ class ConferenceDocument(models.Model):
 
 class Organizer(ChangeTrackedModel):
     name = models.CharField(max_length=200, unique=True)
-    abbreviation = models.CharField(max_length=30, unique=True)
+    abbreviation = models.CharField(max_length=100, unique=True)
     conferences_organized = models.ManyToManyField(
         Conference, related_name="organizers", blank=True
     )

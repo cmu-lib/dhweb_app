@@ -467,6 +467,10 @@ class ConferenceForm(forms.ModelForm):
             "start_date",
             "end_date",
             "notes",
+            "references",
+            "contributors",
+            "attendance",
+            "primary_contact",
         ]
         widgets = {
             "start_date": forms.DateInput(attrs={"type": "date"}),
