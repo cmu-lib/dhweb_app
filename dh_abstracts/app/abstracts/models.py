@@ -135,12 +135,9 @@ class Conference(models.Model):
 
     def __str__(self):
         if self.short_title != "":
-            if self.theme_title != "":
-                return f"{self.year} - '{self.theme_title}' - {self.short_title}"
-            else:
-                return f"{self.year} - {self.short_title}"
+            return f"{self.year} - {self.short_title}"
         else:
-            return f"{self.year} - {self.series.first().title}"
+            return f"{self.year} - {self.theme_title}"
 
     def get_absolute_url(self):
         return reverse("conference_edit", kwargs={"pk": self.pk})

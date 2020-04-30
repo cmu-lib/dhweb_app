@@ -253,9 +253,9 @@ class ConferenceAutocomplete(Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Conference.objects.annotate(main_series=Max("series__title")).order_by(
-            "year", "short_title", "theme_title"
-        )
+        qs = Conference.objects.annotate(
+            main_series=Max("series_memberships__series__abbreviation")
+        ).order_by("year", "main_series", "short_title", "theme_title")
 
         if self.q:
             qs = qs.filter(
@@ -265,6 +265,14 @@ class ConferenceAutocomplete(Select2QuerySetView):
             ).distinct()
 
         return qs
+
+    def get_result_label(self, item):
+        if item.main_series:
+            return f"{item.main_series} - {item.year} - {item.short_title}"
+        elif item.short_title:
+            return f"{item.year} - {item.short_title}"
+        else:
+            return f"{item.year} - {item.theme_title}"
 
 
 class AuthorAutocomplete(Select2QuerySetView):
@@ -288,6 +296,7 @@ def work_view(request, work_id):
     related_conference = Conference.objects.annotate(
         n_works=Count("works", distinct=True),
         n_authors=Count("works__authors", distinct=True),
+        main_series=Max("series_memberships__series__title"),
     )
     work = get_object_or_404(
         Work.objects.select_related(
@@ -506,6 +515,7 @@ def conference_list(request):
     conference_list = Conference.objects.annotate(
         n_works=Count("works", distinct=True),
         n_authors=Count("works__authors", distinct=True),
+        main_series=Max("series_memberships__series__title"),
     ).select_related("country")
 
     series_list = (
@@ -519,6 +529,7 @@ def conference_list(request):
             "conferences__series_memberships",
             "conferences__series_memberships__series",
             "conferences__hosting_institutions",
+            "conferences__hosting_institutions__country",
             "conferences__documents",
         )
         .order_by("title")
@@ -923,16 +934,25 @@ class FullWorkList(ListView):
                     )
                 ).order_by("-first_author_last_name", "title")
 
-            return result_set.prefetch_related(
-                "authorships",
-                "authorships__appellation",
-                "authorships__author",
-                "conference",
-                "conference__organizers",
-                "keywords",
-                "topics",
-                "languages",
-                "disciplines",
+            return (
+                result_set.select_related("conference")
+                .annotate(
+                    main_series=Max(
+                        "conference__series_memberships__series__abbreviation"
+                    )
+                )
+                .prefetch_related(
+                    "conference__organizers",
+                    "conference__series_memberships",
+                    "conference__series_memberships__series",
+                    "authorships",
+                    "authorships__appellation",
+                    "authorships__author",
+                    "keywords",
+                    "topics",
+                    "languages",
+                    "disciplines",
+                )
             )
         else:
             for error in raw_filter_form.errors:
@@ -952,6 +972,7 @@ class FullWorkList(ListView):
                     .annotate(
                         n_works=Count("works", distinct=True),
                         n_authors=Count("works__authors", distinct=True),
+                        main_series=Max("series_memberships__series__title"),
                     )
                     .select_related("country")
                     .prefetch_related(

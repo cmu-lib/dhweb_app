@@ -1,5 +1,16 @@
 <h5 class="mb-1">
-  <a href="{% url 'work_list' %}?conference={{ conference.id }}">{{ conference }}</a>
+  <a href="{% url 'work_list' %}?conference={{ conference.id }}">
+    {{ conference.year }} -
+    {% if conference.main_series %}
+    {% if conference.short_title %}
+    {{ conference.short_title }}
+    {% else %}
+    {{ conference.main_series }}
+    {% endif %}
+    {% else %}
+    {{ conference.theme_title }}
+    {% endif %}
+  </a>
 </h5>
 {% if conference.theme_title %}
 <h6>"{{ conference.theme_title }}"</h6>

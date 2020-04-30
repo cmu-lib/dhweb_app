@@ -29,7 +29,16 @@
   {% endfor %}</p>{% endif %}
 
 <div class="d-flex justify-content-between align-items-end">
-  <small class="text-muted">Presented at <a
-      href="{% url 'work_list' %}?conference={{ work.conference.pk }}">{{ work.conference }}</a></small>
+  <small class="text-muted">Presented at <a href="{% url 'work_list' %}?conference={{ work.conference.pk }}">
+      {% if work.main_series %}
+      {{ work.main_series }} -
+      {% endif %}
+      {{ work.conference.year }} -
+      {% if work.conference.short_title %}
+      {{ work.conference.short_title }}
+      {% else %}
+      {{ work.conference.theme_title }}
+      {% endif %}
+    </a></small>
   {% if work.full_text %}<span class="badge badge-secondary">Full text indexed</span>{% endif %}
 </div>
