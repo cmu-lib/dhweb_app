@@ -56,7 +56,6 @@ class ConferenceSeries(models.Model):
 class Conference(models.Model):
     year = models.IntegerField()
     short_title = models.CharField(max_length=200)
-    venue_abbreviation = models.CharField(max_length=50, blank=True)
     series = models.ManyToManyField(
         ConferenceSeries,
         through="SeriesMembership",
@@ -105,15 +104,13 @@ class Conference(models.Model):
         )
 
     def __str__(self):
-        if self.venue_abbreviation:
-            display = self.venue_abbreviation
+        if self.short_title != "":
+            if self.theme_title != "":
+                return f"{self.year} - '{self.theme_title}' - {self.short_title}"
+            else:
+                return f"{self.year} - {self.short_title}"
         else:
-            display = self.year
-        if self.organizers.exists():
-            org_slug = ", ".join([str(s) for s in self.organizers.all()])
-            return f"{org_slug} {self.year} - {display}"
-        else:
-            return f"{self.year} - {display}"
+            return f"{self.year} - {self.series.first().title}"
 
     def get_absolute_url(self):
         return reverse("conference_edit", kwargs={"pk": self.pk})

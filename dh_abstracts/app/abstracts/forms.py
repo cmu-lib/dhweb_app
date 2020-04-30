@@ -479,7 +479,6 @@ class ConferenceForm(forms.ModelForm):
         fields = [
             "year",
             "short_title",
-            "venue_abbreviation",
             "notes",
             "url",
             "full_text_public",

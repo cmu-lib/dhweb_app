@@ -713,7 +713,6 @@ class CreateConferenceViewTest(CachelessTestCase):
             data={
                 "year": 1987,
                 "short_title": "foo",
-                "venue_abbreviation": "bar",
                 "notes": "buzz",
                 "organizers": [1, 2],
             },
@@ -746,7 +745,6 @@ class EditConferenceViewTest(CachelessTestCase):
             data={
                 "year": "1987",
                 "short_title": "foo",
-                "venue_abbreviation": "bar",
                 "notes": "buzz",
                 "organizers": ["1"],
                 "form-0-number": [""],

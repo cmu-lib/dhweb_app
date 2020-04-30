@@ -1410,7 +1410,6 @@ def ConferenceEdit(request, pk):
             clean_form = form.cleaned_data
             conference.year = clean_form["year"]
             conference.short_title = clean_form["short_title"]
-            conference.venue_abbreviation = clean_form["venue_abbreviation"]
             conference.notes = clean_form["notes"]
             conference.url = clean_form["url"]
 
