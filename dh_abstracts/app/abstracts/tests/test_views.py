@@ -396,25 +396,25 @@ class WorkListViewTest(CachelessTestCase):
             self.assertIn(2, all_institutions)
 
     def test_keyword(self):
-        res = self.client.get(reverse("work_list"), data={"keyword": 1})
+        res = self.client.get(reverse("work_list"), data={"keywords": 1})
         self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertIn(1, w.keywords.values_list("id", flat=True))
 
     def test_topic(self):
-        res = self.client.get(reverse("work_list"), data={"topic": 1})
+        res = self.client.get(reverse("work_list"), data={"topics": 1})
         self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertIn(1, w.topics.values_list("id", flat=True))
 
     def test_language(self):
-        res = self.client.get(reverse("work_list"), data={"language": 1})
+        res = self.client.get(reverse("work_list"), data={"languages": 1})
         self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertIn(1, w.languages.values_list("id", flat=True))
 
     def test_discipline(self):
-        res = self.client.get(reverse("work_list"), data={"discipline": 1})
+        res = self.client.get(reverse("work_list"), data={"disciplines": 1})
         self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertIn(1, w.disciplines.values_list("id", flat=True))
