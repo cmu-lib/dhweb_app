@@ -87,7 +87,7 @@ class Command(BaseCommand):
                     url=row["URL"],
                     references=row["Reference"],
                     notes=row["Notes"],
-                    contributors=row["Contributors of Details"],
+                    contributors=row["Contributors of Details"].rstrip(","),
                     attendance=row["Attendance"],
                     primary_contact=row["Primary Contact"],
                 )
