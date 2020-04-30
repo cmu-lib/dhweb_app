@@ -14,7 +14,42 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, reverse
+from django.contrib.sitemaps import Sitemap, GenericSitemap
+from django.contrib.sitemaps.views import index, sitemap
+from django.contrib.flatpages.models import FlatPage
+from abstracts import models
+
+
+class CoreViewSitemap(Sitemap):
+    priority = 0.5
+    changefreq = "monthly"
+
+    def items(self):
+        return ["home_view", "conference_list"]
+
+    def location(self, item):
+        return reverse(item)
+
+
+dh_sitemaps = {
+    "sitemaps": {
+        "work": GenericSitemap(
+            {"queryset": models.Work.objects.all(), "date_field": "last_updated"},
+            changefreq="monthly",
+            priority=1.0,
+        ),
+        "author": GenericSitemap(
+            {"queryset": models.Author.objects.all(), "date_field": "last_updated"},
+            changefreq="monthly",
+            priority=0.9,
+        ),
+        "flatpages": GenericSitemap(
+            {"queryset": FlatPage.objects.all()}, changefreq="monthly"
+        ),
+        "core": CoreViewSitemap,
+    }
+}
 
 urlpatterns = [
     path("", include("abstracts.urls")),
@@ -22,4 +57,11 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("filer/", include("filer.urls")),
     path("pages/", include("django.contrib.flatpages.urls")),
+    path("sitemap.xml", index, dh_sitemaps),
+    path(
+        "sitemap-<section>.xml",
+        sitemap,
+        dh_sitemaps,
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
 ]

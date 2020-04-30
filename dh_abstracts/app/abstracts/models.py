@@ -292,7 +292,7 @@ class Work(TextIndexedModel, ChangeTrackedModel):
     )
 
     def get_absolute_url(self):
-        return reverse("work_detail", kwargs={"pk": self.pk})
+        return reverse("work_detail", kwargs={"work_id": self.id})
 
     @property
     def display_title(self):
