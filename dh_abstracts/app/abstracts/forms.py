@@ -479,6 +479,9 @@ class ConferenceForm(forms.ModelForm):
             "hosting_institutions": ModelSelect2Multiple(
                 url="institution-autocomplete"
             ),
+            "references": forms.Textarea(attrs={"rows": 2}),
+            "contributors": forms.Textarea(attrs={"rows": 2}),
+            "attendance": forms.Textarea(attrs={"rows": 2}),
         }
 
 

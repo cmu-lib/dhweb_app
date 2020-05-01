@@ -13,7 +13,40 @@
 
 <form method="post">
   {% csrf_token %}
-  {{ form | crispy }}
+  <h3>Title</h3>
+  <div class="row">
+    <div class="col-6">{{ form.short_title | as_crispy_field }}</div>
+
+    <div class="col-6">{{ form.theme_title | as_crispy_field }}</div>
+  </div>
+  <h3>Dates & Locations</h3>
+  <div class="row">
+    <div class="col-6">
+      {{ form.year | as_crispy_field}}
+      <div class="row">
+        <div class="col-6">{{ form.start_date | as_crispy_field }}</div>
+        <div class="col-6">{{ form.end_date | as_crispy_field }}</div>
+      </div>
+    </div>
+    <div class="col-6">
+      {{ form.hosting_institutions | as_crispy_field }}
+      <div class="row">
+        <div class="col-6">{{ form.city | as_crispy_field}}</div>
+        <div class="col-6">{{ form.state_province_region | as_crispy_field }}</div>
+      </div>
+      {{ form.country | as_crispy_field }}
+    </div>
+  </div>
+  <h3>Notes & References</h3>
+  {{ form.url | as_crispy_field }}
+  {{ form.references | as_crispy_field }}
+  <div class="row">
+    <div class="col-4">{{ form.contributors | as_crispy_field }}</div>
+    <div class="col-4">{{ form.attendance | as_crispy_field }}</div>
+    <div class="col-4">{{ form.primary_contact | as_crispy_field }}</div>
+  </div>
+  {{ form.notes | as_crispy_field }}
+  <div class="row"></div>
   {% block seriesforms %}<small>Save changes below first in order to add this conference to one or more conference
     series, or to upload associated documents.</small>{% endblock %}
   <div class="form-group">
