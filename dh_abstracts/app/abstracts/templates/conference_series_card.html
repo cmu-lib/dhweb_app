@@ -18,9 +18,12 @@
       target="_blank">Delete</a>
   </p>
   {% endif %}
-  <small>Abstract indexing progress: <span class="text-success">{{ series.n_complete }} Completed</span>, <span
-      class="text-warning">{{ series.n_in_progress }} in
-      progress</span>, {{ series.n_remaining }} not yet started</small>
+  <small>Abstract indexing progress:
+    <span class="badge badge-success">{{ series.n_complete }} Completed</span>
+    <span class="badge badge-warning">{{ series.n_in_progress }} in
+      progress</span>
+    <span class="badge badge-secondary">{{ series.n_remaining }} not yet started</span>
+  </small>
   <div class="progress my-2">
     <div class="progress-bar bg-success" role="progressbar" style="width: {{ series.pct_complete }}%"
       aria-valuenow="{{ series.n_complete }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
