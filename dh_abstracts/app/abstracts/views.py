@@ -4,8 +4,18 @@ from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.views.generic import DetailView, ListView
-from django.db.models import Count, Max, Min, Q, F, Prefetch, Subquery, OuterRef
-from django.db.models.functions import Concat, FirstValue
+from django.db.models import (
+    Count,
+    Max,
+    Min,
+    Q,
+    F,
+    Prefetch,
+    Subquery,
+    OuterRef,
+    FloatField,
+)
+from django.db.models.functions import Concat, FirstValue, Cast
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
@@ -512,16 +522,36 @@ class AuthorList(ListView):
         return context
 
 
+def conference_series_qs():
+    return ConferenceSeries.objects.annotate(
+        n_conferences=Count("conferences", distinct=True),
+        earliest_year=Min("conferences__year"),
+        latest_year=Max("conferences__year"),
+        n_complete=Count(
+            "conferences", filter=Q(conferences__entry_status="c"), distinct=True
+        ),
+        n_in_progress=Count(
+            "conferences", filter=Q(conferences__entry_status="i"), distinct=True
+        ),
+        n_remaining=F("n_conferences") - F("n_complete") - F("n_in_progress"),
+        pct_complete=(
+            Cast(F("n_complete"), FloatField()) / Cast(F("n_conferences"), FloatField())
+        )
+        * 100,
+        pct_in_progress=(
+            Cast(F("n_in_progress"), FloatField())
+            / Cast(F("n_conferences"), FloatField())
+        )
+        * 100,
+    ).order_by("title")
+
+
 class ConferenceSeriesList(ListView):
     context_object_name = "series_list"
     template_name = "conference_series_list.html"
 
     def get_queryset(self):
-        base_result_set = ConferenceSeries.objects.annotate(
-            n_conferences=Count("conferences", distinct=True),
-            earliest_year=Min("conferences__year"),
-            latest_year=Max("conferences__year"),
-        ).order_by("title")
+        base_result_set = conference_series_qs()
         return base_result_set
 
     def get_context_data(self, **kwargs):
@@ -532,14 +562,6 @@ class ConferenceSeriesList(ListView):
         )
         context["standalone_conference_count"] = sa_conf.count()
         return context
-
-
-def conference_series_qs():
-    return ConferenceSeries.objects.annotate(
-        n_conferences=Count("conferences", distinct=True),
-        earliest_year=Min("conferences__year"),
-        latest_year=Max("conferences__year"),
-    ).order_by("title")
 
 
 class ConferenceSeriesDetail(DetailView):

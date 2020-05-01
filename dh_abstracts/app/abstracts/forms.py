@@ -470,8 +470,10 @@ class ConferenceForm(forms.ModelForm):
             "references",
             "contributors",
             "attendance",
+            "entry_status",
         ]
         widgets = {
+            "entry_status": forms.RadioSelect(choices=Conference.ENTRY_STATUS),
             "start_date": forms.DateInput(attrs={"type": "date"}),
             "end_date": forms.DateInput(attrs={"type": "date"}),
             "country": ModelSelect2(url="country-autocomplete"),

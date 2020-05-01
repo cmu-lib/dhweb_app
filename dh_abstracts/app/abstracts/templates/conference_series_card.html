@@ -11,9 +11,20 @@
   <p>{{ series.notes | safe }}</p>
   {% endif %}
   {% if user.is_staff %}
-  <a href="{% url 'series_edit' series.pk %}" role="button" class="btn btn-warning btn-sm" rel="noopener noreferrer"
-    target="_blank">Edit</a>
-  <a href="{% url 'series_delete' series.pk %}" role="button" class="btn btn-danger btn-sm" rel="noopener noreferrer"
-    target="_blank">Delete</a>
+  <p>
+    <a href="{% url 'series_edit' series.pk %}" role="button" class="btn btn-warning btn-sm" rel="noopener noreferrer"
+      target="_blank">Edit</a>
+    <a href="{% url 'series_delete' series.pk %}" role="button" class="btn btn-danger btn-sm" rel="noopener noreferrer"
+      target="_blank">Delete</a>
+  </p>
   {% endif %}
+  <small>Abstract indexing progress: <span class="text-success">{{ series.n_complete }} Completed</span>, <span
+      class="text-warning">{{ series.n_in_progress }} in
+      progress</span>, {{ series.n_remaining }} not yet started</small>
+  <div class="progress my-2">
+    <div class="progress-bar bg-success" role="progressbar" style="width: {{ series.pct_complete }}%"
+      aria-valuenow="{{ series.n_complete }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
+    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ series.pct_in_progress }}%"
+      aria-valuenow="{{ series.n_in_progress }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
+  </div>
 </div>

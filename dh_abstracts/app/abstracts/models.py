@@ -54,6 +54,8 @@ class ConferenceSeries(models.Model):
 
 
 class Conference(models.Model):
+    ENTRY_STATUS = (("n", "Not started"), ("i", "Incomplete"), ("c", "Complete"))
+
     year = models.PositiveIntegerField(help_text="Year the conference was held")
     short_title = models.CharField(
         max_length=200,
@@ -139,6 +141,15 @@ class Conference(models.Model):
         blank=True,
         default="",
         help_text="Summary information about conference attendance, with source links",
+    )
+    entry_status = models.CharField(
+        max_length=1,
+        default="n",
+        choices=ENTRY_STATUS,
+        blank=False,
+        null=False,
+        help_text="Have all the abstracts for this conference been entered?",
+        db_index=True,
     )
 
     class Meta:
