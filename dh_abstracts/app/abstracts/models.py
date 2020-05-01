@@ -69,7 +69,11 @@ class Conference(models.Model):
         help_text="Conference series which this event belongs to",
     )
     notes = models.TextField(
-        blank=True, null=False, default="", help_text="Further descriptive information"
+        max_length=200000,
+        blank=True,
+        null=False,
+        default="",
+        help_text="Further descriptive information",
     )
     url = models.URLField(
         max_length=500,
@@ -118,20 +122,20 @@ class Conference(models.Model):
         db_index=True,
         help_text="Should the full text for this conference's abstracts be publicly available?",
     )
-    references = models.CharField(
-        max_length=2000,
+    references = models.TextField(
+        max_length=20000,
         blank=True,
         default="",
         help_text="Citations to conference proceedings",
     )
-    contributors = models.CharField(
-        max_length=2000,
+    contributors = models.TextField(
+        max_length=20000,
         blank=True,
         default="",
         help_text="Individuals or organizations who contributed data about this conference",
     )
-    attendance = models.CharField(
-        max_length=2000,
+    attendance = models.TextField(
+        max_length=20000,
         blank=True,
         default="",
         help_text="Summary information about conference attendance, with source links",
