@@ -27,7 +27,7 @@ class CoreViewSitemap(Sitemap):
     changefreq = "monthly"
 
     def items(self):
-        return ["home_view", "conference_list"]
+        return ["home_view", "conference_list", "standalone_conference_list"]
 
     def location(self, item):
         return reverse(item)
@@ -35,6 +35,12 @@ class CoreViewSitemap(Sitemap):
 
 dh_sitemaps = {
     "sitemaps": {
+        "series": GenericSitemap(
+            {"queryset": models.ConferenceSeries.objects.all()},
+            changefreq="monthly",
+            priority=0.8,
+            protocol="https",
+        ),
         "work": GenericSitemap(
             {"queryset": models.Work.objects.all(), "date_field": "last_updated"},
             changefreq="monthly",

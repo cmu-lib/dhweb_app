@@ -50,7 +50,7 @@ class ConferenceSeries(models.Model):
             return self.title
 
     def get_absolute_url(self):
-        return reverse("series_edit", kwargs={"pk": self.pk})
+        return reverse("conference_series_detail", kwargs={"pk": self.pk})
 
 
 class Conference(models.Model):
