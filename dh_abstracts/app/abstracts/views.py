@@ -612,53 +612,6 @@ class StandaloneList(View):
         }
         return render(request, self.template_name, context)
 
-    # def conference_list(request):
-    # conference_list = Conference.objects.annotate(
-    #     n_works=Count("works", distinct=True),
-    #     n_authors=Count("works__authors", distinct=True),
-    #     main_series=Max("series_memberships__series__title"),
-    # ).select_related("country")
-
-    # series_list = (
-    #     ConferenceSeries.objects.annotate(n_conferences=Count("conferences"))
-    #     .prefetch_related(
-    #         Prefetch(
-    #             "conferences",
-    #             queryset=conference_list.order_by("series_memberships__number"),
-    #         ),
-    #         "conferences__organizers",
-    #         "conferences__series_memberships",
-    #         "conferences__series_memberships__series",
-    #         "conferences__hosting_institutions",
-    #         "conferences__hosting_institutions__country",
-    #         "conferences__documents",
-    #     )
-    #     .order_by("title")
-    # )
-
-    # unaffiliated_list = (
-    #     Conference.objects.filter(series__isnull=True)
-    #     .annotate(
-    #         n_works=Count("works", distinct=True),
-    #         n_authors=Count("works__authors", distinct=True),
-    #     )
-    #     .select_related("country")
-    #     .order_by("year")
-    #     .prefetch_related(
-    #         "organizers",
-    #         "series_memberships",
-    #         "series_memberships__series",
-    #         "hosting_institutions",
-    #         "hosting_institutions__country",
-    #         "documents",
-    #     )
-    #     .all()
-    # )
-
-    # context = {"series_list": series_list, "standalone_conferences": unaffiliated_list}
-
-    # return render(request, "conference_list.html", context)
-
 
 def home_view(request):
     public_works = Work.objects.all()
