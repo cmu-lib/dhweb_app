@@ -1554,11 +1554,11 @@ class SeriesCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = "generic_form.html"
     extra_context = {
         "form_title": "Create conference series",
-        "cancel_view": "full_series_list",
+        "cancel_view": "conference_list",
     }
     fields = ["title", "abbreviation", "notes"]
     success_message = "Series '%(title)s' created"
-    success_url = reverse_lazy("full_series_list")
+    success_url = reverse_lazy("conference_list")
 
 
 class SeriesEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -1566,11 +1566,11 @@ class SeriesEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
     template_name = "generic_form.html"
     extra_context = {
         "form_title": "Update conference series",
-        "cancel_view": "full_series_list",
+        "cancel_view": "conference_list",
     }
     fields = ["title", "abbreviation", "notes"]
     success_message = "Series '%(title)s' updated"
-    success_url = reverse_lazy("full_series_list")
+    success_url = reverse_lazy("conference_list")
 
 
 class SeriesDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
@@ -1578,20 +1578,14 @@ class SeriesDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     template_name = "generic_form.html"
     extra_context = {
         "form_title": "Delete conference series",
-        "cancel_view": "full_series_list",
+        "cancel_view": "conference_list",
     }
     success_message = "Series '%(title)s' deleted"
-    success_url = reverse_lazy("full_series_list")
+    success_url = reverse_lazy("conference_list")
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         return super(SeriesDelete, self).delete(request, *args, **kwargs)
-
-
-class SeriesList(LoginRequiredMixin, ListView):
-    model = ConferenceSeries
-    template_name = "full_series_list.html"
-    context_object_name = "series_list"
 
 
 class OrganizerCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):

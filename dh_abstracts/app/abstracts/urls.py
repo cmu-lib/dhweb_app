@@ -147,7 +147,6 @@ urlpatterns = [
     path(
         "editor/conferences/<int:pk>/edit", views.ConferenceEdit, name="conference_edit"
     ),
-    path("editor/series", views.SeriesList.as_view(), name="full_series_list"),
     path("editor/series/create", views.SeriesCreate.as_view(), name="series_create"),
     path("editor/series/<int:pk>/edit", views.SeriesEdit.as_view(), name="series_edit"),
     path(
