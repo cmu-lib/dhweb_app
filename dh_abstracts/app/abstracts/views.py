@@ -1776,7 +1776,7 @@ def keyword_multi_merge(request):
     return render(request, "tag_multi_merge.html", context)
 
 
-class TopicCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
+class TopicCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Topic
     template_name = "generic_form.html"
     extra_context = {"form_title": "Create topic", "cancel_view": "full_topic_list"}
@@ -1797,7 +1797,7 @@ class TopicDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
         return super(TopicDelete, self).delete(request, *args, **kwargs)
 
 
-class TopicEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
+class TopicEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Topic
     template_name = "generic_form.html"
     extra_context = {
