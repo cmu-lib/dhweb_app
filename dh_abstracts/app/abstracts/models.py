@@ -140,9 +140,6 @@ class Conference(models.Model):
         default="",
         help_text="Summary information about conference attendance, with source links",
     )
-    primary_contact = models.CharField(
-        max_length=2000, blank=True, default="", help_text=""
-    )
 
     class Meta:
         ordering = ["-year"]

@@ -35,7 +35,6 @@
     "references": "",
     "contributors": "",
     "attendance": "",
-    "primary_contact": "",
     "hosting_institutions": []
   }
 },
@@ -57,7 +56,6 @@
     "references": "",
     "contributors": "",
     "attendance": "",
-    "primary_contact": "",
     "hosting_institutions": []
   }
 },
@@ -79,7 +77,6 @@
     "references": "",
     "contributors": "",
     "attendance": "",
-    "primary_contact": "",
     "hosting_institutions": [
       2,
       1
@@ -104,7 +101,6 @@
     "references": "",
     "contributors": "",
     "attendance": "",
-    "primary_contact": "",
     "hosting_institutions": []
   }
 },
@@ -402,7 +398,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$180000$tPj49fsbZxwZ$0acMULPg7LIKk4wcMuTgXfTRloYaMStvda8CXpk080I=",
-    "last_login": "2020-04-30T16:55:37.975Z",
+    "last_login": "2020-05-01T19:30:33.889Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",
