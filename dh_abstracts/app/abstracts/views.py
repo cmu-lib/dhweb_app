@@ -523,27 +523,32 @@ class AuthorList(ListView):
 
 
 def conference_series_qs():
-    return ConferenceSeries.objects.annotate(
-        n_conferences=Count("conferences", distinct=True),
-        earliest_year=Min("conferences__year"),
-        latest_year=Max("conferences__year"),
-        n_complete=Count(
-            "conferences", filter=Q(conferences__entry_status="c"), distinct=True
-        ),
-        n_in_progress=Count(
-            "conferences", filter=Q(conferences__entry_status="i"), distinct=True
-        ),
-        n_remaining=F("n_conferences") - F("n_complete") - F("n_in_progress"),
-        pct_complete=(
-            Cast(F("n_complete"), FloatField()) / Cast(F("n_conferences"), FloatField())
+    return (
+        ConferenceSeries.objects.exclude(conferences__isnull=True)
+        .annotate(
+            n_conferences=Count("conferences", distinct=True),
+            earliest_year=Min("conferences__year"),
+            latest_year=Max("conferences__year"),
+            n_complete=Count(
+                "conferences", filter=Q(conferences__entry_status="c"), distinct=True
+            ),
+            n_in_progress=Count(
+                "conferences", filter=Q(conferences__entry_status="i"), distinct=True
+            ),
+            n_remaining=F("n_conferences") - F("n_complete") - F("n_in_progress"),
+            pct_complete=(
+                Cast(F("n_complete"), FloatField())
+                / Cast(F("n_conferences"), FloatField())
+            )
+            * 100,
+            pct_in_progress=(
+                Cast(F("n_in_progress"), FloatField())
+                / Cast(F("n_conferences"), FloatField())
+            )
+            * 100,
         )
-        * 100,
-        pct_in_progress=(
-            Cast(F("n_in_progress"), FloatField())
-            / Cast(F("n_conferences"), FloatField())
-        )
-        * 100,
-    ).order_by("title")
+        .order_by("title")
+    )
 
 
 class ConferenceSeriesList(ListView):
