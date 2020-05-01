@@ -507,9 +507,9 @@ class WorkDetailViewTest(CachelessTestCase):
         self.assertContains(res, "Lorem Ipsum Dolor")
 
 
-class ConferenceListViewTest(CachelessTestCase):
+class ConferenceSeriesListViewTest(CachelessTestCase):
     """
-    Test Conference list view
+    Test Conference Series list view
     """
 
     fixtures = ["test.json"]
@@ -517,12 +517,25 @@ class ConferenceListViewTest(CachelessTestCase):
     def test_render(self):
         publicly_available(self, "conference_list")
 
-    def test_has_unaffiliated_conferences(self):
+    def test_unique(self):
         res = self.client.get(reverse("conference_list"))
-        self.assertIn(
-            Conference.objects.filter(series__isnull=True).first(),
-            res.context["standalone_conferences"],
-        )
+        self.assertTrue(is_list_unique(res.context["series_list"]))
+
+
+class ConferenceSeriesDetailView(CachelessTestCase):
+    """
+    Test Conference Series list view
+    """
+
+    fixtures = ["test.json"]
+
+    def test_render(self):
+        publicly_available(self, "conference_series_detail", kwargs={"pk": 1})
+
+    def test_unique(self):
+        res = self.client.get(reverse("conference_series_detail", kwargs={"pk": 1}))
+        self.assertTrue(is_list_unique(res.context["conference_list"]))
+        self.assertTrue(is_list_unique(res.context["series_list"]))
 
 
 class AuthorMergeViewTest(CachelessTestCase):

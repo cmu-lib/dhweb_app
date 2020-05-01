@@ -12,7 +12,7 @@
     {% endif %}
   </a>
 </h5>
-{% if conference.theme_title %}
+{% if conference.theme_title and conference.short_title %}
 <h6>"{{ conference.theme_title }}"</h6>
 {% endif %}
 {% if conference.hosting_institutions.exists %}

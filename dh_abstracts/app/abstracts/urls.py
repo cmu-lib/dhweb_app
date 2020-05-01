@@ -21,8 +21,18 @@ urlpatterns = [
     path("authors/<int:author_id>/merge", views.author_merge_view, name="author_merge"),
     path(
         "conferences",
-        views.cache_for_anon(views.conference_list),
+        views.cache_for_anon(views.ConferenceSeriesList.as_view()),
         name="conference_list",
+    ),
+    path(
+        "conference_series/<int:pk>",
+        views.cache_for_anon(views.ConferenceSeriesDetail.as_view()),
+        name="conference_series_detail",
+    ),
+    path(
+        "conference_series/standalone_events",
+        views.cache_for_anon(views.StandaloneList.as_view()),
+        name="standalone_conference_list",
     ),
     path("downloads", views.download_data, name="download_data"),
     path(

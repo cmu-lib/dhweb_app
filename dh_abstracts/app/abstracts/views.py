@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
+from django.views import View
 from django.views.generic import DetailView, ListView
 from django.db.models import Count, Max, Min, Q, F, Prefetch, Subquery, OuterRef
 from django.db.models.functions import Concat, FirstValue
@@ -511,52 +512,152 @@ class AuthorList(ListView):
         return context
 
 
-def conference_list(request):
-    conference_list = Conference.objects.annotate(
-        n_works=Count("works", distinct=True),
-        n_authors=Count("works__authors", distinct=True),
-        main_series=Max("series_memberships__series__title"),
-    ).select_related("country")
+class ConferenceSeriesList(ListView):
+    context_object_name = "series_list"
+    template_name = "conference_series_list.html"
 
-    series_list = (
-        ConferenceSeries.objects.annotate(n_conferences=Count("conferences"))
-        .prefetch_related(
-            Prefetch(
-                "conferences",
-                queryset=conference_list.order_by("series_memberships__number"),
-            ),
-            "conferences__organizers",
-            "conferences__series_memberships",
-            "conferences__series_memberships__series",
-            "conferences__hosting_institutions",
-            "conferences__hosting_institutions__country",
-            "conferences__documents",
+    def get_queryset(self):
+        base_result_set = ConferenceSeries.objects.annotate(
+            n_conferences=Count("conferences", distinct=True),
+            earliest_year=Min("conferences__year"),
+            latest_year=Max("conferences__year"),
+        ).order_by("title")
+        return base_result_set
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        sa_conf = Conference.objects.filter(series__isnull=True)
+        context["standalone_conferences"] = sa_conf.aggregate(
+            earliest_year=Min("year"), latest_year=Max("year")
         )
-        .order_by("title")
-    )
+        context["standalone_conference_count"] = sa_conf.count()
+        return context
 
-    unaffiliated_list = (
-        Conference.objects.filter(series__isnull=True)
-        .annotate(
-            n_works=Count("works", distinct=True),
-            n_authors=Count("works__authors", distinct=True),
+
+def conference_series_qs():
+    return ConferenceSeries.objects.annotate(
+        n_conferences=Count("conferences", distinct=True),
+        earliest_year=Min("conferences__year"),
+        latest_year=Max("conferences__year"),
+    ).order_by("title")
+
+
+class ConferenceSeriesDetail(DetailView):
+    model = ConferenceSeries
+    template_name = "conference_series_detail.html"
+    context_object_name = "series"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        series_order_subquery = SeriesMembership.objects.filter(
+            conference=OuterRef("pk"), series=self.get_object()
+        ).order_by("number")
+        context["conference_list"] = (
+            Conference.objects.filter(series_memberships__series=self.get_object())
+            .annotate(
+                main_series=Max("series_memberships__series__title"),
+                n_works=Count("works", distinct=True),
+                n_authors=Count("works__authors", distinct=True),
+                series_order=Subquery(series_order_subquery.values("number")[:1]),
+            )
+            .order_by("series_order")
+            .prefetch_related(
+                "series_memberships",
+                "series_memberships__series",
+                "organizers",
+                "country",
+                "hosting_institutions",
+                "hosting_institutions__country",
+                "documents",
+            )
         )
-        .select_related("country")
-        .order_by("year")
-        .prefetch_related(
-            "organizers",
-            "series_memberships",
-            "series_memberships__series",
-            "hosting_institutions",
-            "hosting_institutions__country",
-            "documents",
+        context["series_list"] = conference_series_qs()
+        return context
+
+
+class StandaloneList(View):
+    template_name = "conference_series_detail.html"
+
+    def get_standalone_list(self):
+        qs = (
+            Conference.objects.filter(series__isnull=True)
+            .annotate(
+                main_series=Max("series_memberships__series__title"),
+                n_works=Count("works", distinct=True),
+                n_authors=Count("works__authors", distinct=True),
+            )
+            .order_by("year", "short_title", "theme_title")
+            .prefetch_related(
+                "series_memberships",
+                "series_memberships__series",
+                "organizers",
+                "country",
+                "hosting_institutions",
+                "hosting_institutions__country",
+                "documents",
+            )
         )
-        .all()
-    )
+        return qs
 
-    context = {"series_list": series_list, "standalone_conferences": unaffiliated_list}
+    def get(self, request):
+        faux_series = {
+            "title": "Standalone Events",
+            "notes": "Digital humanities events not belonging to a larger series, such symposia or workshops.",
+            "n_conferences": self.get_standalone_list().count(),
+        }
+        context = {
+            "conference_list": self.get_standalone_list(),
+            "series": faux_series,
+            "series_list": conference_series_qs(),
+        }
+        return render(request, self.template_name, context)
 
-    return render(request, "conference_list.html", context)
+    # def conference_list(request):
+    # conference_list = Conference.objects.annotate(
+    #     n_works=Count("works", distinct=True),
+    #     n_authors=Count("works__authors", distinct=True),
+    #     main_series=Max("series_memberships__series__title"),
+    # ).select_related("country")
+
+    # series_list = (
+    #     ConferenceSeries.objects.annotate(n_conferences=Count("conferences"))
+    #     .prefetch_related(
+    #         Prefetch(
+    #             "conferences",
+    #             queryset=conference_list.order_by("series_memberships__number"),
+    #         ),
+    #         "conferences__organizers",
+    #         "conferences__series_memberships",
+    #         "conferences__series_memberships__series",
+    #         "conferences__hosting_institutions",
+    #         "conferences__hosting_institutions__country",
+    #         "conferences__documents",
+    #     )
+    #     .order_by("title")
+    # )
+
+    # unaffiliated_list = (
+    #     Conference.objects.filter(series__isnull=True)
+    #     .annotate(
+    #         n_works=Count("works", distinct=True),
+    #         n_authors=Count("works__authors", distinct=True),
+    #     )
+    #     .select_related("country")
+    #     .order_by("year")
+    #     .prefetch_related(
+    #         "organizers",
+    #         "series_memberships",
+    #         "series_memberships__series",
+    #         "hosting_institutions",
+    #         "hosting_institutions__country",
+    #         "documents",
+    #     )
+    #     .all()
+    # )
+
+    # context = {"series_list": series_list, "standalone_conferences": unaffiliated_list}
+
+    # return render(request, "conference_list.html", context)
 
 
 def home_view(request):
