@@ -61,7 +61,7 @@ class Command(BaseCommand):
                         this_org = get_organizer(org)
                         conf_organizers.append(this_org)
 
-                format_str = "%d/%m/%Y"
+                format_str = "%m/%d/%Y"
 
                 try:
                     start_date = datetime.datetime.strptime(
