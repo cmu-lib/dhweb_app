@@ -10,4 +10,10 @@
   <hr>
   <p>{{ series.notes | safe }}</p>
   {% endif %}
+  {% if user.is_staff %}
+  <a href="{% url 'series_edit' series.pk %}" role="button" class="btn btn-warning btn-sm" rel="noopener noreferrer"
+    target="_blank">Edit</a>
+  <a href="{% url 'series_delete' series.pk %}" role="button" class="btn btn-danger btn-sm" rel="noopener noreferrer"
+    target="_blank">Delete</a>
+  {% endif %}
 </div>
