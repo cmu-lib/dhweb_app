@@ -65,7 +65,7 @@
     {% if work.full_text_type == "txt" %}
     <p>{{ work.full_text | linebreaks }}</p>
     {% elif work.full_text_type == "xml" %}
-    {{ work.full_text | safe }}
+    {{ work.full_text | striptags | linebreaksbr }}
     {% endif %}
     {% else %}
     <div class="alert alert-warning">The full text for this abstract has been indexed, but we cannot display it here
