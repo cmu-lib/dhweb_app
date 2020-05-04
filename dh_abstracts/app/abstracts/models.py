@@ -198,7 +198,10 @@ class ConferenceDocument(models.Model):
 
     @property
     def basename(self):
-        return basename(self.document.file.name)
+        try:
+            return basename(self.document.file.name)
+        except:
+            return f"File not found"
 
     @property
     def url(self):
@@ -206,7 +209,10 @@ class ConferenceDocument(models.Model):
 
     @property
     def size(self):
-        return self.document.file.size
+        try:
+            return self.document.file.size
+        except:
+            return f"File not found"
 
 
 class Organizer(ChangeTrackedModel):
