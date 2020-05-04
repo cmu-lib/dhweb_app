@@ -156,6 +156,13 @@ class Conference(models.Model):
         help_text="Have all the abstracts for this conference been entered?",
         db_index=True,
     )
+    editing_user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="User who has currently checked out this conference for data entry",
+    )
 
     class Meta:
         ordering = ["-year"]

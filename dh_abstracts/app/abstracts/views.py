@@ -71,6 +71,7 @@ from .forms import (
     AffiliationMultiMergeForm,
     KeywordMultiMergeForm,
     ConferenceForm,
+    ConferenceCheckoutForm,
     ConferenceSeriesInline,
     LanguageMergeForm,
     DisciplineMergeForm,
@@ -1629,6 +1630,53 @@ class ConferenceDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         return super(ConferenceDelete, self).delete(request, *args, **kwargs)
+
+
+@login_required
+@transaction.atomic
+def conference_checkout(request, conference_id):
+    conference = get_object_or_404(Conference, pk=conference_id)
+
+    if request.method == "GET":
+        """
+        Load the current form and display current attached user
+        """
+
+        context = {
+            "conference": conference,
+            "form": ConferenceCheckoutForm(
+                {"entry_status": conference.entry_status, "editing_user": "self"}
+            ),
+        }
+        return render(request, "conference_checkout.html", context)
+    elif request.method == "POST":
+        """
+        Get the form and update the status if the user has the authority to do so
+        """
+
+        raw_form = ConferenceCheckoutForm(request.POST)
+        if raw_form.is_valid():
+            clean_form = raw_form.cleaned_data
+            if clean_form["entry_status"] == "c" and not request.user.is_staff:
+                messages.error(
+                    request,
+                    "Only an administrator can mark this conference as completed.",
+                )
+                return redirect("conference_checkout", conference_id=conference.id)
+            else:
+                if clean_form["assign_user"] == "self":
+                    conference.entry_status = clean_form["entry_status"]
+                    conference.editing_user = request.user
+                    conference.save()
+                    messages.success(request, "Conference checked out")
+                elif clean_form["assign_user"] == "clear":
+                    conference.entry_status = clean_form["entry_status"]
+                    conference.editing_user = None
+                    conference.save()
+                    messages.success(request, "Conference cleared")
+                return redirect(
+                    "conference_series_detail", pk=conference.series.first().id
+                )
 
 
 class SeriesCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):

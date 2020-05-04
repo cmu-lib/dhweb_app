@@ -13,15 +13,20 @@
       {% endif %}
     </a>
   </h5>
-  {% if conference.entry_status == "n" %}
-  <span class="badge badge-secondary flex-shrink-0">Not started</span>
-  {% elif conference.entry_status == "i" %}
-  <span class="badge badge-warning flex-shrink-0">Incomplete</span>
-  {% elif conference.entry_status == "r" %}
-  <span class="badge badge-info flex-shrink-0">In review</span>
-  {% elif conference.entry_status == "c" %}
-  <span class="badge badge-success flex-shrink-0">Complete</span>
-  {% endif %}
+  <span>
+    {% if user.is_authenticated and conference.editing_user %}
+    <span class="badge badge-light flex-shrink-0">Checked out by {{ conference.editing_user }}</span>
+    {% endif %}
+    {% if conference.entry_status == "n" %}
+    <span class="badge badge-secondary flex-shrink-0">Not started</span>
+    {% elif conference.entry_status == "i" %}
+    <span class="badge badge-warning flex-shrink-0">Incomplete</span>
+    {% elif conference.entry_status == "r" %}
+    <span class="badge badge-info flex-shrink-0">In review</span>
+    {% elif conference.entry_status == "c" %}
+    <span class="badge badge-success flex-shrink-0">Complete</span>
+    {% endif %}
+  </span>
 </div>
 {% if conference.theme_title and not conference.short_title %}
 <h6>"{{ conference.theme_title }}"</h6>
@@ -91,6 +96,7 @@
 {% endif %}
 {% endif %}
 {% if user.is_authenticated %}
+<a href="{% url 'conference_checkout' conference.id %}" role="button" class="btn btn-secondary btn-sm">Checkout</a>
 <a href="{% url 'conference_edit' conference.id %}" role="button" class="btn btn-primary btn-sm">Edit</a>
 <a href="{% url 'conference_delete' conference.id %}" role="button" class="btn btn-danger btn-sm">Delete</a>
 <a href="{% url 'work_create' %}?conference={{ conference.id }}" role="button" class="btn btn-primary btn-sm">New

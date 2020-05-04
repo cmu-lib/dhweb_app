@@ -444,6 +444,24 @@ class TagForm(forms.Form):
     )
 
 
+class ConferenceCheckoutForm(forms.Form):
+    USER_CHOICES = (
+        ("self", "Assign self (replacing any currently-associated user)"),
+        ("clear", "Clear self/others from conference"),
+    )
+
+    entry_status = forms.ChoiceField(
+        choices=Conference.ENTRY_STATUS,
+        widget=forms.RadioSelect(choices=Conference.ENTRY_STATUS),
+    )
+
+    assign_user = forms.ChoiceField(
+        choices=USER_CHOICES,
+        initial="self",
+        widget=forms.RadioSelect(choices=USER_CHOICES),
+    )
+
+
 class ConferenceForm(forms.ModelForm):
     organizers = forms.ModelMultipleChoiceField(
         queryset=Organizer.objects.all(),

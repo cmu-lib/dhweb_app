@@ -39,6 +39,11 @@ urlpatterns = [
         views.cache_for_anon(views.StandaloneList.as_view()),
         name="standalone_conference_list",
     ),
+    path(
+        "conference/<int:conference_id>/checkout",
+        views.conference_checkout,
+        name="conference_checkout",
+    ),
     path("downloads", views.download_data, name="download_data"),
     path(
         "keyword-autocomplete",
