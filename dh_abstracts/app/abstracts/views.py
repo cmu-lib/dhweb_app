@@ -1674,11 +1674,11 @@ def conference_checkout(request, conference_id):
                     conference.editing_user = None
                     conference.save()
                     messages.success(request, "Conference cleared")
-                target_cs = conference.series.first().id
+                target_cs = conference.series.first()
                 if target_cs is None:
                     return redirect("standalone_conference_list")
                 else:
-                    return redirect("work_list", pk=target_cs)
+                    return redirect("work_list", pk=target_cs.id)
 
 
 class SeriesCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
