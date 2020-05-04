@@ -534,32 +534,44 @@ class AuthorList(ListView):
         return context
 
 
-def conference_series_qs():
-    return (
-        ConferenceSeries.objects.exclude(conferences__isnull=True)
-        .annotate(
-            n_conferences=Count("conferences", distinct=True),
-            earliest_year=Min("conferences__year"),
-            latest_year=Max("conferences__year"),
-            n_complete=Count(
-                "conferences", filter=Q(conferences__entry_status="c"), distinct=True
-            ),
-            n_in_progress=Count(
-                "conferences", filter=Q(conferences__entry_status="i"), distinct=True
-            ),
-            n_remaining=F("n_conferences") - F("n_complete") - F("n_in_progress"),
-            pct_complete=(
-                Cast(F("n_complete"), FloatField())
-                / Cast(F("n_conferences"), FloatField())
-            )
-            * 100,
-            pct_in_progress=(
-                Cast(F("n_in_progress"), FloatField())
-                / Cast(F("n_conferences"), FloatField())
-            )
-            * 100,
+def annotate_completeness(qs):
+    return qs.annotate(
+        n_conferences=Count("conferences", distinct=True),
+        earliest_year=Min("conferences__year"),
+        latest_year=Max("conferences__year"),
+        n_complete=Count(
+            "conferences", filter=Q(conferences__entry_status="c"), distinct=True
+        ),
+        n_in_progress=Count(
+            "conferences", filter=Q(conferences__entry_status="i"), distinct=True
+        ),
+        n_in_review=Count(
+            "conferences", filter=Q(conferences__entry_status="r"), distinct=True
+        ),
+        n_remaining=F("n_conferences")
+        - F("n_complete")
+        - F("n_in_progress")
+        - F("n_in_review"),
+        pct_complete=(
+            Cast(F("n_complete"), FloatField()) / Cast(F("n_conferences"), FloatField())
         )
-        .order_by("title")
+        * 100,
+        pct_in_progress=(
+            Cast(F("n_in_progress"), FloatField())
+            / Cast(F("n_conferences"), FloatField())
+        )
+        * 100,
+        pct_in_review=(
+            Cast(F("n_in_review"), FloatField())
+            / Cast(F("n_conferences"), FloatField())
+        )
+        * 100,
+    ).order_by("title")
+
+
+def conference_series_qs():
+    return annotate_completeness(
+        ConferenceSeries.objects.exclude(conferences__isnull=True)
     )
 
 
@@ -575,8 +587,36 @@ class ConferenceSeriesList(ListView):
         context = super().get_context_data(**kwargs)
         sa_conf = Conference.objects.filter(series__isnull=True)
         context["standalone_conferences"] = sa_conf.aggregate(
-            earliest_year=Min("year"), latest_year=Max("year")
+            earliest_year=Min("year"),
+            latest_year=Max("year"),
+            n_conferences=Count("id", distinct=True),
+            n_complete=Count("id", filter=Q(entry_status="c"), distinct=True),
+            n_in_progress=Count("id", filter=Q(entry_status="i"), distinct=True),
+            n_in_review=Count("id", filter=Q(entry_status="r"), distinct=True),
         )
+
+        context["standalone_conferences"]["n_remaining"] = (
+            context["standalone_conferences"]["n_conferences"]
+            - context["standalone_conferences"]["n_complete"]
+            - context["standalone_conferences"]["n_in_progress"]
+            - context["standalone_conferences"]["n_in_review"]
+        )
+
+        context["standalone_conferences"]["pct_complete"] = (
+            context["standalone_conferences"]["n_complete"]
+            / context["standalone_conferences"]["n_conferences"]
+        ) * 100
+
+        context["standalone_conferences"]["pct_in_progress"] = (
+            context["standalone_conferences"]["n_in_progress"]
+            / context["standalone_conferences"]["n_conferences"]
+        ) * 100
+
+        context["standalone_conferences"]["pct_in_review"] = (
+            context["standalone_conferences"]["n_in_review"]
+            / context["standalone_conferences"]["n_conferences"]
+        ) * 100
+
         context["standalone_conference_count"] = sa_conf.count()
         return context
 

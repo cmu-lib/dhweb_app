@@ -54,7 +54,12 @@ class ConferenceSeries(models.Model):
 
 
 class Conference(models.Model):
-    ENTRY_STATUS = (("n", "Not started"), ("i", "Incomplete"), ("c", "Complete"))
+    ENTRY_STATUS = (
+        ("n", "Not started"),
+        ("i", "Incomplete"),
+        ("r", "Needs review"),
+        ("c", "Complete"),
+    )
 
     year = models.PositiveIntegerField(help_text="Year the conference was held")
     short_title = models.CharField(

@@ -30,6 +30,26 @@
     <p class="text-muted">{{ standalone_conferences.earliest_year }} - {{ standalone_conferences.latest_year }}</p>
     <hr>
     <p>Digital humanities events not belonging to a larger conference, such symposia or workshops.</p>
+    <small>Abstract indexing progress:
+      <span class="badge badge-success">{{ standalone_conferences.n_complete }} Completed</span>
+      <span class="badge badge-warning">{{ standalone_conferences.n_in_progress }} in
+        progress</span>
+      <span class="badge badge-info">{{ standalone_conferences.n_in_review }} in
+        review</span>
+      <span class="badge badge-secondary">{{ standalone_conferences.n_remaining }} not yet started</span>
+    </small>
+    <div class="progress my-2">
+      <div class="progress-bar bg-success" role="progressbar" style="width: {{ standalone_conferences.pct_complete }}%"
+        aria-valuenow="{{ standalone_conferences.n_complete }}" aria-valuemin="0"
+        aria-valuemax="{{ standalone_conferences.n_conferences }}"></div>
+      <div class="progress-bar bg-warning" role="progressbar"
+        style="width: {{ standalone_conferences.pct_in_progress }}%"
+        aria-valuenow="{{ standalone_conferences.n_in_progress }}" aria-valuemin="0"
+        aria-valuemax="{{ standalone_conferences.n_conferences }}"></div>
+      <div class="progress-bar bg-info" role="progressbar" style="width: {{ standalone_conferences.pct_in_review }}%"
+        aria-valuenow="{{ standalone_conferences.n_in_review }}" aria-valuemin="0"
+        aria-valuemax="{{ standalone_conferences.n_conferences }}"></div>
+    </div>
   </div>
 </div>
 <hr>
