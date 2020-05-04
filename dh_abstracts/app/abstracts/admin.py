@@ -138,6 +138,8 @@ class ConferenceAdmin(admin.ModelAdmin):
     inlines = [ConferenceDocumentInline, ConferenceMembershipInline, OrganizerInline]
     search_fields = ["short_title"]
     autocomplete_fields = ["organizers", "hosting_institutions", "country"]
+    list_display = ["pk", "short_title", "theme_title", "city", "year", "entry_status"]
+    list_filter = ["entry_status"]
 
 
 class FileImportMessagesAdmin(admin.ModelAdmin):
