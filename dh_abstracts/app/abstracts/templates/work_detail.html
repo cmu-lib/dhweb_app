@@ -10,6 +10,13 @@
 {% block title %}{{ work.title }}{% endblock %}
 
 {% block main %}
+<h4>
+  <a href="{% url 'work_list' %}?work_type={{ work.work_type.id }}">
+    <span class="badge badge-secondary">
+      {{ work.work_type }}
+    </span>
+  </a>
+</h4>
 <div class="card my-2">
   <div class="card-header">
     Authorship
