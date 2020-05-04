@@ -341,7 +341,6 @@ class Work(TextIndexedModel, ChangeTrackedModel):
         help_text='Abstracts may belong to one type that has been defined by editors based on a survey of all the abstracts in this collection, e.g. "poster", "workshop", "long paper".',
     )
     full_text = models.TextField(
-        max_length=50000,
         blank=True,
         null=False,
         default="",
