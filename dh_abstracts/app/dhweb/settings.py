@@ -177,6 +177,16 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 262144000
 
 FILER_CANONICAL_URL = "files/"
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": "WARNING"},
+    "loggers": {
+        "django": {"handlers": ["console"], "level": "WARNING", "propagate": False}
+    },
+}
+
 # Email
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
