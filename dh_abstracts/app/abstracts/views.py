@@ -421,6 +421,18 @@ def author_view(request, author_id):
     return render(request, "author_detail.html", context)
 
 
+class XMLView(DetailView, LoginRequiredMixin):
+    model = Work
+    context_object_name = "work"
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(self.get_object().full_text, content_type="xhtml+xml")
+        response[
+            "Content-Disposition"
+        ] = f"attachment; filename={self.get_object().id}.xml"
+        return response
+
+
 class AuthorList(ListView):
     context_object_name = "author_list"
     template_name = "author_list.html"

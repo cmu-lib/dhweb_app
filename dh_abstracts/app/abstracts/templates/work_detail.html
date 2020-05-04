@@ -76,12 +76,15 @@
   {% with license=work.full_text_license %}
   <div class="card-footer">
     {% if license %}
-    Full text license: {% if license.url %}<a href="{{ license.url }}">{% endif %}<abbr
-        title="{{ license.title }}">{{ license.display_abbreviation }}</abbr>{% if license.url %}</a>{% endif %}
+    <p>Full text license: {% if license.url %}<a href="{{ license.url }}">{% endif %}<abbr
+          title="{{ license.title }}">{{ license.display_abbreviation }}</abbr>{% if license.url %}</a>{% endif %}</p>
     {% else %}
-    The license for this full text is unknown.
+    <p>The license for this full text is unknown.</p>
     {% endif %}
     {% endwith %}
+    {% if user.is_authenticated and work.full_text_type == "xml" %}
+    <p><a href="{% url 'work_xml' work.id %}">Download raw XML</a></p>
+    {% endif %}
   </div>
 </div>
 {% endif %}

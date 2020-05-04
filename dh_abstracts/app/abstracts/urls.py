@@ -11,6 +11,11 @@ urlpatterns = [
         "works/<int:work_id>", views.cache_for_anon(views.work_view), name="work_detail"
     ),
     path(
+        "works/<int:pk>/xml",
+        views.cache_for_anon(views.XMLView.as_view()),
+        name="work_xml",
+    ),
+    path(
         "authors", views.cache_for_anon(views.AuthorList.as_view()), name="author_list"
     ),
     path(
