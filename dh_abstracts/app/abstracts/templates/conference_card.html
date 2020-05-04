@@ -1,17 +1,28 @@
-<h5 class="mb-1">
-  <a href="{% url 'work_list' %}?conference={{ conference.id }}">
-    {{ conference.year }} -
-    {% if conference.main_series %}
-    {% if conference.short_title %}
-    {{ conference.short_title }}
-    {% else %}
-    {{ conference.main_series }}
-    {% endif %}
-    {% else %}
-    {{ conference.theme_title }}
-    {% endif %}
-  </a>
-</h5>
+<div class="d-flex justify-content-between align-items-baseline">
+  <h5 class="mb-1 flex-shrink-true">
+    <a href="{% url 'work_list' %}?conference={{ conference.id }}">
+      {{ conference.year }} -
+      {% if conference.main_series %}
+      {% if conference.short_title %}
+      {{ conference.short_title }}
+      {% else %}
+      {{ conference.main_series }}
+      {% endif %}
+      {% else %}
+      {{ conference.theme_title }}
+      {% endif %}
+    </a>
+  </h5>
+  {% if conference.entry_status == "n" %}
+  <span class="badge badge-secondary flex-shrink-0">Not started</span>
+  {% elif conference.entry_status == "i" %}
+  <span class="badge badge-warning flex-shrink-0">Incomplete</span>
+  {% elif conference.entry_status == "r" %}
+  <span class="badge badge-info flex-shrink-0">In review</span>
+  {% elif conference.entry_status == "c" %}
+  <span class="badge badge-success flex-shrink-0">Complete</span>
+  {% endif %}
+</div>
 {% if conference.theme_title and not conference.short_title %}
 <h6>"{{ conference.theme_title }}"</h6>
 {% endif %}
