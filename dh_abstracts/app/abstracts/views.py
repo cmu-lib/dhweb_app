@@ -534,7 +534,7 @@ class AuthorList(ListView):
         return context
 
 
-def annotate_completeness(qs):
+def annotate_multiple_series(qs):
     return qs.annotate(
         n_conferences=Count("conferences", distinct=True),
         earliest_year=Min("conferences__year"),
@@ -569,8 +569,34 @@ def annotate_completeness(qs):
     ).order_by("title")
 
 
+def annotate_single_series(qs):
+    res = qs.aggregate(
+        earliest_year=Min("year"),
+        latest_year=Max("year"),
+        n_conferences=Count("id", distinct=True),
+        n_complete=Count("id", filter=Q(entry_status="c"), distinct=True),
+        n_in_progress=Count("id", filter=Q(entry_status="i"), distinct=True),
+        n_in_review=Count("id", filter=Q(entry_status="r"), distinct=True),
+    )
+
+    res["n_remaining"] = (
+        res["n_conferences"]
+        - res["n_complete"]
+        - res["n_in_progress"]
+        - res["n_in_review"]
+    )
+
+    res["pct_complete"] = (res["n_complete"] / res["n_conferences"]) * 100
+
+    res["pct_in_progress"] = (res["n_in_progress"] / res["n_conferences"]) * 100
+
+    res["pct_in_review"] = (res["n_in_review"] / res["n_conferences"]) * 100
+
+    return res
+
+
 def conference_series_qs():
-    return annotate_completeness(
+    return annotate_multiple_series(
         ConferenceSeries.objects.exclude(conferences__isnull=True)
     )
 
@@ -586,37 +612,7 @@ class ConferenceSeriesList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         sa_conf = Conference.objects.filter(series__isnull=True)
-        context["standalone_conferences"] = sa_conf.aggregate(
-            earliest_year=Min("year"),
-            latest_year=Max("year"),
-            n_conferences=Count("id", distinct=True),
-            n_complete=Count("id", filter=Q(entry_status="c"), distinct=True),
-            n_in_progress=Count("id", filter=Q(entry_status="i"), distinct=True),
-            n_in_review=Count("id", filter=Q(entry_status="r"), distinct=True),
-        )
-
-        context["standalone_conferences"]["n_remaining"] = (
-            context["standalone_conferences"]["n_conferences"]
-            - context["standalone_conferences"]["n_complete"]
-            - context["standalone_conferences"]["n_in_progress"]
-            - context["standalone_conferences"]["n_in_review"]
-        )
-
-        context["standalone_conferences"]["pct_complete"] = (
-            context["standalone_conferences"]["n_complete"]
-            / context["standalone_conferences"]["n_conferences"]
-        ) * 100
-
-        context["standalone_conferences"]["pct_in_progress"] = (
-            context["standalone_conferences"]["n_in_progress"]
-            / context["standalone_conferences"]["n_conferences"]
-        ) * 100
-
-        context["standalone_conferences"]["pct_in_review"] = (
-            context["standalone_conferences"]["n_in_review"]
-            / context["standalone_conferences"]["n_conferences"]
-        ) * 100
-
+        context["standalone_conferences"] = annotate_single_series(sa_conf)
         context["standalone_conference_count"] = sa_conf.count()
         return context
 
@@ -626,13 +622,19 @@ class ConferenceSeriesDetail(DetailView):
     template_name = "conference_series_detail.html"
     context_object_name = "series"
 
+    def get_member_conferences(self):
+        return Conference.objects.filter(series_memberships__series=self.get_object())
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["series_progress"] = annotate_single_series(
+            self.get_member_conferences()
+        )
         series_order_subquery = SeriesMembership.objects.filter(
             conference=OuterRef("pk"), series=self.get_object()
         ).order_by("number")
         context["conference_list"] = (
-            Conference.objects.filter(series_memberships__series=self.get_object())
+            self.get_member_conferences()
             .annotate(
                 main_series=Max("series_memberships__series__title"),
                 n_works=Count("works", distinct=True),
@@ -688,6 +690,7 @@ class StandaloneList(View):
             "conference_list": self.get_standalone_list(),
             "series": faux_series,
             "series_list": conference_series_qs(),
+            "series_progress": annotate_single_series(self.get_standalone_list()),
         }
         return render(request, self.template_name, context)
 

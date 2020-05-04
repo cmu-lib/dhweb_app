@@ -28,6 +28,7 @@
     <hr>
     <p>{{ series.notes }}</p>
     {% endif %}
+    {% include "series_progress_bar.html" with series=series_progress %}
     {% if user.is_staff and series.id %}
     <a href="{% url 'series_edit' series.pk %}" role="button" class="btn btn-warning btn-sm" rel="noopener noreferrer"
       target="_blank">Edit</a>
