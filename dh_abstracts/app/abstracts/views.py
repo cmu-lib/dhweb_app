@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
@@ -2544,6 +2544,16 @@ def work_type_merge(request, work_type_id):
             return render(request, "tag_merge.html", context)
 
 
+class Echo:
+    """An object that implements just the write method of the file-like
+    interface.
+    """
+
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
+
+
 @login_required
 def download_works_csv(request):
     header_names = [
@@ -2590,12 +2600,12 @@ def download_works_csv(request):
         )
     )
 
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = "attachment; filename=dh_conferences_works.csv"
-    writer = csv.writer(response, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL)
-    writer.writerow(header_names)
-    for w in works:
-        row = [
+    pseudo_buffer = Echo()
+    writer = csv.writer(
+        pseudo_buffer, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL
+    )
+    rows = (
+        [
             w.pk,
             w.conference.short_title,
             w.conference.theme_title,
@@ -2620,5 +2630,10 @@ def download_works_csv(request):
             ";".join([str(k) for k in w.disciplines.all()]),
             ";".join([str(k) for k in w.topics.all()]),
         ]
-        writer.writerow(row)
+        for w in works
+    )
+    response = StreamingHttpResponse(
+        (writer.writerow(row) for row in rows), content_type="text/csv"
+    )
+    response["Content-Disposition"] = "attachment; filename=dh_conferences_works.csv"
     return response
