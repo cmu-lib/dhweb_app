@@ -1077,7 +1077,8 @@ class FullWorkList(ListView):
                 .annotate(
                     main_series=Max(
                         "conference__series_memberships__series__abbreviation"
-                    )
+                    ),
+                    main_institution=Max("conference__hosting_institutions__name"),
                 )
                 .prefetch_related(
                     "conference__organizers",

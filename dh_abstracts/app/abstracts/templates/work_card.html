@@ -36,8 +36,10 @@
       {{ work.conference.year }} -
       {% if work.conference.short_title %}
       {{ work.conference.short_title }}
-      {% else %}
-      {{ work.conference.theme_title }}
+      {% elif work.conference.city %}
+      {{ work.conference.city }}
+      {% elif work.main_institution %}
+      {{ work.main_institution }}
       {% endif %}
     </a></small>
   {% if work.full_text %}<span class="badge badge-secondary">Full text indexed</span>{% endif %}
