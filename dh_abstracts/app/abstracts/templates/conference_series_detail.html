@@ -7,13 +7,13 @@
 <div class="row">
   <div class="col-md-9">
     <div class="d-flex justify-content-between align-items-center">
-      <h2>{{ series.title }}</h2>
-      {% if series.notes %}
+      <h2 class="flex-shrink-1">{{ series.title }}</h2>
       {% if user.is_staff %}
-      <a class="btn btn-primary" role="button" href="{% url 'conference_create' %}">Add conference</a>
+      <a class="btn btn-primary flex-shrink-0" role="button" href="{% url 'conference_create' %}">Add conference</a>
       {% endif %}
     </div>
     <hr>
+    {% if series.notes %}
     <p>{{ series.notes }}</p>
     {% endif %}
     {% include "series_progress_bar.html" with series=series_progress %}
