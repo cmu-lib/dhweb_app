@@ -544,6 +544,7 @@ class Institution(ChangeTrackedModel):
 
     def merge(self, target):
         affected_affiliations = Affiliation.objects.filter(institution=self)
+        affected_conferences = Conference.objects.filter(hosting_institutions=self)
 
         # If changing one of those affect afiliations to the new institution would create an affiliation that already exists, then reassign those authorships to the already-existing affiliation
         results = {"update_results": affected_affiliations.count()}
@@ -562,6 +563,10 @@ class Institution(ChangeTrackedModel):
             else:
                 aff.institution = target
                 aff.save()
+        for conf in affected_conferences:
+            conf.hosting_institutions.remove(self)
+            conf.hosting_institutions.add(target)
+            conf.save()
 
         # Finally, delete the old institution
         self.delete()
