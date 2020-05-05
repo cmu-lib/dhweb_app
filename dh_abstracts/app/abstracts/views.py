@@ -1683,7 +1683,9 @@ def conference_checkout(request, conference_id):
                 if target_cs is None:
                     return redirect("standalone_conference_list")
                 else:
-                    return redirect("work_list", pk=target_cs.id)
+                    return redirect(
+                        reverse("work_list") + f"?conference={target_cs.id}"
+                    )
 
 
 class SeriesCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
