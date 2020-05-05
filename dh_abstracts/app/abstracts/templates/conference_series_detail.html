@@ -32,8 +32,9 @@
   </div>
   <div class="col-md-3">
     <div class="card m-2">
-      <div class="card-header">Other Conference Series</div>
-      <ul class="list-group list-group-flush">
+      <div class="card-header"><a data-toggle="collapse" href="#collapseSeries" role="button" aria-expanded="false"
+          aria-controls="collapseSeries">Other Conference Series</div>
+      <ul class="list-group list-group-flush collapse" id="collapseSeries">
         <li class="list-group-item {% if not series.id %}disabled{% endif %}">
           <a href="{% url 'standalone_conference_list' %}">Standalone Events</a>
         </li>
