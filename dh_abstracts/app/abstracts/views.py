@@ -1501,7 +1501,7 @@ def wipe_unused(request):
             asserted_by__isnull=False
         ).distinct(),
         "Institution": Institution.objects.exclude(
-            affiliations__asserted_by__isnull=False
+            Q(affiliations__asserted_by__isnull=False) | Q(conferences__isnull=False)
         ).distinct(),
         "Keyword": Keyword.objects.exclude(works__isnull=False).distinct(),
         "Appellation": Appellation.objects.exclude(
