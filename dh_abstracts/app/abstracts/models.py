@@ -52,6 +52,9 @@ class ConferenceSeries(models.Model):
     def get_absolute_url(self):
         return reverse("conference_series_detail", kwargs={"pk": self.pk})
 
+    class Meta:
+        ordering = ["abbreviation"]
+
 
 class Conference(models.Model):
     ENTRY_STATUS = (
@@ -248,6 +251,9 @@ class Organizer(ChangeTrackedModel):
             return self.abbreviation
         else:
             return self.name
+
+    class Meta:
+        ordering = ["abbreviation"]
 
 
 class SeriesMembership(models.Model):
