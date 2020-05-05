@@ -5,23 +5,6 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-md-3">
-    <div class="card m-2">
-      <div class="card-header">Conference Series</div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item {% if not series.id %}disabled{% endif %}">
-          <a href="{% url 'standalone_conference_list' %}">Standalone Events</a>
-        </li>
-        {% for s in series_list %}
-        <li class="list-group-item {% if s.id is series.id %}disabled{% endif %}">
-          <a href="{% url 'conference_series_detail' s.id %}">{{ s.title }} ({{ s.n_conferences}})</a>
-          <br>
-          <small class="text-muted">{{ s.earliest_year }} - {{ s.latest_year }}</small>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
   <div class="col-md-9">
     <h2>{{ series.title }}</h2>
     {% if series.notes %}
@@ -45,6 +28,23 @@
         </li>
         {% endfor %}
       </ol>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card m-2">
+      <div class="card-header">Other Conference Series</div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item {% if not series.id %}disabled{% endif %}">
+          <a href="{% url 'standalone_conference_list' %}">Standalone Events</a>
+        </li>
+        {% for s in series_list %}
+        <li class="list-group-item {% if s.id is series.id %}disabled{% endif %}">
+          <a href="{% url 'conference_series_detail' s.id %}">{{ s.title }} ({{ s.n_conferences}})</a>
+          <br>
+          <small class="text-muted">{{ s.earliest_year }} - {{ s.latest_year }}</small>
+        </li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 </div>
