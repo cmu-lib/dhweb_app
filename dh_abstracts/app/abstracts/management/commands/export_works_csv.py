@@ -20,35 +20,23 @@ class Command(BaseCommand):
             writer = csv.writer(
                 csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL
             )
-            writer.writerow(
-                [
-                    "work_id",
-                    "conference_short_title",
-                    "conference_year",
-                    "conference_organizers",
-                    "conference_series",
-                    "work_title",
-                    "work_authors",
-                    "work_type",
-                    "work_full_text",
-                    "work_full_text_type",
-                    "work_full_text_license",
+            writer.writerow()
+            works = (
+                models.Work.objects.order_by("pk")
+                .select_related("conference__country")
+                .prefetch_related(
+                    "conference",
+                    "conference__series",
+                    "conference__organizers",
+                    "conference__hosting_institutions",
+                    "conference__hosting_institutions__country",
                     "keywords",
                     "languages",
                     "disciplines",
                     "topics",
-                ]
-            )
-            works = models.Work.objects.order_by("pk").prefetch_related(
-                "conference",
-                "conference__series",
-                "conference__organizers",
-                "keywords",
-                "languages",
-                "disciplines",
-                "topics",
-                "work_type",
-                "full_text_license",
+                    "work_type",
+                    "full_text_license",
+                )
             )
             bar = Bar("Exporting works", max=works.count())
             for w in works:
@@ -56,10 +44,18 @@ class Command(BaseCommand):
                 row = [
                     w.pk,
                     w.conference.short_title,
+                    w.conference.theme_title,
                     w.conference.year,
                     ";".join([str(o) for o in w.conference.organizers.all()]),
                     ";".join([str(s) for s in w.conference.series.all()]),
+                    ";".join([str(s) for s in w.conference.hosting_institutions.all()]),
+                    w.conference.city,
+                    w.conference.state_province_region,
+                    w.conference.country,
+                    w.conference.url,
+                    w.conference.notes,
                     w.title,
+                    w.url,
                     ";".join([str(a.appellation) for a in w.authorships.all()]),
                     w.work_type,
                     w.full_text,

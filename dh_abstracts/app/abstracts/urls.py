@@ -315,4 +315,5 @@ urlpatterns = [
         views.work_type_merge,
         name="work_type_merge",
     ),
+    path("downloads/works.csv", views.download_works_csv, name="works_download"),
 ]

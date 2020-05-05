@@ -34,6 +34,7 @@ from django.utils.html import format_html
 from django.views.decorators.cache import cache_page
 import glob
 from os.path import basename
+import csv
 
 from .models import (
     Work,
@@ -2541,3 +2542,83 @@ def work_type_merge(request, work_type_id):
             for error in raw_form.errors:
                 messages.error(request, error)
             return render(request, "tag_merge.html", context)
+
+
+@login_required
+def download_works_csv(request):
+    header_names = [
+        "work_id",
+        "conference_short_title",
+        "conference_theme_title",
+        "conference_year",
+        "conference_organizers",
+        "conference_series",
+        "conference_hosting_institutions",
+        "conference_city",
+        "conference_state",
+        "conference_country",
+        "conference_url",
+        "conference_notes",
+        "work_title",
+        "work_url",
+        "work_authors",
+        "work_type",
+        "work_full_text",
+        "work_full_text_type",
+        "work_full_text_license",
+        "keywords",
+        "languages",
+        "disciplines",
+        "topics",
+    ]
+
+    works = (
+        Work.objects.order_by("id")
+        .select_related("conference__country")
+        .prefetch_related(
+            "conference",
+            "conference__series",
+            "conference__organizers",
+            "conference__hosting_institutions",
+            "conference__hosting_institutions__country",
+            "keywords",
+            "languages",
+            "disciplines",
+            "topics",
+            "work_type",
+            "full_text_license",
+        )
+    )
+
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename=dh_conferences_works.csv"
+    writer = csv.writer(response, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL)
+    writer.writerow(header_names)
+    for w in works:
+        row = [
+            w.pk,
+            w.conference.short_title,
+            w.conference.theme_title,
+            w.conference.year,
+            ";".join([str(o) for o in w.conference.organizers.all()]),
+            ";".join([str(s) for s in w.conference.series.all()]),
+            ";".join([str(s) for s in w.conference.hosting_institutions.all()]),
+            w.conference.city,
+            w.conference.state_province_region,
+            w.conference.country,
+            w.conference.url,
+            w.conference.notes,
+            w.title,
+            w.url,
+            ";".join([str(a.appellation) for a in w.authorships.all()]),
+            w.work_type,
+            w.full_text,
+            w.full_text_type,
+            w.full_text_license,
+            ";".join([str(k) for k in w.keywords.all()]),
+            ";".join([str(k) for k in w.languages.all()]),
+            ";".join([str(k) for k in w.disciplines.all()]),
+            ";".join([str(k) for k in w.topics.all()]),
+        ]
+        writer.writerow(row)
+    return response
