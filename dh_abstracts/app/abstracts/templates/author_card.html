@@ -1,11 +1,10 @@
 <h6 class="mb-1">
   <a
     href="{% if editor_view %}{% url 'author_detail' author.id %}{% else %}{% url 'author_detail' author.id %}{% endif %}">
-    {{ author.most_recent_first_name }} {{ author.most_recent_last_name }} <span
-      class="badge badge-info">{{ author.n_works }}</span> works
+    {{ author }} <span class="badge badge-info">{{ author.authorships.count }}</span> works
     authored</a></h6>
-{% if author.main_affiliation_institution %}
+{% with authorship=author.authorships.last %}
 <p class=" mb-0 text-muted">
-  {% include "affiliation_string.html" with department=author.main_affiliation_department institution=author.main_affiliation_institution institution_city=author.main_affiliation_institution_city institution_country=author.main_affiliation_institution_country %}
+  {% include "affiliation_string.html" with department=authorship.affiliations.first.department institution=authorship.affiliations.first.institution institution_city=authorships.affiliations.first.institution.city institution_country=authorships.affiliations.first.institution.country %}
 </p>
-{% endif %}
+{% endwith %}

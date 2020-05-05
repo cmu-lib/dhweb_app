@@ -685,7 +685,7 @@ class Author(ChangeTrackedModel):
     def most_recent_attributes(self, attr):
         """
         Calculate the most recent attribute by annotating attributes based on
-        the latest year of th eoncference in which they were asserted
+        the latest year of the conference in which they were asserted
         """
         every_attr = attr.objects.filter(
             asserted_by__in=self.public_authorships
