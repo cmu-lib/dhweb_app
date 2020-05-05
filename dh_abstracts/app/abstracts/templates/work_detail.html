@@ -120,7 +120,7 @@
     <li class="list-group-item">Keywords:
       {% if work.keywords.all %}
       {% for keyword in work.keywords.all %}
-      <a class="badge badge-info" href="{% url 'work_list' %}?keyword={{ keyword.pk }}">{{ keyword.title }}</a>
+      <a class="badge badge-info" href="{% url 'work_list' %}?keywords={{ keyword.pk }}">{{ keyword.title }}</a>
       {% endfor %}
       {% else %}
       None
@@ -129,7 +129,7 @@
     <li class="list-group-item">Language:
       {% if work.languages.all %}
       {% for language in work.languages.all %}
-      <a class="badge badge-info" href="{% url 'work_list' %}?language={{ language.pk }}">{{ language.title }}</a>
+      <a class="badge badge-info" href="{% url 'work_list' %}?languages={{ language.pk }}">{{ language.title }}</a>
       {% endfor %}
       {% else %}
       None
@@ -138,7 +138,7 @@
     <li class="list-group-item">Topics:
       {% if work.topics.all %}
       {% for topic in work.topics.all %}
-      <a class="badge badge-info" href="{% url 'work_list' %}?topic={{ topic.pk }}">{{ topic.title }}</a>
+      <a class="badge badge-info" href="{% url 'work_list' %}?topics={{ topic.pk }}">{{ topic.title }}</a>
       {% endfor %}
       {% else %}
       None
@@ -147,7 +147,8 @@
     <li class="list-group-item">Disciplines:
       {% if work.disciplines.all %}
       {% for discipline in work.disciplines.all %}
-      <a class="badge badge-info" href="{% url 'work_list' %}?discipline={{ discipline.pk }}">{{ discipline.title }}</a>
+      <a class="badge badge-info"
+        href="{% url 'work_list' %}?disciplines={{ discipline.pk }}">{{ discipline.title }}</a>
       {% endfor %}
       {% else %}
       None
