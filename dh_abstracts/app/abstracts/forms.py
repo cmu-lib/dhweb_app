@@ -503,6 +503,22 @@ class ConferenceForm(forms.ModelForm):
             "attendance": forms.Textarea(attrs={"rows": 2}),
         }
 
+    def clean(self, *args, **kwargs):
+        cleaned_data = super().clean(*args, **kwargs)
+        short_title = cleaned_data.get("short_title")
+        theme_title = cleaned_data.get("theme_title")
+        hosting_institutions = cleaned_data.get("hosting_institutions")
+        if (
+            short_title == ""
+            and theme_title == ""
+            and city == ""
+            and len(hosting_institutions) == 0
+        ):
+            self.add_error(
+                "Conference creation error",
+                "You must supply at least one of either: short title, theme title, city, or at least one hosting institution",
+            )
+
 
 class ConferenceSeriesInline(forms.Form):
     series = forms.ModelChoiceField(

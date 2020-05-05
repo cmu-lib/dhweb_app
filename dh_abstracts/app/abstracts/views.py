@@ -1534,11 +1534,15 @@ class ConferenceCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         form_instance = self.get_form()
-        form_instance.is_valid()
-        for organizer in form_instance.cleaned_data["organizers"]:
-            self.object.organizers.add(organizer)
-        self.object.save()
-        return response
+        if form_instance.is_valid():
+            for organizer in form_instance.cleaned_data["organizers"]:
+                self.object.organizers.add(organizer)
+            self.object.save()
+            return response
+        else:
+            for err in form_instance.errors:
+                messages.error(request, err)
+                return response
 
 
 @user_is_staff
