@@ -1,4 +1,5 @@
 {% extends "detail.html" %}
+{% load query_filters %}
 
 {% block metadata %}
 {% include "twitter_card.html" with title=work.title content=work.full_text %}
@@ -72,7 +73,7 @@
     {% if work.full_text_type == "txt" %}
     <p>{{ work.full_text | linebreaks }}</p>
     {% elif work.full_text_type == "xml" %}
-    {{ work.full_text | striptags | linebreaksbr }}
+    {{ work.full_text | striptags | reduce_lines | linebreaks }}
     {% endif %}
     {% else %}
     <div class="alert alert-warning">The full text for this abstract has been indexed, but we cannot display it here

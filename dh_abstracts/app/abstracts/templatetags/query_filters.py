@@ -1,4 +1,5 @@
 from django import template
+import re
 
 register = template.Library()
 
@@ -11,3 +12,8 @@ def url_replace(request, field, value):
     dict_[field] = str(value)
 
     return dict_.urlencode()
+
+
+@register.filter
+def reduce_lines(value):
+    return re.compile(r"^\s+$", re.MULTILINE).sub("", value)
