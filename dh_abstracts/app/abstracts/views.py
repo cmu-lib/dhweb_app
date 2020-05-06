@@ -224,7 +224,9 @@ class CountryAutocomplete(Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Country.objects.all()
+        qs = Country.objects.annotate(
+            n_works=Count("institution__affiliations__asserted_by__work", distinct=True)
+        ).order_by("-n_works")
 
         if self.q:
             qs = qs.filter(
@@ -233,17 +235,25 @@ class CountryAutocomplete(Select2QuerySetView):
 
         return qs
 
+        def get_result_label(self, item):
+            return f"{item} ({item.n_works} works)"
+
 
 class InstitutionAutocomplete(Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Institution.objects.all()
+        qs = Institution.objects.annotate(
+            n_works=Count("affiliations__asserted_by__work", distinct=True)
+        ).order_by("-n_works")
 
         if self.q:
             qs = qs.filter(name__icontains=self.q).all()
 
         return qs
+
+    def get_result_label(self, item):
+        return f"{item} ({item.n_works} works)"
 
 
 class AffiliationAutocomplete(Select2QuerySetView):
@@ -260,6 +270,9 @@ class AffiliationAutocomplete(Select2QuerySetView):
             ).distinct()
 
         return qs
+
+    def get_result_label(self, item):
+        return f"{item} ({item.n_works} works)"
 
 
 class ConferenceAutocomplete(Select2QuerySetView):
@@ -645,7 +658,9 @@ class ConferenceSeriesDetail(DetailView):
             self.get_member_conferences()
             .annotate(
                 main_series=StringAgg(
-                    "series_memberships__series__abbreviation", delimiter=" / ", distinct=True
+                    "series_memberships__series__abbreviation",
+                    delimiter=" / ",
+                    distinct=True,
                 ),
                 n_works=Count("works", distinct=True),
                 n_authors=Count("works__authors", distinct=True),
@@ -674,7 +689,9 @@ class StandaloneList(View):
             Conference.objects.filter(series__isnull=True)
             .annotate(
                 main_series=StringAgg(
-                    "series_memberships__series__abbreviation", delimiter=" / ", distinct=True
+                    "series_memberships__series__abbreviation",
+                    delimiter=" / ",
+                    distinct=True,
                 ),
                 n_works=Count("works", distinct=True),
                 n_authors=Count("works__authors", distinct=True),
