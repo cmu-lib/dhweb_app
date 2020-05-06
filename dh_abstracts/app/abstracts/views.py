@@ -19,6 +19,7 @@ from django.db.models.functions import Concat, FirstValue, Cast
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
+from django.contrib.postgres.aggregates import StringAgg
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
@@ -266,7 +267,11 @@ class ConferenceAutocomplete(Select2QuerySetView):
 
     def get_queryset(self):
         qs = Conference.objects.annotate(
-            main_series=Max("series_memberships__series__abbreviation")
+            main_series=StringAgg(
+                "series_memberships__series__abbreviation",
+                delimiter=" / ",
+                distinct=True,
+            )
         ).order_by("year", "main_series", "short_title", "theme_title")
 
         if self.q:
@@ -308,7 +313,9 @@ def work_view(request, work_id):
     related_conference = Conference.objects.annotate(
         n_works=Count("works", distinct=True),
         n_authors=Count("works__authors", distinct=True),
-        main_series=Max("series_memberships__series__title"),
+        main_series=StringAgg(
+            "series_memberships__series__abbreviation", delimiter=" / ", distinct=True
+        ),
     )
     work = get_object_or_404(
         Work.objects.select_related(
@@ -637,7 +644,9 @@ class ConferenceSeriesDetail(DetailView):
         context["conference_list"] = (
             self.get_member_conferences()
             .annotate(
-                main_series=Max("series_memberships__series__title"),
+                main_series=StringAgg(
+                    "series_memberships__series__abbreviation", delimiter=" / ", distinct=True
+                ),
                 n_works=Count("works", distinct=True),
                 n_authors=Count("works__authors", distinct=True),
                 series_order=Subquery(series_order_subquery.values("number")[:1]),
@@ -664,7 +673,9 @@ class StandaloneList(View):
         qs = (
             Conference.objects.filter(series__isnull=True)
             .annotate(
-                main_series=Max("series_memberships__series__title"),
+                main_series=StringAgg(
+                    "series_memberships__series__abbreviation", delimiter=" / ", distinct=True
+                ),
                 n_works=Count("works", distinct=True),
                 n_authors=Count("works__authors", distinct=True),
             )
@@ -1075,10 +1086,16 @@ class FullWorkList(ListView):
             return (
                 result_set.select_related("conference")
                 .annotate(
-                    main_series=Max(
-                        "conference__series_memberships__series__abbreviation"
+                    main_series=StringAgg(
+                        "conference__series_memberships__series__abbreviation",
+                        delimiter=" / ",
+                        distinct=True,
                     ),
-                    main_institution=Max("conference__hosting_institutions__name"),
+                    main_institution=StringAgg(
+                        "conference__hosting_institutions__name",
+                        delimiter=" / ",
+                        distinct=True,
+                    ),
                 )
                 .prefetch_related(
                     "conference__organizers",
@@ -1111,7 +1128,11 @@ class FullWorkList(ListView):
                     .annotate(
                         n_works=Count("works", distinct=True),
                         n_authors=Count("works__authors", distinct=True),
-                        main_series=Max("series_memberships__series__title"),
+                        main_series=StringAgg(
+                            "series_memberships__series__abbreviation",
+                            delimiter=" / ",
+                            distinct=True,
+                        ),
                     )
                     .select_related("country")
                     .prefetch_related(
