@@ -35,6 +35,7 @@ from django.views.decorators.cache import cache_page
 import glob
 from os.path import basename
 import csv
+import itertools
 
 from .models import (
     Work,
@@ -2600,40 +2601,42 @@ def download_works_csv(request):
         )
     )
 
+    def header_iterator(names, content):
+        yield names
+        for w in content:
+            yield [
+                w.pk,
+                w.conference.short_title,
+                w.conference.theme_title,
+                w.conference.year,
+                ";".join([str(o) for o in w.conference.organizers.all()]),
+                ";".join([str(s) for s in w.conference.series.all()]),
+                ";".join([str(s) for s in w.conference.hosting_institutions.all()]),
+                w.conference.city,
+                w.conference.state_province_region,
+                w.conference.country,
+                w.conference.url,
+                w.conference.notes,
+                w.title,
+                w.url,
+                ";".join([str(a.appellation) for a in w.authorships.all()]),
+                w.work_type,
+                w.full_text,
+                w.full_text_type,
+                w.full_text_license,
+                ";".join([str(k) for k in w.keywords.all()]),
+                ";".join([str(k) for k in w.languages.all()]),
+                ";".join([str(k) for k in w.disciplines.all()]),
+                ";".join([str(k) for k in w.topics.all()]),
+            ]
+
     pseudo_buffer = Echo()
     writer = csv.writer(
         pseudo_buffer, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL
     )
-    rows = (
-        [
-            w.pk,
-            w.conference.short_title,
-            w.conference.theme_title,
-            w.conference.year,
-            ";".join([str(o) for o in w.conference.organizers.all()]),
-            ";".join([str(s) for s in w.conference.series.all()]),
-            ";".join([str(s) for s in w.conference.hosting_institutions.all()]),
-            w.conference.city,
-            w.conference.state_province_region,
-            w.conference.country,
-            w.conference.url,
-            w.conference.notes,
-            w.title,
-            w.url,
-            ";".join([str(a.appellation) for a in w.authorships.all()]),
-            w.work_type,
-            w.full_text,
-            w.full_text_type,
-            w.full_text_license,
-            ";".join([str(k) for k in w.keywords.all()]),
-            ";".join([str(k) for k in w.languages.all()]),
-            ";".join([str(k) for k in w.disciplines.all()]),
-            ";".join([str(k) for k in w.topics.all()]),
-        ]
-        for w in works
-    )
     response = StreamingHttpResponse(
-        (writer.writerow(row) for row in rows), content_type="text/csv"
+        (writer.writerow(r) for r in header_iterator(header_names, works)),
+        content_type="text/csv",
     )
     response["Content-Disposition"] = "attachment; filename=dh_conferences_works.csv"
     return response
