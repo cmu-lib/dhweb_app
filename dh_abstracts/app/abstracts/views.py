@@ -816,21 +816,7 @@ def author_merge_view(request, author_id):
 
 @user_is_staff
 def download_data(request):
-    download_base = [
-        r"*works.csv",
-        r"*authorships.csv",
-        r"*affiliations.csv",
-        r"*full.json",
-    ]
-
-    actual_downloads = [
-        basename(glob.glob(f"{settings.STATIC_ROOT}/downloads/{dlf}")[0])
-        for dlf in download_base
-    ]
-
-    context = {"downloads": actual_downloads}
-
-    return render(request, "downloads.html", context)
+    return render(request, "downloads.html")
 
 
 @login_required
