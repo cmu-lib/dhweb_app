@@ -313,7 +313,11 @@ class AuthorAutocomplete(Select2QuerySetView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Author.objects.all()
+        qs = Author.objects.annotate(
+            n_works=Count("authorships", distinct=True),
+            main_last_name=Max("appellations__last_name"),
+            main_first_name=Max("appellations__first_name"),
+        ).order_by("main_last_name", "main_first_name", "-n_works")
 
         if self.q:
             qs = qs.filter(appellations_index__icontains=self.q).distinct()
@@ -322,7 +326,7 @@ class AuthorAutocomplete(Select2QuerySetView):
 
     def get_result_label(self, item):
         return format_html(
-            f"{item} <small text-class='muted'>(All names: {item.appellations_index})</small>"
+            f"{item} ({item.n_works} works)<br><small text-class='muted'>(All names: {item.appellations_index})</small>"
         )
 
 
