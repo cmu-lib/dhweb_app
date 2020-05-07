@@ -11,17 +11,27 @@
   the underlying models are relatively complex, these three tables offer a good balance by representing all the data we
   have without requiring too many table joins to navigate.</p>
 
-<p><strong>works.csv</strong> has one row per Work, containing columns that specify the conference, year, series, and
+<p><strong>dh_conferences_works.csv</strong> has one row per Work, containing columns that specify the conference, year,
+  series, and
   organizers, the title and full text when available, as well as the tags associated with the Work. Multiple tags are
   delimited with a `;` within each field.</p>
 
-<p><strong>authorships.csv</strong> has one row per Authorship, which is an Author-Work association. This table can join
+<p><strong>dh_conferences_authorships.csv</strong> has one row per Authorship, which is an Author-Work association. This
+  table can join
   to <strong>works.csv</strong> on the `work_id` column. There is an `author_id` column as well as columns for names and
   affiliations (which may differ from authorship to authorship).</p>
 
 <p>The (possibly multiple) affiliations of the author in the `affiliations` column are a joining key to
-  <strong>affiliations.csv</strong>, which can contain a department name, an institution name, and/or the city and
+  <strong>dh_conferences_affiliations.csv</strong>, which can contain a department name, an institution name, and/or the
+  city and
   country of that institution.</p>
+
+<div class="alert alert-warning">
+  <p>
+    It is strongly recommended to not NOT use Microsoft Excel to open these files, as it is easily confused by the
+    multiline values in the full-text column. We recommend R, Python, or Google Sheets.
+  </p>
+</div>
 
 <div class="card my-2">
   <div class="card-header">Files</div>
