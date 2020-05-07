@@ -315,5 +315,19 @@ urlpatterns = [
         views.work_type_merge,
         name="work_type_merge",
     ),
-    path("downloads/works.csv", views.download_works_csv, name="works_download"),
+    path(
+        "downloads/dh_conferences_works.csv",
+        views.download_works_csv,
+        name="works_download",
+    ),
+    path(
+        "downloads/dh_conferences_authorships.csv",
+        views.download_authorships_csv,
+        name="authorships_download",
+    ),
+    path(
+        "downloads/dh_conferences_affiliations.csv",
+        views.download_affiliations_csv,
+        name="affiliations_download",
+    ),
 ]

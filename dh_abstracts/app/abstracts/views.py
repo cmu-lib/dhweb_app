@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
+from django.http import HttpResponse, JsonResponse, StreamingHttpResponse, FileResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
@@ -16,6 +16,7 @@ from django.db.models import (
     FloatField,
 )
 from django.db.models.functions import Concat, FirstValue, Cast
+from django.core import management
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
@@ -36,6 +37,7 @@ import glob
 from os.path import basename
 import csv
 import itertools
+import sys
 
 from .models import (
     Work,
@@ -2631,12 +2633,84 @@ def download_works_csv(request):
             ]
 
     pseudo_buffer = Echo()
-    writer = csv.writer(
-        pseudo_buffer, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL
-    )
+    writer = csv.writer(pseudo_buffer, dialect=csv.unix_dialect, quoting=csv.QUOTE_ALL)
     response = StreamingHttpResponse(
         (writer.writerow(r) for r in header_iterator(header_names, works)),
         content_type="text/csv",
     )
     response["Content-Disposition"] = "attachment; filename=dh_conferences_works.csv"
+    return response
+
+
+@login_required
+def download_authorships_csv(request):
+    header_names = [
+        "authorship_id",
+        "work_id",
+        "author_id",
+        "first_name",
+        "last_name",
+        "authorship_order",
+        "affiliation_ids",
+    ]
+
+    authorships = (
+        Authorship.objects.select_related("work", "author", "appellation")
+        .order_by("work__pk", "authorship_order")
+        .prefetch_related("affiliations")
+    )
+
+    def header_iterator(names, content):
+        yield names
+        for a in content:
+            yield [
+                a.pk,
+                a.work.pk,
+                a.author.pk,
+                a.appellation.first_name,
+                a.appellation.last_name,
+                a.authorship_order,
+                ";".join([str(aff.pk) for aff in a.affiliations.all()]),
+            ]
+
+    pseudo_buffer = Echo()
+    writer = csv.writer(pseudo_buffer, dialect=csv.unix_dialect, quoting=csv.QUOTE_ALL)
+    response = StreamingHttpResponse(
+        (writer.writerow(r) for r in header_iterator(header_names, authorships)),
+        content_type="text/csv",
+    )
+    response[
+        "Content-Disposition"
+    ] = "attachment; filename=dh_conferences_authorships.csv"
+    return response
+
+
+@login_required
+def download_affiliations_csv(request):
+    header_names = ["affiliation_id", "department", "institution", "city", "country"]
+
+    affiliations = Affiliation.objects.order_by("id").prefetch_related(
+        "institution", "institution__country"
+    )
+
+    def header_iterator(names, content):
+        yield names
+        for a in content:
+            yield [
+                a.pk,
+                a.department,
+                a.institution,
+                a.institution.city,
+                a.institution.country,
+            ]
+
+    pseudo_buffer = Echo()
+    writer = csv.writer(pseudo_buffer, dialect=csv.unix_dialect, quoting=csv.QUOTE_ALL)
+    response = StreamingHttpResponse(
+        (writer.writerow(r) for r in header_iterator(header_names, affiliations)),
+        content_type="text/csv",
+    )
+    response[
+        "Content-Disposition"
+    ] = "attachment; filename=dh_conferences_affiliations.csv"
     return response

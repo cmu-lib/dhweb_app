@@ -23,20 +23,18 @@
   <strong>affiliations.csv</strong>, which can contain a department name, an institution name, and/or the city and
   country of that institution.</p>
 
-<p>The data in its full verbosity can also be downloaded as a <a
-    href="https://docs.djangoproject.com/en/2.1/topics/serialization/#serialization-formats-json">Django fixture
-    serialized to JSON</a>.</p>
-
 <div class="card my-2">
   <div class="card-header">Files</div>
   <ul class="list-group list-group-flush">
-    {% for file in downloads %}
     <li class="list-group-item">
-      {% with path="downloads/"|add:file %}
-      <a href="{% static path %}">{{ file }}</a>
-      {% endwith %}
+      <a href="{% url 'works_download' %}">dh_conferences_works.csv</a>
     </li>
-    {% endfor %}
+    <li class="list-group-item">
+      <a href="{% url 'authorships_download' %}">dh_conferences_authorships.csv</a>
+    </li>
+    <li class="list-group-item">
+      <a href="{% url 'affiliations_download' %}">dh_conferences_affiliations.csv</a>
+    </li>
   </ul>
 </div>
 
