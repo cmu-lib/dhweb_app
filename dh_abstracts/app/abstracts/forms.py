@@ -71,26 +71,6 @@ class WorkFilter(forms.ModelForm):
         required=False,
         help_text="Works having at least one author belonging to that institution.",
     )
-    # keywords = forms.ModelChoiceField(
-    #     queryset=Keyword.objects.all(),
-    #     required=False,
-    #     widget=ModelSelect2(url="keyword-autocomplete"),
-    # )
-    # topics = forms.ModelChoiceField(
-    #     queryset=Topic.objects.distinct(),
-    #     required=False,
-    #     widget=ModelSelect2(url="topic-autocomplete"),
-    # )
-    # languages = forms.ModelChoiceField(
-    #     queryset=Language.objects.distinct(),
-    #     required=False,
-    #     widget=ModelSelect2(url="language-autocomplete"),
-    # )
-    # disciplines = forms.ModelChoiceField(
-    #     queryset=Discipline.objects.distinct(),
-    #     required=False,
-    #     widget=ModelSelect2(url="discipline-autocomplete"),
-    # )
 
     class Meta:
         model = Work
