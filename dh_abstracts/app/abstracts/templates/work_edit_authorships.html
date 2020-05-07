@@ -131,13 +131,21 @@ When the user selects an author, fill in the most recent known information about
     author_count++;
 
     var newformid = "authorship_" + author_count;
-    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <input type="button" class="btn btn-danger" id="remove-authorship-' + newformid + '" value="Remove authorship"></h2> <div class="row"> <div class="col-6"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col-6"> {{ authorships_form.empty_form.affiliations | as_crispy_field |escapejs}} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal" id="affiliationModal-trigger-' + newformid + '">Create new affiliation</button> </div> </div> </li>';
+    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <button type="button" class="btn btn-danger remove-authorship" id="remove-authorship-' + newformid + '">Remove authorship</button></h2> <div class="row"> <div class="col-6"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col-6"> {{ authorships_form.empty_form.affiliations | as_crispy_field |escapejs}} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal" id="affiliationModal-trigger-' + newformid + '">Create new affiliation</button> </div> </div> </li>';
     newform = newform.replace(/__prefix__/g, author_count - 1);
 
     $("#authorship_formset").append(newform);
 
     $("#id_form-" + (author_count - 1) + "-authorship_order").val(author_count);
     $("#id_form-TOTAL_FORMS").val(author_count);
+
+    $("#remove-authorship-" + newformid).click(function () {
+      $(this).parents("li").remove();
+      console.log(author_count);
+      author_count--;
+      console.log(author_count);
+      $("#id_form-TOTAL_FORMS").val(author_count);
+    })
   });
 
   $("#authorship_formset").on("select2:select", "select[id$='-author']", function () {
