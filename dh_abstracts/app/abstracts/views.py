@@ -738,31 +738,35 @@ class StandaloneList(View):
 
 
 def home_view(request):
-    public_works = Work.objects.all()
 
-    conference_count = (
-        Conference.objects.filter(works__in=public_works)
-        .values_list("year")
+    conference_count = Conference.objects.exclude(works__isnull=True).count()
+
+    years_count = Conference.objects.exclude(works__isnull=True).aggregate(
+        year_range=Max("year") - Min("year")
+    )["year_range"]
+
+    work_count = Work.objects.count()
+
+    author_count = Author.objects.exclude(authorships__work__isnull=True).count()
+
+    institution_count = (
+        Institution.objects.exclude(affiliations__asserted_by__work__isnull=False)
         .distinct()
         .count()
     )
 
-    work_count = public_works.count()
-    author_count = (
-        Author.objects.filter(authorships__work__in=public_works).distinct().count()
-    )
-
-    public_institutions = Institution.objects.filter(
-        affiliations__asserted_by__work__in=public_works
-    ).distinct()
-    institution_count = public_institutions.count()
     country_count = (
-        Country.objects.filter(institutions__in=public_institutions).distinct().count()
+        Country.objects.filter(
+            institutions__affiliations__asserted_by__work__isnull=False
+        )
+        .distinct()
+        .count()
     )
 
     context = {
         "site": {
             "conference_count": conference_count,
+            "years_count": years_count,
             "work_count": work_count,
             "author_count": author_count,
             "institution_count": institution_count,
