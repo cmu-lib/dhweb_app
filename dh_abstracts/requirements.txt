@@ -34,6 +34,8 @@ tblib==1.6.0              # via -r dh_abstracts/requirements.txt
 unidecode==1.1.1          # via django-filer
 w3lib==1.21.0             # via -r dh_abstracts/requirements.txt, parsel
 webencodings==0.5.1       # via bleach
+django-compressor
+django-libsass
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
