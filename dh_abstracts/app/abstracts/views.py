@@ -234,15 +234,17 @@ class CountryAutocomplete(ItemLabelAutocomplete):
 
     def get_queryset(self):
         qs = Country.objects.annotate(
-            n_works=Count("institution__affiliations__asserted_by__work", distinct=True)
+            n_works=Count(
+                "institutions__affiliations__asserted_by__work", distinct=True
+            )
         ).order_by("-n_works")
 
         if self.q:
             qs = qs.filter(
                 Q(pref_name__icontains=self.q) | Q(names__name__icontains=self.q)
-            ).distinct()
+            )
 
-        return qs
+        return qs.distinct()
 
         def get_result_label(self, item):
             return f"{item} ({item.n_works} works)"
