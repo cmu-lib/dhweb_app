@@ -38,4 +38,11 @@
 
 {% block js %}
 {% include 'autocomplete_boilerplate.html' %}
+
+<script>
+  // Update desired ordering to text relevance if an entry is made to the text search box
+  $("#id_text").on("input", function () {
+    $("#id_ordering").val("rank");
+  })
+</script>
 {% endblock js %}
