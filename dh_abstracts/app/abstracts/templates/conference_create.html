@@ -29,8 +29,15 @@
         <div class="col-6">{{ form.end_date | as_crispy_field }}</div>
       </div>
     </div>
-    <div class="col-6">
-      {{ form.hosting_institutions | as_crispy_field }}
+    <div class="col">
+      <div class="d-flex align-items-center">
+        <div class="flex-grow-1">
+          {{ form.hosting_institutions | as_crispy_field }}
+        </div>
+        <a href="{% url 'institution_create' %}" role="button" class="btn btn-primary btn-sm mx-2"
+          rel="noopener noreferrer" target="_blank">+</a>
+
+      </div>
       <div class="row">
         <div class="col-6">{{ form.city | as_crispy_field}}</div>
         <div class="col-6">{{ form.state_province_region | as_crispy_field }}</div>
