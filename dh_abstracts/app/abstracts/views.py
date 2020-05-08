@@ -551,6 +551,7 @@ class AuthorList(ListView):
                 most_recent_last_name=Subquery(
                     newest_authorship.values("appellation__last_name")[:1]
                 ),
+                n_works=Count("authorships", distinct=True),
             )
 
             return annotated_authors
