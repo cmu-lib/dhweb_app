@@ -40,6 +40,7 @@ services:
     restart: always
     volumes:
       - ./nginx:/etc/nginx/conf.d/.
+      - ./data:/var/log/nginx
       - static:/vol/static_files
     ports:
       - "80:80"
