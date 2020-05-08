@@ -622,11 +622,14 @@ def annotate_single_series(qs):
         - res["n_in_review"]
     )
 
-    res["pct_complete"] = (res["n_complete"] / res["n_conferences"]) * 100
-
-    res["pct_in_progress"] = (res["n_in_progress"] / res["n_conferences"]) * 100
-
-    res["pct_in_review"] = (res["n_in_review"] / res["n_conferences"]) * 100
+    if res["n_conferences"] > 0:
+        res["pct_complete"] = (res["n_complete"] / res["n_conferences"]) * 100
+        res["pct_in_progress"] = (res["n_in_progress"] / res["n_conferences"]) * 100
+        res["pct_in_review"] = (res["n_in_review"] / res["n_conferences"]) * 100
+    else:
+        res["pct_complete"] = 0
+        res["pct_in_progress"] = 0
+        res["pct_in_review"] = 0
 
     return res
 
