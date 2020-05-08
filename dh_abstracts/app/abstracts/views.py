@@ -129,7 +129,12 @@ class StaffRequiredMixin:
             return redirect("home_view")
 
 
-class WorkAutocomplete(Select2QuerySetView):
+class ItemLabelAutocomplete(Select2QuerySetView):
+    def get_selected_result_label(self, item):
+        return self.get_result_label(item)
+
+
+class WorkAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -150,7 +155,7 @@ class WorkAutocomplete(Select2QuerySetView):
         return qs.all()
 
 
-class AppellationAutocomplete(Select2QuerySetView):
+class AppellationAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -164,7 +169,7 @@ class AppellationAutocomplete(Select2QuerySetView):
         return qs
 
 
-class KeywordAutocomplete(Select2QuerySetView):
+class KeywordAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -179,7 +184,7 @@ class KeywordAutocomplete(Select2QuerySetView):
         return f"{item} ({item.n_works} works)"
 
 
-class LanguageAutocomplete(Select2QuerySetView):
+class LanguageAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -194,7 +199,7 @@ class LanguageAutocomplete(Select2QuerySetView):
         return f"{item} ({item.n_works} works)"
 
 
-class TopicAutocomplete(Select2QuerySetView):
+class TopicAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -209,7 +214,7 @@ class TopicAutocomplete(Select2QuerySetView):
         return f"{item} ({item.n_works} works)"
 
 
-class DisciplineAutocomplete(Select2QuerySetView):
+class DisciplineAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -224,7 +229,7 @@ class DisciplineAutocomplete(Select2QuerySetView):
         return f"{item} ({item.n_works} works)"
 
 
-class CountryAutocomplete(Select2QuerySetView):
+class CountryAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -243,7 +248,7 @@ class CountryAutocomplete(Select2QuerySetView):
             return f"{item} ({item.n_works} works)"
 
 
-class InstitutionAutocomplete(Select2QuerySetView):
+class InstitutionAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -260,7 +265,7 @@ class InstitutionAutocomplete(Select2QuerySetView):
         return f"{item} ({item.n_works} works)"
 
 
-class AffiliationAutocomplete(Select2QuerySetView):
+class AffiliationAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -279,7 +284,7 @@ class AffiliationAutocomplete(Select2QuerySetView):
         return f"{item} ({item.n_works} works)"
 
 
-class ConferenceAutocomplete(Select2QuerySetView):
+class ConferenceAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -309,7 +314,7 @@ class ConferenceAutocomplete(Select2QuerySetView):
             return f"{item.year} - {item.theme_title}"
 
 
-class AuthorAutocomplete(Select2QuerySetView):
+class AuthorAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
@@ -326,7 +331,7 @@ class AuthorAutocomplete(Select2QuerySetView):
 
     def get_result_label(self, item):
         return format_html(
-            f"{item} ({item.n_works} works)<br><small text-class='muted'>(All names: {item.appellations_index})</small>"
+            f"{item.most_recent_appellation} ({item.n_works} works)<br><small text-class='muted'>(All names: {item.appellations_index})</small>"
         )
 
 
@@ -1027,30 +1032,30 @@ class FullWorkList(ListView):
                 result_set = result_set.filter(conference=conference_res)
 
             institution_res = filter_form["institution"]
-            if institution_res is not None:
+            if len(institution_res) > 0:
                 result_set = result_set.filter(
-                    authorships__affiliations__institution=institution_res
+                    authorships__affiliations__institution__in=institution_res
                 ).distinct()
 
             author_res = filter_form["author"]
-            if author_res is not None:
-                result_set = result_set.filter(authorships__author=author_res)
+            if len(author_res) > 0:
+                result_set = result_set.filter(authorships__author__in=author_res)
 
             keyword_res = filter_form["keywords"]
-            if keyword_res is not None:
-                result_set = result_set.filter(keywords=keyword_res)
+            if len(keyword_res) > 0:
+                result_set = result_set.filter(keywords__in=keyword_res)
 
             topic_res = filter_form["topics"]
-            if topic_res is not None:
-                result_set = result_set.filter(topics=topic_res)
+            if len(topic_res) > 0:
+                result_set = result_set.filter(topics__in=topic_res)
 
             language_res = filter_form["languages"]
-            if language_res is not None:
-                result_set = result_set.filter(languages=language_res)
+            if len(language_res) > 0:
+                result_set = result_set.filter(languages__in=language_res)
 
             discipline_res = filter_form["disciplines"]
-            if discipline_res is not None:
-                result_set = result_set.filter(disciplines=discipline_res)
+            if len(discipline_res) > 0:
+                result_set = result_set.filter(disciplines__in=discipline_res)
 
             if filter_form["full_text_available"]:
                 result_set = result_set.exclude(full_text="")

@@ -53,10 +53,12 @@ class WorkFilter(forms.ModelForm):
         required=False,
         help_text='Abstracts may belong to one type that has been defined by editors based on a survey of all the abstracts in this collection, e.g. "poster", "workshop", "long paper".',
     )
-    author = forms.ModelChoiceField(
+    author = forms.ModelMultipleChoiceField(
         queryset=Author.objects.all(),
         required=False,
-        widget=ModelSelect2(url="author-autocomplete", attrs={"data-html": True}),
+        widget=ModelSelect2Multiple(
+            url="author-autocomplete", attrs={"data-html": True}
+        ),
         help_text="Abstract authorship must include this person",
     )
     conference = forms.ModelChoiceField(
@@ -65,9 +67,11 @@ class WorkFilter(forms.ModelForm):
         widget=ModelSelect2(url="conference-autocomplete"),
         help_text="The conference where this abstract was submitted/published.",
     )
-    institution = forms.ModelChoiceField(
+    institution = forms.ModelMultipleChoiceField(
         queryset=Institution.objects.all(),
-        widget=ModelSelect2(url="institution-autocomplete"),
+        widget=ModelSelect2Multiple(
+            url="institution-autocomplete", attrs={"data-html": True}
+        ),
         required=False,
         help_text="Works having at least one author belonging to that institution.",
     )
@@ -88,16 +92,24 @@ class WorkFilter(forms.ModelForm):
             "topics",
         ]
         field_classes = {
-            "keywords": forms.ModelChoiceField,
-            "topics": forms.ModelChoiceField,
-            "languages": forms.ModelChoiceField,
-            "disciplines": forms.ModelChoiceField,
+            "keywords": forms.ModelMultipleChoiceField,
+            "topics": forms.ModelMultipleChoiceField,
+            "languages": forms.ModelMultipleChoiceField,
+            "disciplines": forms.ModelMultipleChoiceField,
         }
         widgets = {
-            "keywords": ModelSelect2(url="keyword-autocomplete"),
-            "topics": ModelSelect2(url="topic-autocomplete"),
-            "languages": ModelSelect2(url="language-autocomplete"),
-            "disciplines": ModelSelect2(url="discipline-autocomplete"),
+            "keywords": ModelSelect2Multiple(
+                url="keyword-autocomplete", attrs={"data-html": True}
+            ),
+            "topics": ModelSelect2Multiple(
+                url="topic-autocomplete", attrs={"data-html": True}
+            ),
+            "languages": ModelSelect2Multiple(
+                url="language-autocomplete", attrs={"data-html": True}
+            ),
+            "disciplines": ModelSelect2Multiple(
+                url="discipline-autocomplete", attrs={"data-html": True}
+            ),
         }
 
 
@@ -244,7 +256,7 @@ class AuthorMergeForm(forms.Form):
 class InstitutionMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
-        widget=ModelSelect2(url="institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete", attrs={"data-html": True}),
         required=True,
         help_text="Select the institution that will be used to replace the one you are deleting.",
     )
@@ -253,7 +265,7 @@ class InstitutionMergeForm(forms.Form):
 class AffiliationMergeForm(forms.Form):
     into = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
-        widget=ModelSelect2(url="affiliation-autocomplete"),
+        widget=ModelSelect2(url="affiliation-autocomplete", attrs={"data-html": True}),
         required=True,
         help_text="Select the affiliation that will be used to replace the one you are deleting.",
     )
