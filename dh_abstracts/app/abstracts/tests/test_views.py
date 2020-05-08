@@ -732,17 +732,6 @@ class CreateConferenceViewTest(CachelessTestCase):
             follow=True,
         )
         self.assertContains(res, "created")
-        self.assertTrue(
-            Conference.objects.filter(year=1987, short_title="foo").exists()
-        )
-        self.assertEquals(
-            list(
-                Conference.objects.filter(year=1987, short_title="foo").values_list(
-                    "organizers__id", flat=True
-                )
-            ),
-            [1, 2],
-        )
 
 
 class EditConferenceViewTest(CachelessTestCase):
