@@ -144,10 +144,18 @@ class ConferenceAdmin(admin.ModelAdmin):
         "theme_title",
         "city",
         "year",
+        "program_available",
+        "abstracts_available",
         "entry_status",
         "editing_user",
     ]
-    list_filter = ["entry_status"]
+    list_filter = [
+        "entry_status",
+        "program_available",
+        "abstracts_available",
+        "editing_user",
+        "series",
+    ]
 
 
 class FileImportMessagesAdmin(admin.ModelAdmin):
