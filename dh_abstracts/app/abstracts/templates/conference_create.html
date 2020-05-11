@@ -47,6 +47,10 @@
   </div>
   <h3>Notes & References</h3>
   {{ form.url | as_crispy_field }}
+  <div class="row">
+    <div class="col-6">{{ form.program_available | as_crispy_field }}</div>
+    <div class="col-6">{{ form.abstracts_available | as_crispy_field }}</div>
+  </div>
   {{ form.references | as_crispy_field }}
   <div class="row">
     <div class="col-6">{{ form.contributors | as_crispy_field }}</div>

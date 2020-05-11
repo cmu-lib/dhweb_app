@@ -481,6 +481,8 @@ class ConferenceForm(forms.ModelForm):
             "contributors",
             "attendance",
             "entry_status",
+            "program_available",
+            "abstracts_available",
         ]
         widgets = {
             "entry_status": forms.RadioSelect(choices=Conference.ENTRY_STATUS),

@@ -166,6 +166,18 @@ class Conference(models.Model):
         blank=True,
         help_text="User who has currently checked out this conference for data entry",
     )
+    program_available = models.BooleanField(
+        default=False,
+        db_index=True,
+        verbose_name="Program available?",
+        help_text="Is a program for this conference available in some format for editors to input?",
+    )
+    abstracts_available = models.BooleanField(
+        default=False,
+        db_index=True,
+        verbose_name="Abstracts available?",
+        help_text="Are the abstracts for this conference available in some format for editors to input?",
+    )
 
     class Meta:
         ordering = ["-year"]
