@@ -12,29 +12,40 @@ class Command(BaseCommand):
 
     def get_obj_field(self, obj, f):
         # if the field is a foreign key, retrieve id only
-        if f[2]:
-            all_ids = getattr(obj, f[0]).all().values_list("id", flat=True)
-            return ";".join([str(i) for i in all_ids])
-        if getattr(obj, f[0]) is not None:
-            if f[1]:
-                return getattr(obj, f[0]).id
+        if getattr(obj, f["name"]) is not None:
+            if f["relation"]:
+                return getattr(obj, f["name"]).id
             else:
-                return getattr(obj, f[0])
+                return getattr(obj, f["name"])
         else:
             return None
 
     def write_model_csv(self, qs, filename, exclude_fields=[]):
         model = qs.model
-        all_model_fields = [(f.name, f.is_relation, False) for f in model._meta.fields]
-        m2m_fields = [(f.name, f.is_relation, True) for f in model._meta.many_to_many]
+        all_model_fields = [
+            {"name": f.name, "relation": f.is_relation, "related": f.one_to_many}
+            for f in model._meta.fields
+        ]
+        # m2m_fields = [
+        #     {
+        #         "name": f.name,
+        #         "relation": f.is_relation,
+        #         "related": f.one_to_many,
+        #         "m2m": True,
+        #     }
+        #     for f in model._meta.many_to_many
+        # ]
+        # Don't include reverse fields
         censored_fields = [
-            f for f in all_model_fields + m2m_fields if f[0] not in exclude_fields
+            f
+            for f in all_model_fields
+            if f["name"] not in exclude_fields and not f["related"]
         ]
         with open(filename, "w") as csv_file:
             writer = csv.writer(
                 csv_file, dialect=csv.unix_dialect, quoting=csv.QUOTE_ALL
             )
-            writer.writerow([f[0] for f in censored_fields])
+            writer.writerow([f["name"] for f in censored_fields])
             for obj in qs.order_by("id"):
                 row = [self.get_obj_field(obj, f) for f in censored_fields]
                 writer.writerow(row)
