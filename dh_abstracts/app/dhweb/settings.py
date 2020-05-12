@@ -173,7 +173,7 @@ DATA_TABLE_CONFIG = [
         "exclude_fields": ["search_text", "last_updated", "user_last_updated"],
     },
     {"model": "Author", "exclude_fields": ["last_updated", "user_last_updated"]},
-    {"model": "Conference", "exclude_fields": []},
+    {"model": "Conference", "exclude_fields": ["editing_user"]},
     {"model": "Conference.organizers.through", "exclude_fields": []},
     {"model": "Conference.hosting_institutions.through", "exclude_fields": []},
     {"model": "ConferenceSeries", "exclude_fields": []},

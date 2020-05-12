@@ -38,6 +38,9 @@ import glob
 from os.path import basename
 import csv
 import sys
+from operator import attrgetter
+
+from . import models
 
 from .models import (
     Work,
@@ -834,7 +837,25 @@ def author_merge_view(request, author_id):
 
 @user_is_staff
 def download_data(request):
-    return render(request, "downloads.html")
+    data_dictionary = []
+    for m in settings.DATA_TABLE_CONFIG:
+        model = attrgetter(m["model"])(models)
+        all_model_fields = [
+            {
+                "name": f.name,
+                "relation": f.is_relation,
+                "help_text": f.help_text,
+                "related_model": str(f.related_model)
+                .replace("<class 'abstracts.models.", "")
+                .replace("'>", ""),
+                "type": f.get_internal_type(),
+            }
+            for f in model._meta.fields
+            if not f.one_to_many and f.name not in m["exclude_fields"]
+        ]
+        data_dictionary.append({"model": m["model"], "fields": all_model_fields})
+
+    return render(request, "downloads.html", {"data_dictionary": data_dictionary})
 
 
 @login_required

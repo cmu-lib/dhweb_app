@@ -51,4 +51,27 @@
   </ul>
 </div>
 
+{% for m in data_dictionary %}
+<h3 id="{{ m.model }}">{{ m.model }}</h3>
+<table class="table table-sm table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Type</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for field in m.fields %}
+    <tr>
+      <th scope="row"><code>{{ field.name }}</code></th>
+      <td>{{ field.type }}</td>
+      <td>{{ field.help_text }}{% if field.relation %} (Related model: <a
+          href="#{{ field.related_model }}">{{ field.related_model }}</a>){% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endfor %}
+
 {% endblock %}
