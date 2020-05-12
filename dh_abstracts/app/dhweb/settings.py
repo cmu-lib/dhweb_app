@@ -164,6 +164,9 @@ STATIC_ROOT = "/vol/static_files"
 LOGIN_URL = "/accounts/login"
 LOGIN_REDIRECT_URL = "/"
 
+DATA_OUTPUT_PATH = "/vol/data"
+DATA_ZIP_NAME = "dh_conferences_tables.zip"
+
 FILER_STORAGES = {
     "public": {
         "main": {

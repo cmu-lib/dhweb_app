@@ -37,7 +37,6 @@ from django.views.decorators.cache import cache_page
 import glob
 from os.path import basename
 import csv
-import itertools
 import sys
 
 from .models import (
