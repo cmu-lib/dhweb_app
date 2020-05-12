@@ -1,6 +1,7 @@
 from django.urls import include, path
 import debug_toolbar
 import django.contrib.auth.views as auth_views
+from django.conf import settings
 from . import views
 
 urlpatterns = [
@@ -329,5 +330,10 @@ urlpatterns = [
         "downloads/dh_conferences_affiliations.csv",
         views.download_affiliations_csv,
         name="affiliations_download",
+    ),
+    path(
+        f"downloads/{settings.DATA_ZIP_NAME}",
+        views.download_all_tables,
+        name="all_tables_download",
     ),
 ]

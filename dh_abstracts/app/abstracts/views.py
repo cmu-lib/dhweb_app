@@ -2763,3 +2763,10 @@ def download_affiliations_csv(request):
         "Content-Disposition"
     ] = "attachment; filename=dh_conferences_affiliations.csv"
     return response
+
+
+@login_required
+def download_all_tables(request):
+    target_zip = f"{settings.DATA_OUTPUT_PATH}/{settings.DATA_ZIP_NAME}"
+    response = FileResponse(open(target_zip, "rb"))
+    return response
