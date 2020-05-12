@@ -1,10 +1,10 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from django.db.models import Q
 from abstracts import models
 import csv
 import tempfile
 from zipfile import ZipFile
+from operator import attrgetter
 
 
 class Command(BaseCommand):
@@ -44,127 +44,14 @@ class Command(BaseCommand):
         with tempfile.TemporaryDirectory() as tdir:
             zip_path = f"{settings.DATA_OUTPUT_PATH}/{settings.DATA_ZIP_NAME}"
             with ZipFile(zip_path, "w") as dat_zip:
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Work.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                        exclude_fields=[
-                            "search_text",
-                            "last_updated",
-                            "user_last_updated",
-                        ],
-                    ),
-                    arcname="dh_conferences_data/works.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Author.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/authors.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Conference.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                        exclude_fields=["last_updated", "user_last_updated"],
-                    ),
-                    arcname="dh_conferences_data/conferences.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.ConferenceSeries.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/conference_series.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.SeriesMembership.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/series_memberships.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Organizer.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/organizers.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Authorship.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                        exclude_fields=["last_updated", "user_last_updated"],
-                    ),
-                    arcname="dh_conferences_data/authorships.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Appellation.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/appellations.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Institution.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/institutions.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Affiliation.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/affiliations.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Country.objects.filter(
-                            Q(conferences__isnull=False)
-                            | Q(institutions__affiliations__asserted_by__isnull=False)
-                        ).distinct(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                        exclude_fields=["names"],
-                    ),
-                    arcname="dh_conferences_data/countries.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Keyword.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/keywords.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Topic.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/topics.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.WorkType.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/work_types.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Discipline.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/disciplines.csv",
-                )
-                dat_zip.write(
-                    self.write_model_csv(
-                        qs=models.Language.objects.all(),
-                        filename=f"{tdir}/{tempfile.TemporaryFile()}",
-                    ),
-                    arcname="dh_conferences_data/languages.csv",
-                )
+                for export_conf in settings.DATA_TABLE_CONFIG:
+                    print(attrgetter(export_conf["model"])(models))
+                    dat_zip.write(
+                        self.write_model_csv(
+                            qs=attrgetter(export_conf["model"])(models).objects.all(),
+                            filename=f"{tdir}/{tempfile.TemporaryFile()}",
+                            exclude_fields=export_conf["exclude_fields"],
+                        ),
+                        arcname=f"dh_conferences_data/{export_conf['model']}.csv",
+                    )
                 dat_zip.close()

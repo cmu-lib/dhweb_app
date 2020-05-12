@@ -167,6 +167,39 @@ LOGIN_REDIRECT_URL = "/"
 DATA_OUTPUT_PATH = "/vol/data"
 DATA_ZIP_NAME = "dh_conferences_tables.zip"
 
+DATA_TABLE_CONFIG = [
+    {
+        "model": "Work",
+        "exclude_fields": [
+            "last_updated",
+            "user_last_updated",
+            "full_text",
+            "search_text",
+        ],
+    },
+    {"model": "Author", "exclude_fields": ["last_updated", "user_last_updated"]},
+    {
+        "model": "Conference",
+        "exclude_fields": ["last_updated", "user_last_updated", "series", "organizers"],
+    },
+    {
+        "model": "Conference.organizers.through",
+        "exclude_fields": ["last_updated", "user_last_updated", "series", "organizers"],
+    },
+    {"model": "ConferenceSeries", "exclude_fields": []},
+    {"model": "SeriesMembership", "exclude_fields": []},
+    {"model": "Organizer", "exclude_fields": ["conferences_organized"]},
+    {"model": "Authorship", "exclude_fields": []},
+    {"model": "Appellation", "exclude_fields": []},
+    {"model": "Institution", "exclude_fields": []},
+    {"model": "Affiliation", "exclude_fields": []},
+    {"model": "Country", "exclude_fields": []},
+    {"model": "Keyword", "exclude_fields": []},
+    {"model": "Topic", "exclude_fields": []},
+    {"model": "Discipline", "exclude_fields": []},
+    {"model": "Language", "exclude_fields": []},
+]
+
 FILER_STORAGES = {
     "public": {
         "main": {
