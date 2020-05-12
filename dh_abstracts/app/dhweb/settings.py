@@ -188,6 +188,8 @@ DATA_TABLE_CONFIG = [
     {"model": "Topic", "exclude_fields": []},
     {"model": "Discipline", "exclude_fields": []},
     {"model": "Language", "exclude_fields": []},
+    {"model": "WorkType", "exclude_fields": []},
+    {"model": "License", "exclude_fields": []},
 ]
 
 FILER_STORAGES = {
