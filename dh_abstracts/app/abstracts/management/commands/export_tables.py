@@ -23,23 +23,13 @@ class Command(BaseCommand):
     def write_model_csv(self, qs, filename, exclude_fields=[]):
         model = qs.model
         all_model_fields = [
-            {"name": f.name, "relation": f.is_relation, "related": f.one_to_many}
+            {"name": f.name, "relation": f.is_relation}
             for f in model._meta.fields
+            if not f.one_to_many
         ]
-        # m2m_fields = [
-        #     {
-        #         "name": f.name,
-        #         "relation": f.is_relation,
-        #         "related": f.one_to_many,
-        #         "m2m": True,
-        #     }
-        #     for f in model._meta.many_to_many
-        # ]
         # Don't include reverse fields
         censored_fields = [
-            f
-            for f in all_model_fields
-            if f["name"] not in exclude_fields and not f["related"]
+            f for f in all_model_fields if f["name"] not in exclude_fields
         ]
         with open(filename, "w") as csv_file:
             writer = csv.writer(
