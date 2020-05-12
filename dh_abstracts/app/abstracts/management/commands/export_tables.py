@@ -45,6 +45,12 @@ class Command(BaseCommand):
             zip_path = f"{settings.DATA_OUTPUT_PATH}/{settings.DATA_ZIP_NAME}"
             with ZipFile(zip_path, "w") as dat_zip:
                 for export_conf in settings.DATA_TABLE_CONFIG:
+                    final_csvname = (
+                        export_conf["model"]
+                        .replace(".through", "")
+                        .replace(".", "_")
+                        .lower()
+                    )
                     print(attrgetter(export_conf["model"])(models))
                     dat_zip.write(
                         self.write_model_csv(
@@ -52,6 +58,6 @@ class Command(BaseCommand):
                             filename=f"{tdir}/{tempfile.TemporaryFile()}",
                             exclude_fields=export_conf["exclude_fields"],
                         ),
-                        arcname=f"dh_conferences_data/{export_conf['model']}.csv",
+                        arcname=f"dh_conferences_data/{final_csvname}.csv",
                     )
                 dat_zip.close()
