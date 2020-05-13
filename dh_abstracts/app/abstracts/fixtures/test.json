@@ -311,7 +311,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$180000$tPj49fsbZxwZ$0acMULPg7LIKk4wcMuTgXfTRloYaMStvda8CXpk080I=",
-    "last_login": "2020-05-11T17:01:17.162Z",
+    "last_login": "2020-05-13T20:03:08.678Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",
@@ -516,10 +516,11 @@
   "model": "abstracts.institution",
   "pk": 1,
   "fields": {
-    "last_updated": "2020-04-03T19:23:27.606Z",
-    "user_last_updated": null,
+    "last_updated": "2020-05-13T20:08:14.542Z",
+    "user_last_updated": 1,
     "name": "Wood's Hole Institute",
-    "city": "Smithtown, NY",
+    "city": "Smithtown",
+    "state_province_region": "New York",
     "country": 1
   }
 },
@@ -527,10 +528,11 @@
   "model": "abstracts.institution",
   "pk": 2,
   "fields": {
-    "last_updated": "2020-04-03T19:23:27.606Z",
-    "user_last_updated": null,
+    "last_updated": "2020-05-13T20:05:48.388Z",
+    "user_last_updated": 1,
     "name": "Stanford University",
-    "city": "Palo Alto, CA",
+    "city": "Palo Alto",
+    "state_province_region": "California",
     "country": 1
   }
 },
@@ -542,6 +544,7 @@
     "user_last_updated": null,
     "name": "University of Maryland",
     "city": "College Park",
+    "state_province_region": "",
     "country": 1
   }
 },
@@ -553,6 +556,7 @@
     "user_last_updated": null,
     "name": "Abandoned Institution",
     "city": "Essex",
+    "state_province_region": "",
     "country": 2
   }
 },

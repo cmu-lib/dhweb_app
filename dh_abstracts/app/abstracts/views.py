@@ -542,6 +542,11 @@ class AuthorList(ListView):
                 main_affiliation_institution_city=Subquery(
                     newest_authorship.values("affiliations__institution__city")[:1]
                 ),
+                main_affiliation_institution_state=Subquery(
+                    newest_authorship.values(
+                        "affiliations__institution__state_province_region"
+                    )[:1]
+                ),
                 main_affiliation_institution_country=Subquery(
                     newest_authorship.values(
                         "affiliations__institution__country__pref_name"
@@ -1319,7 +1324,7 @@ class AuthorInstitutionList(FullInstitutionList):
 class InstitutionEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Institution
     template_name = "generic_form.html"
-    fields = ["name", "city", "country"]
+    fields = ["name", "city", "state_province_region", "country"]
     extra_context = {
         "form_title": "Edit institution",
         "cancel_view": "full_institution_list",
@@ -1338,7 +1343,7 @@ class InstitutionEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 class InstitutionCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Institution
     template_name = "generic_form.html"
-    fields = ["name", "city", "country"]
+    fields = ["name", "city", "state_province_region", "country"]
     extra_context = {
         "form_title": "Create institution",
         "cancel_view": "full_institution_list",

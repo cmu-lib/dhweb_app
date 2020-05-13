@@ -5,6 +5,6 @@
     authored</a></h6>
 {% with authorship=author.authorships.last %}
 <p class=" mb-0 text-muted">
-  {% include "affiliation_string.html" with department=authorship.affiliations.first.department institution=authorship.affiliations.first.institution institution_city=authorships.affiliations.first.institution.city institution_country=authorships.affiliations.first.institution.country %}
+  {% include "affiliation_string.html" with department=authorship.affiliations.first.department institution=authorship.affiliations.first.institution institution_city=authorships.affiliations.first.institution.city institution_state=authorships.affiliations.first.institution.state_province_region institution_country=authorships.affiliations.first.institution.country %}
 </p>
 {% endwith %}

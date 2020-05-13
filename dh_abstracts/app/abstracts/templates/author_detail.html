@@ -52,7 +52,7 @@
     {% for affiliation in affiliations %}
     <li class="list-group-item">
       <p><a
-          href="{% url 'author_list' %}?affiliation={{ affiliation.id }}">{% include "affiliation_string.html" with department=affiliation.department institution=affiliation.institution.name institution_city=affiliation.institution.city institution_country=affiliation.institution.country.pref_name %}</a>
+          href="{% url 'author_list' %}?affiliation={{ affiliation.id }}">{% include "affiliation_string.html" with department=affiliation.department institution=affiliation.institution.name institution_city=affiliation.institution.city institution_state=affiliation.institution.state_province_region institution_country=affiliation.institution.country.pref_name %}</a>
       </p>
       <small class="text-muted">Given in {% for authorship in affiliation.asserted_by.all %}
         <a

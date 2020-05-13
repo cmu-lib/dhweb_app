@@ -545,6 +545,13 @@ class CountryLabel(models.Model):
 class Institution(ChangeTrackedModel):
     name = models.CharField(max_length=500)
     city = models.CharField(max_length=100, blank=True, null=False, default="")
+    state_province_region = models.CharField(
+        max_length=1000,
+        blank=True,
+        null=False,
+        default="",
+        verbose_name="State / Province / Region",
+    )
     country = models.ForeignKey(
         Country,
         on_delete=models.SET_NULL,
@@ -558,14 +565,7 @@ class Institution(ChangeTrackedModel):
         ordering = ["name"]
 
     def __str__(self):
-        if not self.city and not self.country:
-            return f"{self.name}"
-        elif not self.city:
-            return f"{self.name} ({self.country})"
-        elif not self.country:
-            return f"{self.name} ({self.city})"
-        else:
-            return f"{self.name} ({self.city}, {self.country})"
+        return self.name
 
     def merge(self, target):
         affected_affiliations = Affiliation.objects.filter(institution=self)

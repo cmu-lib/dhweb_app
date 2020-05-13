@@ -22,7 +22,7 @@
           class="badge badge-info">{{ author.n_works }} works
         </span></a></h6>
     <p class=" mb-0 text-muted">
-      {% include "affiliation_string.html" with department=author.main_affiliation_department institution=author.main_affiliation_institution institution_city=author.main_affiliation_institution_city author=main_affiliation_institution_country %}
+      {% include "affiliation_string.html" with department=author.main_affiliation_department institution=author.main_affiliation_institution institution_city=author.main_affiliation_institution_city institution_state=author.main_affiliation_institution_state author=main_affiliation_institution_country %}
     </p>
   </li>
   {% endfor %}

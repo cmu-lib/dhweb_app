@@ -1,5 +1,9 @@
 <h5 class="mb-2 d-flex justify-content-between align-items-center">
-  <a href="{% url 'institution_edit' institution.pk %}">{{ institution }}</a>
+  <a href="{% url 'institution_edit' institution.pk %}">
+    {% if institution.name %}{{ institution.name }}{% endif %}{% if institution.city %},
+    {{ institution.city }}{% endif %}{% if institution.state_province_region %},
+    {{ institution.state_province_region }}{% endif %}{% if institution.country %},
+    {{ institution.country.pref_name }}{% endif %}</a>
   <span>Number of abstracts: <a class="badge badge-primary"
       href="{% url 'work_list' %}?institution={{ institution.id }}">{{ institution.n_works }}</a></span>
 </h5>
