@@ -247,4 +247,18 @@ MARKDOWNIFY_WHITELIST_TAGS = [
     "p",
     "strong",
     "ul",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "pre",
+    "code",
+]
+
+MARKDOWNIFY_MARKDOWN_EXTENSIONS = [
+    "markdown.extensions.fenced_code",
+    "markdown.extensions.extra",
+    "markdown.extensions.toc",
 ]
