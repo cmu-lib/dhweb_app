@@ -1066,6 +1066,12 @@ class FullWorkList(ListView):
             if conference_res is not None:
                 result_set = result_set.filter(conference=conference_res)
 
+            affiliation_res = filter_form["affiliation"]
+            if len(affiliation_res) > 0:
+                result_set = result_set.filter(
+                    authorships__affiliations__in=affiliation_res
+                ).distinct()
+
             institution_res = filter_form["institution"]
             if len(institution_res) > 0:
                 result_set = result_set.filter(
