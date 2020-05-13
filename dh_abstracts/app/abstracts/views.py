@@ -1206,9 +1206,16 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        base_result_set = Institution.objects.annotate(
-            n_works=Count("affiliations__asserted_by__work")
-        ).distinct()
+        annotated_affiliations = Affiliation.objects.annotate(
+            n_works=Count("asserted_by__work", distinct=True)
+        )
+        base_result_set = (
+            Institution.objects.annotate(
+                n_works=Count("affiliations__asserted_by__work", distinct=True)
+            )
+            .prefetch_related(Prefetch("affiliations", annotated_affiliations))
+            .distinct()
+        )
         result_set = base_result_set
 
         if self.request.GET:

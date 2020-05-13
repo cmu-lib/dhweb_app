@@ -635,9 +635,6 @@ class Affiliation(Attribute):
     def n_authors(self):
         return Author.objects.filter(authorships__affiliations=self).distinct().count()
 
-    def n_works(self):
-        return Work.objects.filter(authorships__affiliations=self).distinct().count()
-
     def merge(self, target):
         # Don't edit authorships where the target affiliaiton is already # present. It'll get deleted eventually.
         affected_authorships = (
