@@ -56,17 +56,17 @@
 <table class="table table-sm table-striped">
   <thead>
     <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Type</th>
-      <th scope="col">Description</th>
+      <th scope="col" class="col-2">Name</th>
+      <th scope="col" class="col-2">Type</th>
+      <th scope="col" class="col-10">Description</th>
     </tr>
   </thead>
   <tbody>
     {% for field in m.fields %}
     <tr>
-      <th scope="row"><code>{{ field.name }}</code></th>
-      <td>{{ field.type }}</td>
-      <td>{{ field.help_text }}{% if field.relation %} (Related model: <a
+      <th scope="row" class="col-2"><code>{{ field.name }}</code></th>
+      <td class="col-2">{{ field.type }}</td>
+      <td class="col-10">{{ field.help_text }}{% if field.relation %} (Related model: <a
           href="#{{ field.related_model }}">{{ field.related_model }}</a>){% endif %}</td>
     </tr>
     {% endfor %}
