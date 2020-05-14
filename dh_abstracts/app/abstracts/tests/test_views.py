@@ -90,7 +90,7 @@ class DownloadPageTest(CachelessTestCase):
     fixtures = ["test.json"]
 
     def test_render(self):
-        privately_available(self, "download_data")
+        publicly_available(self, "download_data")
 
 
 class AuthorListViewTest(CachelessTestCase):
