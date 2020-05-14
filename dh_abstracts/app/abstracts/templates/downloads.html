@@ -7,58 +7,58 @@
 
 <h1>Data Downloads</h1>
 
-<div class="card my-2">
-  <div class="card-header">
-    <h2>Simple CSV</h2>
-  </div>
-  <div class="card-body">
-    <p>One work per row</p>
-    <p>
-      <a href="{{ denormalized_url }}" role="button" class="btn btn-primary">Download single CSV</a>
-    </p>
-  </div>
+<div class="alert alert-warning">
+  <p>
+    We strongly discourage using Microsoft Excel to open these files, as it is easily confused by the
+    multiline values and UTF-8 characters contained in some columns. We recommend R, Python, OpenOffice, or Google
+    Sheets.
+  </p>
 </div>
 
-<div class="card my-2">
-  <div class="card-header">
-    <h2>Full Data</h2>
-  </div>
-  <div class="card-body">
-    <p>
-      <a href="{{ zip_url }}" class="btn btn-primary">Download zip file of CSVs</a>
-    </p>
-    {% if user.is_authenticated %}
-    <div class="alert alert-warning">
-      <p>
-        It is strongly recommended to not NOT use Microsoft Excel to open these files, as it is easily confused by the
-        multiline values in the full-text column. We recommend R, Python, or Google Sheets.
-      </p>
-    </div>
-    {% endif %}
-    <h3>Data dictionary</h3>
-    {% for m in data_dictionary %}
-    <h4 id="{{ m.model }}">{{ m.csv_name }}.csv</h4>
-    <table class="table table-sm table-striped">
-      <thead>
-        <tr>
-          <th scope="col" class="col-2">Name</th>
-          <th scope="col" class="col-2">Type</th>
-          <th scope="col" class="col-10">Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for field in m.fields %}
-        <tr>
-          <th scope="row" class="col-2"><code>{{ field.name }}</code></th>
-          <td class="col-2">{{ field.type }}</td>
-          <td class="col-10">{{ field.help_text }}{% if field.relation %} (Related model: <a
-              href="#{{ field.related_model }}">{{ field.related_model }}</a>){% endif %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<p>We offer two categories of data download:</p>
+
+<h2>Simple CSV</h2>
+<p>
+  <a href="{{ denormalized_url }}" role="button" class="btn btn-primary">Download single CSV</a>
+</p>
+<p>This file contains a simplified version of our database arranged with one row per "work" (be it a keynote, a paper, a
+  panel session, etc.). Associated conference information such as name, location, and date, as well as author names and
+  keyword/topic tags are included in each row as well.</p>
+<p>This CSV does not contain more complex related information such as changing author names or detailed affiliation
+  information. For that, you will want to look at the full relational database available below.</p>
+
+<h2>Full Data</h2>
+<a href="{{ zip_url }}" class="btn btn-primary">Download zip file of CSVs</a>
+</p>
+<p>
+  This download contains one CSV for each of the core tables in our database, and can be used to do more complex
+  analyses such as tracking institutional affiliations across many different years of conferences.
+</p>
+{% if user.is_authenticated %}
+
+{% endif %}
+<h3 class="mt-4">Data dictionary</h3>
+{% for m in data_dictionary %}
+<h4 id="{{ m.model }}">{{ m.csv_name }}.csv</h4>
+<table class="table table-sm table-striped">
+  <thead>
+    <tr>
+      <th scope="col" class="col-2">Name</th>
+      <th scope="col" class="col-2">Type</th>
+      <th scope="col" class="col-10">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for field in m.fields %}
+    <tr>
+      <th scope="row" class="col-2"><code>{{ field.name }}</code></th>
+      <td class="col-2">{{ field.type }}</td>
+      <td class="col-10">{{ field.help_text }}{% if field.relation %} (Related model: <a
+          href="#{{ field.related_model }}">{{ field.related_model }}</a>){% endif %}</td>
+    </tr>
     {% endfor %}
-  </div>
-</div>
+  </tbody>
+</table>
+{% endfor %}
 
 {% endblock %}

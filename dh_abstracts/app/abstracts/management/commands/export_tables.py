@@ -107,6 +107,7 @@ class Command(BaseCommand):
                 "work_url",
                 "work_authors",
                 "work_type",
+                "parent_work_id",
                 "keywords",
                 "languages",
                 "disciplines",
@@ -120,6 +121,10 @@ class Command(BaseCommand):
                     )
                     writer.writerow(header_names)
                     for w in all_works:
+                        try:
+                            parent_session_id = w.parent_session.id
+                        except:
+                            parent_session_id = None
                         row_data = [
                             w.pk,
                             w.conference.short_title,
@@ -141,6 +146,7 @@ class Command(BaseCommand):
                             w.url,
                             ";".join([str(a.appellation) for a in w.authorships.all()]),
                             w.work_type,
+                            parent_session_id,
                             ";".join([str(k) for k in w.keywords.all()]),
                             ";".join([str(k) for k in w.languages.all()]),
                             ";".join([str(k) for k in w.disciplines.all()]),
@@ -153,6 +159,6 @@ class Command(BaseCommand):
             dat_zip.close()
 
     def handle(self, *args, **options):
-        self.write_private_csvs()
-        self.write_public_csvs()
+        # self.write_private_csvs()
+        # self.write_public_csvs()
         self.write_denormalized_csvs()
