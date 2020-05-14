@@ -90,7 +90,7 @@ class Command(BaseCommand):
                 f"{settings.DATA_OUTPUT_PATH}/{settings.DENORMALIZED_WORKS_NAME}.zip"
             )
             csv_path = f"{tdir}/{settings.DENORMALIZED_WORKS_NAME}.csv"
-            header_names = [h.name for h in settings.DENORMALIZED_HEADERS]
+            header_names = [h["name"] for h in settings.DENORMALIZED_HEADERS]
 
             with ZipFile(zip_path, "w") as dat_zip:
                 with open(csv_path, "w") as csv_file:
