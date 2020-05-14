@@ -1219,7 +1219,9 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
             Institution.objects.annotate(
                 n_works=Count("affiliations__asserted_by__work", distinct=True)
             )
-            .prefetch_related(Prefetch("affiliations", annotated_affiliations))
+            .prefetch_related(
+                Prefetch("affiliations", annotated_affiliations), "country"
+            )
             .distinct()
         )
         result_set = base_result_set
