@@ -168,6 +168,85 @@ DATA_OUTPUT_PATH = "/vol/data"
 
 DENORMALIZED_WORKS_NAME = "dh_conferences_works"
 
+DENORMALIZED_HEADERS = [
+    {"name": "work_id", "description": "Unique ID number", "required": True},
+    {
+        "name": "conference_short_title",
+        "description": "Location-based short title of the conference",
+        "required": False,
+    },
+    {
+        "name": "conference_theme_title",
+        "description": "Thematic conference title",
+        "required": False,
+    },
+    {"name": "conference_year", "description": "", "required": True},
+    {
+        "name": "conference_organizers",
+        "description": "Conference organizing groups (Separated by semicolon)",
+        "required": False,
+    },
+    {
+        "name": "conference_series",
+        "description": "Conference series (separated by semicolon)",
+        "required": False,
+    },
+    {
+        "name": "conference_hosting_institutions",
+        "description": "Hosting institutions (separated by a semicolon)",
+        "required": False,
+    },
+    {"name": "conference_city", "description": "", "required": False},
+    {"name": "conference_state", "description": "", "required": False},
+    {"name": "conference_country", "description": "", "required": False},
+    {
+        "name": "conference_url",
+        "description": "URL for the conference program or abstracts",
+        "required": False,
+    },
+    {"name": "work_title", "description": "Work title"},
+    {
+        "name": "work_url",
+        "description": "Direct URL for the work abstract if it exists",
+        "required": True,
+    },
+    {
+        "name": "work_authors",
+        "description": "Named authors (separated by a semicolon)",
+        "required": True,
+    },
+    {
+        "name": "work_type",
+        "description": "Type of work (e.g. keynote, multipaper session, poster",
+        "required": True,
+    },
+    {
+        "name": "parent_work_id",
+        "description": "ID of a multipaper session or panel session that this work belongs to",
+        "required": False,
+    },
+    {
+        "name": "keywords",
+        "description": "Author-submitted keywords (separated by a semicolon)",
+        "required": False,
+    },
+    {
+        "name": "languages",
+        "description": "Language(s) of the abstract (separated by a semicolon)",
+        "required": False,
+    },
+    {
+        "name": "disciplines",
+        "description": "Disciplines from ADHO controlled vocabulary (separated by a semicolon)",
+        "required": False,
+    },
+    {
+        "name": "topics",
+        "description": "Topics from ADHO controlled vocabulary (separated by a semicolon)",
+        "required": False,
+    },
+]
+
 PUBLIC_DATA_TABLE_CONFIG = {
     "CONFIGURATION": [
         {

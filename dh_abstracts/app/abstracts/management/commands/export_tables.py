@@ -90,29 +90,7 @@ class Command(BaseCommand):
                 f"{settings.DATA_OUTPUT_PATH}/{settings.DENORMALIZED_WORKS_NAME}.zip"
             )
             csv_path = f"{tdir}/{settings.DENORMALIZED_WORKS_NAME}.csv"
-
-            header_names = [
-                "work_id",
-                "conference_short_title",
-                "conference_theme_title",
-                "conference_year",
-                "conference_organizers",
-                "conference_series",
-                "conference_hosting_institutions",
-                "conference_city",
-                "conference_state",
-                "conference_country",
-                "conference_url",
-                "work_title",
-                "work_url",
-                "work_authors",
-                "work_type",
-                "parent_work_id",
-                "keywords",
-                "languages",
-                "disciplines",
-                "topics",
-            ]
+            header_names = [h.name for h in settings.DENORMALIZED_HEADERS]
 
             with ZipFile(zip_path, "w") as dat_zip:
                 with open(csv_path, "w") as csv_file:

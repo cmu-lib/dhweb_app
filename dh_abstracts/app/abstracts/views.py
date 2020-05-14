@@ -840,6 +840,14 @@ def author_merge_view(request, author_id):
             return render(request, "author_merge.html", context)
 
 
+def field_required(field):
+    if field.get_internal_type() in ("CharField", "TextField") and field.blank:
+        return False
+    if field.null:
+        return False
+    return True
+
+
 def download_data(request):
     data_dictionary = []
     if request.user.is_authenticated:
@@ -861,16 +869,20 @@ def download_data(request):
                 .replace("<class 'abstracts.models.", "")
                 .replace("'>", ""),
                 "type": f.get_internal_type(),
+                "required": field_required(f),
             }
             for f in model._meta.fields
             if not f.one_to_many and f.name not in m["exclude_fields"]
         ]
-        data_dictionary.append({"model": m["model"], "csv_name": m["csv_name"], "fields": all_model_fields})
+        data_dictionary.append(
+            {"model": m["model"], "csv_name": m["csv_name"], "fields": all_model_fields}
+        )
 
     context = {
         "zip_url": zip_url,
         "denormalized_url": denormalized_url,
         "data_dictionary": data_dictionary,
+        "denormalized_data_dictionary": settings.DENORMALIZED_HEADERS,
     }
 
     return render(request, "downloads.html", context)

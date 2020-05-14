@@ -27,6 +27,24 @@
 <p>This CSV does not contain more complex related information such as changing author names or detailed affiliation
   information. For that, you will want to look at the full relational database available below.</p>
 
+<h3 class="mt-4">Data dictionary</h3>
+<table class="table table-sm table-striped">
+  <thead>
+    <tr>
+      <th scope="col" class="col-4">Name</th>
+      <th scope="col" class="col-10">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for field in denormalized_data_dictionary %}
+    <tr>
+      <td class="col-4">{% if field.required %}*{% endif %}<code>{{ field.name }}</code></th>
+      <td class="col-10">{{ field.description }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 <h2>Full Data</h2>
 <a href="{{ zip_url }}" class="btn btn-primary">Download zip file of CSVs</a>
 </p>
@@ -34,10 +52,9 @@
   This download contains one CSV for each of the core tables in our database, and can be used to do more complex
   analyses such as tracking institutional affiliations across many different years of conferences.
 </p>
-{% if user.is_authenticated %}
 
-{% endif %}
 <h3 class="mt-4">Data dictionary</h3>
+<small>Required fields marked with an asterisk (*)</small>
 {% for m in data_dictionary %}
 <h4 id="{{ m.model }}">{{ m.csv_name }}.csv</h4>
 <table class="table table-sm table-striped">
@@ -51,7 +68,7 @@
   <tbody>
     {% for field in m.fields %}
     <tr>
-      <th scope="row" class="col-2"><code>{{ field.name }}</code></th>
+      <td class="col-2">{% if field.required %}*{% endif %}<code>{{ field.name }}</code></td>
       <td class="col-2">{{ field.type }}</td>
       <td class="col-10">{{ field.help_text }}{% if field.relation %} (Related model: <a
           href="#{{ field.related_model }}">{{ field.related_model }}</a>){% endif %}</td>
