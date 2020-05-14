@@ -46,12 +46,7 @@ class Command(BaseCommand):
             zip_path = f"{settings.DATA_OUTPUT_PATH}/{dt_config['DATA_ZIP_NAME']}"
             with ZipFile(zip_path, "w") as dat_zip:
                 for export_conf in dt_config["CONFIGURATION"]:
-                    final_csvname = (
-                        export_conf["model"]
-                        .replace(".through", "")
-                        .replace(".", "_")
-                        .lower()
-                    )
+                    final_csvname = export_conf["csv_name"]
                     print(attrgetter(export_conf["model"])(models))
                     dat_zip.write(
                         self.write_model_csv(

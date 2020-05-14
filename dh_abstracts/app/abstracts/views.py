@@ -865,7 +865,7 @@ def download_data(request):
             for f in model._meta.fields
             if not f.one_to_many and f.name not in m["exclude_fields"]
         ]
-        data_dictionary.append({"model": m["model"], "fields": all_model_fields})
+        data_dictionary.append({"model": m["model"], "csv_name": m["csv_name"], "fields": all_model_fields})
 
     context = {
         "zip_url": zip_url,
