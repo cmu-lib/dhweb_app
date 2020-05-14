@@ -322,18 +322,13 @@ urlpatterns = [
         name="works_download",
     ),
     path(
-        "downloads/dh_conferences_authorships.csv",
-        views.download_authorships_csv,
-        name="authorships_download",
+        "downloads/public",
+        views.public_download_all_tables,
+        name="public_all_tables_download",
     ),
     path(
-        "downloads/dh_conferences_affiliations.csv",
-        views.download_affiliations_csv,
-        name="affiliations_download",
-    ),
-    path(
-        f"downloads/{settings.DATA_ZIP_NAME}",
-        views.download_all_tables,
-        name="all_tables_download",
+        f"downloads/private",
+        views.private_download_all_tables,
+        name="private_all_tables_download",
     ),
 ]

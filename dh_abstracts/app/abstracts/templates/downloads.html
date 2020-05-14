@@ -7,71 +7,58 @@
 
 <h1>Data Downloads</h1>
 
-<p>The data that powers this site can be downloaded in three CSV files: Works, Authorships, and Affiliations. Although
-  the underlying models are relatively complex, these three tables offer a good balance by representing all the data we
-  have without requiring too many table joins to navigate.</p>
-
-<p><strong>dh_conferences_works.csv</strong> has one row per Work, containing columns that specify the conference, year,
-  series, and
-  organizers, the title and full text when available, as well as the tags associated with the Work. Multiple tags are
-  delimited with a `;` within each field.</p>
-
-<p><strong>dh_conferences_authorships.csv</strong> has one row per Authorship, which is an Author-Work association. This
-  table can join
-  to <strong>works.csv</strong> on the `work_id` column. There is an `author_id` column as well as columns for names and
-  affiliations (which may differ from authorship to authorship).</p>
-
-<p>The (possibly multiple) affiliations of the author in the `affiliations` column are a joining key to
-  <strong>dh_conferences_affiliations.csv</strong>, which can contain a department name, an institution name, and/or the
-  city and
-  country of that institution.</p>
-
-<div class="alert alert-warning">
-  <p>
-    It is strongly recommended to not NOT use Microsoft Excel to open these files, as it is easily confused by the
-    multiline values in the full-text column. We recommend R, Python, or Google Sheets.
-  </p>
+<div class="card my-2">
+  <div class="card-header">
+    <h2>Simple CSV</h2>
+  </div>
+  <div class="card-body">
+    <p>One work per row</p>
+    <p>
+      <a href="{{ denormalized_url }}" role="button" class="btn btn-primary">Download single CSV</a>
+    </p>
+  </div>
 </div>
 
 <div class="card my-2">
-  <div class="card-header">Files</div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">
-      <a href="{% url 'works_download' %}">dh_conferences_works.csv</a>
-    </li>
-    <li class="list-group-item">
-      <a href="{% url 'authorships_download' %}">dh_conferences_authorships.csv</a>
-    </li>
-    <li class="list-group-item">
-      <a href="{% url 'affiliations_download' %}">dh_conferences_affiliations.csv</a>
-    </li>
-    <li class="list-group-item">
-      <a href="{% url 'all_tables_download' %}">dh_conferences_tables.zip</a>
-    </li>
-  </ul>
-</div>
-
-{% for m in data_dictionary %}
-<h3 id="{{ m.model }}">{{ m.model }}</h3>
-<table class="table table-sm table-striped">
-  <thead>
-    <tr>
-      <th scope="col" class="col-2">Name</th>
-      <th scope="col" class="col-2">Type</th>
-      <th scope="col" class="col-10">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for field in m.fields %}
-    <tr>
-      <th scope="row" class="col-2"><code>{{ field.name }}</code></th>
-      <td class="col-2">{{ field.type }}</td>
-      <td class="col-10">{{ field.help_text }}{% if field.relation %} (Related model: <a
-          href="#{{ field.related_model }}">{{ field.related_model }}</a>){% endif %}</td>
-    </tr>
+  <div class="card-header">
+    <h2>Full Data</h2>
+  </div>
+  <div class="card-body">
+    <p>
+      <a href="{{ zip_url }}" class="btn btn-primary">Download zip file of CSVs</a>
+    </p>
+    {% if user.is_authenticated %}
+    <div class="alert alert-warning">
+      <p>
+        It is strongly recommended to not NOT use Microsoft Excel to open these files, as it is easily confused by the
+        multiline values in the full-text column. We recommend R, Python, or Google Sheets.
+      </p>
+    </div>
+    {% endif %}
+    <h3>Data dictionary</h3>
+    {% for m in data_dictionary %}
+    <h4 id="{{ m.model }}">{{ m.model }}</h4>
+    <table class="table table-sm table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="col-2">Name</th>
+          <th scope="col" class="col-2">Type</th>
+          <th scope="col" class="col-10">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for field in m.fields %}
+        <tr>
+          <th scope="row" class="col-2"><code>{{ field.name }}</code></th>
+          <td class="col-2">{{ field.type }}</td>
+          <td class="col-10">{{ field.help_text }}{% if field.relation %} (Related model: <a
+              href="#{{ field.related_model }}">{{ field.related_model }}</a>){% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
     {% endfor %}
-  </tbody>
-</table>
-{% endfor %}
+  </div>
+</div>
 
 {% endblock %}

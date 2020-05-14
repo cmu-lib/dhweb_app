@@ -165,32 +165,97 @@ LOGIN_URL = "/accounts/login"
 LOGIN_REDIRECT_URL = "/"
 
 DATA_OUTPUT_PATH = "/vol/data"
-DATA_ZIP_NAME = "dh_conferences_tables.zip"
 
-DATA_TABLE_CONFIG = [
-    {
-        "model": "Work",
-        "exclude_fields": ["search_text", "last_updated", "user_last_updated"],
-    },
-    {"model": "Author", "exclude_fields": ["last_updated", "user_last_updated"]},
-    {"model": "Conference", "exclude_fields": ["editing_user"]},
-    {"model": "Conference.organizers.through", "exclude_fields": []},
-    {"model": "Conference.hosting_institutions.through", "exclude_fields": []},
-    {"model": "ConferenceSeries", "exclude_fields": []},
-    {"model": "SeriesMembership", "exclude_fields": []},
-    {"model": "Organizer", "exclude_fields": ["last_updated", "user_last_updated"]},
-    {"model": "Authorship", "exclude_fields": ["last_updated", "user_last_updated"]},
-    {"model": "Appellation", "exclude_fields": []},
-    {"model": "Institution", "exclude_fields": ["last_updated", "user_last_updated"]},
-    {"model": "Affiliation", "exclude_fields": []},
-    {"model": "Country", "exclude_fields": []},
-    {"model": "Keyword", "exclude_fields": []},
-    {"model": "Topic", "exclude_fields": []},
-    {"model": "Discipline", "exclude_fields": []},
-    {"model": "Language", "exclude_fields": []},
-    {"model": "WorkType", "exclude_fields": []},
-    {"model": "License", "exclude_fields": []},
-]
+DENORMALIZED_WORKS_NAME = "dh_conferences_works"
+
+PUBLIC_DATA_TABLE_CONFIG = {
+    "CONFIGURATION": [
+        {
+            "model": "Work",
+            "exclude_fields": [
+                "search_text",
+                "full_text",
+                "full_text_type",
+                "full_text_license",
+                "last_updated",
+                "user_last_updated",
+            ],
+        },
+        {
+            "model": "Author",
+            "exclude_fields": [
+                "appellations_index",
+                "last_updated",
+                "user_last_updated",
+            ],
+        },
+        {"model": "Conference", "exclude_fields": ["editing_user"]},
+        {"model": "Conference.organizers.through", "exclude_fields": []},
+        {"model": "Conference.hosting_institutions.through", "exclude_fields": []},
+        {"model": "ConferenceSeries", "exclude_fields": []},
+        {"model": "SeriesMembership", "exclude_fields": []},
+        {"model": "Organizer", "exclude_fields": ["last_updated", "user_last_updated"]},
+        {
+            "model": "Authorship",
+            "exclude_fields": ["last_updated", "user_last_updated"],
+        },
+        {"model": "Appellation", "exclude_fields": []},
+        {
+            "model": "Institution",
+            "exclude_fields": ["last_updated", "user_last_updated"],
+        },
+        {"model": "Affiliation", "exclude_fields": []},
+        {"model": "Country", "exclude_fields": []},
+        {"model": "Keyword", "exclude_fields": []},
+        {"model": "Topic", "exclude_fields": []},
+        {"model": "Discipline", "exclude_fields": []},
+        {"model": "Language", "exclude_fields": []},
+        {"model": "WorkType", "exclude_fields": []},
+        {"model": "License", "exclude_fields": []},
+    ],
+    "DATA_ZIP_NAME": "dh_conferences_tables.zip",
+}
+
+PRIVATE_DATA_TABLE_CONFIG = {
+    "CONFIGURATION": [
+        {
+            "model": "Work",
+            "exclude_fields": ["search_text", "last_updated", "user_last_updated"],
+        },
+        {
+            "model": "Author",
+            "exclude_fields": [
+                "appellations_index",
+                "last_updated",
+                "user_last_updated",
+            ],
+        },
+        {"model": "Conference", "exclude_fields": ["editing_user"]},
+        {"model": "Conference.organizers.through", "exclude_fields": []},
+        {"model": "Conference.hosting_institutions.through", "exclude_fields": []},
+        {"model": "ConferenceSeries", "exclude_fields": []},
+        {"model": "SeriesMembership", "exclude_fields": []},
+        {"model": "Organizer", "exclude_fields": ["last_updated", "user_last_updated"]},
+        {
+            "model": "Authorship",
+            "exclude_fields": ["last_updated", "user_last_updated"],
+        },
+        {"model": "Appellation", "exclude_fields": []},
+        {
+            "model": "Institution",
+            "exclude_fields": ["last_updated", "user_last_updated"],
+        },
+        {"model": "Affiliation", "exclude_fields": []},
+        {"model": "Country", "exclude_fields": []},
+        {"model": "Keyword", "exclude_fields": []},
+        {"model": "Topic", "exclude_fields": []},
+        {"model": "Discipline", "exclude_fields": []},
+        {"model": "Language", "exclude_fields": []},
+        {"model": "WorkType", "exclude_fields": []},
+        {"model": "License", "exclude_fields": []},
+    ],
+    "DATA_ZIP_NAME": "private_dh_conferences_tables.zip",
+}
 
 FILER_STORAGES = {
     "public": {

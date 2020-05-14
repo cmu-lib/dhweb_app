@@ -840,10 +840,17 @@ def author_merge_view(request, author_id):
             return render(request, "author_merge.html", context)
 
 
-@user_is_staff
 def download_data(request):
     data_dictionary = []
-    for m in settings.DATA_TABLE_CONFIG:
+    if request.user.is_authenticated:
+        dt_config = settings.PRIVATE_DATA_TABLE_CONFIG
+        zip_url = reverse("private_all_tables_download")
+    else:
+        dt_config = settings.PUBLIC_DATA_TABLE_CONFIG
+        zip_url = reverse("public_all_tables_download")
+    denormalized_url = reverse("works_download")
+
+    for m in dt_config["CONFIGURATION"]:
         model = attrgetter(m["model"])(models)
         all_model_fields = [
             {
@@ -860,7 +867,32 @@ def download_data(request):
         ]
         data_dictionary.append({"model": m["model"], "fields": all_model_fields})
 
-    return render(request, "downloads.html", {"data_dictionary": data_dictionary})
+    context = {
+        "zip_url": zip_url,
+        "denormalized_url": denormalized_url,
+        "data_dictionary": data_dictionary,
+    }
+
+    return render(request, "downloads.html", context)
+
+
+def download_works_csv(request):
+    target_zip = f"{settings.DATA_OUTPUT_PATH}/{settings.DENORMALIZED_WORKS_NAME}.zip"
+    response = FileResponse(open(target_zip, "rb"))
+    return response
+
+
+def public_download_all_tables(request):
+    target_zip = f"{settings.DATA_OUTPUT_PATH}/{settings.PUBLIC_DATA_TABLE_CONFIG['DATA_ZIP_NAME']}"
+    response = FileResponse(open(target_zip, "rb"))
+    return response
+
+
+@login_required
+def private_download_all_tables(request):
+    target_zip = f"{settings.DATA_OUTPUT_PATH}/{settings.PRIVATE_DATA_TABLE_CONFIG['DATA_ZIP_NAME']}"
+    response = FileResponse(open(target_zip, "rb"))
+    return response
 
 
 @login_required
@@ -2635,179 +2667,3 @@ def work_type_merge(request, work_type_id):
             for error in raw_form.errors:
                 messages.error(request, error)
             return render(request, "tag_merge.html", context)
-
-
-class Echo:
-    """An object that implements just the write method of the file-like
-    interface.
-    """
-
-    def write(self, value):
-        """Write the value by returning it, instead of storing in a buffer."""
-        return value
-
-
-@login_required
-def download_works_csv(request):
-    header_names = [
-        "work_id",
-        "conference_short_title",
-        "conference_theme_title",
-        "conference_year",
-        "conference_organizers",
-        "conference_series",
-        "conference_hosting_institutions",
-        "conference_city",
-        "conference_state",
-        "conference_country",
-        "conference_url",
-        "conference_notes",
-        "work_title",
-        "work_url",
-        "work_authors",
-        "work_type",
-        "work_full_text",
-        "work_full_text_type",
-        "work_full_text_license",
-        "keywords",
-        "languages",
-        "disciplines",
-        "topics",
-    ]
-
-    works = (
-        Work.objects.order_by("id")
-        .select_related("conference__country")
-        .prefetch_related(
-            "conference",
-            "conference__series",
-            "conference__organizers",
-            "conference__hosting_institutions",
-            "conference__hosting_institutions__country",
-            "keywords",
-            "languages",
-            "disciplines",
-            "topics",
-            "work_type",
-            "full_text_license",
-        )
-    )
-
-    def header_iterator(names, content):
-        yield names
-        for w in content:
-            yield [
-                w.pk,
-                w.conference.short_title,
-                w.conference.theme_title,
-                w.conference.year,
-                ";".join([str(o) for o in w.conference.organizers.all()]),
-                ";".join([str(s) for s in w.conference.series.all()]),
-                ";".join([str(s) for s in w.conference.hosting_institutions.all()]),
-                w.conference.city,
-                w.conference.state_province_region,
-                w.conference.country,
-                w.conference.url,
-                w.conference.notes,
-                w.title,
-                w.url,
-                ";".join([str(a.appellation) for a in w.authorships.all()]),
-                w.work_type,
-                w.full_text,
-                w.full_text_type,
-                w.full_text_license,
-                ";".join([str(k) for k in w.keywords.all()]),
-                ";".join([str(k) for k in w.languages.all()]),
-                ";".join([str(k) for k in w.disciplines.all()]),
-                ";".join([str(k) for k in w.topics.all()]),
-            ]
-
-    pseudo_buffer = Echo()
-    writer = csv.writer(pseudo_buffer, dialect=csv.unix_dialect, quoting=csv.QUOTE_ALL)
-    response = StreamingHttpResponse(
-        (writer.writerow(r) for r in header_iterator(header_names, works)),
-        content_type="text/csv",
-    )
-    response["Content-Disposition"] = "attachment; filename=dh_conferences_works.csv"
-    return response
-
-
-@login_required
-def download_authorships_csv(request):
-    header_names = [
-        "authorship_id",
-        "work_id",
-        "author_id",
-        "first_name",
-        "last_name",
-        "authorship_order",
-        "affiliation_ids",
-    ]
-
-    authorships = (
-        Authorship.objects.select_related("work", "author", "appellation")
-        .order_by("work__pk", "authorship_order")
-        .prefetch_related("affiliations")
-    )
-
-    def header_iterator(names, content):
-        yield names
-        for a in content:
-            yield [
-                a.pk,
-                a.work.pk,
-                a.author.pk,
-                a.appellation.first_name,
-                a.appellation.last_name,
-                a.authorship_order,
-                ";".join([str(aff.pk) for aff in a.affiliations.all()]),
-            ]
-
-    pseudo_buffer = Echo()
-    writer = csv.writer(pseudo_buffer, dialect=csv.unix_dialect, quoting=csv.QUOTE_ALL)
-    response = StreamingHttpResponse(
-        (writer.writerow(r) for r in header_iterator(header_names, authorships)),
-        content_type="text/csv",
-    )
-    response[
-        "Content-Disposition"
-    ] = "attachment; filename=dh_conferences_authorships.csv"
-    return response
-
-
-@login_required
-def download_affiliations_csv(request):
-    header_names = ["affiliation_id", "department", "institution", "city", "country"]
-
-    affiliations = Affiliation.objects.order_by("id").prefetch_related(
-        "institution", "institution__country"
-    )
-
-    def header_iterator(names, content):
-        yield names
-        for a in content:
-            yield [
-                a.pk,
-                a.department,
-                a.institution,
-                a.institution.city,
-                a.institution.country,
-            ]
-
-    pseudo_buffer = Echo()
-    writer = csv.writer(pseudo_buffer, dialect=csv.unix_dialect, quoting=csv.QUOTE_ALL)
-    response = StreamingHttpResponse(
-        (writer.writerow(r) for r in header_iterator(header_names, affiliations)),
-        content_type="text/csv",
-    )
-    response[
-        "Content-Disposition"
-    ] = "attachment; filename=dh_conferences_affiliations.csv"
-    return response
-
-
-@login_required
-def download_all_tables(request):
-    target_zip = f"{settings.DATA_OUTPUT_PATH}/{settings.DATA_ZIP_NAME}"
-    response = FileResponse(open(target_zip, "rb"))
-    return response
