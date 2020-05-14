@@ -137,6 +137,6 @@ class Command(BaseCommand):
             dat_zip.close()
 
     def handle(self, *args, **options):
-        # self.write_private_csvs()
-        # self.write_public_csvs()
+        self.write_private_csvs()
+        self.write_public_csvs()
         self.write_denormalized_csvs()
