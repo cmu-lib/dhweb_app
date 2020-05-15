@@ -26,22 +26,34 @@
   </h5>
   <span>
     {% if user.is_authenticated and conference.editing_user %}
-    <span class="badge badge-light flex-shrink-0">Checked out by {{ conference.editing_user }}</span>
+    <span class="badge badge-light flex-shrink-0 mx-1">Checked out by {{ conference.editing_user }}</span>
     {% endif %}
     {% if conference.entry_status == "n" %}
-    <span class="badge badge-secondary flex-shrink-0">Not started</span>
+    <span class="badge badge-secondary flex-shrink-0 mx-1">Not started</span>
     {% elif conference.entry_status == "i" %}
-    <span class="badge badge-warning flex-shrink-0">Incomplete</span>
+    <span class="badge badge-warning flex-shrink-0 mx-1">Incomplete</span>
     {% elif conference.entry_status == "r" %}
-    <span class="badge badge-info flex-shrink-0">In review</span>
+    <span class="badge badge-info flex-shrink-0 mx-1">In review</span>
     {% elif conference.entry_status == "c" %}
-    <span class="badge badge-success flex-shrink-0">Complete</span>
+    <span class="badge badge-success flex-shrink-0 mx-1">Complete</span>
     {% endif %}
   </span>
 </div>
-{% if conference.theme_title and conference.main_series %}
-<h6>"{{ conference.theme_title }}"</h6>
-{% endif %}
+<div class="d-flex justify-content-between align-items-baseline">
+  <h6 class="flex-grow-1">
+    {% if conference.theme_title and conference.main_series %}
+    "{{ conference.theme_title }}"
+    {% endif %}
+  </h6>
+  {% if user.is_authenticated %}
+  {% if conference.program_available %}
+  <span class="badge badge-info flex-shrink-0 mx-1">Has program</span>
+  {% endif %}
+  {% if conference.abstracts_available %}
+  <span class="badge badge-secondary flex-shrink-0 mx-1">Has abstracts</span>
+  {% endif %}
+  {% endif %}
+</div>
 {% if conference.hosting_institutions.exists %}
 <small class="text-muted">
   Hosted at {{ conference.hosting_institutions.all|join:", "}}
