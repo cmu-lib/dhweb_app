@@ -38,12 +38,9 @@
   <div class="col-md-3">
     <div class="card m-2">
       <div class="card-header d-flex justify-content-left align-items-baseline">
-        <button class="btn btn-lg btn-link" type="button" data-toggle="collapse" data-target="#collapseSeries"
-          aria-expanded="true" aria-controls="collapseSeries"><i id="toggleSeries"
-            class="fas fa-caret-down"></i></button>
         <span>All other series</span>
       </div>
-      <ul class="list-group list-group-flush collapse show" id="collapseSeries">
+      <ul class="list-group list-group-flush">
         <li class="list-group-item {% if not series.id %}disabled{% endif %}">
           <a href="{% url 'standalone_conference_list' %}">Standalone Events</a>
         </li>
@@ -60,16 +57,4 @@
   </div>
 </div>
 
-{% endblock %}
-
-{% block js %}
-<script>
-  $('#collapseSeries').on('show.bs.collapse', function () {
-    $("#toggleSeries").removeClass('fa-caret-right').addClass('fa-caret-down');
-  });
-
-  $('#collapseSeries').on('hide.bs.collapse', function () {
-    $("#toggleSeries").removeClass('fa-caret-down').addClass('fa-caret-right');
-  });
-</script>
 {% endblock %}
