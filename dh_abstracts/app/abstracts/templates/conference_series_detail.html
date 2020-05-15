@@ -51,7 +51,8 @@
         <li class="list-group-item {% if s.id is series.id %}disabled{% endif %}">
           <a href="{% url 'conference_series_detail' s.id %}">{{ s.title }} ({{ s.n_conferences}})</a>
           <br>
-          <small class="text-muted">{{ s.earliest_year }} - {{ s.latest_year }}</small>
+          <small class="text-muted">{{ s.earliest_year }}{% if s.earliest_year != s.latest_year %} -
+            {{ s.latest_year }}{% endif %}</small>
         </li>
         {% endfor %}
       </ul>
