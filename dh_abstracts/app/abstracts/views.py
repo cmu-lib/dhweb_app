@@ -1087,11 +1087,10 @@ class WorkDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     template_name = "work_delete.html"
     extra_context = {"cancel_view": "work_list"}
     success_url = reverse_lazy("work_list")
-    success_message = "%(id)s deleted."
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(WorkDelete, self).delete(request, *args, **kwargs)
+        messages.success(self.request, f"'{self.get_object().title}' deleted")
+        return super().delete(request, *args, **kwargs)
 
 
 class FullWorkList(ListView):
