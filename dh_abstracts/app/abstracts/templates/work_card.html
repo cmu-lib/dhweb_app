@@ -12,6 +12,17 @@
     href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.appellation.first_name }}
     {{ authorship.appellation.last_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 
+{% if work.session_papers.exists %}
+<p>Session papers:</p>
+<ul>
+  {% for w in work.session_papers.all %}
+  <li><a href="{% url 'work_detail' w.id %}">{{ w.title }}</a></li>
+  {% endfor %}
+</ul>
+{% elif work.parent_session %}
+<p>Parent session: <a href="{% url 'work_detail' work.parent_session.id %}">{{ work.parent_session.title }}</a></p>
+{% endif %}
+
 {% if work.keywords.exists %}<p>Keywords: {% for kw in work.keywords.all %}<a class="badge"
     href="{% url 'work_list' %}?keyword={{ kw.pk }}">{{ kw }}</a>
   {% endfor %}</p>{% endif %}

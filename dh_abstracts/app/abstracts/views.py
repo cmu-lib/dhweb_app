@@ -384,22 +384,10 @@ def work_view(request, work_id):
 def author_view(request, author_id):
     author = get_object_or_404(Author, pk=author_id)
 
-    obj_authorships = (
+    sorted_authorships = (
         Authorship.objects.filter(author=author)
-        .select_related("work_type", "conference")
-        .prefetch_related(
-            "authorships__appellation",
-            "authorships__author",
-            "keywords",
-            "topics",
-            "languages",
-            "disciplines",
-            "conference__organizers",
-        )
-    ).order_by("-work__conference__year")
-
-    sorted_authorships = Authorship.objects.filter(author=author).order_by(
-        "work__conference__year"
+        .order_by("work__conference__year")
+        .prefetch_related("work", "work__conference")
     )
 
     appellations = (
@@ -407,11 +395,7 @@ def author_view(request, author_id):
         .distinct()
         .annotate(latest_year=Max("asserted_by__work__conference__year"))
         .order_by("-latest_year")
-        .prefetch_related(
-            Prefetch("asserted_by", queryset=sorted_authorships),
-            "asserted_by__work",
-            "asserted_by__work__conference",
-        )
+        .prefetch_related(Prefetch("asserted_by", queryset=sorted_authorships))
     )
 
     affiliations = (
@@ -421,8 +405,6 @@ def author_view(request, author_id):
         .order_by("-latest_year")
         .prefetch_related(
             Prefetch("asserted_by", queryset=sorted_authorships),
-            "asserted_by__work",
-            "asserted_by__work__conference",
             "institution",
             "institution__country",
         )
@@ -432,10 +414,11 @@ def author_view(request, author_id):
         Work.objects.filter(authorships__author=author)
         .order_by("conference__year")
         .distinct()
-        .select_related("conference", "work_type")
+        .select_related("conference", "parent_session", "work_type")
         .prefetch_related(
             "conference__series",
             "conference__organizers",
+            "session_papers",
             "keywords",
             "topics",
             "disciplines",
@@ -451,7 +434,6 @@ def author_view(request, author_id):
     context = {
         "author": author,
         "works": works,
-        "authorships": obj_authorships,
         "appellations": appellations,
         "affiliations": affiliations,
         "author_admin_page": author_admin_page,
@@ -1107,7 +1089,7 @@ class FullWorkList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        base_result_set = Work.objects.select_related("work_type")
+        base_result_set = Work.objects.all()
         raw_filter_form = WorkFilter(self.request.GET)
 
         if raw_filter_form.is_valid():
@@ -1197,7 +1179,7 @@ class FullWorkList(ListView):
                 ).order_by("-first_author_last_name", "title")
 
             return (
-                result_set.select_related("conference")
+                result_set.select_related("conference", "work_type", "parent_session")
                 .annotate(
                     main_series=StringAgg(
                         "conference__series_memberships__series__abbreviation",
@@ -1214,6 +1196,7 @@ class FullWorkList(ListView):
                     "conference__organizers",
                     "conference__series_memberships",
                     "conference__series_memberships__series",
+                    "session_papers",
                     "authorships",
                     "authorships__appellation",
                     "authorships__author",
