@@ -35,7 +35,8 @@ from django.conf import settings
 from django.utils.html import format_html
 from django.views.decorators.cache import cache_page
 import glob
-from os.path import basename
+from os.path import basename, getmtime
+from datetime import datetime
 import csv
 import sys
 from operator import attrgetter
@@ -857,6 +858,9 @@ def download_data(request):
         dt_config = settings.PUBLIC_DATA_TABLE_CONFIG
         zip_url = reverse("public_all_tables_download")
     denormalized_url = reverse("works_download")
+    denormalized_last_updated = datetime.fromtimestamp(
+        getmtime(f"{settings.DATA_OUTPUT_PATH}/{settings.DENORMALIZED_WORKS_NAME}.zip")
+    )
 
     for m in dt_config["CONFIGURATION"]:
         model = attrgetter(m["model"])(models)
@@ -877,10 +881,15 @@ def download_data(request):
         data_dictionary.append(
             {"model": m["model"], "csv_name": m["csv_name"], "fields": all_model_fields}
         )
+    normalized_last_updated = datetime.fromtimestamp(
+        getmtime(f"{settings.DATA_OUTPUT_PATH}/{dt_config['DATA_ZIP_NAME']}")
+    )
 
     context = {
         "zip_url": zip_url,
         "denormalized_url": denormalized_url,
+        "denormalized_last_updated": denormalized_last_updated,
+        "normalized_last_updated": normalized_last_updated,
         "data_dictionary": data_dictionary,
         "denormalized_data_dictionary": settings.DENORMALIZED_HEADERS,
     }
