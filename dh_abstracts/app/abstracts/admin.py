@@ -139,7 +139,7 @@ class ConferenceAdmin(admin.ModelAdmin):
     search_fields = ["short_title"]
     autocomplete_fields = ["organizers", "hosting_institutions", "country"]
     list_display = [
-        "pk",
+        "__str__",
         "short_title",
         "theme_title",
         "city",

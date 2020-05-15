@@ -199,12 +199,18 @@ class Conference(models.Model):
         elif self.theme_title != "":
             return f"{self.year} - {self.theme_title}"
         elif self.city != "":
-            return f"{self.year} - {self.city}"
+            try:
+                return f"{self.year} - {self.city} - {self.series.first().title}"
+            except:
+                try:
+                    return f"{self.year} - {self.city} - {self.hosting_institutions.first().name}"
+                except:
+                    return f"{self.year} - {self.city}"
         else:
             try:
                 return f"{self.year} - {self.hosting_institutions.first().name}"
             except:
-                return f"{self.year}"
+                return f"{self.year} - {self.series.first().title}"
 
     def get_absolute_url(self):
         return reverse("conference_edit", kwargs={"pk": self.pk})
