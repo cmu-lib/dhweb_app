@@ -350,7 +350,7 @@ class FullInstitutionForm(forms.Form):
             ("n_dsc", "By number of abstracts (descending)"),
             ("n_asc", "By number of abstracts (ascending)"),
         ),
-        required=True,
+        required=False,
         initial="n_dsc",
     )
 

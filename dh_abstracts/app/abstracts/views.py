@@ -1259,16 +1259,15 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
         annotated_affiliations = Affiliation.objects.annotate(
             n_works=Count("asserted_by__work", distinct=True)
         )
-        base_result_set = (
+        result_set = (
             Institution.objects.annotate(
                 n_works=Count("affiliations__asserted_by__work", distinct=True)
             )
             .prefetch_related(
                 Prefetch("affiliations", annotated_affiliations), "country"
             )
-            .distinct()
+            .order_by("-n_works")
         )
-        result_set = base_result_set
 
         if self.request.GET:
             raw_filter_form = FullInstitutionForm(self.request.GET)
@@ -1305,12 +1304,8 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
             else:
                 for f, e in raw_filter_form.errors.items():
                     messages.error(self.request, f"{f}: {e}")
-                result_set = base_result_set
-        else:
-            # Otherwise default to sorting by n_dsc
-            result_set = result_set.order_by("-n_works")
 
-        return result_set.distinct()
+        return result_set
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
