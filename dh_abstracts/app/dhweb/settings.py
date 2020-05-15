@@ -275,6 +275,7 @@ PUBLIC_DATA_TABLE_CONFIG = {
             "model": "Conference",
             "exclude_fields": ["editing_user"],
             "csv_name": "conferences",
+            "include_string": True,
         },
         {
             "model": "Conference.organizers.through",
@@ -348,6 +349,7 @@ PRIVATE_DATA_TABLE_CONFIG = {
             "model": "Conference",
             "exclude_fields": ["editing_user"],
             "csv_name": "conferences",
+            "include_string": True,
         },
         {
             "model": "Conference.organizers.through",

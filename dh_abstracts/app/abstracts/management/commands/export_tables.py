@@ -21,7 +21,7 @@ class Command(BaseCommand):
         else:
             return None
 
-    def write_model_csv(self, qs, filename, exclude_fields=[]):
+    def write_model_csv(self, qs, filename, exclude_fields=[], include_string=False):
         model = qs.model
         all_model_fields = [
             {"name": f.name, "relation": f.is_relation}
@@ -36,9 +36,14 @@ class Command(BaseCommand):
             writer = csv.writer(
                 csv_file, dialect=csv.unix_dialect, quoting=csv.QUOTE_ALL
             )
-            writer.writerow([f["name"] for f in censored_fields])
+            headernames = [f["name"] for f in censored_fields]
+            if include_string:
+                headernames.append("label")
+            writer.writerow(headernames)
             for obj in qs.order_by("id"):
                 row = [self.get_obj_field(obj, f) for f in censored_fields]
+                if include_string:
+                    row.append(str(obj))
                 writer.writerow(row)
         return filename
 
@@ -53,6 +58,7 @@ class Command(BaseCommand):
                         qs=attrgetter(export_conf["model"])(models).objects.all(),
                         filename=f"{tdir}/{tempfile.TemporaryFile()}",
                         exclude_fields=export_conf["exclude_fields"],
+                        include_string=export_conf.get("include_string", False),
                     ),
                     arcname=f"dh_conferences_data/{final_csvname}.csv",
                 )

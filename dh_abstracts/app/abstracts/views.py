@@ -860,6 +860,17 @@ def download_data(request):
             for f in model._meta.fields
             if not f.one_to_many and f.name not in m["exclude_fields"]
         ]
+        if m.get("include_string", False):
+            all_model_fields.append(
+                {
+                    "name": "label",
+                    "relation": None,
+                    "help_text": "General label for this object",
+                    "related_model": None,
+                    "type": "CharField",
+                    "required": True,
+                }
+            )
         data_dictionary.append(
             {"model": m["model"], "csv_name": m["csv_name"], "fields": all_model_fields}
         )
