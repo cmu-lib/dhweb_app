@@ -442,7 +442,7 @@ def author_view(request, author_id):
     return render(request, "author_detail.html", context)
 
 
-class AuthorSplit(DetailView):
+class AuthorSplit(DetailView, StaffRequiredMixin):
     model = Author
     template_name = "author_split.html"
     context_object_name = "original_author"
