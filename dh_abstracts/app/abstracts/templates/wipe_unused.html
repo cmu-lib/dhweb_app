@@ -5,7 +5,7 @@
 {% block content %}
 {% if hanging_items %}
 <p>Wipe any {% for k, v in deletions.items %}{{ k }}, {% endfor %} that is not associated with an
-  abstract?</p>
+  work?</p>
 
 <form method="post">
   {% csrf_token %}

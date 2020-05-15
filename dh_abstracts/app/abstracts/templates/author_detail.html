@@ -1,7 +1,7 @@
 {% extends "detail.html" %}
 
 {% block metadata %}
-{% include "twitter_card.html" with title=appellations.first content="Abstracts submitted by this author" %}
+{% include "twitter_card.html" with title=appellations.first content="Works submitted by this author" %}
 {% endblock %}
 
 {% block header_title %}{{ appellations.first }}{% endblock %}
@@ -10,7 +10,7 @@
 
 {% block main %}
 <div class="card m-2">
-  <div class="card-header">Abstracts</div>
+  <div class="card-header">Works</div>
   <ul class="list-group list-group-flush">
     {% for work in works %}
     <li class="list-group-item">{% include "work_card.html" with work=work %}</li>

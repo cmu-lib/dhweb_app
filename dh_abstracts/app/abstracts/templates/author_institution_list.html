@@ -15,7 +15,7 @@
       {% for author in institution.affiliated_authors %}
       <li class="list-group-item  d-flex justify-content-between align-items-center">
         <a href="{% url 'author_detail' author.pk %}">{{ author }}</a>
-        <span>Number of abstracts: <span class="badge badge-primary">{{ author.works.count }}</span></span>
+        <span>Number of works: <span class="badge badge-primary">{{ author.works.count }}</span></span>
       </li>
       {% endfor %}
     </ul>

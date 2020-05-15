@@ -4,7 +4,7 @@
     {{ institution.city }}{% endif %}{% if institution.state_province_region %},
     {{ institution.state_province_region }}{% endif %}{% if institution.country %},
     {{ institution.country.pref_name }}{% endif %}</a>
-  <span>Number of abstracts: <a class="badge badge-primary"
+  <span>Number of works: <a class="badge badge-primary"
       href="{% url 'work_list' %}?institution={{ institution.id }}">{{ institution.n_works }}</a></span>
 </h5>
 <div class="card">
@@ -14,7 +14,7 @@
     {% for affiliation in institution.affiliations.all %}
     <li class="list-group-item  d-flex justify-content-between align-items-center">
       <a href="{% url 'affiliation_edit' affiliation.pk %}">{{ affiliation.department|default:"(no department)"}}</a>
-      <span>Number of abstracts: <a class="badge badge-primary"
+      <span>Number of works: <a class="badge badge-primary"
           href="{% url 'work_list' %}?affiliation={{ affiliation.pk }}">{{ affiliation.n_works }}</a></span>
     </li>
     {% endfor %}

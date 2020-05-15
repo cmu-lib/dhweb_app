@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block header_title %}Editing abstract ID {{ work.pk }}{% endblock %}
+{% block header_title %}Editing work ID {{ work.pk }}{% endblock %}
 
 {% block content %}
 <h2>Authorship of "{{ work.title }}"</h2>
@@ -9,7 +9,7 @@
     <nav>
       <ul class="nav nav-pills">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'work_edit' work.pk %}">Abstract Details</a>
+          <a class="nav-link" href="{% url 'work_edit' work.pk %}">Work Details</a>
         </li>
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'work_edit_authorship' work.pk %}">Authorships</a>

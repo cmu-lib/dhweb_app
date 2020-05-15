@@ -29,8 +29,9 @@
 
   <body>
     <div class="alert alert-warning text-center">
-      <p>This site is currently in beta testing. Layout and functionality are subject to change or removal at any time. 
-        Data are still in preparation. <b>Please do not use or link to this site until its public release later in 2020.</b> 
+      <p>This site is currently in beta testing. Layout and functionality are subject to change or removal at any time.
+        Data are still in preparation. <b>Please do not use or link to this site until its public release later in
+          2020.</b>
         Report issues <a href="https://github.com/cmu-lib/dhweb_app/issues">on our GitHub page.</a></p>
     </div>
 
@@ -48,7 +49,7 @@
               aria-haspopup="true" aria-expanded="false">Browse</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{% url 'conference_list' %}">Conferences</a>
-              <a class="dropdown-item" href="{% url 'work_list' %}">Abstracts</a>
+              <a class="dropdown-item" href="{% url 'work_list' %}">Works</a>
               <a class="dropdown-item" href="{% url 'author_list' %}">Authors</a>
           </li>
           <li class="nav-item">
@@ -73,7 +74,7 @@
               <a class="dropdown-item" href="{% url 'full_institution_list' %}">Departments and Institutions</a>
               <a class="dropdown-item" href="{% url 'author_institution_list' %}">Authors by institution</a>
               <a class="dropdown-item" href="{% url 'full_organizer_list' %}">Organizers</a>
-              <a class="dropdown-item" href="{% url 'full_work_type_list' %}">Abstract Types</a>
+              <a class="dropdown-item" href="{% url 'full_work_type_list' %}">Work Types</a>
               <a class="dropdown-item" href="{% url 'full_keyword_list' %}">Keywords</a>
               <a class="dropdown-item" href="{% url 'full_topic_list' %}">Topics</a>
               <a class="dropdown-item" href="{% url 'full_language_list' %}">Languages</a>

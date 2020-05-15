@@ -67,7 +67,7 @@
 
 {% if work.full_text %}
 <div class="card my-2">
-  <div class="card-header d-flex justify-content-between">Abstract</div>
+  <div class="card-header d-flex justify-content-between">Work</div>
   <div class="card-body">
     {% if user.is_authenticated or work.conference.full_text_public or work.full_text_license %}
     {% if work.full_text_type == "txt" %}
@@ -76,7 +76,7 @@
     {{ work.full_text | striptags | reduce_lines | linebreaks }}
     {% endif %}
     {% else %}
-    <div class="alert alert-warning">The full text for this abstract has been indexed, but we cannot display it here
+    <div class="alert alert-warning">The full text for this work has been indexed, but we cannot display it here
       because it is protected by copyright. If you would like access to the full text, please {% if work.url %} use the
       URL above, or {% endif %} locate the conference proceedings through your institution's library.</div>
     {% endif %}
@@ -96,7 +96,8 @@
   </div>
 </div>
 <div class="alert alert-secondary my-2">
-  <p>If this content appears in violation of your intellectual property rights, or you see errors or omissions, please reach
+  <p>If this content appears in violation of your intellectual property rights, or you see errors or omissions, please
+    reach
     out to <a href="/pages/about">Scott B. Weingart</a> to discuss removing or amending the materials.</p>
 </div>
 {% endif %}
