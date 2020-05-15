@@ -475,6 +475,10 @@ class AuthorList(ListView):
                 n_works=Count("authorships", distinct=True),
             ).order_by(order_res)
 
+            author_res = filter_form["author"]
+            if author_res is not None:
+                result_set = result_set.filter(id=author_res.id)
+
             affiliation_res = filter_form["affiliation"]
             if affiliation_res is not None:
                 result_set = result_set.filter(

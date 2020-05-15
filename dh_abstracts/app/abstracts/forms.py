@@ -221,6 +221,11 @@ class AuthorFilter(forms.Form):
         required=False,
         initial="last_name",
     )
+    author = forms.ModelChoiceField(
+        queryset=Author.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="author-autocomplete", attrs={"data-html": True}),
+    )
     name = forms.CharField(max_length=100, strip=True, required=False)
     first_name = forms.CharField(
         max_length=100,
