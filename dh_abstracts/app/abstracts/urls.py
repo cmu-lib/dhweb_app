@@ -25,6 +25,7 @@ urlpatterns = [
         name="author_detail",
     ),
     path("authors/<int:author_id>/merge", views.author_merge_view, name="author_merge"),
+    path("authors/<int:pk>/split", views.AuthorSplit.as_view(), name="author_split"),
     path(
         "conferences",
         views.cache_for_anon(views.ConferenceSeriesList.as_view()),

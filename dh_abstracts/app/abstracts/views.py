@@ -442,6 +442,41 @@ def author_view(request, author_id):
     return render(request, "author_detail.html", context)
 
 
+class AuthorSplit(DetailView):
+    model = Author
+    template_name = "author_split.html"
+    context_object_name = "original_author"
+
+    def get_context_data(self, **kwargs):
+        authorships = Authorship.objects.filter(author=self.get_object()).order_by(
+            "work__conference__year"
+        )
+        return {self.context_object_name: self.get_object(), "authorships": authorships}
+
+    def post(self, request, *args, **kwargs):
+        """
+        Create new author and transfer authorships
+        """
+        try:
+            authorships_to_move = request.POST["splitselect"]
+            print(authorships_to_move)
+            new_author = Author.objects.create()
+            Authorship.objects.filter(id__in=authorships_to_move).update(
+                author=new_author
+            )
+            # Force-update appellations
+            self.get_object().save()
+            new_author.save()
+            messages.success(
+                request,
+                f"{len(authorships_to_move)} authorships moved to new author id {new_author.id}",
+            )
+            return redirect("author_detail", new_author.id)
+        except:
+            messages.error(request, "An unknown error occurred")
+            return redirect("author_split", self.get_object().id)
+
+
 class XMLView(DetailView, LoginRequiredMixin):
     model = Work
     context_object_name = "work"
