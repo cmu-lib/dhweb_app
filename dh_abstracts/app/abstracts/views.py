@@ -983,9 +983,12 @@ def WorkEditAuthorship(request, work_id):
         if authorships_forms.is_valid():
             for d_form in authorships_forms.deleted_forms:
                 d_form_data = d_form.cleaned_data
+                attached_author = d_form_data["author"]
                 Authorship.objects.filter(
                     work=work, author=d_form_data["author"]
                 ).delete()
+                # Refresh the author in DB to update appellations index
+                attached_author.save()
             for aform in authorships_forms:
                 if aform not in authorships_forms.deleted_forms:
                     aform_data = aform.cleaned_data

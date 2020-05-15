@@ -777,6 +777,9 @@ class Author(ChangeTrackedModel):
             new_path=target.get_absolute_url(),
         )
 
+        # Force-save the target so that its appellation index gets updated
+        target.save()
+
         # Delete self
         deletion_results = self.delete()[1]
         results["deletions"] = deletion_results
