@@ -208,7 +208,7 @@ DENORMALIZED_HEADERS = [
     {
         "name": "work_url",
         "description": "Direct URL for the work abstract if it exists",
-        "required": True,
+        "required": False,
     },
     {
         "name": "work_authors",
