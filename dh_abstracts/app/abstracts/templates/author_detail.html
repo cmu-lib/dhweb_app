@@ -25,6 +25,7 @@
   <div class="card-header">Administration</div>
   <div class="card-body">
     <a href="{% url 'author_merge' author.pk %}" class="btn btn-warning" role="button">Merge</a>
+    <a href="{% url 'author_split' author.pk %}" class="btn btn-warning" role="button">Split</a>
     <a class="btn btn-primary" role="button" href="{{ author_admin_page }}">Edit this author</a>
   </div>
 </div>

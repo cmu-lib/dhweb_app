@@ -453,12 +453,13 @@ class AuthorSplit(DetailView):
         )
         return {self.context_object_name: self.get_object(), "authorships": authorships}
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         """
         Create new author and transfer authorships
         """
+        authorships_to_move = request.POST.getlist("splitselect")
         try:
-            authorships_to_move = request.POST["splitselect"]
             print(authorships_to_move)
             new_author = Author.objects.create()
             Authorship.objects.filter(id__in=authorships_to_move).update(
@@ -473,7 +474,7 @@ class AuthorSplit(DetailView):
             )
             return redirect("author_detail", new_author.id)
         except:
-            messages.error(request, "An unknown error occurred")
+            messages.error(request, str(authorships_to_move))
             return redirect("author_split", self.get_object().id)
 
 
