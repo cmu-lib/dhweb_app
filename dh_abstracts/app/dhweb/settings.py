@@ -170,6 +170,7 @@ DENORMALIZED_WORKS_NAME = "dh_conferences_works"
 
 DENORMALIZED_HEADERS = [
     {"name": "work_id", "description": "Unique ID number", "required": True},
+    {"name": "conference_label", "description": "Conference label", "required": True},
     {
         "name": "conference_short_title",
         "description": "Location-based short title of the conference",

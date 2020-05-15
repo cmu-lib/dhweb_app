@@ -103,6 +103,7 @@ class Command(BaseCommand):
                         parent_session_id = None
                     row_data = [
                         w.pk,
+                        str(w.conference),
                         w.conference.short_title,
                         w.conference.theme_title,
                         w.conference.year,
