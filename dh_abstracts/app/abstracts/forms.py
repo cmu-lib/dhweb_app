@@ -146,7 +146,9 @@ class WorkAuthorshipForm(forms.Form):
     affiliations = forms.ModelMultipleChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
-        widget=ModelSelect2Multiple(url="affiliation-autocomplete"),
+        widget=ModelSelect2Multiple(
+            url="affiliation-autocomplete", attrs={"data-html": True}
+        ),
         help_text="If the combination of department and institution is not available in this list, then use the fields below to define it.",
     )
 
@@ -246,13 +248,13 @@ class AuthorFilter(forms.Form):
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
         required=False,
-        widget=ModelSelect2(url="institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete", attrs={"data-html": True}),
         help_text="Authors who were once affiliated with this institution",
     )
     affiliation = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
-        widget=ModelSelect2(url="affiliation-autocomplete"),
+        widget=ModelSelect2(url="affiliation-autocomplete", attrs={"data-html": True}),
         help_text='Search by department+institution combination. This is a more granular search than "Institution" above.',
     )
 
@@ -287,13 +289,15 @@ class AffiliationMergeForm(forms.Form):
 class AffiliationMultiMergeForm(forms.Form):
     sources = forms.ModelMultipleChoiceField(
         queryset=Affiliation.objects.all(),
-        widget=ModelSelect2Multiple(url="affiliation-autocomplete"),
+        widget=ModelSelect2Multiple(
+            url="affiliation-autocomplete", attrs={"data-html": True}
+        ),
         required=True,
         help_text="Select the affiliations that you want to merge together",
     )
     into = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
-        widget=ModelSelect2(url="affiliation-autocomplete"),
+        widget=ModelSelect2(url="affiliation-autocomplete", attrs={"data-html": True}),
         required=True,
         help_text="Select the target affiliation to merge into",
     )
@@ -302,13 +306,15 @@ class AffiliationMultiMergeForm(forms.Form):
 class InstitutionMultiMergeForm(forms.Form):
     sources = forms.ModelMultipleChoiceField(
         queryset=Institution.objects.all(),
-        widget=ModelSelect2Multiple(url="institution-autocomplete"),
+        widget=ModelSelect2Multiple(
+            url="institution-autocomplete", attrs={"data-html": True}
+        ),
         required=True,
         help_text="Select the institutions that you want to merge together",
     )
     into = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
-        widget=ModelSelect2(url="institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete", attrs={"data-html": True}),
         required=True,
         help_text="Select the target institution to merge into",
     )
@@ -317,7 +323,7 @@ class InstitutionMultiMergeForm(forms.Form):
 class AffiliationEditForm(forms.ModelForm):
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
-        widget=ModelSelect2(url="institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete", attrs={"data-html": True}),
         required=True,
     )
 
@@ -337,12 +343,12 @@ class FullInstitutionForm(forms.Form):
     affiliation = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
-        widget=ModelSelect2(url="affiliation-autocomplete"),
+        widget=ModelSelect2(url="affiliation-autocomplete", attrs={"data-html": True}),
     )
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
         required=False,
-        widget=ModelSelect2(url="institution-autocomplete"),
+        widget=ModelSelect2(url="institution-autocomplete", attrs={"data-html": True}),
     )
     country = forms.ModelChoiceField(
         queryset=Country.objects.filter().all(),
@@ -503,7 +509,7 @@ class ConferenceForm(forms.ModelForm):
             "end_date": forms.DateInput(attrs={"type": "date"}),
             "country": ModelSelect2(url="country-autocomplete"),
             "hosting_institutions": ModelSelect2Multiple(
-                url="institution-autocomplete"
+                url="institution-autocomplete", attrs={"data-html": True}
             ),
             "references": forms.Textarea(attrs={"rows": 2}),
             "contributors": forms.Textarea(attrs={"rows": 2}),

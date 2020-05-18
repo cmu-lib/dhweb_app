@@ -257,9 +257,13 @@ class InstitutionAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Institution.objects.annotate(
-            n_works=Count("affiliations__asserted_by__work", distinct=True)
-        ).order_by("-n_works")
+        qs = (
+            Institution.objects.annotate(
+                n_works=Count("affiliations__asserted_by__work", distinct=True)
+            )
+            .select_related("country")
+            .order_by("-n_works")
+        )
 
         if self.q:
             qs = qs.filter(name__icontains=self.q).all()
@@ -267,16 +271,27 @@ class InstitutionAutocomplete(ItemLabelAutocomplete):
         return qs
 
     def get_result_label(self, item):
-        return f"{item} ({item.n_works} works)"
+        if item.country is not None:
+            c_label = item.country.pref_name
+        else:
+            c_label = ""
+        location_statement = ", ".join(
+            [l for l in [item.state_province_region, c_label] if l != ""]
+        )
+        return f"{item} ({item.n_works} works)<br><small text-class='muted'>{location_statement}</small>"
 
 
 class AffiliationAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Affiliation.objects.annotate(
-            n_works=Count("asserted_by__work", distinct=True)
-        ).order_by("-n_works")
+        qs = (
+            Affiliation.objects.annotate(
+                n_works=Count("asserted_by__work", distinct=True)
+            )
+            .select_related("institution", "institution__country")
+            .order_by("-n_works")
+        )
 
         if self.q:
             qs = qs.filter(
@@ -286,7 +301,14 @@ class AffiliationAutocomplete(ItemLabelAutocomplete):
         return qs
 
     def get_result_label(self, item):
-        return f"{item} ({item.n_works} works)"
+        if item.institution.country is not None:
+            c_label = item.institution.country.pref_name
+        else:
+            c_label = ""
+        location_statement = ", ".join(
+            [l for l in [item.institution.state_province_region, c_label] if l != ""]
+        )
+        return f"{item} ({item.n_works} works)<br><small text-class='muted'>{location_statement}</small>"
 
 
 class ConferenceAutocomplete(ItemLabelAutocomplete):
