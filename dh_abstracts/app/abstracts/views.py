@@ -274,9 +274,9 @@ class AffiliationAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Affiliation.objects.annotate(n_works=Count("asserted_by__work")).order_by(
-            "-n_works"
-        )
+        qs = Affiliation.objects.annotate(
+            n_works=Count("asserted_by__work", distinct=True)
+        ).order_by("-n_works")
 
         if self.q:
             qs = qs.filter(
