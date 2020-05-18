@@ -88,16 +88,16 @@ class WorkAdmin(admin.ModelAdmin):
 
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = [
-        "pk",
         "name",
         "city",
+        "state_province_region",
         "country",
         "last_updated",
         "user_last_updated",
     ]
-    search_fields = ["name", "city", "country__pref_name"]
+    search_fields = ["name", "city", "state_province_region", "country__pref_name"]
     readonly_fields = ["last_updated", "user_last_updated"]
-    list_display = ["last_updated", "user_last_updated"]
+    list_filter = ["user_last_updated", "country"]
     ordering = ["name"]
 
 
@@ -113,6 +113,11 @@ class ConferenceMembershipInline(admin.TabularInline):
     extra = 0
 
 
+class SeriesMembershipAdmin(admin.ModelAdmin):
+    list_display = ["series", "conference", "number"]
+    model = SeriesMembership
+
+
 class ConferenceSeriesAdmin(admin.ModelAdmin):
     inlines = [ConferenceMembershipInline]
 
@@ -126,7 +131,8 @@ class OrganizerAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     filter_horizontal = ["conferences_organized"]
     readonly_fields = ["last_updated", "user_last_updated"]
-    list_display = ["pk", "name", "last_updated", "user_last_updated"]
+    list_display = ["name", "last_updated", "user_last_updated"]
+    list_filter = ["user_last_updated"]
 
 
 class ConferenceDocumentInline(admin.TabularInline):
@@ -167,7 +173,7 @@ admin.site.register(Authorship, AuthorshipAdmin)
 admin.site.register(Organizer, OrganizerAdmin)
 admin.site.register(ConferenceSeries, ConferenceSeriesAdmin)
 admin.site.register(Conference, ConferenceAdmin)
-admin.site.register(SeriesMembership)
+admin.site.register(SeriesMembership, SeriesMembershipAdmin)
 admin.site.register(Work, WorkAdmin)
 admin.site.register(Institution, InstitutionAdmin)
 admin.site.register(Author, AuthorAdmin)
