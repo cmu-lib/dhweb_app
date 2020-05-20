@@ -38,7 +38,7 @@
               {{ form.last_name|as_crispy_field }}
             </div>
             <div class="col">
-              {{ form.institution|as_crispy_field}}
+              {{ form.institution|as_crispy_field }}
               {{ form.affiliations|as_crispy_field }}
 
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal" ,
@@ -132,7 +132,7 @@ When the user selects an author, fill in the most recent known information about
     author_count++;
 
     var newformid = "authorship_" + author_count;
-    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <button type="button" class="btn btn-danger remove-authorship" id="remove-authorship-' + newformid + '">Remove authorship</button></h2> <div class="row"> <div class="col-6"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col-6"> {{ authorships_form.empty_form.affiliations | as_crispy_field |escapejs}} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal" id="affiliationModal-trigger-' + newformid + '">Create new affiliation</button> </div> </div> </li>';
+    var newform = '<li class="list-group-item authorship_form" id="' + newformid + '"> <h2> Author {{ authorships_form.empty_form.authorship_order|escapejs }} <button type="button" class="btn btn-danger remove-authorship" id="remove-authorship-' + newformid + '">Remove authorship</button></h2> <div class="row"> <div class="col-6"> {{ authorships_form.empty_form.author | as_crispy_field|escapejs }} {{ authorships_form.empty_form.first_name | as_crispy_field|escapejs }} {{ authorships_form.empty_form.last_name | as_crispy_field|escapejs }} </div> <div class="col-6"> {{ authorships_form.empty_form.institution|as_crispy_field|escapejs }} {{ authorships_form.empty_form.affiliations | as_crispy_field |escapejs}} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#affiliationModal" id="affiliationModal-trigger-' + newformid + '">Create new affiliation</button> </div> </div> </li>';
     newform = newform.replace(/__prefix__/g, author_count - 1);
 
     $("#authorship_formset").append(newform);
