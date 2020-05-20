@@ -797,21 +797,17 @@ class StandaloneList(View):
 
 def home_view(request):
 
-    conference_count = Conference.objects.exclude(works__isnull=True).count()
+    conference_count = Conference.objects.count()
 
-    years_count = Conference.objects.exclude(works__isnull=True).aggregate(
-        year_range=Max("year") - Min("year")
-    )["year_range"]
+    years_count = Conference.objects.aggregate(year_range=Max("year") - Min("year"))[
+        "year_range"
+    ]
 
     work_count = Work.objects.count()
 
     author_count = Author.objects.exclude(authorships__work__isnull=True).count()
 
-    institution_count = (
-        Institution.objects.exclude(affiliations__asserted_by__work__isnull=False)
-        .distinct()
-        .count()
-    )
+    institution_count = Institution.objects.count()
 
     country_count = (
         Country.objects.filter(
