@@ -160,6 +160,16 @@ class WorkAuthorshipForm(forms.Form):
         help_text="Use this optional menu to filter the affiliation list below. This value is only used for filtering and does not affect the final affiliation data that gets saved.",
     )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        affiliations = cleaned_data.get("affiliations")
+        institution = cleaned_data.get("institution")
+        if institution is not None and len(affiliations) < 1:
+            self.add_error(
+                "affiliations",
+                "You must enter a specific affiliation for each author. It is not sufficient to only select an institution - that field is used only to filter the available affiliations.",
+            )
+
 
 class WorkForm(forms.ModelForm):
     class Meta:
