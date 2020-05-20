@@ -293,6 +293,10 @@ class AffiliationAutocomplete(ItemLabelAutocomplete):
             .order_by("-n_works")
         )
 
+        inst_filter = self.forwarded.get("institution", None)
+        if inst_filter:
+            qs = qs.filter(institution=inst_filter)
+
         if self.q:
             qs = qs.filter(
                 Q(department__icontains=self.q) | Q(institution__name__icontains=self.q)

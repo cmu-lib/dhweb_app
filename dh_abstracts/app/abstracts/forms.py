@@ -147,9 +147,17 @@ class WorkAuthorshipForm(forms.Form):
         queryset=Affiliation.objects.all(),
         required=False,
         widget=ModelSelect2Multiple(
-            url="affiliation-autocomplete", attrs={"data-html": True}
+            url="affiliation-autocomplete",
+            attrs={"data-html": True},
+            forward=["institution"],
         ),
         help_text="If the combination of department and institution is not available in this list, then use the fields below to define it.",
+    )
+    institution = forms.ModelChoiceField(
+        queryset=Institution.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="institution-autocomplete", attrs={"data-html": True}),
+        help_text="Use this optional menu to filter the affiliation list below. This value is only used for filtering and does not affect the final affiliation choices you select.",
     )
 
 
