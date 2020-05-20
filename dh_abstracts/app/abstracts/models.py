@@ -35,9 +35,17 @@ class TextIndexedModel(models.Model):
 
 
 class ConferenceSeries(models.Model):
-    title = models.CharField(max_length=200, unique=True)
-    abbreviation = models.CharField(max_length=100, unique=True)
-    notes = models.TextField(blank=True, null=False, default="")
+    model_description = "A formalized series of multiple events, such as an annual conference or recurring symposium"
+    title = models.CharField(max_length=200, unique=True, help_text="Full name")
+    abbreviation = models.CharField(
+        max_length=100, unique=True, help_text="Display abbreviation"
+    )
+    notes = models.TextField(
+        blank=True,
+        null=False,
+        default="",
+        help_text="Discursive notes, generally concerning the history of this series",
+    )
 
     @property
     def all_organizers(self):
@@ -64,6 +72,7 @@ class Conference(models.Model):
         ("c", "Complete"),
     )
 
+    model_description = "A scholarly event with organized presentations, such as a conference, symposium, or workshop."
     year = models.PositiveIntegerField(help_text="Year the conference was held")
     short_title = models.CharField(
         max_length=200,
@@ -119,6 +128,7 @@ class Conference(models.Model):
         null=False,
         default="",
         verbose_name="State / Province / Region",
+        help_text="State, province, or region where the conference was held",
     )
     country = models.ForeignKey(
         "Country",
@@ -256,6 +266,7 @@ class ConferenceDocument(models.Model):
 
 
 class Organizer(ChangeTrackedModel):
+    model_description = "An organizer of academic events, such as a scholarly association or academic center."
     name = models.CharField(max_length=200, unique=True)
     abbreviation = models.CharField(max_length=100, unique=True)
     conferences_organized = models.ManyToManyField(
@@ -275,6 +286,7 @@ class Organizer(ChangeTrackedModel):
 
 
 class SeriesMembership(models.Model):
+    model_description = "Many-to-many relationships between conferences and the (potentially) multiple series they belong to."
     series = models.ForeignKey(
         ConferenceSeries,
         on_delete=models.CASCADE,
@@ -319,22 +331,32 @@ class Tag(models.Model):
 
 
 class Keyword(Tag):
-    author_supplied = models.BooleanField(default=True)
+    model_description = "Author-supplied keywords describing the content of a work"
+    author_supplied = models.BooleanField(
+        default=True,
+        help_text="Was this keyword supplied by an author, or applied by an editor?",
+    )
 
 
 class Language(Tag):
+    model_description = "Languages in which works are written"
     pass
 
 
 class Discipline(Tag):
+    model_description = "ADHO-based controlled vocabulary of disciplines"
     pass
 
 
 class Topic(Tag):
+    model_description = "ADHO-based controlled vocabulary of topics"
     pass
 
 
 class WorkType(models.Model):
+    model_description = (
+        "Controlled vocabulary of work types, such as 'paper' or 'keynote'"
+    )
     title = models.CharField(max_length=100, unique=True)
     is_parent = models.BooleanField(
         default=False,
@@ -358,10 +380,24 @@ class WorkType(models.Model):
 
 
 class License(models.Model):
-    title = models.CharField(max_length=100, unique=True)
-    full_text = models.TextField(max_length=100_000)
-    display_abbreviation = models.CharField(max_length=100, unique=True)
-    url = models.URLField(max_length=200, blank=True, null=True)
+    model_description = "Licenses that may be applicable to full texts"
+    title = models.CharField(
+        max_length=100, unique=True, help_text="Full title of the license"
+    )
+    full_text = models.TextField(
+        max_length=100_000, help_text="Full text of the license"
+    )
+    display_abbreviation = models.CharField(
+        max_length=100,
+        unique=True,
+        help_text="A short, identifiable abbreviation of the license",
+    )
+    url = models.URLField(
+        max_length=200,
+        blank=True,
+        null=True,
+        help_text="URL with a full description of the licnese",
+    )
     default = models.BooleanField(
         default=False,
         help_text="Make this license the default license applied to any work whose conference has been set to show all full texts.",
@@ -372,6 +408,9 @@ class License(models.Model):
 
 
 class Work(TextIndexedModel, ChangeTrackedModel):
+    model_description = (
+        "A record for a single work such as a paper, keynote, or session."
+    )
     FT_TYPE = (("", "-----------"), ("xml", "XML"), ("txt", "plain text"))
 
     conference = models.ForeignKey(
@@ -489,11 +528,22 @@ class Attribute(models.Model):
 
 
 class Appellation(Attribute):
+    model_description = "A name belonging to an author"
     first_name = models.CharField(
-        max_length=100, blank=True, null=False, default="", db_index=True
+        max_length=100,
+        blank=True,
+        null=False,
+        default="",
+        db_index=True,
+        help_text="Surname and/or first and middle initials",
     )
     last_name = models.CharField(
-        max_length=100, blank=True, null=False, default="", db_index=True
+        max_length=100,
+        blank=True,
+        null=False,
+        default="",
+        db_index=True,
+        help_text="Family name",
     )
 
     def __str__(self):
@@ -513,8 +563,17 @@ class Appellation(Attribute):
 
 
 class Country(models.Model):
-    tgn_id = models.URLField(max_length=100, unique=True)
-    pref_name = models.CharField(max_length=300, db_index=True)
+    model_description = "A controlled vocabulary of countries"
+    tgn_id = models.URLField(
+        max_length=100,
+        unique=True,
+        help_text="Canonical ID in the Getty Thesaurus of Geographic Names",
+    )
+    pref_name = models.CharField(
+        max_length=300,
+        db_index=True,
+        help_text="Preferred label for the country sourced from the Getty TGN",
+    )
 
     def __str__(self):
         return self.pref_name
@@ -549,14 +608,22 @@ class CountryLabel(models.Model):
 
 
 class Institution(ChangeTrackedModel):
-    name = models.CharField(max_length=500)
-    city = models.CharField(max_length=100, blank=True, null=False, default="")
+    model_description = "Institutions such as universities or research centers, with which authors may be affiliated."
+    name = models.CharField(max_length=500, help_text="Institution name")
+    city = models.CharField(
+        max_length=100,
+        blank=True,
+        null=False,
+        default="",
+        help_text="City where the institution is located",
+    )
     state_province_region = models.CharField(
         max_length=1000,
         blank=True,
         null=False,
         default="",
         verbose_name="State / Province / Region",
+        help_text="State, province, or region where the institution is located",
     )
     country = models.ForeignKey(
         Country,
@@ -564,6 +631,7 @@ class Institution(ChangeTrackedModel):
         blank=True,
         null=True,
         related_name="institutions",
+        help_text="Country where the institution is located",
     )
 
     class Meta:
@@ -623,9 +691,21 @@ class Institution(ChangeTrackedModel):
 
 
 class Affiliation(Attribute):
-    department = models.CharField(max_length=500, blank=True, null=False, default="")
+    model_description = (
+        "A sub-unit of an Institution, such as a center, department, library, etc."
+    )
+    department = models.CharField(
+        max_length=500,
+        blank=True,
+        null=False,
+        default="",
+        help_text="The name of a department, center, or other subdivision of a larger institution",
+    )
     institution = models.ForeignKey(
-        Institution, on_delete=models.CASCADE, related_name="affiliations"
+        Institution,
+        on_delete=models.CASCADE,
+        related_name="affiliations",
+        help_text="The parent institution for this affiliation",
     )
 
     class Meta:
@@ -659,6 +739,7 @@ class Affiliation(Attribute):
 
 
 class Author(ChangeTrackedModel):
+    model_description = "A person who has authored at least one abstract in this database. All attributes of the author are established in the context of a given work, so authors have no inherent/immutable attributes beyond this unique identifier."
     works = models.ManyToManyField(
         Work,
         through="Authorship",
@@ -793,16 +874,33 @@ class Author(ChangeTrackedModel):
 
 
 class Authorship(ChangeTrackedModel):
+    model_description = "Each authorship describes the relationship of an author to a given work, establishing the authors' attributes as they gave them in the official program where the work was presented."
     author = models.ForeignKey(
-        Author, on_delete=models.CASCADE, related_name="authorships"
+        Author,
+        on_delete=models.CASCADE,
+        related_name="authorships",
+        help_text="The author",
     )
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name="authorships")
-    authorship_order = models.PositiveSmallIntegerField(default=1)
+    work = models.ForeignKey(
+        Work,
+        on_delete=models.CASCADE,
+        related_name="authorships",
+        help_text="The work authored.",
+    )
+    authorship_order = models.PositiveSmallIntegerField(
+        default=1, help_text="Authorship order (1-based indexing)"
+    )
     appellation = models.ForeignKey(
-        Appellation, on_delete=models.CASCADE, related_name="asserted_by"
+        Appellation,
+        on_delete=models.CASCADE,
+        related_name="asserted_by",
+        help_text="The appellation given by the author when they submitted this particular work.",
     )
     affiliations = models.ManyToManyField(
-        Affiliation, related_name="asserted_by", blank=True
+        Affiliation,
+        related_name="asserted_by",
+        blank=True,
+        help_text="The affiliation(s) given by the author when they submitted this particular work.",
     )
 
     def __str__(self):

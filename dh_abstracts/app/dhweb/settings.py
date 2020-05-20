@@ -281,11 +281,13 @@ PUBLIC_DATA_TABLE_CONFIG = {
             "model": "Conference.organizers.through",
             "exclude_fields": [],
             "csv_name": "conference_organizer",
+            "manual_model_description": "Many-to-many relationships between conferences and their (potentially) multiple organizers.",
         },
         {
             "model": "Conference.hosting_institutions.through",
             "exclude_fields": [],
             "csv_name": "conference_hosting_institution",
+            "manual_model_description": "Many-to-many relationships between conferences and the (potentially) multiple institutions that host them.",
         },
         {
             "model": "ConferenceSeries",
@@ -311,6 +313,7 @@ PUBLIC_DATA_TABLE_CONFIG = {
             "model": "Authorship.affiliations.through",
             "exclude_fields": [],
             "csv_name": "authorship_affiliation",
+            "manual_model_description": "Many-to-many relationships between authorships and the (potentially) multiple affiliations given by authors for a given work",
         },
         {"model": "Appellation", "exclude_fields": [], "csv_name": "appellations"},
         {
@@ -355,11 +358,13 @@ PRIVATE_DATA_TABLE_CONFIG = {
             "model": "Conference.organizers.through",
             "exclude_fields": [],
             "csv_name": "conference_organizer",
+            "manual_model_description": "Many-to-many relationships between conferences and their (potentially) multiple organizers.",
         },
         {
             "model": "Conference.hosting_institutions.through",
             "exclude_fields": [],
             "csv_name": "conference_hosting_institution",
+            "manual_model_description": "Many-to-many relationships between conferences and the (potentially) multiple institutions that host them.",
         },
         {
             "model": "ConferenceSeries",
@@ -385,6 +390,7 @@ PRIVATE_DATA_TABLE_CONFIG = {
             "model": "Authorship.affiliations.through",
             "exclude_fields": [],
             "csv_name": "authorship_affiliation",
+            "manual_model_description": "Many-to-many relationships between authorships and the (potentially) multiple affiliations given by authors for a given work",
         },
         {"model": "Appellation", "exclude_fields": [], "csv_name": "appellations"},
         {

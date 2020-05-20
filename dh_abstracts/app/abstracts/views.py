@@ -910,6 +910,13 @@ def download_data(request):
 
     for m in dt_config["CONFIGURATION"]:
         model = attrgetter(m["model"])(models)
+        if "manual_model_description" in m:
+            model_description = m["manual_model_description"]
+        else:
+            try:
+                model_description = model.model_description
+            except:
+                model_description = None
         all_model_fields = [
             {
                 "name": f.name,
@@ -936,7 +943,12 @@ def download_data(request):
                 }
             )
         data_dictionary.append(
-            {"model": m["model"], "csv_name": m["csv_name"], "fields": all_model_fields}
+            {
+                "model": m["model"],
+                "model_description": model_description,
+                "csv_name": m["csv_name"],
+                "fields": all_model_fields,
+            }
         )
     normalized_last_updated = datetime.fromtimestamp(
         getmtime(f"{settings.DATA_OUTPUT_PATH}/{dt_config['DATA_ZIP_NAME']}")

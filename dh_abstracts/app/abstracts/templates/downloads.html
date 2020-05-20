@@ -77,6 +77,9 @@
     {% for m in data_dictionary %}
     <hr>
     <h4 id="{{ m.model }}">{{ m.csv_name }}.csv</h4>
+    {% if m.model_description %}
+    <p>{{ m.model_description }}</p>
+    {% endif %}
     <div class="table-responsive">
       <table class="table table-sm table-striped">
         <thead>
