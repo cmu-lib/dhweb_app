@@ -62,7 +62,12 @@
     series, or to upload associated documents.</small>{% endblock %}
   <div class="form-group">
     <button type="submit" class="btn btn-primary mb-2">Save</button>
-    {% comment %}<a class="btn btn-secondary mb-2" href="{% url cancel_view %}" role="button">Cancel</a>{% endcomment %}
+    {% if conference %}
+    <button type="submit" class="btn btn-primary mb-2" name="goto_series" value="goto_series">Save and return to
+      series</button>
+    {% endif %}
+    <button type="submit" class="btn btn-primary mb-2" name="goto_abstracts" value="goto_abstracts">Save
+      and go to abstracts</button>
     {% if delete_view %}
     <a class="btn btn-danger mb-2" href="{% url delete_view object.pk %}" role="button">Delete</a>
     {% endif %}

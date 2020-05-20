@@ -1730,7 +1730,8 @@ class ConferenceCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
             for organizer in form_instance.cleaned_data["organizers"]:
                 self.object.organizers.add(organizer)
             self.object.save()
-            return response
+            if "goto_abstracts" in request.POST:
+                return redirect(reverse("work_list") + f"?conference={self.object.id}")
         else:
             for err in form_instance.errors:
                 messages.error(request, err)
@@ -1798,17 +1799,23 @@ def ConferenceEdit(request, pk):
                             defaults={"number": s_form_data["number"]},
                         )
                 messages.success(request, f"Conference {conference} updated.")
+                if "goto_abstracts" in request.POST:
+                    return redirect(
+                        reverse("work_list") + f"?conference={conference.id}"
+                    )
+                if "goto_series" in request.POST:
+                    first_series = conference.series.first()
+                    if first_series is None:
+                        return redirect("standalone_conferences")
+                    else:
+                        return redirect("conference_series_detail", pk=first_series.id)
                 return redirect("conference_edit", pk=conference.pk)
             else:
                 for f, e in series_forms.errors.items():
                     messages.error(request, f"{f}: {e}")
-                # for error in series_forms.errors:
-                #     messages.error(request, error)
         else:
             for f, e in form.errors.items():
                 messages.error(request, f"{f}: {e}")
-            # for error in form.errors:
-            #     messages.error(request, error)
 
     return render(request, "conference_edit.html", context)
 
