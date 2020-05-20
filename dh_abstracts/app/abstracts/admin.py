@@ -76,7 +76,7 @@ class WorkAdmin(admin.ModelAdmin):
     inlines = [AuthorshipInline]
     autocomplete_fields = ["keywords", "languages", "topics", "disciplines"]
     search_fields = ["title", "authorships__appellation__last_name"]
-    list_filter = ["work_type", "conference"]
+    list_filter = ["work_type", "full_text_type", "conference"]
     list_display = [
         "title",
         "conference",
