@@ -811,7 +811,9 @@ def home_view(request):
 
     country_count = (
         Country.objects.filter(
-            institutions__affiliations__asserted_by__work__isnull=False
+            Q(institutions__affiliations__asserted_by__work__isnull=False)
+            | Q(institutions__conferences__isnull=False)
+            | Q(conferences__isnull=False)
         )
         .distinct()
         .count()
