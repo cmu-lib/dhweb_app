@@ -3,7 +3,7 @@ from django.conf import settings
 from abstracts import models
 import csv
 import tempfile
-from zipfile import ZipFile
+import zipfile
 from operator import attrgetter
 import shutil
 
@@ -49,7 +49,9 @@ class Command(BaseCommand):
 
     def write_csvs(self, dt_config, tdir):
         zip_path = f"{tdir}/{dt_config['DATA_ZIP_NAME']}"
-        with ZipFile(zip_path, "w") as dat_zip:
+        with zipfile.ZipFile(
+            zip_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9
+        ) as dat_zip:
             for export_conf in dt_config["CONFIGURATION"]:
                 final_csvname = export_conf["csv_name"]
                 print(attrgetter(export_conf["model"])(models))
@@ -96,7 +98,9 @@ class Command(BaseCommand):
         csv_path = f"{tdir}/{settings.DENORMALIZED_WORKS_NAME}.csv"
         header_names = [h["name"] for h in settings.DENORMALIZED_HEADERS]
 
-        with ZipFile(zip_path, "w") as dat_zip:
+        with zipfile.ZipFile(
+            zip_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9
+        ) as dat_zip:
             with open(csv_path, "w") as csv_file:
                 writer = csv.writer(
                     csv_file, dialect=csv.unix_dialect, quoting=csv.QUOTE_ALL
