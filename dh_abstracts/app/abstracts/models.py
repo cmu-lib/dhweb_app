@@ -332,10 +332,6 @@ class Tag(models.Model):
 
 class Keyword(Tag):
     model_description = "Author-supplied keywords describing the content of a work"
-    author_supplied = models.BooleanField(
-        default=True,
-        help_text="Was this keyword supplied by an author, or applied by an editor?",
-    )
 
 
 class Language(Tag):
