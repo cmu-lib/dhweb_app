@@ -1323,6 +1323,8 @@ class FullWorkList(ListView):
                     .all()
                 )
                 context["selected_conferences"] = conferences_data
+            if filter_form["text"] != "":
+                context["fts"] = True
 
         context["work_filter_form"] = WorkFilter(data=self.request.GET)
         context["available_works_count"] = Work.objects.count()

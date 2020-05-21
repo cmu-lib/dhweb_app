@@ -53,5 +53,5 @@
       {{ work.main_institution }}
       {% endif %}
     </a></small>
-  {% if work.full_text %}<span class="badge badge-secondary">Full text indexed</span>{% endif %}
+  {% if fts and work.full_text %}<span class="badge badge-secondary">Full text indexed</span>{% endif %}
 </div>
