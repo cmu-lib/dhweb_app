@@ -107,8 +107,8 @@ class Conference(models.Model):
         default="",
         help_text="Optional thematic title (e.g. 'Big Tent Digital Humanities')",
     )
-    start_date = models.DateField(null=True, blank=True, help_text="MM/DD/YYY")
-    end_date = models.DateField(null=True, blank=True, help_text="MM/DD/YYY")
+    start_date = models.DateField(null=True, blank=True, help_text="YYYY-MM-DD")
+    end_date = models.DateField(null=True, blank=True, help_text="YYYY-MM-DD")
     city = models.CharField(
         max_length=1000,
         blank=True,
