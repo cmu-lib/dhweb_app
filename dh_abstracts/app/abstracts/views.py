@@ -1228,9 +1228,10 @@ class FullWorkList(ListView):
             text_res = filter_form["text"]
             if text_res != "":
                 result_set = (
-                    result_set.filter(search_text=text_res)
-                    .annotate(rank=SearchRank(F("search_text"), SearchQuery(text_res)))
-                    .filter(rank__gte=0)
+                    result_set.annotate(
+                        rank=SearchRank(F("search_text"), SearchQuery(text_res))
+                    )
+                    .filter(rank__gt=0)
                     .order_by("-rank")
                 )
                 order_res = "rank"
