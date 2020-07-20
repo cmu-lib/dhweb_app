@@ -19,7 +19,7 @@ from django.db.models.functions import Concat, FirstValue, Cast
 from django.core import management
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models.functions import Coalesce
-from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
+from django.contrib.postgres.search import SearchRank, SearchQuery
 from django.contrib.postgres.aggregates import StringAgg
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
