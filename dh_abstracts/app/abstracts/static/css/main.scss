@@ -2,6 +2,8 @@
 // Used for the DH Abstracts theme designed by Heidi Wiren Bartlett, CMU Libraries
 
 $white: #fff !default;
+$link-color: #008bc0;
+$font-size-base: 0.9rem;
 $font-family-base: "Open Sans";
 $font-weight-light: 300 !default;
 $font-weight-normal: 500 !default;
@@ -10,10 +12,9 @@ $enable-rounded: false;
 $enable-responsive-font-sizes: true;
 $enable-shadows: true;
 
-$line-height-base: 1.5 !default;
-
 $font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
 $h1-font-size: $font-size-base * 2.2 !default;
+$h6-font-size: $font-size-base;
 $headings-font-weight: $font-weight-bold;
 
 $gray-background: #f2f2f2;
@@ -27,7 +28,6 @@ $card-cap-bg: $gray-background;
 
 // Typography customizations
 
-$paragraph-margin-bottom: 2rem !default;
 $headings-margin-bottom: 3rem !default;
 
 // Navbar customizations
@@ -50,6 +50,8 @@ nav.navbar {
     text-transform: uppercase;
   }
 }
+
+// work list conference card
 
 .card.work-list-conference-card {
   background-color: $gray-background;
@@ -77,6 +79,32 @@ nav.navbar {
 
   .conference-notes {
     color: #808080;
+  }
+}
+
+// Work list card
+
+li.work {
+  p.work-type {
+    font-size: small;
+  }
+
+  p.authors {
+    font-size: large;
+  }
+
+  span.fts {
+    text-transform: uppercase;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+  }
+
+  .work-facets-box {
+    background-color: $gray-background;
+
+    a {
+      text-decoration: underline;
+    }
   }
 }
 

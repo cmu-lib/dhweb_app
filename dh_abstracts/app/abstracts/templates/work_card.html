@@ -1,46 +1,63 @@
-<div class="d-flex justify-content-between align-items-baseline">
-  <h6 class="mb-1 flex-shrink-1">
-    <a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a>
-  </h6>
-  {% if user.is_authenticated %}
-  <a class="btn btn-primary btn-sm flex-shrink-0" role="button" href="{% url 'work_edit' work.pk %}">Edit this work</a>
+<div class="p-3">
+  <div class="d-flex justify-content-between align-items-baseline">
+    <h6 class="mb-1 mr-1 flex-shrink-1">
+      <a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a>
+    </h6>
+    {% if user.is_authenticated %}
+    <a class="btn btn-primary btn-sm flex-shrink-0" role="button" href="{% url 'work_edit' work.pk %}">Edit this
+      work</a>
+    {% endif %}
+    {% if fts and work.full_text %}<span class="badge p-3 fts">Full text indexed</span>{% endif %}
+  </div>
+  <p class="mt-2 work-type">
+    <a href="{% url 'work_list' %}?work_type={{ work.work_type.pk }}">{{ work.work_type }}</a>
+  </p>
+  <p class="mt-0 authors">
+    {% for authorship in work.authorships.all %}<a
+      href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.appellation.first_name }}
+      {{ authorship.appellation.last_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+  {% if work.session_papers.exists %}
+  <p>Session papers:</p>
+  <ul>
+    {% for w in work.session_papers.all %}
+    <li><a href="{% url 'work_detail' w.id %}">{{ w.title }}</a></li>
+    {% endfor %}
+  </ul>
+  {% elif work.parent_session %}
+  <p>Parent session: <a href="{% url 'work_detail' work.parent_session.id %}">{{ work.parent_session.title }}</a></p>
   {% endif %}
-</div>
-<small class="text-muted text-right mt-auto"><a
-    href="{% url 'work_list' %}?work_type={{ work.work_type.pk }}">{{ work.work_type }}</a></small>
-<p>{% for authorship in work.authorships.all %}<a
-    href="{% url 'author_detail' authorship.author.pk %}">{{ authorship.appellation.first_name }}
-    {{ authorship.appellation.last_name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 
-{% if work.session_papers.exists %}
-<p>Session papers:</p>
-<ul>
-  {% for w in work.session_papers.all %}
-  <li><a href="{% url 'work_detail' w.id %}">{{ w.title }}</a></li>
-  {% endfor %}
-</ul>
-{% elif work.parent_session %}
-<p>Parent session: <a href="{% url 'work_detail' work.parent_session.id %}">{{ work.parent_session.title }}</a></p>
-{% endif %}
+  {% if work.keywords.exists or work.topics.exists or work.languages.exists or work.disciplines.exists %}
+  <div class="work-facets-box p-3 my-2">
+    {% if work.keywords.exists %}
+    <p><strong>Keywords:</strong> {% for kw in work.keywords.all %}<a class="mx-2"
+        href="{% url 'work_list' %}?keyword={{ kw.pk }}">{{ kw }}</a>
+      {% endfor %}</p>
+    {% endif %}
 
-{% if work.keywords.exists %}<p>Keywords: {% for kw in work.keywords.all %}<a class="badge"
-    href="{% url 'work_list' %}?keyword={{ kw.pk }}">{{ kw }}</a>
-  {% endfor %}</p>{% endif %}
+    {% if work.topics.exists %}
+    <p><strong>Topics:</strong> {% for t in work.topics.all %}<a class="mx-2"
+        href="{% url 'work_list' %}?topic={{ t.pk }}">{{ t }}</a>
+      {% endfor %}</p>
+    {% endif %}
 
-{% if work.topics.exists %}<p>Topics: {% for t in work.topics.all %}<a class="badge"
-    href="{% url 'work_list' %}?topic={{ t.pk }}">{{ t }}</a>
-  {% endfor %}</p>{% endif %}
+    {% if work.languages.exists %}
+    <p><strong>Languages:</strong> {% for l in work.languages.all %}<a class="mx-2"
+        href="{% url 'work_list' %}?language={{ l.pk }}">{{ l }}</a>
+      {% endfor %}</p>
+    {% endif %}
 
-{% if work.languages.exists %}<p>Languages: {% for l in work.languages.all %}<a class="badge"
-    href="{% url 'work_list' %}?language={{ l.pk }}">{{ l }}</a>
-  {% endfor %}</p>{% endif %}
+    {% if work.disciplines.exists %}
+    <p><strong>Disciplines:</strong> {% for d in work.disciplines.all %}<a class="mx-2"
+        href="{% url 'work_list' %}?discipline={{ d.pk }}">{{ d }}</a>
+      {% endfor %}</p>
+    {% endif %}
+  </div>
+  {% endif %}
 
-{% if work.disciplines.exists %}<p>Disciplines: {% for d in work.disciplines.all %}<a class="badge"
-    href="{% url 'work_list' %}?discipline={{ d.pk }}">{{ d }}</a>
-  {% endfor %}</p>{% endif %}
-
-<div class="d-flex justify-content-between align-items-end">
-  <small class="text-muted">Presented at <a href="{% url 'work_list' %}?conference={{ work.conference.pk }}">
+  <small class="my-2">
+    Presented at <a href="{% url 'work_list' %}?conference={{ work.conference.pk }}">
       {% if work.main_series %}
       {{ work.main_series }} -
       {% endif %}
@@ -52,6 +69,6 @@
       {% elif work.main_institution %}
       {{ work.main_institution }}
       {% endif %}
-    </a></small>
-  {% if fts and work.full_text %}<span class="badge badge-secondary">Full text indexed</span>{% endif %}
+    </a>
+  </small>
 </div>
