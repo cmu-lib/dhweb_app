@@ -1,6 +1,7 @@
 // Custom overrides for default Bootstrap variables
 // Used for the DH Abstracts theme designed by Heidi Wiren Bartlett, CMU Libraries
 
+$white: #fff !default;
 $font-family-base: "Open Sans";
 $font-weight-light: 300 !default;
 $font-weight-normal: 500 !default;
@@ -17,6 +18,16 @@ $headings-font-weight: $font-weight-bold;
 
 $gray-background: #f2f2f2;
 $card-cap-bg: $gray-background;
+
+// Navbar customizations
+
+$navbar-dark-color: rgba($white, 1);
+$navbar-dark-hover-color: rgba($white, 1) !default;
+
+nav.navbar {
+  font-variant-caps: all-small-caps;
+  font-weight: $font-weight-bold;
+}
 
 .card {
   box-shadow: 5px 5px 5px lightgray;
