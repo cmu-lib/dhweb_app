@@ -10,15 +10,18 @@
 
 {% block title %}{{ work.title }}{% endblock %}
 
-{% block main %}
-<h4>
-  <a href="{% url 'work_list' %}?work_type={{ work.work_type.id }}">
-    <span class="badge badge-secondary">
+{% block pre %}
+<div class="my-5">
+  <span class="work-type px-4 py-3">
+    <a href="{% url 'work_list' %}?work_type={{ work.work_type.id }}">
       {{ work.work_type }}
-    </span>
-  </a>
-</h4>
-<div class="card my-2">
+    </a>
+  </span>
+</div>
+{% endblock %}
+
+{% block main %}
+<div class="card my-4">
   <div class="card-header">
     Authorship
     {% if user.is_authenticated %}
@@ -27,15 +30,15 @@
   </div>
   <ol class="list-group list-group-flush">
     {% for authorship in authorships %}
-    <li class="list-group-item">{% include "authorship_card.html" with authorship=authorship %}</li>
+    <li class="list-group-item p-4">{% include "authorship_card.html" with authorship=authorship %}</li>
     {% endfor %}
   </ol>
 </div>
 
 {% if work.parent_session %}
-<div class="card my-2">
+<div class="card my-4">
   <div class="card-header">Parent session</div>
-  <div class="card-body">
+  <div class="card-body p4">
     <a href="{% url 'work_detail' work.parent_session.id %}">{{ work.parent_session.title }}<a>{% for author in work.parent_session.authorships.all %},
         {{ author.appellation.first_name }} {{ author.appellation.last_name }}{% endfor %}
   </div>
@@ -43,11 +46,11 @@
 {% endif %}
 
 {% if work.session_papers.exists %}
-<div class=" card my-2">
+<div class=" card my-4">
   <div class="card-header">Children sessions</div>
   <ol class="list-group list-group-flush">
     {% for child in work.session_papers.all %}
-    <li class="list-group-item">
+    <li class="list-group-item p-4">
       <a href="{% url 'work_detail' child.id %}">{{ child.title }}</a>{% for author in child.authorships.all %},
       {{ author.appellation.first_name }} {{ author.appellation.last_name }}{% endfor %}
     </li>
@@ -57,16 +60,16 @@
 {% endif %}
 
 {% if work.url %}
-<div class=" card my-2">
+<div class=" card my-4">
   <div class="card-header">Original URL</div>
-  <div class="card-body">
+  <div class="card-body p-4">
     <a href="{{ work.url }}" target="_blank" rel="noopener noreferrer">{{ work.url }}</a>
   </div>
 </div>
 {% endif %}
 
 {% if work.full_text %}
-<div class="card my-2">
+<div class="card my-4">
   <div class="card-header d-flex justify-content-between">Work</div>
   <div class="card-body">
     {% if user.is_authenticated or work.conference.full_text_public or work.full_text_license %}
@@ -105,7 +108,7 @@
 
 {% block context %}
 {% if user.is_authenticated %}
-<div class="card my-2">
+<div class="card my-4">
   <div class="card-header">Administration</div>
   <div class="card-body">
     <a class="btn btn-primary" role="button" href="{% url 'work_edit' work.pk %}">Edit this work</a>
@@ -113,20 +116,20 @@
   </div>
 </div>
 {% endif %}
-<div class="card my-2">
+<div class="card my-4">
   <div class="card-header">Conference Info</div>
   <div class="card-body">
     {% include "conference_card.html" with conference=work.conference show_series=True %}
   </div>
 </div>
 
-<div class="card my-2">
+<div class="card my-4">
   <div class="card-header">Tags</div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">Keywords:
       {% if work.keywords.all %}
       {% for keyword in work.keywords.all %}
-      <a class="badge badge-info" href="{% url 'work_list' %}?keywords={{ keyword.pk }}">{{ keyword.title }}</a>
+      <a class="mx-2 facet-link" href="{% url 'work_list' %}?keywords={{ keyword.pk }}">{{ keyword.title }}</a>
       {% endfor %}
       {% else %}
       None
@@ -135,7 +138,7 @@
     <li class="list-group-item">Language:
       {% if work.languages.all %}
       {% for language in work.languages.all %}
-      <a class="badge badge-info" href="{% url 'work_list' %}?languages={{ language.pk }}">{{ language.title }}</a>
+      <a class="mx-2 facet-link" href="{% url 'work_list' %}?languages={{ language.pk }}">{{ language.title }}</a>
       {% endfor %}
       {% else %}
       None
@@ -144,7 +147,7 @@
     <li class="list-group-item">Topics:
       {% if work.topics.all %}
       {% for topic in work.topics.all %}
-      <a class="badge badge-info" href="{% url 'work_list' %}?topics={{ topic.pk }}">{{ topic.title }}</a>
+      <a class="mx-2 facet-link" href="{% url 'work_list' %}?topics={{ topic.pk }}">{{ topic.title }}</a>
       {% endfor %}
       {% else %}
       None
@@ -153,8 +156,7 @@
     <li class="list-group-item">Disciplines:
       {% if work.disciplines.all %}
       {% for discipline in work.disciplines.all %}
-      <a class="badge badge-info"
-        href="{% url 'work_list' %}?disciplines={{ discipline.pk }}">{{ discipline.title }}</a>
+      <a class="mx-2 facet-link" href="{% url 'work_list' %}?disciplines={{ discipline.pk }}">{{ discipline.title }}</a>
       {% endfor %}
       {% else %}
       None

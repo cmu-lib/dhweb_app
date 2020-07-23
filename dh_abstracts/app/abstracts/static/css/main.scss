@@ -12,6 +12,8 @@ $enable-rounded: false;
 $enable-responsive-font-sizes: true;
 $enable-shadows: true;
 
+$warning: #fcb415;
+
 $font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
 $h1-font-size: $font-size-base * 2.2 !default;
 $h6-font-size: $font-size-base;
@@ -37,6 +39,12 @@ $navbar-dark-hover-color: rgba($white, 1) !default;
 
 nav.navbar {
   text-transform: uppercase;
+  font-weight: $font-weight-bold;
+}
+
+// Alert customizations
+
+.alert {
   font-weight: $font-weight-bold;
 }
 
@@ -101,11 +109,23 @@ li.work {
 
   .work-facets-box {
     background-color: $gray-background;
-
-    a {
-      text-decoration: underline;
-    }
   }
+}
+
+// Work detail page
+
+span.work-type {
+  background-color: #666666;
+  border-radius: 20px;
+  a {
+    font-weight: $font-weight-bold;
+    color: white;
+    text-transform: uppercase;
+  }
+}
+
+a.facet-link {
+  text-decoration: underline;
 }
 
 @import "./bootstrap/scss/bootstrap";

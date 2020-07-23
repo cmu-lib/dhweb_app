@@ -4,6 +4,8 @@
 
 <h1>{% block title %}{% endblock %}</h1>
 
+{% block pre %}{% endblock %}
+
 <div class="row">
   <div class="col-md-8">
     {% block main %}
@@ -11,8 +13,8 @@
   </div>
 
   <div class="col-md-4">
-      {% block context %}
-      {% endblock %}
+    {% block context %}
+    {% endblock %}
   </div>
 </div>
 
