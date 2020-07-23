@@ -1,144 +1,147 @@
-<div class="d-flex justify-content-between align-items-baseline">
-  <h5 class="mb-1 flex-shrink-true">
-    <a href="{% url 'work_list' %}?conference={{ conference.id }}">
-      {% if conference.main_series and show_series %}
-      {{ conference.main_series }} - {{ conference.year }}
-      {% elif conference.main_series and not show_series %}
-      {{ conference.year }}
-      {% if conference.short_title %}
-      - {{ conference.short_title }}
-      {% elif conference.city %}
-      - {{ conference.city }}
-      {% elif conference.hosting_institutions %}
-      - {{ conference.hosting_institutions.first.name }}
+<div class="container-flex">
+  <div class="row justify-content-between">
+    <div class="col-md-9">
+      <h5>
+        <a href="{% url 'work_list' %}?conference={{ conference.id }}">
+          {% if conference.main_series and show_series %}
+          {{ conference.main_series }} - {{ conference.year }}
+          {% elif conference.main_series and not show_series %}
+          {{ conference.year }}
+          {% if conference.short_title %}
+          - {{ conference.short_title }}
+          {% elif conference.city %}
+          - {{ conference.city }}
+          {% elif conference.hosting_institutions %}
+          - {{ conference.hosting_institutions.first.name }}
+          {% endif %}
+          {% else %}
+          {{ conference.year }} - {{ conference.theme_title }}
+          {% if conference.short_title %}
+          - {{ conference.short_title }}
+          {% elif conference.city %}
+          - {{ conference.city }}
+          {% elif conference.hosting_institutions %}
+          - {{ conference.hosting_institutions.first.name }}
+          {% endif %}
+          {% endif %}
+        </a>
+      </h5>
+      <h6>
+        {% if conference.theme_title and conference.main_series %}
+        "{{ conference.theme_title }}"
+        {% endif %}
+      </h6>
+      {% if conference.hosting_institutions.exists %}
+      <div class="conference-location-unit my-3">
+        <p>
+          Hosted at {{ conference.hosting_institutions.all|join:", "}}
+        </p>
+        {% endif %}
+        <p>
+          {% if conference.city %}{{ conference.city }},
+          {% endif %}{% if conference.state_province_region %}{{ conference.state_province_region }},
+          {% endif %}{% if conference.country %}{{ conference.country }}{% endif %}
+        </p>
+        {% if conference.start_date %}
+        <p>
+          {{ conference.start_date }} - {{ conference.end_date }}
+        </p>
+      </div>
       {% endif %}
-      {% else %}
-      {{ conference.year }} - {{ conference.theme_title }}
-      {% if conference.short_title %}
-      - {{ conference.short_title }}
-      {% elif conference.city %}
-      - {{ conference.city }}
-      {% elif conference.hosting_institutions %}
-      - {{ conference.hosting_institutions.first.name }}
+      <div class="conference-notes my-3">
+        <p>
+          {{ conference.n_works }} works by {{ conference.n_authors }} authors indexed
+        </p>
+        {% if conference.notes %}
+        <p>{{ conference.notes|urlize }}</p>
+        {% endif %}
+        {% if conference.url %}
+        <p>
+          Conference website: <a href="{{ conference.url }}">{{ conference.url }}</a>
+        </p>
+        {% endif %}
+        {% if conference.references %}
+        <p>References: {{ conference.references|urlize }}</p>
+        {% endif %}
+        {% if conference.contributors %}
+        <p>Contributors: {{ conference.contributors }}</p>
+        {% endif %}
+        {% if conference.attendance %}
+        <p>Attendance: {{ conference.attendance|urlize }}</p>
+        {% endif %}
+        {% if conference.primary_contact %}
+        <p>Primary contact: {{ conference.primary_contact }}</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-3">
+      {% if user.is_authenticated and conference.editing_user %}
+      <span class="badge badge-light">Checked out by {{ conference.editing_user }}</span>
       {% endif %}
+      {% if conference.entry_status == "n" %}
+      <span class="badge badge-secondary p-3 mb-4">Not started</span>
+      {% elif conference.entry_status == "i" %}
+      <span class="badge badge-warning p-3 mb-4">Incomplete</span>
+      {% elif conference.entry_status == "r" %}
+      <span class="badge badge-info mx-1 p-3 mb-4">In review</span>
+      {% elif conference.entry_status == "c" %}
+      <span class="badge badge-success p-3 mb-4">Complete</span>
       {% endif %}
-    </a>
-  </h5>
-  <span>
-    {% if user.is_authenticated and conference.editing_user %}
-    <span class="badge badge-light flex-shrink-0 mx-1">Checked out by {{ conference.editing_user }}</span>
-    {% endif %}
-    {% if conference.entry_status == "n" %}
-    <span class="badge badge-secondary flex-shrink-0 mx-1 p-3">Not started</span>
-    {% elif conference.entry_status == "i" %}
-    <span class="badge badge-warning flex-shrink-0 mx-1 p-3">Incomplete</span>
-    {% elif conference.entry_status == "r" %}
-    <span class="badge badge-info flex-shrink-0 mx-1 p-3">In review</span>
-    {% elif conference.entry_status == "c" %}
-    <span class="badge badge-success flex-shrink-0 mx-1 p-3">Complete</span>
-    {% endif %}
-  </span>
-</div>
-<div class="d-flex justify-content-between align-items-baseline">
-  <h6 class="flex-grow-1">
-    {% if conference.theme_title and conference.main_series %}
-    "{{ conference.theme_title }}"
-    {% endif %}
-  </h6>
-  {% if user.is_authenticated %}
-  {% if conference.program_available %}
-  <span class="badge badge-info flex-shrink-0 mx-1">Has program</span>
-  {% endif %}
-  {% if conference.abstracts_available %}
-  <span class="badge badge-secondary flex-shrink-0 mx-1">Has abstracts</span>
-  {% endif %}
-  {% endif %}
-</div>
-{% if conference.hosting_institutions.exists %}
-<div class="conference-location-unit my-3">
-  <p>
-    Hosted at {{ conference.hosting_institutions.all|join:", "}}
-  </p>
-  {% endif %}
-  <p>
-    {% if conference.city %}{{ conference.city }},
-    {% endif %}{% if conference.state_province_region %}{{ conference.state_province_region }},
-    {% endif %}{% if conference.country %}{{ conference.country }}{% endif %}
-  </p>
-  {% if conference.start_date %}
-  <p>
-    {{ conference.start_date }} - {{ conference.end_date }}
-  </p>
-</div>
-{% endif %}
 
-<div class="d-flex justify-content-between">
-  <div class="conference-notes my-3">
-    <p>
-      {{ conference.n_works }} works by {{ conference.n_authors }} authors indexed
-    </p>
-    {% if conference.notes %}
-    <p>{{ conference.notes|urlize }}</p>
-    {% endif %}
-    {% if conference.url %}
-    <p>
-      Conference website: <a href="{{ conference.url }}">{{ conference.url }}</a>
-    </p>
-    {% endif %}
-    {% if conference.references %}
-    <p>References: {{ conference.references|urlize }}</p>
-    {% endif %}
-    {% if conference.contributors %}
-    <p>Contributors: {{ conference.contributors }}</p>
-    {% endif %}
-    {% if conference.attendance %}
-    <p>Attendance: {{ conference.attendance|urlize }}</p>
-    {% endif %}
-    {% if conference.primary_contact %}
-    <p>Primary contact: {{ conference.primary_contact }}</p>
-    {% endif %}
-  </div>
-  <div class=" d-flex align-items-center series-membership-box px-4 pb-0">
-    <div>
-      {% if conference.series_memberships.exists %}
-      <p>
-        Series:
-        {% for membership in conference.series_memberships.all %}
-        <a href="{% url 'conference_series_detail' membership.series.id %}">{{ membership.series.abbreviation }}</a>
-        ({{ membership.number }}){% if not forloop.last %},{% endif %}{% endfor %}
-      </p>
+      {% if user.is_authenticated %}
+      {% if conference.program_available %}
+      <span class="badge badge-info flex-shrink-0 mx-1">Has program</span>
       {% endif %}
-      {% if conference.organizers.exists %}
-      <p>
-        Organizers:
-        {% for organizer in conference.organizers.all %}
-        {% if user.is_authenticated %}
-        <a href="{% url 'organizer_edit' organizer.id %}">{{ organizer.abbreviation }}</a>
-        {% else %}
-        {{ organizer.abbreviation }}{% endif %}{% if not forloop.last %},{% endif %}{% endfor %}
-      </p>
+      {% if conference.abstracts_available %}
+      <span class="badge badge-secondary flex-shrink-0 mx-1">Has abstracts</span>
       {% endif %}
+      {% endif %}
+      <div class="d-flex align-self-end align-items-center series-membership-box p-4">
+        <div>
+          {% if conference.series_memberships.exists %}
+          <p>
+            Series:
+            {% for membership in conference.series_memberships.all %}
+            <a href="{% url 'conference_series_detail' membership.series.id %}">{{ membership.series.abbreviation }}</a>
+            ({{ membership.number }}){% if not forloop.last %},{% endif %}{% endfor %}
+          </p>
+          {% endif %}
+          {% if conference.organizers.exists %}
+          <p>
+            Organizers:
+            {% for organizer in conference.organizers.all %}
+            {% if user.is_authenticated %}
+            <a href="{% url 'organizer_edit' organizer.id %}">{{ organizer.abbreviation }}</a>
+            {% else %}
+            {{ organizer.abbreviation }}{% endif %}{% if not forloop.last %},{% endif %}{% endfor %}
+          </p>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
+  {% if user.is_authenticated and conference.documents.exists %}
+  <div class="row">
+    <div class="card my-2">
+      <div class="card-header p-1">Files</div>
+      <ul class="list-group list-group-flush">
+        {% for document in conference.documents.all %}
+        <li class="list-group-item p-1"><i class="far fa-file mr-1"></i> <a
+            href="{{ document.url }}">{{ document.basename }} ({{ document.size|filesizeformat }})</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <div class="row">
+      <a href="{% url 'conference_checkout' conference.id %}" role="button"
+        class="btn btn-secondary btn-sm">Checkout</a>
+      <a href="{% url 'conference_edit' conference.id %}" role="button" class="btn btn-primary btn-sm">Edit</a>
+      <a href="{% url 'conference_delete' conference.id %}" role="button" class="btn btn-danger btn-sm">Delete</a>
+      <a href="{% url 'work_create' %}?conference={{ conference.id }}" role="button" class="btn btn-primary btn-sm">New
+        work</a>
+    </div>
+  </div>
+  {% endif %}
 </div>
-{% if user.is_authenticated and conference.documents.exists %}
-<div class="card my-2">
-  <div class="card-header p-1">Files</div>
-  <ul class="list-group list-group-flush">
-    {% for document in conference.documents.all %}
-    <li class="list-group-item p-1"><i class="far fa-file mr-1"></i> <a
-        href="{{ document.url }}">{{ document.basename }} ({{ document.size|filesizeformat }})</a>
-    </li>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
-{% if user.is_authenticated %}
-<div class="row">
-  <a href="{% url 'conference_checkout' conference.id %}" role="button" class="btn btn-secondary btn-sm">Checkout</a>
-  <a href="{% url 'conference_edit' conference.id %}" role="button" class="btn btn-primary btn-sm">Edit</a>
-  <a href="{% url 'conference_delete' conference.id %}" role="button" class="btn btn-danger btn-sm">Delete</a>
-  <a href="{% url 'work_create' %}?conference={{ conference.id }}" role="button" class="btn btn-primary btn-sm">New
-    work</a>
-</div>
-{% endif %}
