@@ -44,6 +44,7 @@ nav.navbar {
 
 .card {
   box-shadow: 5px 5px 5px lightgray;
+  border-radius: 5px;
 
   .card-header {
     text-transform: uppercase;
@@ -52,7 +53,6 @@ nav.navbar {
 
 .card.work-list-conference-card {
   background-color: $gray-background;
-  border-radius: 10px;
 
   p {
     margin-bottom: 0.1rem;
