@@ -7,7 +7,7 @@
 
 {% block head %}
 {% for conference in selected_conferences %}
-<div class="card p-5 work-list-conference-card">
+<div class="card p-5 my-5 work-list-conference-card">
   {% include "conference_card.html" with conference=conference show_series=True %}
 </div>
 {% endfor %}
