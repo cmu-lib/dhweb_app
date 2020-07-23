@@ -1,6 +1,6 @@
 <div class="container-flex">
   <div class="row justify-content-between">
-    <div class="col-md-9">
+    <div class="col-9">
       <h5>
         <a href="{% url 'work_list' %}?conference={{ conference.id }}">
           {% if conference.main_series and show_series %}
@@ -26,11 +26,11 @@
           {% endif %}
         </a>
       </h5>
+      {% if conference.theme_title and conference.main_series %}
       <h6>
-        {% if conference.theme_title and conference.main_series %}
         "{{ conference.theme_title }}"
-        {% endif %}
       </h6>
+      {% endif %}
       {% if conference.hosting_institutions.exists %}
       <div class="conference-location-unit my-3">
         <p>
@@ -46,8 +46,8 @@
         <p>
           {{ conference.start_date }} - {{ conference.end_date }}
         </p>
+        {% endif %}
       </div>
-      {% endif %}
       <div class="conference-notes my-3">
         <p>
           {{ conference.n_works }} works by {{ conference.n_authors }} authors indexed
@@ -74,28 +74,34 @@
         {% endif %}
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-3">
       {% if user.is_authenticated and conference.editing_user %}
-      <span class="badge badge-light">Checked out by {{ conference.editing_user }}</span>
+      <p class="badge badge-light">Checked out by {{ conference.editing_user }}</p>
       {% endif %}
+
       {% if conference.entry_status == "n" %}
-      <span class="badge badge-secondary p-3 mb-4">Not started</span>
+      <p class="badge badge-secondary p-3 mb-4">Not started</p>
       {% elif conference.entry_status == "i" %}
-      <span class="badge badge-warning p-3 mb-4">Incomplete</span>
+      <p class="badge badge-warning p-3 mb-4">Incomplete</p>
       {% elif conference.entry_status == "r" %}
-      <span class="badge badge-info mx-1 p-3 mb-4">In review</span>
+      <p class="badge badge-info mx-1 p-3 mb-4">In review</p>
       {% elif conference.entry_status == "c" %}
-      <span class="badge badge-success p-3 mb-4">Complete</span>
+      <p class="badge badge-success p-3 mb-4">Complete</p>
       {% endif %}
 
       {% if user.is_authenticated %}
+
       {% if conference.program_available %}
-      <span class="badge badge-info flex-shrink-0 mx-1">Has program</span>
+      <p class="badge badge-info mx-1">Has program</p>
       {% endif %}
+
       {% if conference.abstracts_available %}
-      <span class="badge badge-secondary flex-shrink-0 mx-1">Has abstracts</span>
+      <p class="badge badge-secondary mx-1">Has abstracts</p>
       {% endif %}
+
       {% endif %}
+
+      {% if conference.organizers.exists or conference.series_memberships.exists %}
       <div class="d-flex align-self-end align-items-center series-membership-box p-4">
         <div>
           {% if conference.series_memberships.exists %}
@@ -118,30 +124,34 @@
           {% endif %}
         </div>
       </div>
+      {% endif %}
+
     </div>
   </div>
+
   {% if user.is_authenticated and conference.documents.exists %}
-  <div class="row">
-    <div class="card my-2">
-      <div class="card-header p-1">Files</div>
-      <ul class="list-group list-group-flush">
-        {% for document in conference.documents.all %}
-        <li class="list-group-item p-1"><i class="far fa-file mr-1"></i> <a
-            href="{{ document.url }}">{{ document.basename }} ({{ document.size|filesizeformat }})</a>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-    {% if user.is_authenticated %}
-    <div class="row">
-      <a href="{% url 'conference_checkout' conference.id %}" role="button"
-        class="btn btn-secondary btn-sm">Checkout</a>
-      <a href="{% url 'conference_edit' conference.id %}" role="button" class="btn btn-primary btn-sm">Edit</a>
-      <a href="{% url 'conference_delete' conference.id %}" role="button" class="btn btn-danger btn-sm">Delete</a>
-      <a href="{% url 'work_create' %}?conference={{ conference.id }}" role="button" class="btn btn-primary btn-sm">New
-        work</a>
-    </div>
+  <div class="card my-2">
+    <div class="card-header p-1">Files</div>
+    <ul class="list-group list-group-flush">
+      {% for document in conference.documents.all %}
+      <li class="list-group-item p-1"><i class="far fa-file mr-1"></i> <a
+          href="{{ document.url }}">{{ document.basename }} ({{ document.size|filesizeformat }})</a>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
   {% endif %}
+
+  {% if user.is_authenticated %}
+  <div class="row">
+    <a href="{% url 'conference_checkout' conference.id %}" role="button"
+      class="btn btn-secondary btn-sm mx-2">Checkout</a>
+    <a href="{% url 'conference_edit' conference.id %}" role="button" class="btn btn-primary btn-sm mx-2">Edit</a>
+    <a href="{% url 'conference_delete' conference.id %}" role="button" class="btn btn-danger btn-sm mx-2">Delete</a>
+    <a href="{% url 'work_create' %}?conference={{ conference.id }}" role="button"
+      class="btn btn-primary btn-sm mx-2">New
+      work</a>
+  </div>
+  {% endif %}
+
 </div>

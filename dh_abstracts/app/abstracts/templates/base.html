@@ -29,8 +29,10 @@
   </head>
 
   <body>
+
     <div class="alert alert-warning text-center">
-      <p>This site is currently in beta testing. Layout and functionality are subject to change or removal at any time.
+      <p>This site is currently in beta testing. Layout and functionality are subject to change or removal at any
+        time.
         Data are still in preparation. <b>Please do not use or link to this site until its public release later in
           2020.</b>
         Report issues <a href="https://github.com/cmu-lib/dhweb_app/issues">on our GitHub page.</a></p>
@@ -75,6 +77,7 @@
         {% endif %}
       </ul>
     </nav>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-4">
       <a class="navbar-brand" href="{% url 'home_view' %}">DH Conference Index</a>
       <ul class="navbar-nav ml-auto">
@@ -102,13 +105,14 @@
       </ul>
     </nav>
 
-    <div class="container p-4">
+    <div class="container pt-4">
       {% if messages %}
       {% for message in messages %}
       {% if message.tags == "error" %}
       <div class="alert my-2 alert-danger" role="alert">{{ message | safe }}</div>
       {% else %}
-      <div class="alert my-2 alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">{{ message | safe }}
+      <div class="alert my-2 alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+        {{ message | safe }}
       </div>
       {% endif %}
       {% endfor %}
@@ -118,8 +122,11 @@
       {% endblock %}
     </div>
 
-    <nav class="navbar sticky-bottom navbar-light bg-light">
-      <p>Website code © <a href="https://library.cmu.edu/">Carnegie Mellon University Libraries</a>, 2020</p>
+    <nav class="navbar sticky-bottom navbar-dark bg-dark">
+      <ul class="navbar-nav bg-dark ml-auto">
+        <li class="navbar-text">Website code © <a href="https://library.cmu.edu/">Carnegie Mellon University
+            Libraries</a>, 2020</li>
+      </ul>
     </nav>
 
   </body>

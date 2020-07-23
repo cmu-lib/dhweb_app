@@ -19,18 +19,35 @@ $headings-font-weight: $font-weight-bold;
 $gray-background: #f2f2f2;
 $card-cap-bg: $gray-background;
 
+// Fullscreen parent
+
+.parent {
+  min-height: 100vh;
+}
+
+// Typography customizations
+
+$paragraph-margin-bottom: 2rem !default;
+$headings-margin-bottom: 3rem !default;
+
 // Navbar customizations
 
 $navbar-dark-color: rgba($white, 1);
 $navbar-dark-hover-color: rgba($white, 1) !default;
 
 nav.navbar {
-  font-variant-caps: all-small-caps;
+  text-transform: uppercase;
   font-weight: $font-weight-bold;
 }
 
+// Card Customizations
+
 .card {
   box-shadow: 5px 5px 5px lightgray;
+
+  .card-header {
+    text-transform: uppercase;
+  }
 }
 
 .card.work-list-conference-card {
