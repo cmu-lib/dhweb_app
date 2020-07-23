@@ -1,13 +1,47 @@
-// $font-family-base: "Open Sans";
-// $headings-font-family: "Open Sans";
-// $headings-color: #b00;
-// $primary: #b00;
-// $enable-rounded: false;
-// $enable-responsive-font-sizes: true;
+// Custom overrides for default Bootstrap variables
+// Used for the DH Abstracts theme designed by Heidi Wiren Bartlett, CMU Libraries
 
-// $display1-size: 5rem !default;
-// $display2-size: 2.5rem !default;
-// $display3-size: 2rem !default;
-// $display4-size: 1.5rem !default;
+$font-family-base: "Open Sans";
+$font-weight-light: 300 !default;
+$font-weight-normal: 500 !default;
+$font-weight-bold: 700 !default;
+$enable-rounded: false;
+$enable-responsive-font-sizes: true;
+$line-height-base: 1.5 !default;
+
+$font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
+$h1-font-size: $font-size-base * 2.2 !default;
+
+$gray-background: #f2f2f2;
+$card-cap-bg: $gray-background;
+
+.card.work-list-conference-card {
+  background-color: $gray-background;
+
+  p {
+    margin-bottom: 0.1rem;
+    font-size: small;
+  }
+
+  h5 > a {
+    font-weight: $font-weight-light;
+    font-size: xx-large;
+    color: #008bc0;
+  }
+
+  .conference-location.unit {
+    p {
+      font-weight: $font-weight-normal;
+    }
+  }
+
+  .series-membership-box {
+    background-color: #ffffff;
+  }
+
+  .conference-notes {
+    color: #808080;
+  }
+}
 
 @import "./bootstrap/scss/bootstrap";

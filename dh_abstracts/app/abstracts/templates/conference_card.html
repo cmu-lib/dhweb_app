@@ -29,13 +29,13 @@
     <span class="badge badge-light flex-shrink-0 mx-1">Checked out by {{ conference.editing_user }}</span>
     {% endif %}
     {% if conference.entry_status == "n" %}
-    <span class="badge badge-secondary flex-shrink-0 mx-1">Not started</span>
+    <span class="badge badge-secondary flex-shrink-0 mx-1 p-3">Not started</span>
     {% elif conference.entry_status == "i" %}
-    <span class="badge badge-warning flex-shrink-0 mx-1">Incomplete</span>
+    <span class="badge badge-warning flex-shrink-0 mx-1 p-3">Incomplete</span>
     {% elif conference.entry_status == "r" %}
-    <span class="badge badge-info flex-shrink-0 mx-1">In review</span>
+    <span class="badge badge-info flex-shrink-0 mx-1 p-3">In review</span>
     {% elif conference.entry_status == "c" %}
-    <span class="badge badge-success flex-shrink-0 mx-1">Complete</span>
+    <span class="badge badge-success flex-shrink-0 mx-1 p-3">Complete</span>
     {% endif %}
   </span>
 </div>
@@ -55,60 +55,73 @@
   {% endif %}
 </div>
 {% if conference.hosting_institutions.exists %}
-<small class="text-muted">
-  Hosted at {{ conference.hosting_institutions.all|join:", "}}
-</small>
-<br>
-{% endif %}
-<small class="text-muted">
-  {% if conference.city %}{{ conference.city }},
-  {% endif %}{% if conference.state_province_region %}{{ conference.state_province_region }},
-  {% endif %}{% if conference.country %}{{ conference.country }}{% endif %}
-</small>
-{% if conference.start_date %}
-<br>
-<small class="text-muted">{{ conference.start_date }}
-  -
-  {{ conference.end_date }}</small>
+<div class="conference-location-unit my-3">
+  <p>
+    Hosted at {{ conference.hosting_institutions.all|join:", "}}
+  </p>
+  {% endif %}
+  <p>
+    {% if conference.city %}{{ conference.city }},
+    {% endif %}{% if conference.state_province_region %}{{ conference.state_province_region }},
+    {% endif %}{% if conference.country %}{{ conference.country }}{% endif %}
+  </p>
+  {% if conference.start_date %}
+  <p>
+    {{ conference.start_date }} - {{ conference.end_date }}
+  </p>
+</div>
 {% endif %}
 
 <div class="d-flex justify-content-between">
-  <div>
-    <p>{{ conference.n_works }} works by {{ conference.n_authors }} authors indexed</p>
+  <div class="conference-notes my-3">
+    <p>
+      {{ conference.n_works }} works by {{ conference.n_authors }} authors indexed
+    </p>
+    {% if conference.notes %}
+    <p>{{ conference.notes|urlize }}</p>
+    {% endif %}
+    {% if conference.url %}
+    <p>
+      Conference website: <a href="{{ conference.url }}">{{ conference.url }}</a>
+    </p>
+    {% endif %}
+    {% if conference.references %}
+    <p>References: {{ conference.references|urlize }}</p>
+    {% endif %}
+    {% if conference.contributors %}
+    <p>Contributors: {{ conference.contributors }}</p>
+    {% endif %}
+    {% if conference.attendance %}
+    <p>Attendance: {{ conference.attendance|urlize }}</p>
+    {% endif %}
+    {% if conference.primary_contact %}
+    <p>Primary contact: {{ conference.primary_contact }}</p>
+    {% endif %}
   </div>
-  <div>
-    {% if conference.series_memberships.exists %}
-    <p class="my-0">
-      <small class="text-muted">
+  <div class=" d-flex align-items-center series-membership-box px-4 pb-0">
+    <div>
+      {% if conference.series_memberships.exists %}
+      <p>
         Series:
         {% for membership in conference.series_memberships.all %}
         <a href="{% url 'conference_series_detail' membership.series.id %}">{{ membership.series.abbreviation }}</a>
         ({{ membership.number }}){% if not forloop.last %},{% endif %}{% endfor %}
-      </small>
-    </p>
-    {% endif %}
-    {% if conference.organizers.exists %}
-    <p class="my-0">
-      <small class="text-muted">
+      </p>
+      {% endif %}
+      {% if conference.organizers.exists %}
+      <p>
         Organizers:
         {% for organizer in conference.organizers.all %}
         {% if user.is_authenticated %}
         <a href="{% url 'organizer_edit' organizer.id %}">{{ organizer.abbreviation }}</a>
         {% else %}
         {{ organizer.abbreviation }}{% endif %}{% if not forloop.last %},{% endif %}{% endfor %}
-      </small>
-    </p>
-    {% endif %}
+      </p>
+      {% endif %}
+    </div>
   </div>
 </div>
-{% if conference.notes %}<p>{{ conference.notes|urlize }}</p>{% endif %}
-{% if conference.url %}<p>Conference website: <a href="{{ conference.url }}">{{ conference.url }}</a></p>{% endif %}
-{% if conference.references %}<p>References: <cite>{{ conference.references|urlize }}</cite></p>{% endif %}
-{% if conference.contributors %}<p>Contributors: {{ conference.contributors }}</p>{% endif %}
-{% if conference.attendance %}<p>Attendance: {{ conference.attendance|urlize }}</p>{% endif %}
-{% if conference.primary_contact %}<p>Primary contact: {{ conference.primary_contact }}</p>{% endif %}
-{% if user.is_authenticated %}
-{% if conference.documents.exists %}
+{% if user.is_authenticated and conference.documents.exists %}
 <div class="card my-2">
   <div class="card-header p-1">Files</div>
   <ul class="list-group list-group-flush">
@@ -120,11 +133,12 @@
   </ul>
 </div>
 {% endif %}
-{% endif %}
 {% if user.is_authenticated %}
-<a href="{% url 'conference_checkout' conference.id %}" role="button" class="btn btn-secondary btn-sm">Checkout</a>
-<a href="{% url 'conference_edit' conference.id %}" role="button" class="btn btn-primary btn-sm">Edit</a>
-<a href="{% url 'conference_delete' conference.id %}" role="button" class="btn btn-danger btn-sm">Delete</a>
-<a href="{% url 'work_create' %}?conference={{ conference.id }}" role="button" class="btn btn-primary btn-sm">New
-  work</a>
+<div class="row">
+  <a href="{% url 'conference_checkout' conference.id %}" role="button" class="btn btn-secondary btn-sm">Checkout</a>
+  <a href="{% url 'conference_edit' conference.id %}" role="button" class="btn btn-primary btn-sm">Edit</a>
+  <a href="{% url 'conference_delete' conference.id %}" role="button" class="btn btn-danger btn-sm">Delete</a>
+  <a href="{% url 'work_create' %}?conference={{ conference.id }}" role="button" class="btn btn-primary btn-sm">New
+    work</a>
+</div>
 {% endif %}
