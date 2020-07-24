@@ -1,0 +1,148 @@
+{% load static %}
+{% load flatpages %}
+{% load compress %}
+{% load cache %}
+{% get_flatpages as flatpages %}
+
+<!doctype html>
+<html lang="en">
+
+  <head>
+
+    <link rel="shortcut icon" href="/static/favicon.ico" />
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'css/main.scss' %}">
+    {% endcompress %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css"
+      integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,700;1,300&display=swap"
+      rel="stylesheet">
+    {% block metadata %}
+    {% endblock %}
+
+
+    <title>Index of DH Conferences - {% block header_title %}{% endblock %}</title>
+  </head>
+
+  <body class="{% block bodyclass %}{% endblock %}">
+
+    <div class="alert alert-warning text-center">
+      <p>This site is currently in beta testing. Layout and functionality are subject to change or removal at any
+        time.
+        Data are still in preparation. <b>Please do not use or link to this site until its public release later in
+          2020.</b>
+        Report issues <a href="https://github.com/cmu-lib/dhweb_app/issues">on our GitHub page.</a></p>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary p-0">
+      <ul class="ml-auto navbar-nav bg-secondary">
+        {% if not user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}?next=/">Log In</a>
+        </li>
+        {% else %}
+        <li class="nav-item dropdown dropleft">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">Edit</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <p class="text-muted m-3">Full database listings, including unpublished data.</p>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'full_institution_list' %}">Departments and Institutions</a>
+            <a class="dropdown-item" href="{% url 'author_institution_list' %}">Authors by institution</a>
+            <a class="dropdown-item" href="{% url 'full_organizer_list' %}">Organizers</a>
+            <a class="dropdown-item" href="{% url 'full_work_type_list' %}">Work Types</a>
+            <a class="dropdown-item" href="{% url 'full_keyword_list' %}">Keywords</a>
+            <a class="dropdown-item" href="{% url 'full_topic_list' %}">Topics</a>
+            <a class="dropdown-item" href="{% url 'full_language_list' %}">Languages</a>
+            <a class="dropdown-item" href="{% url 'full_discipline_list' %}">Disciplines</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'wipe_unused' %}">Wipe unused records</a>
+          </div>
+        </li>
+        <li class="navbar-text">
+          (logged in as {{ user.username }})
+        </li>
+        {% if user.is_staff %}
+        <li class="nav-item">
+          <a class="nav-link" href="/admin">Administration</a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}?next=/">Log Out</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-4 nav-shadow mb-0">
+      <a class="navbar-brand" href="{% url 'home_view' %}">Index of Digital<br />Humanities Conferences</r></a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown dropleft">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">Browse</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'conference_list' %}">Conferences</a>
+            <a class="dropdown-item" href="{% url 'work_list' %}">Works</a>
+            <a class="dropdown-item" href="{% url 'author_list' %}">Authors</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'download_data' %}">Downloads</a>
+        </li>
+        <li class="nav-item dropdown dropleft">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">About</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% for page in flatpages %}
+            <a class="dropdown-item" href="/pages{{ page.url }}">{{ page.title }}</a>
+            {% endfor %}
+          </div>
+        </li>
+      </ul>
+    </nav>
+
+    {% if messages %}
+    <div class="container pt-4">
+      {% for message in messages %}
+      {% if message.tags == "error" %}
+      <div class="alert my-2 alert-danger" role="alert">{{ message | safe }}</div>
+      {% else %}
+      <div class="alert my-2 alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+        {{ message | safe }}
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block body %}
+    {% endblock %}
+
+    <nav class="navbar sticky-bottom navbar-dark bg-dark">
+      <ul class="navbar-nav bg-dark ml-auto">
+        <li class="navbar-text">Website code © <a href="https://library.cmu.edu/">Carnegie Mellon University
+            Libraries</a>, 2020</li>
+      </ul>
+    </nav>
+
+  </body>
+
+  <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  {% comment %}
+  Activate tooltips present on the this page
+  {% endcomment %}
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  {% block js %}
+  {% endblock %}
+
+</html>
