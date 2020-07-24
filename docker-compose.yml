@@ -2,7 +2,7 @@ version: "3"
 
 services:
   postgres:
-    image: postgres:12.2
+    image: postgres:12.3
     volumes:
       - db:/var/lib/postgresql/data
     expose:
@@ -30,13 +30,13 @@ services:
       - memcached
 
   memcached:
-    image: memcached:1.6.5
+    image: memcached:1.6.6
     restart: always
     expose:
       - 11211
 
   nginx:
-    image: nginx:1.16.1
+    image: nginx:1.19.1
     restart: always
     volumes:
       - ./nginx:/etc/nginx/conf.d/.
