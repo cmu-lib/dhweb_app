@@ -134,25 +134,27 @@ a.facet-link {
   text-decoration: underline;
 }
 
+// Conference series progress
+
+span.progress-def {
+  margin-left: 0.6rem;
+  padding: 0.4rem 0.7rem 0.4rem 0.7rem;
+  border-radius: 20px;
+  font-weight: $font-weight-bold;
+  color: white;
+  text-transform: uppercase;
+}
+
 // Conference Series Detail page
+
+.date-spread {
+  letter-spacing: 0.2rem;
+}
 
 .conference-series-detail {
   h2 {
     border-bottom: 1px solid gray;
     padding-bottom: 2rem;
-  }
-
-  span.progress-def {
-    margin-left: 0.6rem;
-    padding: 0.4rem 0.7rem 0.4rem 0.7rem;
-    border-radius: 20px;
-    font-weight: $font-weight-bold;
-    color: white;
-    text-transform: uppercase;
-  }
-
-  small.date-spread {
-    letter-spacing: 0.2rem;
   }
 }
 

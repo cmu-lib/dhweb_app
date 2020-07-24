@@ -5,8 +5,8 @@
 {% block content %}
 <h1>Conference Series</h1>
 {% if user.is_authenticated %}
-<div class="card my-2">
-  <div class="card-body">
+<div class="card my-4">
+  <div class="card-body p-5">
     <a href="{% url 'conference_create' %}" type="button" class="btn
         btn-primary">Create
       conference</a>
@@ -19,24 +19,23 @@
   </div>
 </div>
 {% endif %}
-<hr>
-<div class="card my-2">
-  <div class="card-body">
+<div class="card my-4">
+  <div class="card-body p-5">
     <div class="d-flex justify-content-between align-items-baseline">
       <h3><a href="{% url 'standalone_conference_list' %}">Standalone Events</a></h3>
       <h4>{{ standalone_conference_count }}
         event{{ standalone_conference_count|pluralize }}</h4>
     </div>
-    <p class="text-muted">{{ standalone_conferences.earliest_year }} - {{ standalone_conferences.latest_year }}</p>
+    <p class="text-muted date-spread">{{ standalone_conferences.earliest_year }} -
+      {{ standalone_conferences.latest_year }}</p>
     <hr>
     <p>Digital humanities events not belonging to a larger conference, such symposia or workshops.</p>
     {% include "series_progress_bar.html" with series=standalone_conferences %}
   </div>
 </div>
-<hr>
 {% for series in series_list %}
-<div class="card my-2">
-  <div class="card-body py-2">
+<div class="card my-4">
+  <div class="card-body p-5">
     {% include "conference_series_card.html" with series=series %}
   </div>
 </div>
