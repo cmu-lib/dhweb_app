@@ -126,7 +126,7 @@
 <div class="card my-4">
   <div class="card-header">Tags</div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">Keywords:
+    <li class="list-group-item"><strong>Keywords:</strong>
       {% if work.keywords.all %}
       {% for keyword in work.keywords.all %}
       <a class="mx-2 facet-link" href="{% url 'work_list' %}?keywords={{ keyword.pk }}">{{ keyword.title }}</a>
@@ -135,7 +135,7 @@
       None
       {% endif %}
     </li>
-    <li class="list-group-item">Language:
+    <li class="list-group-item"><strong>Language:</strong>
       {% if work.languages.all %}
       {% for language in work.languages.all %}
       <a class="mx-2 facet-link" href="{% url 'work_list' %}?languages={{ language.pk }}">{{ language.title }}</a>
@@ -144,7 +144,7 @@
       None
       {% endif %}
     </li>
-    <li class="list-group-item">Topics:
+    <li class="list-group-item"><strong>Topics:</strong>
       {% if work.topics.all %}
       {% for topic in work.topics.all %}
       <a class="mx-2 facet-link" href="{% url 'work_list' %}?topics={{ topic.pk }}">{{ topic.title }}</a>
@@ -153,7 +153,7 @@
       None
       {% endif %}
     </li>
-    <li class="list-group-item">Disciplines:
+    <li class="list-group-item"><strong>Disciplines:</strong>
       {% if work.disciplines.all %}
       {% for discipline in work.disciplines.all %}
       <a class="mx-2 facet-link" href="{% url 'work_list' %}?disciplines={{ discipline.pk }}">{{ discipline.title }}</a>
