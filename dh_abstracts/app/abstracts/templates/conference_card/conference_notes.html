@@ -1,0 +1,20 @@
+{% if conference.notes %}
+<p>{{ conference.notes|urlize }}</p>
+{% endif %}
+{% if conference.url %}
+<p>
+  Conference website: <a href="{{ conference.url }}">{{ conference.url }}</a>
+</p>
+{% endif %}
+{% if conference.references %}
+<p>References: {{ conference.references|urlize }}</p>
+{% endif %}
+{% if conference.contributors %}
+<p>Contributors: {{ conference.contributors }}</p>
+{% endif %}
+{% if conference.attendance %}
+<p>Attendance: {{ conference.attendance|urlize }}</p>
+{% endif %}
+{% if conference.primary_contact %}
+<p>Primary contact: {{ conference.primary_contact }}</p>
+{% endif %}

@@ -1,0 +1,20 @@
+<div>
+  {% if conference.series_memberships.exists %}
+  <p class="mb-3">
+    Series:
+    {% for membership in conference.series_memberships.all %}
+    <a href="{% url 'conference_series_detail' membership.series.id %}">{{ membership.series.abbreviation }}</a>
+    ({{ membership.number }}){% if not forloop.last %},{% endif %}{% endfor %}
+  </p>
+  {% endif %}
+  {% if conference.organizers.exists %}
+  <p class="mt-3">
+    Organizers:
+    {% for organizer in conference.organizers.all %}
+    {% if user.is_authenticated %}
+    <a href="{% url 'organizer_edit' organizer.id %}">{{ organizer.abbreviation }}</a>
+    {% else %}
+    {{ organizer.abbreviation }}{% endif %}{% if not forloop.last %},{% endif %}{% endfor %}
+  </p>
+  {% endif %}
+</div>

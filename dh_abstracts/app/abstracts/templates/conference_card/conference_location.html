@@ -1,0 +1,18 @@
+{% if conference.hosting_institutions.exists %}
+<p>
+  Hosted at {{ conference.hosting_institutions.all|join:", "}}
+</p>
+{% endif %}
+<p>
+  {% if conference.city %}{{ conference.city }},
+  {% endif %}{% if conference.state_province_region %}{{ conference.state_province_region }},
+  {% endif %}{% if conference.country %}{{ conference.country }}{% endif %}
+</p>
+{% if conference.start_date %}
+<p>
+  {{ conference.start_date }} - {{ conference.end_date }}
+</p>
+{% endif %}
+<p>
+  {{ conference.n_works }} works by {{ conference.n_authors }} authors indexed
+</p>

@@ -1,0 +1,28 @@
+<a href="{% url 'work_list' %}?conference={{ conference.id }}">
+  {% if conference.main_series and show_series %}
+  {{ conference.main_series }} - {{ conference.year }}
+  {% elif conference.main_series and not show_series %}
+  {{ conference.year }}
+
+  {% if conference.short_title %}
+  - {{ conference.short_title }}
+  {% elif conference.city %}
+  - {{ conference.city }}
+  {% elif conference.hosting_institutions %}
+  - {{ conference.hosting_institutions.first.name }}
+  {% endif %}
+
+  {% else %}
+
+  {{ conference.year }} - {{ conference.theme_title }}
+
+  {% if conference.short_title %}
+  - {{ conference.short_title }}
+  {% elif conference.city %}
+  - {{ conference.city }}
+  {% elif conference.hosting_institutions %}
+  - {{ conference.hosting_institutions.first.name }}
+  {% endif %}
+
+  {% endif %}
+</a>

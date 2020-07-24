@@ -116,10 +116,10 @@
   </div>
 </div>
 {% endif %}
-<div class="card my-4">
+<div class="card work-detail-conference-card my-4">
   <div class="card-header">Conference Info</div>
   <div class="card-body">
-    {% include "conference_card.html" with conference=work.conference show_series=True %}
+    {% include "conference_card/work_detail_conference_card.html" with conference=work.conference show_series=True %}
   </div>
 </div>
 

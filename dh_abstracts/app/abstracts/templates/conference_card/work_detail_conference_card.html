@@ -1,0 +1,24 @@
+<div class="container-flex">
+  {% include "conference_card/conference_completion.html" with conference=conference %}
+  <h5>
+    {% include "conference_card/conference_title.html" with conference=conference %}
+  </h5>
+  {% if conference.theme_title and conference.main_series %}
+  <h6>
+    "{{ conference.theme_title }}"
+  </h6>
+  {% endif %}
+  <div class="conference-location-unit my-3">
+    {% include "conference_card/conference_location.html" with conference=conference %}
+  </div>
+  <div class="conference-notes my-3">
+    {% include "conference_card/conference_notes.html" with conference=conference %}
+  </div>
+  {% if conference.organizers.exists or conference.series_memberships.exists %}
+  <div class="d-flex align-self-end align-items-center series-membership-box p-4">
+    {% include "conference_card/conference_organizers.html" with conference=conference %}
+  </div>
+  {% endif %}
+  {% include "conference_card/conference_files.html" with conference=conference user=user %}
+  {% include "conference_card/editing_buttons.html" with conference=conference user=user %}
+</div>

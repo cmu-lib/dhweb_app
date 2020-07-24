@@ -1,0 +1,12 @@
+{% if user.is_authenticated and conference.documents.exists %}
+<div class="card my-2">
+  <div class="card-header p-1">Files</div>
+  <ul class="list-group list-group-flush">
+    {% for document in conference.documents.all %}
+    <li class="list-group-item p-1"><i class="far fa-file mr-1"></i> <a
+        href="{{ document.url }}">{{ document.basename }} ({{ document.size|filesizeformat }})</a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

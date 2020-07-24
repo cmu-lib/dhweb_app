@@ -30,8 +30,8 @@
         <div class="card-header">Conferences</div>
         <ol class="list-group list-group-flush">
           {% for conference in conference_list %}
-          <li class="list-group-item p-5">
-            {% include "conference_card.html" with conference=conference %}
+          <li class="list-group-item p-5 series-list-conference-card">
+            {% include "conference_card/conference_series_conference_card.html" with conference=conference %}
           </li>
           {% endfor %}
         </ol>

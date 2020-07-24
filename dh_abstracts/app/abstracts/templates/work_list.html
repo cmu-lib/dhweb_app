@@ -8,7 +8,7 @@
 {% block head %}
 {% for conference in selected_conferences %}
 <div class="card p-5 my-5 work-list-conference-card">
-  {% include "conference_card.html" with conference=conference show_series=True %}
+  {% include "conference_card/work_search_conference_card.html" with conference=conference show_series=True %}
 </div>
 {% endfor %}
 {% endblock %}

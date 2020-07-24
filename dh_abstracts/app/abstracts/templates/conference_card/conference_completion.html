@@ -1,0 +1,25 @@
+{% if user.is_authenticated and conference.editing_user %}
+<p class="badge badge-light">Checked out by {{ conference.editing_user }}</p>
+{% endif %}
+
+{% if conference.entry_status == "n" %}
+<p class="badge badge-secondary p-3 mb-4">Not started</p>
+{% elif conference.entry_status == "i" %}
+<p class="badge badge-warning p-3 mb-4">Incomplete</p>
+{% elif conference.entry_status == "r" %}
+<p class="badge badge-info mx-1 p-3 mb-4">In review</p>
+{% elif conference.entry_status == "c" %}
+<p class="badge badge-success p-3 mb-4">Complete</p>
+{% endif %}
+
+{% if user.is_authenticated %}
+
+{% if conference.program_available %}
+<p class="badge badge-info mx-1">Has program</p>
+{% endif %}
+
+{% if conference.abstracts_available %}
+<p class="badge badge-secondary mx-1">Has abstracts</p>
+{% endif %}
+
+{% endif %}

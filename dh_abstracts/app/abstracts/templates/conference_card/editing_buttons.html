@@ -1,0 +1,10 @@
+{% if user.is_authenticated %}
+<div class="row">
+  <a href="{% url 'conference_checkout' conference.id %}" role="button"
+    class="btn btn-secondary btn-sm mx-2">Checkout</a>
+  <a href="{% url 'conference_edit' conference.id %}" role="button" class="btn btn-primary btn-sm mx-2">Edit</a>
+  <a href="{% url 'conference_delete' conference.id %}" role="button" class="btn btn-danger btn-sm mx-2">Delete</a>
+  <a href="{% url 'work_create' %}?conference={{ conference.id }}" role="button" class="btn btn-primary btn-sm mx-2">New
+    work</a>
+</div>
+{% endif %}

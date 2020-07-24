@@ -134,6 +134,24 @@ a.facet-link {
   text-decoration: underline;
 }
 
+.work-detail-conference-card {
+  h5 {
+    margin-bottom: 1rem;
+  }
+
+  .conference-location-unit {
+    p {
+      font-size: 0.7rem;
+      margin-bottom: 0.2rem;
+      font-weight: $font-weight-normal;
+    }
+  }
+
+  .series-membership-box {
+    background-color: $gray-background;
+  }
+}
+
 // Conference series progress
 
 span.progress-def {
@@ -155,6 +173,24 @@ span.progress-def {
   h2 {
     border-bottom: 1px solid gray;
     padding-bottom: 2rem;
+  }
+}
+
+.series-list-conference-card {
+  .series-membership-box {
+    background-color: $gray-background;
+  }
+
+  h5 {
+    margin-bottom: 1rem;
+  }
+
+  .conference-location-unit {
+    p {
+      font-size: 0.7rem;
+      margin-bottom: 0.2rem;
+      font-weight: $font-weight-normal;
+    }
   }
 }
 
