@@ -3,13 +3,13 @@
 {% endif %}
 
 {% if conference.entry_status == "n" %}
-<p class="badge badge-secondary p-3 mb-4">Not started</p>
+<p class="completion-status badge badge-secondary p-3 px-5 mb-4">Not started</p>
 {% elif conference.entry_status == "i" %}
-<p class="badge badge-warning p-3 mb-4">Incomplete</p>
+<p class="completion-status badge badge-warning p-3 px-5 mb-4">Incomplete</p>
 {% elif conference.entry_status == "r" %}
-<p class="badge badge-info mx-1 p-3 mb-4">In review</p>
+<p class="completion-status badge badge-info mx-1 p-3 px-5 mb-4">In review</p>
 {% elif conference.entry_status == "c" %}
-<p class="badge badge-success p-3 mb-4">Complete</p>
+<p class="completion-status badge badge-success p-3 px-5 mb-4">Complete</p>
 {% endif %}
 
 {% if user.is_authenticated %}

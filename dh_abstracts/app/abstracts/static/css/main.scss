@@ -65,6 +65,11 @@ nav.navbar {
   }
 }
 
+.badge.completion-status {
+  text-transform: uppercase;
+  border-radius: 20px;
+}
+
 // work list conference card
 
 .card.work-list-conference-card {
