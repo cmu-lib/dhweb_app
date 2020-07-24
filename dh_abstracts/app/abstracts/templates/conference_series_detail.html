@@ -44,7 +44,9 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item {% if not series.id %}disabled{% endif %}">
-            <a href="{% url 'standalone_conference_list' %}">Standalone Events</a>
+            <strong>
+              <a href="{% url 'standalone_conference_list' %}">Standalone Events</a>
+            </strong>
           </li>
           {% for s in series_list %}
           <li class="list-group-item p3 {% if s.id is series.id %}disabled{% endif %}">
