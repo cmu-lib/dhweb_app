@@ -13,6 +13,9 @@ $enable-responsive-font-sizes: true;
 $enable-shadows: true;
 
 $warning: #fcb415;
+$success: #009647;
+$info: #008e90;
+$secondary: #808080;
 
 $font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
 $h1-font-size: $font-size-base * 2.2 !default;
@@ -52,10 +55,13 @@ nav.navbar {
 
 .card {
   box-shadow: 5px 5px 5px lightgray;
+  border: none !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.125) !important;
   border-radius: 5px;
 
   .card-header {
     text-transform: uppercase;
+    border: none;
   }
 }
 
@@ -126,6 +132,28 @@ span.work-type {
 
 a.facet-link {
   text-decoration: underline;
+}
+
+// Conference Series Detail page
+
+.conference-series-detail {
+  h2 {
+    border-bottom: 1px solid gray;
+    padding-bottom: 2rem;
+  }
+
+  span.progress-def {
+    margin-left: 0.6rem;
+    padding: 0.4rem 0.7rem 0.4rem 0.7rem;
+    border-radius: 20px;
+    font-weight: $font-weight-bold;
+    color: white;
+    text-transform: uppercase;
+  }
+
+  small.date-spread {
+    letter-spacing: 0.2rem;
+  }
 }
 
 @import "./bootstrap/scss/bootstrap";

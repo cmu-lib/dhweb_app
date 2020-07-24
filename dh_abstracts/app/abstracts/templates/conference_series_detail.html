@@ -4,55 +4,60 @@
 
 {% block content %}
 
-<div class="row">
-  <div class="col-md-9">
-    <div class="d-flex justify-content-between align-items-center">
-      <h2 class="flex-shrink-1">{{ series.title }}</h2>
+<div class="conference-series-detail">
+  <div class="row mb-5">
+    <div class="col-sm-8">
+      <h2 class="conference-title">{{ series.title }}</h2>
       {% if user.is_staff %}
       <a class="btn btn-primary flex-shrink-0" role="button" href="{% url 'conference_create' %}">Add conference</a>
       {% endif %}
+      {% if series.notes %}
+      <p class="my-2">{{ series.notes }}</p>
+      {% endif %}
+      {% include "series_progress_bar.html" with series=series_progress %}
+      {% if user.is_staff and series.id %}
+      <a href="{% url 'series_edit' series.pk %}" role="button" class="btn btn-warning btn-sm" rel="noopener noreferrer"
+        target="_blank">Edit</a>
+      <a href="{% url 'series_delete' series.pk %}" role="button" class="btn btn-danger btn-sm"
+        rel="noopener noreferrer" target="_blank">Delete</a>
+      {% endif %}
     </div>
-    <hr>
-    {% if series.notes %}
-    <p>{{ series.notes }}</p>
-    {% endif %}
-    {% include "series_progress_bar.html" with series=series_progress %}
-    {% if user.is_staff and series.id %}
-    <a href="{% url 'series_edit' series.pk %}" role="button" class="btn btn-warning btn-sm" rel="noopener noreferrer"
-      target="_blank">Edit</a>
-    <a href="{% url 'series_delete' series.pk %}" role="button" class="btn btn-danger btn-sm" rel="noopener noreferrer"
-      target="_blank">Delete</a>
-    {% endif %}
-    <hr>
-    <div class="card">
-      <div class="card-header">Conferences</div>
-      <ol class="list-group list-group-flush">
-        {% for conference in conference_list %}
-        <li class="list-group-item">
-          {% include "conference_card.html" with conference=conference %}
-        </li>
-        {% endfor %}
-      </ol>
-    </div>
+    <div class="col-sm-4"></div>
   </div>
-  <div class="col-md-3">
-    <div class="card m-2">
-      <div class="card-header d-flex justify-content-left align-items-baseline">
-        <span>All other series</span>
+  <div class="row my-3">
+    <div class="col-sm-8">
+      <div class="card mr-1">
+        <div class="card-header">Conferences</div>
+        <ol class="list-group list-group-flush">
+          {% for conference in conference_list %}
+          <li class="list-group-item p-5">
+            {% include "conference_card.html" with conference=conference %}
+          </li>
+          {% endfor %}
+        </ol>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item {% if not series.id %}disabled{% endif %}">
-          <a href="{% url 'standalone_conference_list' %}">Standalone Events</a>
-        </li>
-        {% for s in series_list %}
-        <li class="list-group-item {% if s.id is series.id %}disabled{% endif %}">
-          <a href="{% url 'conference_series_detail' s.id %}">{{ s.title }} ({{ s.n_conferences}})</a>
-          <br>
-          <small class="text-muted">{{ s.earliest_year }}{% if s.earliest_year != s.latest_year %} -
-            {{ s.latest_year }}{% endif %}</small>
-        </li>
-        {% endfor %}
-      </ul>
+    </div>
+    <div class="col-sm-4">
+      <div class="card ml-1">
+        <div class="card-header d-flex justify-content-left align-items-baseline">
+          <span>All other series</span>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item {% if not series.id %}disabled{% endif %}">
+            <a href="{% url 'standalone_conference_list' %}">Standalone Events</a>
+          </li>
+          {% for s in series_list %}
+          <li class="list-group-item p3 {% if s.id is series.id %}disabled{% endif %}">
+            <strong>
+              <a href="{% url 'conference_series_detail' s.id %}">{{ s.title }} ({{ s.n_conferences}})</a>
+            </strong>
+            <br>
+            <small class="text-muted date-spread">{{ s.earliest_year }}{% if s.earliest_year != s.latest_year %} -
+              {{ s.latest_year }}{% endif %}</small>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
   </div>
 </div>
