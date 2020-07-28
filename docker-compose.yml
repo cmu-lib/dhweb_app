@@ -12,7 +12,7 @@ services:
   app:
     build: dh_abstracts
     restart: always
-    command: "bash -c ${SERVE_COMMAND}"
+    command: "${SERVE_COMMAND}"
     volumes:
       - ./dh_abstracts:/vol/dh
       - static:/vol/static_files
