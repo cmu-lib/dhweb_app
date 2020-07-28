@@ -13,7 +13,9 @@ from django.db.models import (
     Prefetch,
     Subquery,
     OuterRef,
+    ExpressionWrapper,
     FloatField,
+    BooleanField
 )
 from django.db.models.functions import Concat, FirstValue, Cast
 from django.core import management
@@ -1229,7 +1231,9 @@ class FullWorkList(ListView):
             if text_res != "":
                 result_set = (
                     result_set.annotate(
-                        rank=SearchRank(F("search_text"), SearchQuery(text_res))
+                        rank=SearchRank(F("search_text"), SearchQuery(text_res)),
+                        # Does the search text show up only in the full text?
+                        search_in_ft_only=ExpressionWrapper(~Q(title__icontains=text_res), output_field=BooleanField())
                     )
                     .filter(rank__gt=0)
                     .order_by("-rank")
@@ -1324,8 +1328,6 @@ class FullWorkList(ListView):
                     .all()
                 )
                 context["selected_conferences"] = conferences_data
-            if filter_form["text"] != "":
-                context["fts"] = True
 
         context["work_filter_form"] = WorkFilter(data=self.request.GET)
         context["available_works_count"] = Work.objects.count()
