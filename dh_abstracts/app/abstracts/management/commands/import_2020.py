@@ -16,6 +16,7 @@ class Command(BaseCommand):
         with open("/vol/data/metadata_V4.csv", "r") as csvfile:
             reader = csv.DictReader(csvfile)
             adho2020 = models.Conference.objects.get(id=495)
+            # Delete handful of hand-entered papers
             models.Work.objects.filter(conference=adho2020).delete()
             for work in reader:
                 # print(work)
