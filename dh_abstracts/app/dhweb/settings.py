@@ -120,7 +120,7 @@ DATABASES = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
         "LOCATION": "memcached:11211",
         "TIMEOUT": 60 * 5,
     }
@@ -473,6 +473,7 @@ MARKDOWNIFY_WHITELIST_TAGS = [
     "h6",
     "pre",
     "code",
+    "img",
 ]
 
 MARKDOWNIFY_MARKDOWN_EXTENSIONS = [
