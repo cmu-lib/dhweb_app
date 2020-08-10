@@ -474,6 +474,7 @@ MARKDOWNIFY_WHITELIST_TAGS = [
     "pre",
     "code",
     "img",
+    "svg",
 ]
 
 MARKDOWNIFY_MARKDOWN_EXTENSIONS = [
