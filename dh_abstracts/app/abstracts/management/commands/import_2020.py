@@ -19,13 +19,16 @@ class Command(BaseCommand):
             # Delete handful of hand-entered papers
             models.Work.objects.filter(conference=adho2020).delete()
             for work in reader:
-                # print(work)
+                print(work)
                 # Grab authors
                 authors_dict = []
                 for author in work["authors"].split(";"):
                     name = re.match(r"^[^(]+", author).group(0)
                     last_name = name.split(",")[0].strip()
                     first_name = name.split(",")[1].strip()
+                    print(name)
+                    print(last_name)
+                    print(first_name)
                     raw_institutions = re.search(r"\(([0-9](?:,[0-9])*)\)", author)
                     if raw_institutions is not None:
                         institution_nos = [
@@ -47,6 +50,7 @@ class Command(BaseCommand):
                             "institution_nos": institution_nos,
                         }
                     )
+                print(authors_dict)
 
                 institution_dict = []
                 if re.search(r"\d: ", work["organisations"]) is not None:
