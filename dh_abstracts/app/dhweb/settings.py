@@ -477,6 +477,8 @@ MARKDOWNIFY_WHITELIST_TAGS = [
     "svg",
 ]
 
+MARKDOWNIFY_WHITELIST_ATTRS = ["href", "src", "alt", "id"]
+
 MARKDOWNIFY_MARKDOWN_EXTENSIONS = [
     "markdown.extensions.fenced_code",
     "markdown.extensions.extra",
