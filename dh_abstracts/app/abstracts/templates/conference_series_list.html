@@ -21,9 +21,9 @@
 {% endif %}
 <div class="card my-4">
   <div class="card-body p-5">
-    <div class="d-flex justify-content-between align-items-baseline">
-      <h3><a href="{% url 'standalone_conference_list' %}">Standalone Events</a></h3>
-      <h4>{{ standalone_conference_count }}
+    <div class="d-flex justify-content-between align-items-baseline mb-2">
+      <h3 class="mb-0"><a href="{% url 'standalone_conference_list' %}">Standalone Events</a></h3>
+      <h4 class="mb-0">{{ standalone_conference_count }}
         event{{ standalone_conference_count|pluralize }}</h4>
     </div>
     <p class="text-muted date-spread">{{ standalone_conferences.earliest_year }} -

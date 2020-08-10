@@ -1,9 +1,9 @@
 <div>
-  <div class="d-flex justify-content-between align-items-baseline">
+  <div class="d-flex justify-content-between align-items-baseline mb-2">
     <a href="{% url 'conference_series_detail' series.id %}" class="flex-shrink-1">
-      <h3 class="pr-4">{{ series.title }} ({{ series.abbreviation }})</h3>
+      <h3 class="pr-4 mb-0">{{ series.title }} ({{ series.abbreviation }})</h3>
     </a>
-    <h4 class="flex-shrink-0">{{ series.n_conferences }} event{{ series.n_conferences|pluralize }}</h4>
+    <h4 class="flex-shrink-0 mb-0">{{ series.n_conferences }} event{{ series.n_conferences|pluralize }}</h4>
   </div>
   <p class="text-muted date-spread">{{ series.earliest_year }} - {{ series.latest_year }}</p>
   {% if series.notes %}
