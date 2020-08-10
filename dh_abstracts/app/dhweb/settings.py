@@ -475,6 +475,8 @@ MARKDOWNIFY_WHITELIST_TAGS = [
     "code",
     "img",
     "svg",
+    "figure",
+    "figcaption",
 ]
 
 MARKDOWNIFY_WHITELIST_ATTRS = ["href", "src", "alt", "id"]

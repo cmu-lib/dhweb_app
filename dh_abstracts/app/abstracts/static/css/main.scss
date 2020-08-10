@@ -35,6 +35,11 @@ $card-cap-bg: $gray-background;
 
 $headings-margin-bottom: 3rem !default;
 
+figure > figcaption {
+  text-align: center;
+  margin: 1rem 0 1rem 0;
+}
+
 // Navbar customizations
 
 $navbar-dark-color: rgba($white, 1);
