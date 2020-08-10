@@ -1,11 +1,19 @@
 <div class="mt-4">
   <p class="text-muted">Indexing progress:
-    <span class="badge badge-success progress-def">{{ series.n_complete }} Completed</span>
-    <span class="badge badge-warning progress-def">{{ series.n_in_progress }} in
+    <span class="badge badge-success progress-def" data-toggle="tooltip" data-placement="top"
+      title="Editors have completed entering every published abstract for this event.">{{ series.n_complete }}
+      Completed</span>
+    <span class="badge badge-warning progress-def" data-toggle="tooltip" data-placement="top"
+      title="Editors are in the process of entering abstracts for this event, so the list of works may not yet be complete.">{{ series.n_in_progress }}
+      in
       progress</span>
-    <span class="badge badge-info progress-def">{{ series.n_in_review }} in
+    <span class="badge badge-info progress-def" data-toggle="tooltip" data-placement="top"
+      title="Editors have finished entering abstracts for this event but have not finished reviewing them for quality and correctness.">{{ series.n_in_review }}
+      in
       review</span>
-    <span class="badge badge-secondary progress-def">{{ series.n_remaining }} not yet started</span>
+    <span class="badge badge-secondary progress-def" data-toggle="tooltip" data-placement="top"
+      title="Individual abstracts may exist for this event but editors have not yet started the work of entering the data.">{{ series.n_remaining }}
+      not yet started</span>
   </p>
   <div class="progress my-4">
     <div class="progress-bar bg-success" role="progressbar" style="width: {{ series.pct_complete }}%"

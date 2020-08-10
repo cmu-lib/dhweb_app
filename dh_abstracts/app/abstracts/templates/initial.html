@@ -125,14 +125,6 @@
 
   <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-  {% comment %}
-  Activate tooltips present on the this page
-  {% endcomment %}
-  <script>
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-  </script>
 
   {% block js %}
   {% endblock %}

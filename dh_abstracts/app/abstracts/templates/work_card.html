@@ -11,9 +11,13 @@
         work</a>
       {% endif %}
       {% if work.full_text %}
-      <span class="badge p-2 fts">Full text indexed</span>{% endif %}
+      <span class="badge p-2 fts" data-toggle="tooltip" data-placement="top"
+        title="The full text for this work has been indexed for search, though it may not be available to view publicly.">Full
+        text indexed</span>{% endif %}
       {% if work.search_in_ft_only and work.full_text %}
-      <span class="badge p-2 mt-2 fts fts-retrieved">Query found in full-text only</span>
+      <span class="badge p-2 mt-2 fts fts-retrieved" data-toggle="tooltip" data-placement="top"
+        title="Your text search matched this abstract because the terms were found in the full-text, which may not be available to view publicly.">Query
+        found in full-text only</span>
       {% endif %}
     </div>
   </div>

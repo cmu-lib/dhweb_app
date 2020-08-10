@@ -44,5 +44,10 @@
   $("#id_text").on("input", function () {
     $("#id_ordering").val("rank");
   })
+
+  // Activate tooltips
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
 </script>
 {% endblock js %}
