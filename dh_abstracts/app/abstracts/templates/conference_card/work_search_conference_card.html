@@ -19,7 +19,7 @@
     <div class="col-3">
       {% include "conference_card/conference_completion.html" with conference=conference %}
       {% if conference.organizers.exists or conference.series_memberships.exists %}
-      <div class="d-flex align-self-end align-items-center series-membership-box p-4">
+      <div class="d-flex align-self-end align-items-center series-membership-box p-3">
         {% include "conference_card/conference_organizers.html" with conference=conference %}
       </div>
       {% endif %}
