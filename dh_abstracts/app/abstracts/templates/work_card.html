@@ -46,25 +46,25 @@
   <div class="work-facets-box p-3 my-2">
     {% if work.keywords.exists %}
     <p><strong>Keywords:</strong> {% for kw in work.keywords.all %}<a class="facet-link mx-2"
-        href="{% url 'work_list' %}?keyword={{ kw.pk }}">{{ kw }}</a>
+        href="{% url 'work_list' %}?keywords={{ kw.pk }}">{{ kw }}</a>
       {% endfor %}</p>
     {% endif %}
 
     {% if work.topics.exists %}
     <p><strong>Topics:</strong> {% for t in work.topics.all %}<a class="facet-link mx-2"
-        href="{% url 'work_list' %}?topic={{ t.pk }}">{{ t }}</a>
+        href="{% url 'work_list' %}?topics={{ t.pk }}">{{ t }}</a>
       {% endfor %}</p>
     {% endif %}
 
     {% if work.languages.exists %}
     <p><strong>Languages:</strong> {% for l in work.languages.all %}<a class="facet-link mx-2"
-        href="{% url 'work_list' %}?language={{ l.pk }}">{{ l }}</a>
+        href="{% url 'work_list' %}?languages={{ l.pk }}">{{ l }}</a>
       {% endfor %}</p>
     {% endif %}
 
     {% if work.disciplines.exists %}
     <p><strong>Disciplines:</strong> {% for d in work.disciplines.all %}<a class="facet-link mx-2"
-        href="{% url 'work_list' %}?discipline={{ d.pk }}">{{ d }}</a>
+        href="{% url 'work_list' %}?disciplines={{ d.pk }}">{{ d }}</a>
       {% endfor %}</p>
     {% endif %}
   </div>

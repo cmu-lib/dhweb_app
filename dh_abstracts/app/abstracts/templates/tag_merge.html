@@ -14,26 +14,27 @@
     <p>This will reassign the following to a new {{ tag_category }}:</p>
     {% for work in sample_elements %}
     <p>
-      <div class="card m-2">
-        <div class="card-body">
-          {% include "work_card.html" with work=work%}
-        </div>
+    <div class="card m-2">
+      <div class="card-body">
+        {% include "work_card.html" with work=work%}
       </div>
+    </div>
     </p>
     {% endfor %}
     {% if count_elements > 0 %}
-    <a href="{% url 'work_list' %}?topic={{ merging.pk }}">... and {{ count_elements }} more</a>
+    <a href="{% url 'work_list' %}?{{ tag_category }}s={{ merging.pk }}">... and {{ count_elements }} more</a>
     {% endif %}
   </div>
   <div class="col-md-6">
-    <p>Choose the {{ tag_category }} to reassign all these works to:<p>
+    <p>Choose the {{ tag_category }} to reassign all these works to:
+    <p>
 
-        <form action="{% url merge_view merging.pk %}" method="post">
-          {% csrf_token %}
-          {{ tag_merge_form | crispy }}
-          <div class="alert alert-danger">This action cannot be undone!</div>
-          <button type="submit" class="btn btn-primary mb-2">Merge</button>
-        </form>
+    <form action="{% url merge_view merging.pk %}" method="post">
+      {% csrf_token %}
+      {{ tag_merge_form | crispy }}
+      <div class="alert alert-danger">This action cannot be undone!</div>
+      <button type="submit" class="btn btn-primary mb-2">Merge</button>
+    </form>
   </div>
 </div>
 
