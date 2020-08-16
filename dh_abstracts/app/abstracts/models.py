@@ -140,7 +140,7 @@ class Conference(models.Model):
     full_text_public = models.BooleanField(
         default=False,
         db_index=True,
-        help_text="Should the full text for this conference's abstracts be publicly available?",
+        help_text="Should the full text for this conference's abstracts be publicly available, no matter the individual abstract's license status?",
     )
     references = models.TextField(
         max_length=20000,

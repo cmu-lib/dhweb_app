@@ -13,7 +13,10 @@
 
 <form method="post">
   {% csrf_token %}
-  {{ form.entry_status | as_crispy_field }}
+  <div class="row">
+    <div class="col-6">{{ form.entry_status | as_crispy_field }}</div>
+    <div class="col-6">{{ form.full_text_public | as_crispy_field }}</div>
+  </div>
   <h3>Title</h3>
   <div class="row">
     <div class="col-6">{{ form.short_title | as_crispy_field }}</div>
