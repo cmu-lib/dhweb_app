@@ -19,8 +19,8 @@
 <div class="card my-2 border-info">
   <div class="card-header bg-info text-light">How to cite these data downloads:</div>
   <div class="card-body">
-    "Weingart, S.B., Eichmann-Kalwara, N., Lincoln, M., et al. "DH Conferences Data Extract" in <i>The Index of Digital 
-    Humanities Conferences</i>. Carnegie Mellon University, 2020. Data last updated 
+    "Weingart, S.B., Eichmann-Kalwara, N., Lincoln, M., et al. "DH Conferences Data Extract" in <i>The Index of Digital
+      Humanities Conferences</i>. Carnegie Mellon University, 2020. Data last updated
     {{ denormalized_last_updated|date:"Y-m-d" }}. https://dh-abstracts.library.cmu.edu
   </div>
 </div>
@@ -56,16 +56,16 @@
     <div class="table-responsive">
       <table class="table table-sm table-striped">
         <thead>
-          <tr>
+          <tr class="d-flex">
             <th scope="col" class="col-4">Name</th>
             <th scope="col" class="col-10">Description</th>
           </tr>
         </thead>
         <tbody>
           {% for field in denormalized_data_dictionary %}
-          <tr>
+          <tr class="d-flex">
             <td class="col-4">{% if field.required %}*{% endif %}<code>{{ field.name }}</code></th>
-            <td class="col-10">{{ field.description }}</td>
+            <td class="col-10 flex-shrink-1">{{ field.description }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -100,7 +100,7 @@
     <div class="table-responsive">
       <table class="table table-sm table-striped">
         <thead>
-          <tr>
+          <tr class="d-flex">
             <th scope="col" class="col-2">Name</th>
             <th scope="col" class="col-2">Type</th>
             <th scope="col" class="col-10">Description</th>
@@ -108,10 +108,10 @@
         </thead>
         <tbody>
           {% for field in m.fields %}
-          <tr>
+          <tr class="d-flex">
             <td class="col-2">{% if field.required %}*{% endif %}<code>{{ field.name }}</code></td>
             <td class="col-2">{{ field.type }}</td>
-            <td class="col-10">{{ field.help_text }}{% if field.relation %} (Related model: <a
+            <td class="col-10 flex-shrink-1">{{ field.help_text }}{% if field.relation %} (Related model: <a
                 href="#{{ field.related_model }}">{{ field.related_model }}</a>){% endif %}</td>
           </tr>
           {% endfor %}
