@@ -72,7 +72,7 @@
 
 {% if work.full_text %}
 <div class="card my-4">
-  <div class="card-header d-flex justify-content-between">Work</div>
+  <div class="card-header d-flex justify-content-between">Work text</div>
   <div class="card-body">
     {% if user.is_authenticated or work.conference.full_text_public or work.full_text_license %}
     {% if work.full_text_type == "txt" %}
