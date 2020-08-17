@@ -15,12 +15,16 @@
 </div>
 <ul class="list-group list-group-flush">
   {% for author in author_list %}
-  <li class="list-group-item">
-    <h6 class="mb-1">
-      <a href="{% url 'author_detail' author.id %}">
-        {{ author.most_recent_first_name }} {{ author.most_recent_last_name }} <span
-          class="badge badge-info">{{ author.n_works }} works
-        </span></a></h6>
+  <li class="list-group-item p-3">
+    <div class="mb-1 d-flex justify-content-between align-items-center">
+      <h6>
+        <a href="{% url 'author_detail' author.id %}">
+          {{ author.most_recent_first_name }} {{ author.most_recent_last_name }}</a>
+      </h6>
+      <h6 class="badge badge-info">
+        {{ author.n_works }} work{{ author.n_works | pluralize }}
+      </h6>
+    </div>
     <p class=" mb-0 text-muted">
       {% include "affiliation_string.html" with department=author.main_affiliation_department institution=author.main_affiliation_institution institution_city=author.main_affiliation_institution_city institution_state=author.main_affiliation_institution_state author=main_affiliation_institution_country %}
     </p>
