@@ -3,19 +3,19 @@
 {% endif %}
 
 {% if conference.entry_status == "n" %}
-<p class="completion-status badge badge-secondary p-3 px-5 mb-4" data-toggle="tooltip" data-placement="top"
+<p class="completion-status badge badge-secondary p-3 mb-4" data-toggle="tooltip" data-placement="top"
   title="Individual abstracts may exist for this event but editors have not yet started the work of entering the data.">
   Not started</p>
 {% elif conference.entry_status == "i" %}
-<p class="completion-status badge badge-warning p-3 px-5 mb-4" data-toggle="tooltip" data-placement="top"
+<p class="completion-status badge badge-warning p-3 mb-4" data-toggle="tooltip" data-placement="top"
   title="Editors are in the process of entering abstracts for this event, so the list of works may not yet be complete.">
   Incomplete</p>
 {% elif conference.entry_status == "r" %}
-<p class="completion-status badge badge-info mx-1 p-3 px-5 mb-4" data-toggle="tooltip" data-placement="top"
+<p class="completion-status badge badge-info mx-1 p-3 mb-4" data-toggle="tooltip" data-placement="top"
   title="Editors have finished entering abstracts for this event but have not finished reviewing them for quality and correctness.">
   In review</p>
 {% elif conference.entry_status == "c" %}
-<p class="completion-status badge badge-success p-3 px-5 mb-4" data-toggle="tooltip" data-placement="top"
+<p class="completion-status badge badge-success p-3 mb-4" data-toggle="tooltip" data-placement="top"
   title="Editors have completed entering every published abstract for this event.">Complete</p>
 {% endif %}
 
