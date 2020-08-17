@@ -1,5 +1,8 @@
 {% if department %}{{ department }} -
-{% endif %}{{ institution }}
+{% endif %}{% if institution %}{{ institution }}
 {% if institution_country %}({% if institution_city %}{{ institution_city }},
 {% if institution_state %}{{ institution_state }},{% endif %}
 {% endif %}{{ institution_country }}){% endif %}
+{% else %}
+No affiliations given
+{% endif %}
