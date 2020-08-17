@@ -13,7 +13,7 @@
   <div class="card-header">Works</div>
   <ul class="list-group list-group-flush">
     {% for work in works %}
-    <li class="list-group-item">{% include "work_card.html" with work=work %}</li>
+    <li class="list-group-item work">{% include "work_card.html" with work=work %}</li>
     {% endfor %}
   </ul>
 </div>
