@@ -1,20 +1,25 @@
 <div class="mt-4">
-  <p class="text-muted">Indexing progress:
-    <span class="badge badge-success progress-def" data-toggle="tooltip" data-placement="top"
-      title="Editors have completed entering every published abstract for this event.">{{ series.n_complete }}
-      Completed</span>
-    <span class="badge badge-warning progress-def" data-toggle="tooltip" data-placement="top"
-      title="Editors are in the process of entering abstracts for this event, so the list of works may not yet be complete.">{{ series.n_in_progress }}
-      in
-      progress</span>
-    <span class="badge badge-info progress-def" data-toggle="tooltip" data-placement="top"
-      title="Editors have finished entering abstracts for this event but have not finished reviewing them for quality and correctness.">{{ series.n_in_review }}
-      in
-      review</span>
-    <span class="badge badge-secondary progress-def" data-toggle="tooltip" data-placement="top"
-      title="Individual abstracts may exist for this event but editors have not yet started the work of entering the data.">{{ series.n_remaining }}
-      not yet started</span>
-  </p>
+  <div class="row d-flex align-items-center justify-content-start">
+    <div class="col-xl-2 flex-shrink-0 flex-grow-1">
+      <span class="text-muted">Indexing progress</span>
+    </div>
+    <div class="col-xl-10 col-3 flex-shrink-1">
+      <span class="badge badge-success progress-def" data-toggle="tooltip" data-placement="top"
+        title="Editors have completed entering every published abstract for this event.">{{ series.n_complete }}
+        Completed</span>
+      <span class="badge badge-warning progress-def" data-toggle="tooltip" data-placement="top"
+        title="Editors are in the process of entering abstracts for this event, so the list of works may not yet be complete.">{{ series.n_in_progress }}
+        in
+        progress</span>
+      <span class="badge badge-info progress-def" data-toggle="tooltip" data-placement="top"
+        title="Editors have finished entering abstracts for this event but have not finished reviewing them for quality and correctness.">{{ series.n_in_review }}
+        in
+        review</span>
+      <span class="badge badge-secondary progress-def" data-toggle="tooltip" data-placement="top"
+        title="Individual abstracts may exist for this event but editors have not yet started the work of entering the data.">{{ series.n_remaining }}
+        not yet started</span>
+    </div>
+  </div>
   <div class="progress my-4">
     <div class="progress-bar bg-success" role="progressbar" style="width: {{ series.pct_complete }}%"
       aria-valuenow="{{ series.n_complete }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
