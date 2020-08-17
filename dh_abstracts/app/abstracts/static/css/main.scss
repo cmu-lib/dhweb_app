@@ -80,7 +80,7 @@ nav.nav-shadow {
 
 .homepage {
   width: auto;
-  height: 100vh;
+  height: 100%;
   background-image: url("/static/images/homepage-splash.jpg");
   background-size: 100%;
 
@@ -128,8 +128,9 @@ nav.nav-shadow {
   }
 
   .browse-block.browse-block-mobile {
+    position: relative;
     display: block;
-    top: -12rem;
+    top: -15rem;
 
     .browse-content {
       padding: 2rem;
