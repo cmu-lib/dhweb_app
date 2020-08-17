@@ -46,31 +46,29 @@
 <p>This CSV does not contain more complex related information such as changing author names or detailed affiliation
   information. For that, you will want to look at the full relational database available below.</p>
 
-<div class="alert alert-secondary">
-  <h3>Simple data dictionary
-    <button class="btn btn-lg btn-link" type="button" data-toggle="collapse" data-target="#collapseDenormalized"
-      aria-expanded="false" aria-controls="collapseDenormalized"><i id="toggleDenormalized"
-        class="fas fa-caret-right"></i></button></h3>
-  <div class="collapse hide" id="collapseDenormalized">
-    <small>Required fields marked with an asterisk (*)</small>
-    <div class="table-responsive">
-      <table class="table table-sm table-striped">
-        <thead>
-          <tr class="d-flex">
-            <th scope="col" class="col-4">Name</th>
-            <th scope="col" class="col-10">Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for field in denormalized_data_dictionary %}
-          <tr class="d-flex">
-            <td class="col-4">{% if field.required %}*{% endif %}<code>{{ field.name }}</code></th>
-            <td class="col-10 flex-shrink-1">{{ field.description }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+<h3>Simple data dictionary
+  <button class="btn btn-lg btn-link" type="button" data-toggle="collapse" data-target="#collapseDenormalized"
+    aria-expanded="false" aria-controls="collapseDenormalized"><i id="toggleDenormalized"
+      class="fas fa-caret-right"></i></button></h3>
+<div class="collapse hide" id="collapseDenormalized">
+  <small>Required fields marked with an asterisk (*)</small>
+  <div class="table-responsive">
+    <table class="table table-sm table-striped">
+      <thead>
+        <tr>
+          <th scope="col" style="width:15%">Name</th>
+          <th scope="col" style="width:85%">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for field in denormalized_data_dictionary %}
+        <tr>
+          <td style="width:15%">{% if field.required %}*{% endif %}<code>{{ field.name }}</code></th>
+          <td style="width:85%">{{ field.description }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -84,42 +82,40 @@
   analyses such as tracking institutional affiliations across many different years of conferences.
 </p>
 
-<div class="alert alert-secondary">
-  <h3>Full data dictionary
-    <button class="btn btn-lg btn-link" type="button" data-toggle="collapse" data-target="#collapseFull"
-      aria-expanded="false" aria-controls="collapseFull"><i id="toggleFull" class="fas fa-caret-right"></i></button>
-  </h3>
-  <div class="collapse hide" id="collapseFull">
-    <small>Required fields marked with an asterisk (*)</small>
-    {% for m in data_dictionary %}
-    <hr>
-    <h4 id="{{ m.model }}">{{ m.csv_name }}.csv</h4>
-    {% if m.model_description %}
-    <p>{{ m.model_description }}</p>
-    {% endif %}
-    <div class="table-responsive">
-      <table class="table table-sm table-striped">
-        <thead>
-          <tr class="d-flex">
-            <th scope="col" class="col-2">Name</th>
-            <th scope="col" class="col-2">Type</th>
-            <th scope="col" class="col-10">Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for field in m.fields %}
-          <tr class="d-flex">
-            <td class="col-2">{% if field.required %}*{% endif %}<code>{{ field.name }}</code></td>
-            <td class="col-2">{{ field.type }}</td>
-            <td class="col-10 flex-shrink-1">{{ field.help_text }}{% if field.relation %} (Related model: <a
-                href="#{{ field.related_model }}">{{ field.related_model }}</a>){% endif %}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    {% endfor %}
+<h3>Full data dictionary
+  <button class="btn btn-lg btn-link" type="button" data-toggle="collapse" data-target="#collapseFull"
+    aria-expanded="false" aria-controls="collapseFull"><i id="toggleFull" class="fas fa-caret-right"></i></button>
+</h3>
+<div class="collapse hide" id="collapseFull">
+  <small>Required fields marked with an asterisk (*)</small>
+  {% for m in data_dictionary %}
+  <hr>
+  <h5 id="{{ m.model }}">{{ m.csv_name }}.csv</h5>
+  {% if m.model_description %}
+  <p>{{ m.model_description }}</p>
+  {% endif %}
+  <div class="table-responsive">
+    <table class="table table-sm table-striped">
+      <thead>
+        <tr>
+          <th scope="col" style="width:15%">Name</th>
+          <th scope="col" style="width:15%">Type</th>
+          <th scope="col" style="width:70%">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for field in m.fields %}
+        <tr>
+          <td style="width:15%">{% if field.required %}*{% endif %}<code>{{ field.name }}</code></td>
+          <td style="width:15%">{{ field.type }}</td>
+          <td style="width:70%">{{ field.help_text }}{% if field.relation %} (Related model: <a
+              href="#{{ field.related_model }}">{{ field.related_model }}</a>){% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
+  {% endfor %}
 </div>
 
 {% endblock %}
