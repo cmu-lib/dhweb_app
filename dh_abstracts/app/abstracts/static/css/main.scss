@@ -82,8 +82,9 @@ nav.nav-shadow {
 .homepage {
   width: auto;
   height: 100%;
+  background-position: center;
   background-image: url("/static/images/homepage-splash.jpg");
-  background-size: 100%;
+  background-size: cover;
 
   .splash-block {
     margin-top: 0;
