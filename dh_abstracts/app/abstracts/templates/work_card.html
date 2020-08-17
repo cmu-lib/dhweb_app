@@ -1,11 +1,11 @@
 <div class="p-3">
   <div class="row">
-    <div class="col-8">
-      <h6 class="mb-1 mr-1 flex-shrink-1">
+    <div class="col-xl-8">
+      <h6 class="mb-2 mr-1 flex-shrink-1">
         <a href="{% url 'work_detail' work.pk %}">{{ work.title }}</a>
       </h6>
     </div>
-    <div class="col-4">
+    <div class="col-xl-4">
       {% if user.is_authenticated %}
       <a class="btn btn-primary btn-sm flex-shrink-0" role="button" href="{% url 'work_edit' work.pk %}">Edit this
         work</a>
