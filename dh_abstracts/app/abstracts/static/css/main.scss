@@ -126,6 +126,25 @@ nav.nav-shadow {
       border-radius: 20px;
     }
   }
+
+  .browse-block.browse-block-mobile {
+    display: block;
+    top: -12rem;
+
+    .browse-content {
+      padding: 2rem;
+      width: 100%;
+      margin: 0;
+      background-color: black;
+      border-radius: 0px;
+    }
+
+    p {
+      font-size: 1.5rem;
+      font-weight: $font-weight-light;
+      letter-spacing: 0.3rem;
+    }
+  }
 }
 
 // work list conference card
