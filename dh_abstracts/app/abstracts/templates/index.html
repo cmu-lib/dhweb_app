@@ -2,30 +2,31 @@
 
 {% block header_title %}Home{% endblock %}
 
-{% block bodyclass %}homepage{% endblock %}
 
 {% block content %}
 
 {% load humanize %}
 
-<div class="row splash-block">
-  <h1>The Index of Digital Humanities Conferences</h1>
-  <p>Browse {{ site.work_count | intcomma }} presentations from
-    {{ site.conference_count | intcomma }} digital humanities conferences spanning {{ site.years_count | intcomma }}
-    years,
-    featuring
-    {{ site.author_count | intcomma }} different authors hailing from {{ site.institution_count | intcomma }}
-    institutions and {{ site.country_count | intcomma }} countries.</p>
-</div>
+<div class="homepage">
 
-<div class="browse-block d-flex justify-content-center">
-  <div class="browse-content text-white">
-    <p class="text-center my-5">Browse Database</p>
-    <a class="btn btn-lg" href="{% url 'work_list' %}">Works</a>
-    <a class="btn btn-lg" href="{% url 'author_list' %}">Authors</a>
-    <a class="btn btn-lg" href="{% url 'conference_list' %}">Conferences</a>
+  <div class="splash-block">
+    <h1 class="display-3 font-weight-bolder">The Index of Digital Humanities Conferences</h1>
+    <p class="lead">Browse {{ site.work_count | intcomma }} presentations from
+      {{ site.conference_count | intcomma }} digital humanities conferences spanning {{ site.years_count | intcomma }}
+      years,
+      featuring
+      {{ site.author_count | intcomma }} different authors hailing from {{ site.institution_count | intcomma }}
+      institutions and {{ site.country_count | intcomma }} countries.</p>
   </div>
+
+  <div class="browse-block d-flex justify-content-center">
+    <div class="browse-content text-white">
+      <p class="text-center my-5">Browse Database</p>
+      <a class="btn btn-lg" href="{% url 'work_list' %}">Works</a>
+      <a class="btn btn-lg" href="{% url 'author_list' %}">Authors</a>
+      <a class="btn btn-lg" href="{% url 'conference_list' %}">Conferences</a>
+    </div>
+  </div>
+
 </div>
-
-
 {% endblock %}

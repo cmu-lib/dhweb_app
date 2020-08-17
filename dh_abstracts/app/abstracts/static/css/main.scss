@@ -25,12 +25,6 @@ $headings-font-weight: $font-weight-bold;
 $gray-background: #f2f2f2;
 $card-cap-bg: $gray-background;
 
-// Fullscreen parent
-
-.parent {
-  min-height: 100vh;
-}
-
 // Typography customizations
 
 $headings-margin-bottom: 1.2rem !default;
@@ -85,6 +79,8 @@ nav.nav-shadow {
 // Home splash page
 
 .homepage {
+  width: auto;
+  height: 100vh;
   background-image: url("/static/images/homepage-splash.jpg");
   background-size: 100%;
 
@@ -95,12 +91,10 @@ nav.nav-shadow {
     background-color: rgba($white, 0.75);
 
     h1 {
-      font-size: 4rem;
       text-align: center;
     }
 
     p {
-      font-size: 1.5rem;
       text-align: center;
     }
   }
