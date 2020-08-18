@@ -9,7 +9,7 @@
 {% block title %}{{ appellations.first }}{% endblock %}
 
 {% block main %}
-<div class="card mr-2 mb-5">
+<div class="card mb-5">
   <div class="card-header">Works</div>
   <ul class="list-group list-group-flush">
     {% for work in works %}
@@ -21,7 +21,7 @@
 
 {% block context %}
 {% if user.is_authenticated %}
-<div class="card mr-2">
+<div class="card">
   <div class="card-header">Administration</div>
   <div class="card-body">
     <a href="{% url 'author_merge' author.pk %}" class="btn btn-warning" role="button">Merge</a>
