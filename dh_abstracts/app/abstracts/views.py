@@ -661,6 +661,11 @@ def annotate_multiple_series(qs):
             / Cast(F("n_conferences"), FloatField())
         )
         * 100,
+        pct_remaining=(
+            Cast(F("n_remaining"), FloatField())
+            / Cast(F("n_conferences"), FloatField())
+        )
+        * 100,
     ).order_by("title")
 
 
@@ -685,10 +690,12 @@ def annotate_single_series(qs):
         res["pct_complete"] = (res["n_complete"] / res["n_conferences"]) * 100
         res["pct_in_progress"] = (res["n_in_progress"] / res["n_conferences"]) * 100
         res["pct_in_review"] = (res["n_in_review"] / res["n_conferences"]) * 100
+        res["pct_remaining"] = (res["n_remaining"] / res["n_conferences"]) * 100
     else:
         res["pct_complete"] = 0
         res["pct_in_progress"] = 0
         res["pct_in_review"] = 0
+        res["pct_remaining"] = 0
 
     return res
 

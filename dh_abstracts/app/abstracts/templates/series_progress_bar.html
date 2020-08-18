@@ -27,5 +27,7 @@
       aria-valuenow="{{ series.n_in_progress }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
     <div class="progress-bar bg-info" role="progressbar" style="width: {{ series.pct_in_review }}%"
       aria-valuenow="{{ series.n_in_review }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
+    <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ series.pct_remaining }}%"
+      aria-valuenow="{{ series.pct_remaining }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
   </div>
 </div>
