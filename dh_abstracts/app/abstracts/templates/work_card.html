@@ -11,7 +11,7 @@
         work</a>
       {% endif %}
       {% if work.full_text %}
-      {% if work.license or work.conference.full_text_public %}
+      {% if work.full_text_license or work.conference.full_text_public %}
       <span class="badge p-2 fts public" data-toggle="tooltip" data-placement="top"
         title="The full text for this work is public.">Full
         text is public</span>
