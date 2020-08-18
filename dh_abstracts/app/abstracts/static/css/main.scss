@@ -203,6 +203,11 @@ li.work {
     background-color: #8ab8e8;
   }
 
+  .fts.public {
+    background-color: $success;
+    color: $white;
+  }
+
   .work-facets-box {
     background-color: $gray-background;
   }

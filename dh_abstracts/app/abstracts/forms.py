@@ -48,6 +48,9 @@ class WorkFilter(forms.ModelForm):
     full_text_available = forms.BooleanField(
         required=False, label="Full text has been indexed"
     )
+    full_text_viewable = forms.BooleanField(
+        required=False, label="Full text is publicly viewable"
+    )
     work_type = forms.ModelChoiceField(
         queryset=WorkType.objects.distinct(),
         required=False,
@@ -91,6 +94,7 @@ class WorkFilter(forms.ModelForm):
             "text",
             "conference",
             "full_text_available",
+            "full_text_viewable",
             "work_type",
             "author",
             "institution",

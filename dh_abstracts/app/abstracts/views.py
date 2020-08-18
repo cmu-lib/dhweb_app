@@ -15,7 +15,7 @@ from django.db.models import (
     OuterRef,
     ExpressionWrapper,
     FloatField,
-    BooleanField
+    BooleanField,
 )
 from django.db.models.functions import Concat, FirstValue, Cast
 from django.core import management
@@ -1227,13 +1227,21 @@ class FullWorkList(ListView):
             if filter_form["full_text_available"]:
                 result_set = result_set.exclude(full_text="")
 
+            if filter_form["full_text_viewable"]:
+                result_set = result_set.exclude(full_text="").filter(
+                    Q(full_text_license__isnull=False)
+                    | Q(conference__full_text_public=True)
+                )
+
             text_res = filter_form["text"]
             if text_res != "":
                 result_set = (
                     result_set.annotate(
                         rank=SearchRank(F("search_text"), SearchQuery(text_res)),
                         # Does the search text show up only in the full text?
-                        search_in_ft_only=ExpressionWrapper(~Q(title__icontains=text_res), output_field=BooleanField())
+                        search_in_ft_only=ExpressionWrapper(
+                            ~Q(title__icontains=text_res), output_field=BooleanField()
+                        ),
                     )
                     .filter(rank__gt=0)
                     .order_by("-rank")
