@@ -150,6 +150,14 @@ nav.nav-shadow {
   }
 }
 
+// List filter collapse
+
+@media (min-width: 992px) {
+  #filter-collapse {
+    display: block;
+  }
+}
+
 // work list conference card
 
 .card.work-list-conference-card {
