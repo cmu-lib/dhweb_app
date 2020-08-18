@@ -30,7 +30,7 @@
   </div>
   {% if work.work_type %}
   <p class="mt-2 work-type">
-    <a href="{% url 'work_list' %}?work_type={{ work.work_type.pk }}">{{ work.work_type }}</a>
+    Work type: <a href="{% url 'work_list' %}?work_type={{ work.work_type.pk }}">{{ work.work_type }}</a>
   </p>
   {% endif %}
   <p class="mt-0 authors">
