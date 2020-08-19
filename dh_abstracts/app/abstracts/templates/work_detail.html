@@ -156,3 +156,12 @@
   </ul>
 </div>
 {% endblock %}
+
+{% block js %}
+<script>
+  // Activate tooltips
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+{% endblock %}
