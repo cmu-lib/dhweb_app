@@ -13,11 +13,9 @@
 {% block pre %}
 {% if work.work_type %}
 <div class="my-5">
-  <span class="work-type px-4 py-3">
-    <a href="{% url 'work_list' %}?work_type={{ work.work_type.id }}">
-      {{ work.work_type }}
-    </a>
-  </span>
+  <a class="btn work-type px-4 py-3" role="button" href="{% url 'work_list' %}?work_type={{ work.work_type.id }}">
+    {{ work.work_type }}
+  </a>
 </div>
 {% endif %}
 {% endblock %}

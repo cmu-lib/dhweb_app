@@ -223,14 +223,12 @@ li.work {
 
 // Work detail page
 
-span.work-type {
+a.work-type {
   background-color: #666666;
   border-radius: 20px;
-  a {
-    font-weight: $font-weight-bold;
-    color: white;
-    text-transform: uppercase;
-  }
+  font-weight: $font-weight-bold;
+  color: white;
+  text-transform: uppercase;
 }
 
 a.facet-link {
