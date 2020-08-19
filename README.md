@@ -30,7 +30,7 @@ This is the core Django service, which builds from `/dh_abstracts/Dockerfile`. T
 
 Running this stack locally or in production requires an `.env` file based on `.env.template`, with selected db password and secret, and the proper hostname, email server etc.
 
-In production we currently use gunicorn to serve, so the `SERVE_COMMAND` is set to `'gunicorn dhweb.wsgi -b 0.0.0.0:8000'`
+In production we currently use gunicorn to serve, so the `SERVE_COMMAND` is set to `'gunicorn dhweb.wsgi -b 0.0.0.0:8000 -w $SOME_INT'` where the number of workers `$SOME_INT` is appropriate to the number of cores on the deployent machine.
 
 ## Updates
 
