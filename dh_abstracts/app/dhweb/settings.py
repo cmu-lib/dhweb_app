@@ -237,11 +237,6 @@ DENORMALIZED_HEADERS = [
         "required": False,
     },
     {
-        "name": "disciplines",
-        "description": "Disciplines from ADHO controlled vocabulary (separated by a semicolon)",
-        "required": False,
-    },
-    {
         "name": "topics",
         "description": "Topics from ADHO controlled vocabulary (separated by a semicolon)",
         "required": False,
@@ -325,7 +320,6 @@ PUBLIC_DATA_TABLE_CONFIG = {
         {"model": "Country", "exclude_fields": [], "csv_name": "countries"},
         {"model": "Keyword", "exclude_fields": [], "csv_name": "keywords"},
         {"model": "Topic", "exclude_fields": [], "csv_name": "topics"},
-        {"model": "Discipline", "exclude_fields": [], "csv_name": "disciplines"},
         {"model": "Language", "exclude_fields": [], "csv_name": "languages"},
         {"model": "WorkType", "exclude_fields": [], "csv_name": "work_types"},
     ],
@@ -402,7 +396,6 @@ PRIVATE_DATA_TABLE_CONFIG = {
         {"model": "Country", "exclude_fields": [], "csv_name": "countries"},
         {"model": "Keyword", "exclude_fields": [], "csv_name": "keywords"},
         {"model": "Topic", "exclude_fields": [], "csv_name": "topics"},
-        {"model": "Discipline", "exclude_fields": [], "csv_name": "disciplines"},
         {"model": "Language", "exclude_fields": [], "csv_name": "languages"},
         {"model": "WorkType", "exclude_fields": [], "csv_name": "work_types"},
         {"model": "License", "exclude_fields": [], "csv_name": "licenses"},

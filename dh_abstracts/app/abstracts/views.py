@@ -59,7 +59,6 @@ from .models import (
     Country,
     Keyword,
     Topic,
-    Discipline,
     Language,
     CountryLabel,
     Authorship,
@@ -84,7 +83,6 @@ from .forms import (
     ConferenceCheckoutForm,
     ConferenceSeriesInline,
     LanguageMergeForm,
-    DisciplineMergeForm,
     WorkTypeMergeForm,
     InstitutionMultiMergeForm,
     TopicMultiMergeForm,
@@ -220,20 +218,6 @@ class TopicAutocomplete(ItemLabelAutocomplete):
     def get_result_label(self, item):
         return f"{item} ({item.n_works} works)"
 
-
-class DisciplineAutocomplete(ItemLabelAutocomplete):
-    raise_exception = True
-
-    def get_queryset(self):
-        qs = Discipline.objects.annotate(n_works=Count("works")).order_by("-n_works")
-
-        if self.q:
-            qs = qs.filter(title__icontains=self.q).all()
-
-        return qs
-
-    def get_result_label(self, item):
-        return f"{item} ({item.n_works} works)"
 
 
 class CountryAutocomplete(ItemLabelAutocomplete):
@@ -387,7 +371,6 @@ def work_view(request, work_id):
             "conference__organizers",
             "keywords",
             "topics",
-            "disciplines",
             "languages",
             "session_papers",
             "session_papers__authorships__appellation",
@@ -451,7 +434,6 @@ def author_view(request, author_id):
             "session_papers",
             "keywords",
             "topics",
-            "disciplines",
             "languages",
             "authorships",
             "authorships__appellation",
@@ -1229,10 +1211,6 @@ class FullWorkList(ListView):
             if len(language_res) > 0:
                 result_set = result_set.filter(languages__in=language_res)
 
-            discipline_res = filter_form["disciplines"]
-            if len(discipline_res) > 0:
-                result_set = result_set.filter(disciplines__in=discipline_res)
-
             if filter_form["full_text_available"]:
                 result_set = result_set.exclude(full_text="")
 
@@ -1311,7 +1289,6 @@ class FullWorkList(ListView):
                     "keywords",
                     "topics",
                     "languages",
-                    "disciplines",
                 )
             )
         else:
@@ -2496,145 +2473,6 @@ def language_merge(request, language_id):
                     request, f"{merge_results['update_results']} languages updated"
                 )
                 return redirect("language_edit", pk=target_language.pk)
-        else:
-            for error in raw_form.errors:
-                messages.error(request, error)
-            return render(request, "tag_merge.html", context)
-
-
-class DisciplineCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
-    model = Discipline
-    template_name = "generic_form.html"
-    extra_context = {
-        "form_title": "Create discipline",
-        "cancel_view": "full_discipline_list",
-    }
-    fields = ["title"]
-    success_message = "Discipline '%(title)s' created"
-    success_url = reverse_lazy("full_discipline_list")
-
-
-class DisciplineDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
-    model = Discipline
-    template_name = "generic_form.html"
-    extra_context = {
-        "form_title": "Delete discipline",
-        "cancel_view": "full_discipline_list",
-    }
-    success_message = "Discipline '%(title)s' deleted"
-    success_url = reverse_lazy("full_discipline_list")
-
-    def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(DisciplineDelete, self).delete(request, *args, **kwargs)
-
-
-class DisciplineEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = Discipline
-    template_name = "generic_form.html"
-    extra_context = {
-        "form_title": "Update discipline",
-        "cancel_view": "full_discipline_list",
-        "merge_view": "discipline_merge",
-        "delete_view": "discipline_delete",
-    }
-    fields = ["title"]
-    success_message = "Discipline '%(title)s' updated"
-    success_url = reverse_lazy("full_discipline_list")
-
-
-class DisciplineList(LoginRequiredMixin, ListView):
-    model = Discipline
-    template_name = "tag_list.html"
-    context_object_name = "tag_list"
-    extra_context = {
-        "tag_category": "Disciplines",
-        "tag_edit_view": "discipline_edit",
-        "tag_create_view": "discipline_create",
-        "tag_filter_form": TagForm,
-        "tag_list_view": "full_discipline_list",
-        "filter_param_name": "discipline",
-    }
-
-    def get_queryset(self):
-        base_results_set = Discipline.objects.order_by("title")
-        results_set = base_results_set.annotate(n_works=Count("works"))
-
-        raw_filter_form = TagForm(self.request.GET)
-        if raw_filter_form.is_valid():
-            filter_form = raw_filter_form.cleaned_data
-
-            if filter_form["name"] != "":
-                results_set = results_set.filter(title__icontains=filter_form["name"])
-
-            if filter_form["ordering"] == "a":
-                results_set = results_set.order_by("title")
-            elif filter_form["ordering"] == "n_asc":
-                results_set = results_set.order_by("n_works")
-            elif filter_form["ordering"] == "n_dsc":
-                results_set = results_set.order_by("-n_works")
-
-        return results_set
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["filtered_tags_count"] = self.get_queryset().count()
-        context["available_tags_count"] = Discipline.objects.count()
-        return context
-
-
-@user_is_staff
-@transaction.atomic
-def discipline_merge(request, discipline_id):
-    discipline = get_object_or_404(Discipline, pk=discipline_id)
-    affected_elements = discipline.works.all()
-    count_elements = affected_elements.count() - 10
-    sample_elements = affected_elements[:10]
-    context = {
-        "merging": discipline,
-        "tag_merge_form": DisciplineMergeForm,
-        "tag_category": "Discipline",
-        "merge_view": "discipline_merge",
-        "sample_elements": sample_elements,
-        "count_elements": count_elements,
-    }
-
-    if request.method == "GET":
-        """
-        Initial load of the merge form displays all the authors and works associated with this discipline.
-        """
-        return render(request, "tag_merge.html", context)
-
-    elif request.method == "POST":
-        """
-        Posting the new author id causes all of the old author's authorships to be reassigned.
-        """
-
-        raw_form = DisciplineMergeForm(request.POST)
-        if raw_form.is_valid():
-            target_discipline = raw_form.cleaned_data["into"]
-
-            if discipline == target_discipline:
-                """
-                If the user chooses the existing discipline, don't merge, but instead error out.
-                """
-                messages.error(
-                    request,
-                    f"You cannot merge a discipline into itself. Please select a different discipline.",
-                )
-                return redirect("discipline_merge", discipline_id=discipline_id)
-            else:
-                old_discipline_id = str(discipline)
-                merge_results = discipline.merge(target_discipline)
-
-                messages.success(
-                    request,
-                    f"Discipline {old_discipline_id} has been merged into {target_discipline}, and the old discipline entry has been deleted.",
-                )
-                messages.success(
-                    request, f"{merge_results['update_results']} disciplines updated"
-                )
-                return redirect("discipline_edit", pk=target_discipline.pk)
         else:
             for error in raw_form.errors:
                 messages.error(request, error)

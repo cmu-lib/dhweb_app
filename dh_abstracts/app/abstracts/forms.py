@@ -16,7 +16,6 @@ from .models import (
     WorkType,
     Country,
     Language,
-    Discipline,
     License,
     Affiliation,
     SeriesMembership,
@@ -100,14 +99,12 @@ class WorkFilter(forms.ModelForm):
             "institution",
             "keywords",
             "languages",
-            "disciplines",
             "topics",
         ]
         field_classes = {
             "keywords": forms.ModelMultipleChoiceField,
             "topics": forms.ModelMultipleChoiceField,
             "languages": forms.ModelMultipleChoiceField,
-            "disciplines": forms.ModelMultipleChoiceField,
         }
         widgets = {
             "keywords": ModelSelect2Multiple(
@@ -118,9 +115,6 @@ class WorkFilter(forms.ModelForm):
             ),
             "languages": ModelSelect2Multiple(
                 url="language-autocomplete", attrs={"data-html": True}
-            ),
-            "disciplines": ModelSelect2Multiple(
-                url="discipline-autocomplete", attrs={"data-html": True}
             ),
         }
 
@@ -188,7 +182,6 @@ class WorkForm(forms.ModelForm):
             "full_text_license",
             "keywords",
             "languages",
-            "disciplines",
             "topics",
             "parent_session",
         ]
@@ -196,7 +189,6 @@ class WorkForm(forms.ModelForm):
             "keywords": ModelSelect2Multiple(url="keyword-autocomplete"),
             "topics": ModelSelect2Multiple(url="topic-autocomplete"),
             "languages": ModelSelect2Multiple(url="language-autocomplete"),
-            "disciplines": ModelSelect2Multiple(url="discipline-autocomplete"),
             "conference": ModelSelect2(url="conference-autocomplete"),
             "parent_session": ModelSelect2(
                 url="work-autocomplete",
@@ -442,15 +434,6 @@ class LanguageMergeForm(forms.Form):
         widget=ModelSelect2(url="language-autocomplete"),
         required=True,
         help_text="Select the language that will be used to replace the one you are deleting.",
-    )
-
-
-class DisciplineMergeForm(forms.Form):
-    into = forms.ModelChoiceField(
-        queryset=Discipline.objects.all(),
-        widget=ModelSelect2(url="discipline-autocomplete"),
-        required=True,
-        help_text="Select the discipline that will be used to replace the one you are deleting.",
     )
 
 

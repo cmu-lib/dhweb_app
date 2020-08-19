@@ -16,7 +16,6 @@ from abstracts.models import (
     Keyword,
     Language,
     Topic,
-    Discipline,
     Affiliation,
     Country,
     CountryLabel,
@@ -156,37 +155,6 @@ class LanguageAutocompleteTest(TestCase):
         result_vals = [
             res["id"]
             for res in json.loads(auth_language_ac_response.content)["results"]
-        ]
-        self.assertTrue(is_list_unique(result_vals))
-
-
-class DisciplineAutocompleteTest(TestCase):
-    fixtures = ["test.json"]
-
-    def test_render(self):
-        auth_discipline_ac_response = self.client.get(
-            reverse("discipline-autocomplete")
-        )
-        self.assertEqual(auth_discipline_ac_response.status_code, 200)
-
-    def test_unique(self):
-        auth_discipline_ac_response = self.client.get(
-            reverse("discipline-autocomplete")
-        )
-        result_vals = [
-            res["id"]
-            for res in json.loads(auth_discipline_ac_response.content)["results"]
-        ]
-        self.assertTrue(is_list_unique(result_vals))
-
-    def test_q(self):
-        auth_discipline_ac_response = self.client.get(
-            reverse("discipline-autocomplete"), data={"q": "art"}
-        )
-        self.assertRegex(str(auth_discipline_ac_response.content), "Art")
-        result_vals = [
-            res["id"]
-            for res in json.loads(auth_discipline_ac_response.content)["results"]
         ]
         self.assertTrue(is_list_unique(result_vals))
 

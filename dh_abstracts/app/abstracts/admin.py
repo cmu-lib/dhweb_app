@@ -14,7 +14,6 @@ from .models import (
     Keyword,
     Language,
     Topic,
-    Discipline,
     Affiliation,
     Country,
     CountryLabel,
@@ -74,7 +73,7 @@ class AppellationAdmin(admin.ModelAdmin):
 class WorkAdmin(admin.ModelAdmin):
     readonly_fields = ["last_updated", "user_last_updated"]
     inlines = [AuthorshipInline]
-    autocomplete_fields = ["keywords", "languages", "topics", "disciplines"]
+    autocomplete_fields = ["keywords", "languages", "topics"]
     search_fields = ["title", "authorships__appellation__last_name"]
     list_filter = ["work_type", "full_text_type", "conference"]
     list_display = [
@@ -182,7 +181,6 @@ admin.site.register(Affiliation, AffiliationAdmin)
 admin.site.register(Keyword, KeywordAdmin)
 admin.site.register(Topic, KeywordAdmin)
 admin.site.register(Language, KeywordAdmin)
-admin.site.register(Discipline, KeywordAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(CountryLabel)
 admin.site.register(WorkType)

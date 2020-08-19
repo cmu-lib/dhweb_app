@@ -49,7 +49,7 @@
   <p>Parent session: <a href="{% url 'work_detail' work.parent_session.id %}">{{ work.parent_session.title }}</a></p>
   {% endif %}
 
-  {% if work.keywords.exists or work.topics.exists or work.languages.exists or work.disciplines.exists %}
+  {% if work.keywords.exists or work.topics.exists or work.languages.exists %}
   <div class="work-facets-box p-3 my-2">
     {% if work.keywords.exists %}
     <p><strong>Keywords:</strong> {% for kw in work.keywords.all %}<a class="facet-link mx-2"
@@ -66,12 +66,6 @@
     {% if work.languages.exists %}
     <p><strong>Languages:</strong> {% for l in work.languages.all %}<a class="facet-link mx-2"
         href="{% url 'work_list' %}?languages={{ l.pk }}">{{ l }}</a>
-      {% endfor %}</p>
-    {% endif %}
-
-    {% if work.disciplines.exists %}
-    <p><strong>Disciplines:</strong> {% for d in work.disciplines.all %}<a class="facet-link mx-2"
-        href="{% url 'work_list' %}?disciplines={{ d.pk }}">{{ d }}</a>
       {% endfor %}</p>
     {% endif %}
   </div>

@@ -17,7 +17,6 @@ from abstracts.models import (
     Keyword,
     Language,
     Topic,
-    Discipline,
     Affiliation,
     Country,
     CountryLabel,
@@ -412,12 +411,6 @@ class WorkListViewTest(CachelessTestCase):
         self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
         for w in res.context["work_list"]:
             self.assertIn(1, w.languages.values_list("id", flat=True))
-
-    def test_discipline(self):
-        res = self.client.get(reverse("work_list"), data={"disciplines": 1})
-        self.assertTrue(is_list_unique([d.id for d in res.context["work_list"]]))
-        for w in res.context["work_list"]:
-            self.assertIn(1, w.disciplines.values_list("id", flat=True))
 
     def test_author(self):
         res = self.client.get(reverse("work_list"), data={"author": 1})
@@ -1275,131 +1268,6 @@ class LanguageMergeViewTest(CachelessTestCase):
         expected_redirect = reverse("language_merge", kwargs={"language_id": 1})
         self.assertRedirects(res, expected_redirect)
         self.assertContains(res, "You cannot merge a language into itself")
-
-
-class DisciplineFullListViewTest(CachelessTestCase):
-    """
-    Test full Discipline list page
-    """
-
-    fixtures = ["test.json"]
-
-    def test_render(self):
-        privately_available(self, "full_discipline_list")
-
-    @as_auth
-    def test_query_filtered_count(self):
-        res = self.client.get(reverse("full_discipline_list"))
-        self.assertEqual(
-            res.context["filtered_tags_count"], len(res.context["tag_list"])
-        )
-
-    @as_auth
-    def test_query_total_count(self):
-        res = self.client.get(reverse("full_discipline_list"))
-        self.assertIsInstance(res.context["available_tags_count"], int)
-
-    @as_auth
-    def test_unique(self):
-        res = self.client.get(reverse("full_discipline_list"))
-        self.assertTrue(is_list_unique(res.context["tag_list"]))
-
-    @as_auth
-    def test_sort(self):
-        res = self.client.get(reverse("full_discipline_list"), data={"ordering": "a"})
-        self.assertTrue(res.context["tag_list"].ordered)
-        res = self.client.get(
-            reverse("full_discipline_list"), data={"ordering": "n_dsc"}
-        )
-        self.assertTrue(res.context["tag_list"].ordered)
-        res = self.client.get(
-            reverse("full_discipline_list"), data={"ordering": "n_asc"}
-        )
-        self.assertTrue(res.context["tag_list"].ordered)
-
-
-class CreateDisciplineViewTest(CachelessTestCase):
-    fixtures = ["test.json"]
-
-    def test_render(self):
-        privately_available(self, "discipline_create")
-
-    @as_auth
-    def test_post(self):
-        res = self.client.post(
-            reverse("discipline_create"), data={"title": "foo"}, follow=True
-        )
-        self.assertContains(res, "created")
-        self.assertTrue(Discipline.objects.filter(title="foo").exists())
-
-
-class EditDisciplineViewTest(CachelessTestCase):
-    fixtures = ["test.json"]
-
-    def test_render(self):
-        privately_available(self, "discipline_edit", kwargs={"pk": 1})
-
-    @as_auth
-    def test_post(self):
-        res = self.client.post(
-            reverse("discipline_edit", kwargs={"pk": 1}),
-            data={"title": "buzz"},
-            follow=True,
-        )
-        self.assertContains(res, "updated")
-        self.assertTrue(Discipline.objects.filter(title="buzz").exists())
-
-
-class DeleteDisciplineViewTest(CachelessTestCase):
-    fixtures = ["test.json"]
-
-    def test_render(self):
-        privately_available(self, "discipline_delete", kwargs={"pk": 1})
-
-    @as_auth
-    def test_post(self):
-        res = self.client.post(
-            reverse("discipline_delete", kwargs={"pk": 1}), follow=True
-        )
-        self.assertFalse(Discipline.objects.filter(pk=1).exists())
-
-
-class DisciplineMergeViewTest(CachelessTestCase):
-    fixtures = ["test.json"]
-
-    def test_render(self):
-        privately_available(self, "discipline_merge", kwargs={"discipline_id": 1})
-
-    @as_auth
-    def test_404(self):
-        res = self.client.get(
-            reverse("discipline_merge", kwargs={"discipline_id": 100}), follow=True
-        )
-        self.assertEqual(res.status_code, 404)
-
-    @as_auth
-    def test_post(self):
-        res = self.client.post(
-            reverse("discipline_merge", kwargs={"discipline_id": 1}),
-            data={"into": 2},
-            follow=True,
-        )
-        expected_redirect = reverse("discipline_edit", kwargs={"pk": 2})
-        self.assertRedirects(res, expected_redirect)
-        self.assertFalse(Discipline.objects.filter(pk=1).exists())
-        self.assertContains(res, "updated")
-        self.assertContains(res, "deleted")
-
-    @as_auth
-    def test_invalid_discipline(self):
-        res = self.client.post(
-            reverse("discipline_merge", kwargs={"discipline_id": 1}),
-            data={"into": 1},
-            follow=True,
-        )
-        expected_redirect = reverse("discipline_merge", kwargs={"discipline_id": 1})
-        self.assertRedirects(res, expected_redirect)
-        self.assertContains(res, "You cannot merge a discipline into itself")
 
 
 class WorkTypeFullListViewTest(CachelessTestCase):

@@ -88,7 +88,6 @@ class Command(BaseCommand):
                 "conference__hosting_institutions__country",
                 "keywords",
                 "languages",
-                "disciplines",
                 "topics",
                 "work_type",
                 "full_text_license",
@@ -133,7 +132,6 @@ class Command(BaseCommand):
                         parent_session_id,
                         ";".join([str(k) for k in w.keywords.all()]),
                         ";".join([str(k) for k in w.languages.all()]),
-                        ";".join([str(k) for k in w.disciplines.all()]),
                         ";".join([str(k) for k in w.topics.all()]),
                     ]
                     writer.writerow(row_data)

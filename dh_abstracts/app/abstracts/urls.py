@@ -58,11 +58,6 @@ urlpatterns = [
         name="language-autocomplete",
     ),
     path(
-        "discipline-autocomplete",
-        views.cache_for_anon(views.DisciplineAutocomplete.as_view()),
-        name="discipline-autocomplete",
-    ),
-    path(
         "topic-autocomplete",
         views.cache_for_anon(views.TopicAutocomplete.as_view()),
         name="topic-autocomplete",
@@ -272,31 +267,6 @@ urlpatterns = [
         "editor/languages/<int:language_id>/merge",
         views.language_merge,
         name="language_merge",
-    ),
-    path(
-        "editor/disciplines",
-        views.DisciplineList.as_view(),
-        name="full_discipline_list",
-    ),
-    path(
-        "editor/disciplines/create",
-        views.DisciplineCreate.as_view(),
-        name="discipline_create",
-    ),
-    path(
-        "editor/disciplines/<int:pk>/delete",
-        views.DisciplineDelete.as_view(),
-        name="discipline_delete",
-    ),
-    path(
-        "editor/disciplines/<int:pk>/edit",
-        views.DisciplineEdit.as_view(),
-        name="discipline_edit",
-    ),
-    path(
-        "editor/disciplines/<int:discipline_id>/merge",
-        views.discipline_merge,
-        name="discipline_merge",
     ),
     path("editor/work_types", views.WorkTypeList.as_view(), name="full_work_type_list"),
     path(

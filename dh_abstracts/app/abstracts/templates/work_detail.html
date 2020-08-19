@@ -155,15 +155,6 @@
       None
       {% endif %}
     </li>
-    <li class="list-group-item"><strong>Disciplines:</strong>
-      {% if work.disciplines.all %}
-      {% for discipline in work.disciplines.all %}
-      <a class="mx-2 facet-link" href="{% url 'work_list' %}?disciplines={{ discipline.pk }}">{{ discipline.title }}</a>
-      {% endfor %}
-      {% else %}
-      None
-      {% endif %}
-    </li>
   </ul>
 </div>
 {% endblock %}

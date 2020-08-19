@@ -338,12 +338,6 @@ class Language(Tag):
     model_description = "Languages in which works are written"
     pass
 
-
-class Discipline(Tag):
-    model_description = "ADHO-based controlled vocabulary of disciplines"
-    pass
-
-
 class Topic(Tag):
     model_description = "ADHO-based controlled vocabulary of topics"
     pass
@@ -449,12 +443,6 @@ class Work(TextIndexedModel, ChangeTrackedModel):
         related_name="works",
         blank=True,
         help_text="The language(s) of the text of an abstract (not to be confused with e.g. 'English' as a keyword, where the topic of the abstract concerns English.)  (Matches ANY of the languages)",
-    )
-    disciplines = models.ManyToManyField(
-        Discipline,
-        related_name="works",
-        blank=True,
-        help_text="Optional discipline tag from a controlled vocabulary established by the ADHO DH conferences. (Matches ANY of the disciplines)",
     )
     topics = models.ManyToManyField(
         Topic,

@@ -94,20 +94,6 @@
     }
   },
   {
-    "model": "abstracts.discipline",
-    "pk": 1,
-    "fields": {
-      "title": "Art History"
-    }
-  },
-  {
-    "model": "abstracts.discipline",
-    "pk": 2,
-    "fields": {
-      "title": "History"
-    }
-  },
-  {
     "model": "abstracts.topic",
     "pk": 1,
     "fields": {
@@ -577,9 +563,6 @@
       "languages": [
         1
       ],
-      "disciplines": [
-        1
-      ],
       "topics": [
         1
       ]
@@ -604,9 +587,6 @@
         3
       ],
       "languages": [],
-      "disciplines": [
-        2
-      ],
       "topics": [
         2,
         3,
@@ -633,9 +613,6 @@
         3
       ],
       "languages": [],
-      "disciplines": [
-        1
-      ],
       "topics": []
     }
   },
@@ -656,7 +633,6 @@
       "parent_session": null,
       "keywords": [],
       "languages": [],
-      "disciplines": [],
       "topics": []
     }
   },
@@ -677,7 +653,6 @@
       "parent_session": 6,
       "keywords": [],
       "languages": [],
-      "disciplines": [],
       "topics": []
     }
   },
@@ -698,7 +673,6 @@
       "parent_session": null,
       "keywords": [],
       "languages": [],
-      "disciplines": [],
       "topics": []
     }
   },
