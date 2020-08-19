@@ -105,7 +105,9 @@ def cache_for_anon(func):
         if request.user.is_authenticated:
             return func(request, *args, **kwargs)
         else:
-            return cache_page(60)(func)(request, *args, **kwargs)
+            return cache_page(settings.CACHES["default"]["TIMEOUT"])(func)(
+                request, *args, **kwargs
+            )
 
     return wrap
 
