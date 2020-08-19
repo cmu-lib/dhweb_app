@@ -34,6 +34,7 @@ services:
     restart: always
     expose:
       - 11211
+    command: "${MEMCACHED_COMMAND}"
 
   nginx:
     image: nginx:1.19.1
