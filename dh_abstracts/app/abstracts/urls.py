@@ -46,58 +46,60 @@ urlpatterns = [
         views.conference_checkout,
         name="conference_checkout",
     ),
-    path("downloads", views.download_data, name="download_data"),
+    path("downloads", views.cache_for_anon(views.download_data), name="download_data"),
     path(
         "keyword-autocomplete",
-        views.KeywordAutocomplete.as_view(),
+        views.cache_for_anon(views.KeywordAutocomplete.as_view()),
         name="keyword-autocomplete",
     ),
     path(
         "language-autocomplete",
-        views.LanguageAutocomplete.as_view(),
+        views.cache_for_anon(views.LanguageAutocomplete.as_view()),
         name="language-autocomplete",
     ),
     path(
         "discipline-autocomplete",
-        views.DisciplineAutocomplete.as_view(),
+        views.cache_for_anon(views.DisciplineAutocomplete.as_view()),
         name="discipline-autocomplete",
     ),
     path(
         "topic-autocomplete",
-        views.TopicAutocomplete.as_view(),
+        views.cache_for_anon(views.TopicAutocomplete.as_view()),
         name="topic-autocomplete",
     ),
     path(
         "country-autocomplete",
-        views.CountryAutocomplete.as_view(),
+        views.cache_for_anon(views.CountryAutocomplete.as_view()),
         name="country-autocomplete",
     ),
     path(
         "appellation-autocomplete",
-        views.AppellationAutocomplete.as_view(),
+        views.cache_for_anon(views.AppellationAutocomplete.as_view()),
         name="appellation-autocomplete",
     ),
     path(
-        "work-autocomplete", views.WorkAutocomplete.as_view(), name="work-autocomplete"
+        "work-autocomplete",
+        views.cache_for_anon(views.WorkAutocomplete.as_view()),
+        name="work-autocomplete",
     ),
     path(
         "institution-autocomplete",
-        views.InstitutionAutocomplete.as_view(),
+        views.cache_for_anon(views.InstitutionAutocomplete.as_view()),
         name="institution-autocomplete",
     ),
     path(
         "affiliation-autocomplete",
-        views.AffiliationAutocomplete.as_view(),
+        views.cache_for_anon(views.AffiliationAutocomplete.as_view()),
         name="affiliation-autocomplete",
     ),
     path(
         "author-autocomplete",
-        views.AuthorAutocomplete.as_view(),
+        views.cache_for_anon(views.AuthorAutocomplete.as_view()),
         name="author-autocomplete",
     ),
     path(
         "conference-autocomplete",
-        views.ConferenceAutocomplete.as_view(),
+        views.cache_for_anon(views.ConferenceAutocomplete.as_view()),
         name="conference-autocomplete",
     ),
     path(
