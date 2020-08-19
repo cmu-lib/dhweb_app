@@ -97,6 +97,7 @@ class WorkFilter(forms.ModelForm):
             "work_type",
             "author",
             "institution",
+            "affiliation",
             "keywords",
             "languages",
             "topics",
