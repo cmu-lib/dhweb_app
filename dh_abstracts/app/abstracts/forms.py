@@ -75,7 +75,7 @@ class WorkFilter(forms.ModelForm):
             url="institution-autocomplete", attrs={"data-html": True}
         ),
         required=False,
-        help_text="Works having at least one author belonging to that institution.",
+        help_text="Works having at least one author belonging to ANY of the selected institutions.",
     )
     affiliation = forms.ModelMultipleChoiceField(
         queryset=Affiliation.objects.all(),
