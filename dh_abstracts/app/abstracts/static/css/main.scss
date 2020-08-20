@@ -17,6 +17,7 @@ $warning: #fcb415;
 $success: #00843d;
 $info: #007d8a;
 $secondary: #bbbcbc;
+$dark: #63666a;
 
 $link-color: $primary;
 
@@ -45,6 +46,14 @@ figure > figcaption {
 
 $navbar-dark-color: rgba($white, 1);
 $navbar-dark-hover-color: rgba($white, 1) !default;
+
+.navbar-dark {
+  background-color: #262c31 !important;
+}
+
+.admin-bar {
+  background-color: #6d6d6d !important;
+}
 
 nav.navbar {
   text-transform: uppercase;

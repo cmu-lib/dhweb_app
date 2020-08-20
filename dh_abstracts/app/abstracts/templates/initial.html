@@ -30,8 +30,8 @@
 
   <body class="{% block bodyclass %}{% endblock %}">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary py-0">
-      <ul class="ml-auto navbar-nav bg-secondary">
+    <nav class="navbar navbar-expand-lg navbar-dark admin-bar py-0">
+      <ul class="ml-auto navbar-nav">
         {% if not user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'login' %}?next=/">Log In</a>
@@ -69,7 +69,7 @@
       </ul>
     </nav>
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark py-4 nav-shadow mb-0">
+    <nav class="navbar navbar-expand-md navbar-dark py-4 nav-shadow mb-0">
       <a class="navbar-brand text-center" href="{% url 'home_view' %}">The Index of Digital<br />Humanities Conferences
         </r></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#toggle-navbar"
