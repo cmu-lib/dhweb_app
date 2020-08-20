@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% load markdownify %}
+{% load cache %}
+
+{% cache 600 fpcache %}
 
 {% block header_title %}{{ flatpage.title }}{% endblock %}
 
@@ -8,3 +11,5 @@
 <h1>{{ flatpage.title }}</h1>
 {{ flatpage.content | markdownify }}
 {% endblock %}
+
+{% endcache %}
