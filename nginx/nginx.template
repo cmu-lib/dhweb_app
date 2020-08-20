@@ -5,6 +5,7 @@ server {
 
     location /static/ {
         alias /vol/static_files/;
+        expires 30d;
     }
 
     location / {
