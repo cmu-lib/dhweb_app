@@ -29,14 +29,9 @@
   </head>
 
   <body class="{% block bodyclass %}{% endblock %}">
-
+    {% if user.is_authenticated %}
     <nav class="navbar navbar-expand-lg navbar-dark admin-bar py-0">
       <ul class="ml-auto navbar-nav">
-        {% if not user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}?next=/">Log In</a>
-        </li>
-        {% else %}
         <li class="nav-item dropdown dropleft">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">Edit</a>
@@ -65,9 +60,9 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'logout' %}?next=/">Log Out</a>
         </li>
-        {% endif %}
       </ul>
     </nav>
+    {% endif %}
 
     <nav class="navbar navbar-expand-md navbar-dark py-4 nav-shadow mb-0">
       <a class="navbar-brand text-center" href="{% url 'home_view' %}">The Index of Digital<br />Humanities Conferences
@@ -121,17 +116,24 @@
     {% endblock %}
 
     <nav class="navbar sticky-bottom navbar-dark bg-dark">
-      <ul class="navbar-nav bg-dark">
-        <li class="navbar-text">
-          <a href="/pages/team#photo-credit">Photo credit</a>
-        </li>
-      </ul>
+      {% block photo_credit %}{% endblock %}
       <ul class="navbar-nav bg-dark ml-auto">
         <li class="navbar-text"><a href="https://github.com/cmu-lib/dhweb_app">Website code</a> © <a
             href="https://library.cmu.edu/">Carnegie Mellon University
             Libraries</a>, 2020</li>
       </ul>
     </nav>
+
+
+    {% if not user.is_authenticated %}
+    <nav class="navbar sticky-bottom navbar-dark bg-dark">
+      <ul class="navbar-nav bg-dark ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}?next=/">Administrator Log In</a>
+        </li>
+      </ul>
+    </nav>
+    {% endif %}
 
   </body>
 
