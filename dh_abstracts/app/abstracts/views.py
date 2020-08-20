@@ -1281,7 +1281,17 @@ class FullWorkList(ListView):
                     "conference__organizers",
                     "conference__series_memberships",
                     "conference__series_memberships__series",
-                    "session_papers",
+                    Prefetch(
+                        "session_papers",
+                        queryset=Work.objects.prefetch_related(
+                            Prefetch(
+                                "authorships",
+                                queryset=Authorship.objects.select_related(
+                                    "appellation"
+                                ),
+                            )
+                        ),
+                    ),
                     "authorships",
                     "authorships__appellation",
                     "authorships__author",
