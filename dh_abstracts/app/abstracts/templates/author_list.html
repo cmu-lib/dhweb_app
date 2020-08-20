@@ -17,10 +17,10 @@
   {% for author in author_list %}
   <li class="list-group-item p-3">
     <div class="mb-1 d-flex justify-content-between align-items-center">
-      <h6>
+      <h5>
         <a href="{% url 'author_detail' author.id %}">
           {{ author.most_recent_first_name }} {{ author.most_recent_last_name }}</a>
-      </h6>
+      </h5>
       <h6 class="badge badge-info">
         {{ author.n_works }} work{{ author.n_works | pluralize }}
       </h6>
