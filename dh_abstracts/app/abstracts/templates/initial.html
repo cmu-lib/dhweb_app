@@ -117,11 +117,6 @@
 
     <nav class="navbar navbar-expand-md sticky-bottom navbar-dark bg-dark">
       <ul class="navbar-nav mr-md-auto">
-        {% if not user.is_authenticated %}
-        <li class="nav-item mr-5">
-          <a class="nav-link" href="{% url 'login' %}?next=/">Administrator Log In</a>
-        </li>
-        {% endif %}
         {% block photo_credit %}{% endblock %}
       </ul>
       <li class="navbar-text">
@@ -130,6 +125,16 @@
           Libraries</a>, 2020
       </li>
     </nav>
+    {% if not user.is_authenticated %}
+    <nav class="navbar navbar-expand-md sticky-bottom navbar-dark login-nav py-0">
+      <ul class="navbar-nav ml-md-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}?next=/">Administrator Log In</a>
+        </li>
+      </ul>
+      </li>
+    </nav>
+    {% endif %}
 
   </body>
 
