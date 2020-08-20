@@ -73,6 +73,8 @@
   <div class="card-header d-flex justify-content-between">Work text</div>
   <div class="card-body">
     {% if user.is_authenticated or work.conference.full_text_public or work.full_text_license %}
+    <div class="alert alert-info">This plain text was ingested for the purpose of full-text search, not to preserve
+      original formatting or readability. For the most complete copy, refer to the original conference program.</div>
     {% if work.full_text_type == "txt" %}
     <p>{{ work.full_text | linebreaks }}</p>
     {% elif work.full_text_type == "xml" %}
