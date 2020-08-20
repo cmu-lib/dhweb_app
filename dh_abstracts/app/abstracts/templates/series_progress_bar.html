@@ -7,14 +7,14 @@
       <span class="badge badge-success progress-def" data-toggle="tooltip" data-placement="top"
         title="Editors have completed entering every published work for this event.">{{ series.n_complete }}
         Completed</span>
-      <span class="badge badge-dark progress-def" data-toggle="tooltip" data-placement="top"
-        title="Editors are in the process of entering works for this event, so the list of works may not yet be complete.">{{ series.n_in_progress }}
-        in
-        progress</span>
       <span class="badge badge-warning progress-def" data-toggle="tooltip" data-placement="top"
         title="Editors have finished entering works for this event but have not finished reviewing them for quality and correctness.">{{ series.n_in_review }}
         in
         review</span>
+      <span class="badge badge-dark progress-def" data-toggle="tooltip" data-placement="top"
+        title="Editors are in the process of entering works for this event, so the list of works may not yet be complete.">{{ series.n_in_progress }}
+        in
+        progress</span>
       <span class="badge badge-secondary progress-def" data-toggle="tooltip" data-placement="top"
         title="Individual works may exist for this event but editors have not yet started the work of entering the data.">{{ series.n_remaining }}
         not yet started</span>
@@ -23,10 +23,10 @@
   <div class="progress my-4">
     <div class="progress-bar bg-success" role="progressbar" style="width: {{ series.pct_complete }}%"
       aria-valuenow="{{ series.n_complete }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
-    <div class="progress-bar bg-dark" role="progressbar" style="width: {{ series.pct_in_progress }}%"
-      aria-valuenow="{{ series.n_in_progress }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
     <div class="progress-bar bg-warning" role="progressbar" style="width: {{ series.pct_in_review }}%"
       aria-valuenow="{{ series.n_in_review }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
+    <div class="progress-bar bg-dark" role="progressbar" style="width: {{ series.pct_in_progress }}%"
+      aria-valuenow="{{ series.n_in_progress }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
     <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ series.pct_remaining }}%"
       aria-valuenow="{{ series.pct_remaining }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
   </div>
