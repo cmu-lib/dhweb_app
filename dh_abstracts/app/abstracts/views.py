@@ -400,7 +400,9 @@ def author_view(request, author_id):
     sorted_authorships = (
         Authorship.objects.filter(author=author)
         .order_by("work__conference__year")
-        .prefetch_related("work", "work__conference")
+        .prefetch_related(
+            Prefetch("work", queryset=Work.objects.select_related("conference"))
+        )
     )
 
     appellations = (
@@ -418,8 +420,9 @@ def author_view(request, author_id):
         .order_by("-latest_year")
         .prefetch_related(
             Prefetch("asserted_by", queryset=sorted_authorships),
-            "institution",
-            "institution__country",
+            Prefetch(
+                "institution", queryset=Institution.objects.select_related("country")
+            ),
         )
     )
 
@@ -429,15 +432,18 @@ def author_view(request, author_id):
         .distinct()
         .select_related("conference", "parent_session", "work_type")
         .prefetch_related(
-            "conference__series",
-            "conference__organizers",
+            Prefetch(
+                "conference",
+                queryset=Conference.objects.prefetch_related("series", "organizers"),
+            ),
             "session_papers",
             "keywords",
             "topics",
             "languages",
-            "authorships",
-            "authorships__appellation",
-            "authorships__author__appellations",
+            Prefetch(
+                "authorships",
+                queryset=Authorship.objects.select_related("appellation", "author"),
+            ),
         )
     )
 
