@@ -2,7 +2,6 @@
 // Used for the DH Abstracts theme designed by Heidi Wiren Bartlett, CMU Libraries
 
 $white: #fff !default;
-$link-color: #008bc0;
 $font-size-base: 0.9rem;
 $font-family-base: "Open Sans";
 $font-weight-light: 300 !default;
@@ -12,10 +11,14 @@ $enable-rounded: true;
 $enable-responsive-font-sizes: true;
 $enable-shadows: true;
 
+$primary: #007d8a;
+$danger: #ef3340;
 $warning: #fcb415;
-$success: #009647;
-$info: #008e90;
-$secondary: #808080;
+$success: #00843d;
+$info: #007d8a;
+$secondary: #bbbcbc;
+
+$link-color: $primary;
 
 $font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
 $h1-font-size: $font-size-base * 2.9 !default;

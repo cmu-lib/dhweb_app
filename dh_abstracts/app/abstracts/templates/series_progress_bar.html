@@ -11,7 +11,7 @@
         title="Editors are in the process of entering abstracts for this event, so the list of works may not yet be complete.">{{ series.n_in_progress }}
         in
         progress</span>
-      <span class="badge badge-info progress-def" data-toggle="tooltip" data-placement="top"
+      <span class="badge badge-dark progress-def" data-toggle="tooltip" data-placement="top"
         title="Editors have finished entering abstracts for this event but have not finished reviewing them for quality and correctness.">{{ series.n_in_review }}
         in
         review</span>
@@ -25,7 +25,7 @@
       aria-valuenow="{{ series.n_complete }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
     <div class="progress-bar bg-warning" role="progressbar" style="width: {{ series.pct_in_progress }}%"
       aria-valuenow="{{ series.n_in_progress }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
-    <div class="progress-bar bg-info" role="progressbar" style="width: {{ series.pct_in_review }}%"
+    <div class="progress-bar bg-dark" role="progressbar" style="width: {{ series.pct_in_review }}%"
       aria-valuenow="{{ series.n_in_review }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
     <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ series.pct_remaining }}%"
       aria-valuenow="{{ series.pct_remaining }}" aria-valuemin="0" aria-valuemax="{{ series.n_conferences }}"></div>
