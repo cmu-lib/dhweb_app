@@ -137,11 +137,6 @@ class Conference(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
     )
-    full_text_public = models.BooleanField(
-        default=False,
-        db_index=True,
-        help_text="Should the full text for this conference's abstracts be publicly available, no matter the individual abstract's license status?",
-    )
     references = models.TextField(
         max_length=20000,
         blank=True,
@@ -224,15 +219,6 @@ class Conference(models.Model):
 
     def get_absolute_url(self):
         return reverse("conference_edit", kwargs={"pk": self.pk})
-
-    def save(self, *args, **kwargs):
-        response = super().save(*args, **kwargs)
-        # If this conference is set so all full texts are public, assign the default public license to all works that don't already have a specific license
-        if self.full_text_public:
-            default_license = License.objects.filter(default=True).first()
-            Work.objects.filter(conference=self, full_text_license__isnull=True).update(
-                full_text_license=default_license
-            )
 
 
 class ConferenceDocument(models.Model):
@@ -337,6 +323,7 @@ class Keyword(Tag):
 class Language(Tag):
     model_description = "Languages in which works are written"
     pass
+
 
 class Topic(Tag):
     model_description = "ADHO-based controlled vocabulary of topics"
@@ -492,10 +479,6 @@ class Work(TextIndexedModel, ChangeTrackedModel):
             search_text=SearchVector("title", weight="A")
             + SearchVector("full_text", weight="B")
         )
-        # If no license is supplied but the parent conference has public text, assign the default license
-        if self.full_text_license is None and self.conference.full_text_public:
-            public_license = License.objects.filter(default=True).first()
-            Work.objects.filter(id=self.id).update(full_text_license=public_license)
         return res
 
     class Meta(TextIndexedModel.Meta):

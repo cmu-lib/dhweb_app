@@ -479,17 +479,28 @@ class ConferenceCheckoutForm(forms.Form):
     )
 
 
+def get_license_choices():
+    return [("", "Do nothing"), ("clear", "Clear all licenses")] + [
+        (l.id, l.title) for l in License.objects.all()
+    ]
+
+
 class ConferenceForm(forms.ModelForm):
     organizers = forms.ModelMultipleChoiceField(
         queryset=Organizer.objects.all(),
         required=False,
         help_text="Organizers of the conference",
     )
+    license_action = forms.ChoiceField(
+        choices=get_license_choices,
+        initial="",
+        required=False,
+        label="Bulk reassign licenses?",
+    )
 
     class Meta:
         model = Conference
         fields = [
-            "full_text_public",
             "year",
             "short_title",
             "theme_title",
@@ -508,6 +519,7 @@ class ConferenceForm(forms.ModelForm):
             "entry_status",
             "program_available",
             "abstracts_available",
+            "license_action",
         ]
         widgets = {
             "entry_status": forms.RadioSelect(choices=Conference.ENTRY_STATUS),

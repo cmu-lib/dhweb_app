@@ -72,7 +72,7 @@
 <div class="card my-4">
   <div class="card-header d-flex justify-content-between">Work text</div>
   <div class="card-body">
-    {% if user.is_authenticated or work.conference.full_text_public or work.full_text_license %}
+    {% if user.is_authenticated or work.full_text_license %}
     <div class="alert alert-info">This plain text was ingested for the purpose of full-text search, not to preserve
       original formatting or readability. For the most complete copy, refer to the original conference program.</div>
     {% if work.full_text_type == "txt" %}
@@ -93,7 +93,9 @@
     <p>Full text license: {% if license.url %}<a href="{{ license.url }}">{% endif %}<abbr
           title="{{ license.title }}">{{ license.display_abbreviation }}</abbr>{% if license.url %}</a>{% endif %}</p>
     {% else %}
-    <p>The license for this full text is unknown.</p>
+    {% if user.is_authenticated %}
+    <p>This work is not licensed for republication and is hidden to the public.</p>
+    {% endif %}
     {% endif %}
     {% endwith %}
     {% if user.is_authenticated and work.full_text_type == "xml" %}

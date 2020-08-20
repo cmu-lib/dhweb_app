@@ -62,6 +62,7 @@ from .models import (
     Language,
     CountryLabel,
     Authorship,
+    License,
 )
 
 from .forms import (
@@ -217,7 +218,6 @@ class TopicAutocomplete(ItemLabelAutocomplete):
 
     def get_result_label(self, item):
         return f"{item} ({item.n_works} works)"
-
 
 
 class CountryAutocomplete(ItemLabelAutocomplete):
@@ -1216,8 +1216,7 @@ class FullWorkList(ListView):
 
             if filter_form["full_text_viewable"]:
                 result_set = result_set.exclude(full_text="").filter(
-                    Q(full_text_license__isnull=False)
-                    | Q(conference__full_text_public=True)
+                    full_text_license__isnull=False
                 )
 
             text_res = filter_form["text"]
@@ -1771,6 +1770,7 @@ def ConferenceEdit(request, pk):
     context = {
         "conference": conference,
         "form": form,
+        # "licenses": License.objects.all(),
         "series_membership_form": ConferenceSeriesFormSet(initial=initial_series),
         "form_title": "Edit conference",
         "cancel_view": "conference_list",
@@ -1793,6 +1793,16 @@ def ConferenceEdit(request, pk):
                 conference.hosting_institutions.add(hosting_institution)
 
             conference.save()
+
+            # License action
+            license_action = clean_form["license_action"]
+            if license_action is "":
+                pass
+            elif license_action == "clear":
+                conference.works.all().update(full_text_license=None)
+            else:
+                license_object = License.objects.get(id=int(license_action))
+                conference.works.all().update(full_text_license=license_object)
 
             series_forms = ConferenceSeriesFormSet(data=request.POST)
             if series_forms.is_valid():
