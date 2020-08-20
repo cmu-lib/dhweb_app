@@ -1802,7 +1802,7 @@ def ConferenceEdit(request, pk):
 
             # License action
             license_action = clean_form["license_action"]
-            if license_action is "":
+            if license_action == "":
                 pass
             elif license_action == "clear":
                 conference.works.all().update(full_text_license=None)
