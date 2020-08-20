@@ -478,7 +478,6 @@ class AuthorSplit(DetailView, StaffRequiredMixin):
         """
         authorships_to_move = request.POST.getlist("splitselect")
         try:
-            print(authorships_to_move)
             new_author = Author.objects.create()
             Authorship.objects.filter(id__in=authorships_to_move).update(
                 author=new_author
@@ -1014,7 +1013,6 @@ def WorkEdit(request, work_id):
     work = get_object_or_404(Work, pk=work_id)
 
     if request.method == "POST":
-        print(request.user)
         work_form = WorkForm(request.POST, instance=work)
         if work_form.is_valid():
             work.user_last_updated = request.user
