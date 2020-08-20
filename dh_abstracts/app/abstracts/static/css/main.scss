@@ -233,6 +233,10 @@ li.work {
 
   .work-facets-box {
     background-color: $gray-background;
+    p {
+      margin-top: 0.3rem;
+      margin-bottom: 0.3rem;
+    }
   }
 }
 
