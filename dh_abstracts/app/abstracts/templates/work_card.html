@@ -79,10 +79,13 @@
       {{ work.conference.year }} -
       {% if work.conference.short_title %}
       {{ work.conference.short_title }}
+      {% elif work.conference.theme_title %}
+      {{ work.conference.theme_title }}
+      {% endif %}
+      {% if work.main_institution %}
+      - {{ work.main_institution }}
       {% elif work.conference.city %}
-      {{ work.conference.city }}
-      {% elif work.main_institution %}
-      {{ work.main_institution }}
+      - {{ work.conference.city }}
       {% endif %}
     </a>
   </small>
