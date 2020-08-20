@@ -13,6 +13,8 @@
 {% endblock %}
 
 {% block seriesforms %}
+<h2>Bulk license change</h2>
+{{ form.license_action | as_crispy_field}}
 <h2>Conference Series</h2>
 <input class="btn btn-primary btn-sm" type="button" value="Add to series" id="add_series">
 {{ series_membership_form.management_form }}
