@@ -11,7 +11,7 @@ attach:
 db:
 	docker-compose exec postgres psql -U dh
 restart:
-	docker-compose restart app nginx
+	docker-compose restart app nginx memcached
 migrate:
 	docker-compose exec app python manage.py migrate
 deploy:
