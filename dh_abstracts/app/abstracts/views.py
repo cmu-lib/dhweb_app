@@ -361,33 +361,43 @@ def work_view(request, work_id):
         main_series=StringAgg(
             "series_memberships__series__abbreviation", delimiter=" / ", distinct=True
         ),
-    )
+    ).prefetch_related("series", "organizers")
+
     work = get_object_or_404(
-        Work.objects.select_related(
-            "work_type", "parent_session", "full_text_license"
-        ).prefetch_related(
+        Work.objects.select_related("work_type", "full_text_license").prefetch_related(
             Prefetch("conference", queryset=related_conference),
-            "conference__series",
-            "conference__organizers",
             "keywords",
             "topics",
             "languages",
-            "session_papers",
-            "session_papers__authorships__appellation",
-            "parent_session__authorships__appellation",
+            Prefetch(
+                "session_papers",
+                queryset=Work.objects.prefetch_related(
+                    Prefetch(
+                        "authorships",
+                        queryset=Authorship.objects.select_related("appellation"),
+                    ),
+                ),
+            ),
+            Prefetch(
+                "parent_session",
+                queryset=Authorship.objects.select_related("appellation"),
+            ),
         ),
         pk=work_id,
     )
 
     authorships = (
-        Authorship.objects.filter(work__id=work_id)
+        Authorship.objects.filter(work_id=work_id)
         .order_by("authorship_order")
         .distinct()
         .select_related("work", "author", "appellation")
         .prefetch_related(
-            "affiliations",
-            "affiliations__institution",
-            "affiliations__institution__country",
+            Prefetch(
+                "affiliations",
+                queryset=Affiliation.objects.select_related(
+                    "institution", "institution__country"
+                ),
+            )
         )
     )
     context = {"work": work, "authorships": authorships}
