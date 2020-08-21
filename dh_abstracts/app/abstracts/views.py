@@ -380,7 +380,14 @@ def work_view(request, work_id):
             ),
             Prefetch(
                 "parent_session",
-                queryset=Authorship.objects.select_related("appellation"),
+                queryset=Work.objects.prefetch_related(
+                    Prefetch(
+                        "authorships",
+                        queryset=Authorship.objects.select_related(
+                            "author", "appellation"
+                        ),
+                    )
+                ),
             ),
         ),
         pk=work_id,
