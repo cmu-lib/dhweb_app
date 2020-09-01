@@ -1,0 +1,15 @@
+django
+django-libsass
+django-coverage-plugin
+django-debug-toolbar
+django-crispy-forms
+django-filer
+django-markdownify
+django-autocomplete-light
+gunicorn
+cssselect
+progress
+psycopg2-binary
+python-memcached
+tblib
+w3lib
