@@ -1396,9 +1396,13 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
                     result_set = result_set.filter(affiliations__department="")
 
                 if filter_form["ordering"] == "n_dsc":
-                    result_set = result_set.order_by("-n_works")
+                    result_set = result_set.order_by(
+                        "-n_works", "affiliations__institution__name"
+                    )
                 elif filter_form["ordering"] == "n_asc":
-                    result_set = result_set.order_by("n_works")
+                    result_set = result_set.order_by(
+                        "n_works", "affiliations__institution__name"
+                    )
                 elif filter_form["ordering"] == "a":
                     result_set = result_set.order_by("affiliations__institution__name")
             else:
