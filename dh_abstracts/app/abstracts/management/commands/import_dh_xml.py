@@ -4,15 +4,10 @@ Import Works
 
 from abstracts.models import (
     Conference,
-    Organizer,
-    ConferenceSeries,
-    SeriesMembership,
     Work,
     Author,
     Keyword,
     Topic,
-    Language,
-    Discipline,
     Authorship,
     Appellation,
     Affiliation,
@@ -23,13 +18,11 @@ from abstracts.models import (
     FileImportTries,
     FileImportMessgaes,
 )
-
 from parsel import Selector
 from glob import glob
 from django.core.management.base import BaseCommand
+from django.db.models import Count
 import re
-from django.db.models.query import QuerySet
-from pprint import PrettyPrinter
 
 
 def object_status(command, object, attempt):
@@ -98,7 +91,6 @@ class Command(BaseCommand):
                 work_title = " ".join(
                     xml.xpath("//titlestmt//title/text()").getall()
                 ).strip()
-                work_state = "ac"
                 work_full_text = xml.xpath("//text").get()
                 keywords = xml.xpath("//keywords[@n='keywords']/term/text()").getall()
                 topics = xml.xpath(
@@ -108,7 +100,6 @@ class Command(BaseCommand):
                 new_work = Work.objects.get_or_create(
                     conference=target_conference,
                     title=work_title,
-                    state=work_state,
                     work_type=WorkType.objects.get_or_create(title=work_type)[0],
                     full_text=work_full_text,
                     full_text_type="xml",
@@ -166,66 +157,87 @@ class Command(BaseCommand):
                         target_author = possible_authors.first()
                         object_status(self, (target_author, False), attempt)
 
+                    all_affiliations = []
                     if affiliation is not None:
 
-                        """
-                        Try to split out country and institution
-                        """
+                        multi_affiliations = affiliation.split(";")
 
-                        split_affiliation = affiliation.split(",")
-                        # Try to find a matching institution first; if not that, then fall back to the country
+                        for affiliation_part in multi_affiliations:
 
-                        institution = None
-                        country = None
-                        for particle in split_affiliation:
-                            ustrip = particle
-                            particle = particle.strip()
+                            """
+                            Try to split out country and institution
+                            """
 
-                            if (
-                                institution is None
-                                and Institution.objects.filter(name=particle).exists()
-                            ):
-                                institution = Institution.objects.filter(
-                                    name=particle
-                                ).first()
-                                split_affiliation.remove(ustrip)
-                                object_status(self, (institution, False), attempt)
+                            split_affiliation = affiliation_part.split(",")
+                            # Try to find a matching institution first; if not that, then fall back to the country
 
-                            if (
-                                country is None
-                                and Country.objects.filter(name=particle).exists()
-                            ):
-                                country = Country.objects.get(name=particle)
-                                object_status(self, (country, False), attempt)
-                                split_affiliation.remove(ustrip)
+                            target_institution = None
+                            target_city = ""
+                            target_country = None
+                            affiliation_name = ""
+                            while len(split_affiliation) > 0:
+                                particle = split_affiliation.pop(-1).strip()
+                                if particle == "The":
+                                    continue
+                                if (
+                                    target_country is None
+                                    and Country.objects.filter(
+                                        names__name__icontains=particle
+                                    ).exists()
+                                ):
+                                    target_country = (
+                                        Country.objects.filter(
+                                            names__name__icontains=particle
+                                        )
+                                        .annotate(
+                                            n_institutions=Count(
+                                                "institutions", distinct=True
+                                            )
+                                        )
+                                        .order_by("-n_institutions")
+                                        .first()
+                                    )
+                                    object_status(
+                                        self, (target_country, False), attempt
+                                    )
+                                    continue
+                                if target_institution is None:
+                                    if Institution.objects.filter(
+                                        name__icontains=particle
+                                    ).exists():
+                                        target_institution = Institution.objects.filter(
+                                            name__icontains=particle
+                                        ).first()
+                                        object_status(
+                                            self, (target_institution, False), attempt
+                                        )
+                                        continue
+                                    else:
+                                        if target_city == "":
+                                            if Institution.objects.filter(
+                                                city__icontains=particle
+                                            ).exists():
+                                                target_city = particle
+                                                continue
+                                        target_institution = Institution.objects.create(
+                                            name=particle,
+                                            city=target_city,
+                                            country=target_country,
+                                        )
+                                        continue
+                                if target_institution is not None:
+                                    if affiliation_name == "":
+                                        affiliation_name = particle
+                                    else:
+                                        affiliation_name = ", ".join(
+                                            [particle, affiliation_name,]
+                                        )
 
-                        # After clearing out matching institution and/or country texts, reassemble the affiliation statement.
-                        affiliation = ", ".join(split_affiliation)
-
-                        if institution is None:
-                            # If no institution was matched, create one
-                            if country is not None:
-                                # If a country was matched, attach it to the new institution
-                                target_institution = Institution.objects.get_or_create(
-                                    name=affiliation, country=country
-                                )
-                            else:
-                                #  otherwise leave the country blank
-                                target_institution = Institution.objects.get_or_create(
-                                    name=affiliation, country=None
-                                )
-                            object_status(self, target_institution, attempt)
-                            target_institution = target_institution[0]
-                        else:
-                            # If we matched an institutuion, go ahead and use it
-                            target_institution = institution
-
-                        # finally, create or retreive the affiliation statement by attaching the non-institutuion, non-country text as the department, and point to the matched-or-created institution
-                        target_affiliation = Affiliation.objects.get_or_create(
-                            department=affiliation, institution=target_institution
-                        )
-                        object_status(self, target_affiliation, attempt)
-                        target_affiliation = target_affiliation[0]
+                            identified_affiliation = Affiliation.objects.get_or_create(
+                                department=affiliation_name,
+                                institution=target_institution,
+                            )[0]
+                            all_affiliations.append(identified_affiliation)
 
                     new_authorship = Authorship.objects.get_or_create(
                         work=new_work,
@@ -235,6 +247,5 @@ class Command(BaseCommand):
                     )
                     object_status(self, new_authorship, attempt)
                     new_authorship = new_authorship[0]
-
-                    if affiliation is not None:
+                    for target_affiliation in all_affiliations:
                         new_authorship.affiliations.add(target_affiliation)
