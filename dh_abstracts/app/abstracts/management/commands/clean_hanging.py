@@ -8,7 +8,6 @@ class Command(BaseCommand):
     help = "Erase hanging records"
 
     def handle(self, *args, **options):
-        models.Conference.objects.get(id=23).works.all().delete()
         models.Author.objects.exclude(authorships__isnull=False).all().delete()
         models.Affiliation.objects.exclude(asserted_by__isnull=False).all().delete()
         models.Institution.objects.exclude(
