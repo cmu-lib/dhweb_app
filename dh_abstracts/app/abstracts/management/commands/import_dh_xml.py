@@ -243,7 +243,7 @@ class Command(BaseCommand):
                         work=new_work,
                         author=target_author,
                         appellation=target_app,
-                        authorship_order=idx,
+                        authorship_order=idx + 1,
                     )
                     object_status(self, new_authorship, attempt)
                     new_authorship = new_authorship[0]
