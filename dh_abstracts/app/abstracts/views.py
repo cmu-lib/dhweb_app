@@ -1451,7 +1451,10 @@ class AuthorInstitutionList(FullInstitutionList):
 
     def get_queryset(self):
         base_result_set = Institution.objects.annotate(
-            n_authors=Count("affiliations__asserted_by__author")
+            n_authors=Count("affiliations__asserted_by__author", distinct=True),
+            n_conferences=Count(
+                "affiliations__asserted_by__work__conference", distinct=True
+            ),
         ).distinct()
         result_set = base_result_set
 
@@ -1474,9 +1477,16 @@ class AuthorInstitutionList(FullInstitutionList):
                 if institution_res is not None:
                     result_set = result_set.filter(pk=institution_res.pk)
 
+                conference_res = filter_form["conference"]
+                if conference_res is not None:
+                    result_set = result_set.filter(works__conference=conference_res)
+
                 country_res = filter_form["country"]
                 if country_res is not None:
                     result_set = result_set.filter(country=country_res)
+
+                if filter_form["singleton"]:
+                    result_set = result_set.filter(n_conferences=1)
 
                 if filter_form["no_department"]:
                     result_set = result_set.filter(affiliations__department="")
