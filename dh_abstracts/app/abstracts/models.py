@@ -183,6 +183,11 @@ class Conference(models.Model):
         verbose_name="Abstracts available?",
         help_text="Are the abstracts for this conference available in some format for editors to input?",
     )
+    search_text = models.CharField(
+        blank=True,
+        max_length=20000,
+        help_text="Any searchable text that should lead to this conference",
+    )
 
     class Meta:
         ordering = ["-year"]
@@ -197,6 +202,15 @@ class Conference(models.Model):
             .distinct()
             .count()
         )
+
+    def save(self, *args, **kwargs):
+        self.search_text = " ".join(
+            [self.year, self.short_title, self.city]
+            + [str(hi) for hi in self.hosting_institutions.all()]
+            + [" ".join([sr.title, sr.abbreviation]) for sr in self.series.all()]
+            + [" ".join([sr.name, sr.abbreviation]) for sr in self.organizers.all()]
+        )
+        super().save(*args, **kwargs)
 
     def __str__(self):
         if self.short_title != "":

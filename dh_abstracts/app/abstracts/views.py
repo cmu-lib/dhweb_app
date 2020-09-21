@@ -316,11 +316,7 @@ class ConferenceAutocomplete(ItemLabelAutocomplete):
         ).order_by("year", "main_series", "short_title", "theme_title")
 
         if self.q:
-            qs = qs.filter(
-                Q(short_title__icontains=self.q)
-                | Q(theme_title__icontains=self.q)
-                | Q(main_series=self.q)
-            ).distinct()
+            qs = qs.filter(search_text__icontains=self.q).distinct()
 
         return qs
 
