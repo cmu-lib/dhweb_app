@@ -272,6 +272,15 @@ class AuthorFilter(forms.Form):
         widget=ModelSelect2(url="affiliation-autocomplete", attrs={"data-html": True}),
         help_text='Search by department+institution combination. This is a more granular search than "Institution" above.',
     )
+    conference = forms.ModelChoiceField(
+        queryset=Conference.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="conference-autocomplete", attrs={"data-html": True}),
+        help_text="Show authors with works submitted to this conference.",
+    )
+    singleton = forms.BooleanField(
+        required=False, help_text="Show authors who only appear in one conference."
+    )
 
 
 class AuthorMergeForm(forms.Form):

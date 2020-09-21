@@ -530,7 +530,9 @@ class AuthorList(ListView):
     paginate_by = 50
 
     def get_queryset(self):
-        base_result_set = Author.objects.exclude(appellations__isnull=True)
+        base_result_set = Author.objects.exclude(appellations__isnull=True).annotate(
+            n_conferences=Count("works__conference", distinct=True)
+        )
         raw_filter_form = AuthorFilter(self.request.GET)
 
         if raw_filter_form.is_valid():
@@ -566,6 +568,13 @@ class AuthorList(ListView):
                 result_set = result_set.filter(
                     authorships__affiliations__institution__country=country_res
                 )
+
+            conference_res = filter_form["conference"]
+            if conference_res is not None:
+                result_set = result_set.filter(works__conference=conference_res)
+
+            if filter_form["singleton"]:
+                result_set = result_set.filter(n_conferences=1)
 
             name_res = filter_form["name"]
             if name_res != "":
