@@ -1374,6 +1374,12 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
             if raw_filter_form.is_valid():
                 filter_form = raw_filter_form.cleaned_data
 
+                result_set = result_set.annotate(
+                    n_conferences=Count(
+                        "affiliations__asserted_by__work__conference", distinct=True
+                    )
+                )
+
                 department_res = filter_form["department"]
                 if department_res != "":
                     result_set = result_set.filter(
@@ -1394,6 +1400,15 @@ class FullInstitutionList(LoginRequiredMixin, ListView):
 
                 if filter_form["no_department"]:
                     result_set = result_set.filter(affiliations__department="")
+
+                conference_res = filter_form["conference"]
+                if conference_res is not None:
+                    result_set = result_set.filter(
+                        affiliations__asserted_by__work__conference=conference_res
+                    ).distinct()
+
+                if filter_form["singleton"]:
+                    result_set = result_set.filter(n_conferences=1)
 
                 if filter_form["ordering"] == "n_dsc":
                     result_set = result_set.order_by(

@@ -355,10 +355,19 @@ class FullInstitutionForm(forms.Form):
         required=False,
         help_text="Show institutions with at least one affiliation that does not specifiy a department?",
     )
+    singleton = forms.BooleanField(
+        required=False,
+        help_text="Show institutions that appear only in one conference (Useful for identifying institutions that ought to be merged.)",
+    )
     affiliation = forms.ModelChoiceField(
         queryset=Affiliation.objects.all(),
         required=False,
         widget=ModelSelect2(url="affiliation-autocomplete", attrs={"data-html": True}),
+    )
+    conference = forms.ModelChoiceField(
+        queryset=Conference.objects.all(),
+        required=False,
+        widget=ModelSelect2(url="conference-autocomplete", attrs={"data-html": True}),
     )
     institution = forms.ModelChoiceField(
         queryset=Institution.objects.all(),
