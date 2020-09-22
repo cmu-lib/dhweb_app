@@ -205,7 +205,7 @@ class Conference(models.Model):
 
     def save(self, *args, **kwargs):
         self.search_text = " ".join(
-            [self.year, self.short_title, self.city]
+            [str(self.year), self.short_title, self.city]
             + [str(hi) for hi in self.hosting_institutions.all()]
             + [" ".join([sr.title, sr.abbreviation]) for sr in self.series.all()]
             + [" ".join([sr.name, sr.abbreviation]) for sr in self.organizers.all()]
