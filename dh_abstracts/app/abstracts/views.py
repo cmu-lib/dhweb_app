@@ -2101,7 +2101,7 @@ class KeywordList(LoginRequiredMixin, ListView):
         "tag_create_view": "keyword_create",
         "tag_list_view": "full_keyword_list",
         "multi_merge": "keyword_multi_merge",
-        "filter_param_name": "keyword",
+        "filter_param_name": "keywords",
     }
 
     def get_queryset(self):
@@ -2281,7 +2281,7 @@ class TopicList(LoginRequiredMixin, ListView):
         "tag_filter_form": TagForm,
         "tag_list_view": "full_topic_list",
         "multi_merge": "topic_multi_merge",
-        "filter_param_name": "topic",
+        "filter_param_name": "topics",
     }
 
     def get_queryset(self):
@@ -2456,7 +2456,7 @@ class LanguageList(LoginRequiredMixin, ListView):
         "tag_create_view": "language_create",
         "tag_filter_form": TagForm,
         "tag_list_view": "full_language_list",
-        "filter_param_name": "language",
+        "filter_param_name": "languages",
     }
 
     def get_queryset(self):
