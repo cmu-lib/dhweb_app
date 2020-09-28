@@ -39,10 +39,10 @@ class WorkFilter(forms.ModelForm):
         initial="year",
     )
     text = forms.CharField(
-        max_length=100,
+        max_length=500,
         strip=True,
         required=False,
-        help_text="Search abstracts by title and by full text content when available. Search will look for all terms by default; use OR to look for any terms, and quotation marks to search for exact phrases.",
+        help_text="Search abstracts by title and by full text content when available. Search will look for all terms by default. Use OR to look for any terms in the query, and quotation marks to search for exact phrases.",
     )
     full_text_available = forms.BooleanField(
         required=False, label="Full text has been indexed"
