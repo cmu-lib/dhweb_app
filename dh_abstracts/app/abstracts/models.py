@@ -204,13 +204,25 @@ class Conference(models.Model):
         )
 
     def save(self, *args, **kwargs):
-        self.search_text = " ".join(
-            [str(self.year), self.short_title, self.city]
-            + [str(hi) for hi in self.hosting_institutions.all()]
-            + [" ".join([sr.title, sr.abbreviation]) for sr in self.series.all()]
-            + [" ".join([sr.name, sr.abbreviation]) for sr in self.organizers.all()]
-        )
+        # Save the object to the DB first so that we can filter on many-to-many relations
         super().save(*args, **kwargs)
+        hosting_objects = Institution.objects.filter(conferences=self).distinct()
+        series_objects = ConferenceSeries.objects.filter(
+            conference_memberships__conference=self
+        ).distinct()
+        organizer_objects = Organizer.objects.filter(
+            conferences_organized=self
+        ).distinct()
+        # Generate the search text string and save again before returning
+        new_search_text = " ".join(
+            [str(self.year), self.short_title, self.city]
+            + [str(hi) for hi in hosting_objects]
+            + [" ".join([sr.title, sr.abbreviation]) for sr in series_objects]
+            + [" ".join([sr.name, sr.abbreviation]) for sr in organizer_objects]
+        )
+        self.search_text = new_search_text
+        res = super().save(*args, **kwargs)
+        return res
 
     def __str__(self):
         if self.short_title != "":

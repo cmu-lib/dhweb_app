@@ -1799,6 +1799,7 @@ class ConferenceCreate(StaffRequiredMixin, SuccessMessageMixin, CreateView):
             for organizer in form_instance.cleaned_data["organizers"]:
                 self.object.organizers.add(organizer)
             self.object.save()
+            return response
             if "goto_abstracts" in request.POST:
                 return redirect(reverse("work_list") + f"?conference={self.object.id}")
         else:
