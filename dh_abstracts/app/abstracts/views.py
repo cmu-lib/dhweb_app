@@ -1247,9 +1247,11 @@ class FullWorkList(ListView):
 
             text_res = filter_form["text"]
             if text_res != "":
+                text_query = SearchQuery(text_res, search_type="phrase")
                 result_set = (
-                    result_set.annotate(
-                        rank=SearchRank(F("search_text"), SearchQuery(text_res)),
+                    result_set.filter(search_text=text_query)
+                    .annotate(
+                        rank=SearchRank(F("search_text"), text_query,),
                         # Does the search text show up only in the full text?
                         search_in_ft_only=ExpressionWrapper(
                             ~Q(title__icontains=text_res), output_field=BooleanField()
