@@ -1290,7 +1290,9 @@ class FullWorkList(ListView):
                 ).order_by("-first_author_last_name", "title")
 
             return (
-                result_set.select_related("conference", "work_type", "parent_session")
+                result_set.select_related(
+                    "conference", "work_type", "parent_session", "full_text_license"
+                )
                 .annotate(
                     main_series=StringAgg(
                         "conference__series_memberships__series__abbreviation",
@@ -1304,13 +1306,25 @@ class FullWorkList(ListView):
                     ),
                 )
                 .prefetch_related(
-                    "conference__organizers",
-                    "conference__series_memberships",
-                    "conference__series_memberships__series",
+                    Prefetch(
+                        "conference",
+                        queryset=Conference.objects.prefetch_related(
+                            Prefetch(
+                                "series_memberships",
+                                queryset=SeriesMembership.objects.select_related(
+                                    "series"
+                                ),
+                            ),
+                            "organizers",
+                        ),
+                    ),
                     "session_papers",
-                    "authorships",
-                    "authorships__appellation",
-                    "authorships__author",
+                    Prefetch(
+                        "authorships",
+                        queryset=Authorship.objects.select_related(
+                            "appellation", "author"
+                        ),
+                    ),
                     "keywords",
                     "topics",
                     "languages",
