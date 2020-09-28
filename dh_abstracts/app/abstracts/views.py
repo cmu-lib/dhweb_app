@@ -1247,7 +1247,7 @@ class FullWorkList(ListView):
 
             text_res = filter_form["text"]
             if text_res != "":
-                text_query = SearchQuery(text_res, search_type="phrase")
+                text_query = SearchQuery(text_res, search_type="websearch")
                 result_set = (
                     result_set.filter(search_text=text_query)
                     .annotate(
@@ -1257,7 +1257,7 @@ class FullWorkList(ListView):
                             ~Q(title__icontains=text_res), output_field=BooleanField()
                         ),
                     )
-                    .filter(rank__gt=0)
+                    .filter(rank__gt=0.1)
                     .order_by("-rank")
                 )
                 order_res = "rank"
