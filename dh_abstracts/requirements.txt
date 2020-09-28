@@ -5,22 +5,22 @@
 #    pip-compile requirements.in
 #
 asgiref==3.2.10           # via django
-bleach==3.1.5             # via django-markdownify
-coverage==5.2.1           # via django-coverage-plugin
+bleach==3.2.1             # via django-markdownify
+coverage==5.3             # via django-coverage-plugin
 cssselect==1.1.0          # via -r requirements.in, parsel
 django-appconf==1.0.4     # via django-compressor
 django-autocomplete-light==3.5.1  # via -r requirements.in
 django-compressor==2.4    # via django-libsass
 django-coverage-plugin==1.8.0  # via -r requirements.in
 django-crispy-forms==1.9.2  # via -r requirements.in
-django-debug-toolbar==2.2  # via -r requirements.in
-django-filer==1.7.1       # via -r requirements.in
+django-debug-toolbar==3.1.1  # via -r requirements.in
+django-filer==2.0.2       # via -r requirements.in
 django-js-asset==1.2.2    # via django-mptt
 django-libsass==0.8       # via -r requirements.in
 django-markdownify==0.8.1  # via -r requirements.in
 django-mptt==0.11.0       # via django-filer
-django-polymorphic==2.1.2  # via django-filer
-django==3.0.10            # via -r requirements.in, django-appconf, django-debug-toolbar, django-filer, django-markdownify, django-mptt, django-polymorphic, easy-thumbnails
+django-polymorphic==3.0.0  # via django-filer
+git+git://github.com/django/django.git@848770dd2c5dec6c805d67f470eb936f38b9421d  # kludge until next django bugfix release
 easy-thumbnails==2.7      # via django-filer
 gunicorn==20.0.4          # via -r requirements.in
 libsass==0.20.1           # via django-libsass
@@ -30,13 +30,13 @@ packaging==20.4           # via bleach
 parsel==1.6.0             # via -r requirements.in
 pillow==7.2.0             # via easy-thumbnails
 progress==1.5             # via -r requirements.in
-psycopg2-binary==2.8.5    # via -r requirements.in
+psycopg2-binary==2.8.6    # via -r requirements.in
 pyparsing==2.4.7          # via packaging
 python-memcached==1.59    # via -r requirements.in
 pytz==2020.1              # via django
 rcssmin==1.0.6            # via django-compressor
 rjsmin==1.1.0             # via django-compressor
-six==1.15.0               # via bleach, django-autocomplete-light, django-compressor, django-coverage-plugin, django-filer, libsass, packaging, parsel, python-memcached, w3lib
+six==1.15.0               # via bleach, django-autocomplete-light, django-compressor, django-coverage-plugin, libsass, packaging, parsel, python-memcached, w3lib
 sqlparse==0.3.1           # via django, django-debug-toolbar
 tblib==1.7.0              # via -r requirements.in
 unidecode==1.1.1          # via django-filer
