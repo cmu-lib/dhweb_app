@@ -17,25 +17,29 @@ This example TEI-XML file is based on the format accepted by the Alliance for Di
             <surname>Afanador-Llach</surname>
             <forename>Maria Jose</forename>
           </persName>
-          <!--
-            The IDHC contains more structured information about author affiliations than specified in the ADHO TEI schema. For maximum compatibility, use the following conventions when entering affiliations:
-
-            * marks a required field
-
-            <affiliation>department name, institution name*, city, country; (add additional affiliations following same format, separated by semicolon)</affiliation>
-
-           -->
-          <affiliation>Universidad de los Andes, Colombia; Fundación Histórica Neogranadina, Colombia</affiliation>
-          <!-- <email> ignored -->
+          <affiliation>
+            <orgName type="department">Departamento de Historia</orgName>
+            <orgName>Universidad de los Andes</orgName>
+            <district>Bogotá</district>
+            <country>Colombia</country>
+          </affiliation>
+          <affiliation>
+            <orgName>Fundación Histórica Neogranadina</orgName>
+            <country>Colombia</country>
+          </affiliation>
           <email>mj.afanador28@uniandes.edu.co</email>
         </author>
-        <!-- Additional authors follow the same formatting rules. Authors will be assigned an order based on the order of their elements in thse TEI XML -->
         <author>
           <persName>
             <surname>Lombana</surname>
             <forename>Andres</forename>
           </persName>
-          <affiliation>Berkman Klein Center for Internet and Society, Harvard University</affiliation>
+          <affiliation>
+            <orgName type="department">Berkman Klein Center for Internet and Society</orgName>
+            <orgName>Harvard University</orgName>
+            <district>Cambridge</district>
+            <country>United States of America</country>
+          </affiliation>
           <email>alombana@cyber.law.harvard.edu</email>
         </author>
       </titleStmt>
@@ -70,14 +74,14 @@ This example TEI-XML file is based on the format accepted by the Alliance for Di
     </encodingDesc>
     <profileDesc>
       <textClass>
-        <!-- IDHC will first try to match work_type on <keywords n="category">/<term>, followed by <keywords n="subcategory">/<term>. All terms are covnerted to lowercase. -->
+        <!-- IDHC will first try to match work_type on <keywords n="category">/<term>, followed by <keywords n="subcategory">/<term>. All terms are converted to lowercase. -->
         <keywords scheme="ConfTool" n="category">
           <term>Paper</term>
         </keywords>
         <keywords scheme="ConfTool" n="subcategory">
           <term>Short Paper</term>
         </keywords>
-        <!-- IDHC will add author-supplied "keywords" based on <keywords n="keywords">/<term>. All terms are covnerted to lowercase. -->
+        <!-- IDHC will add author-supplied "keywords" based on <keywords n="keywords">/<term>. All terms are converted to lowercase. -->
         <keywords scheme="ConfTool" n="keywords">
           <term>Nuevos alfabetismos</term>
           <term>Producción de pares</term>
@@ -86,7 +90,7 @@ This example TEI-XML file is based on the format accepted by the Alliance for Di
           <term>cultura participativa</term>
           <term>archivos digitales</term>
         </keywords>
-        <!-- IDHC will add ADHO-managed "topics" based on <keywords n="keywords">/<term>. All terms are covnerted to lowercase. -->
+        <!-- IDHC will add ADHO-managed "topics" based on <keywords n="keywords">/<term>. All terms are converted to lowercase. -->
         <keywords scheme="ConfTool" n="topics">
           <term>archives</term>
           <term>repositories</term>
