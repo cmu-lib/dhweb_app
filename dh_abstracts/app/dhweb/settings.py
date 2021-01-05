@@ -238,7 +238,7 @@ DENORMALIZED_HEADERS = [
     },
     {
         "name": "topics",
-        "description": "Topics from ADHO controlled vocabulary (separated by a semicolon)",
+        "description": "Topics from a conference-specific controlled vocabulary (separated by a semicolon)",
         "required": False,
     },
 ]

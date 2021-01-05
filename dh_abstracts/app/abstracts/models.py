@@ -352,7 +352,7 @@ class Language(Tag):
 
 
 class Topic(Tag):
-    model_description = "ADHO-based controlled vocabulary of topics"
+    model_description = "Conference-specific controlled vocabulary of topics"
     pass
 
 
@@ -461,7 +461,7 @@ class Work(TextIndexedModel, ChangeTrackedModel):
         Topic,
         related_name="works",
         blank=True,
-        help_text="Optional topics from a controlled vocabulary established by the ADHO DH conferences. (Matches ANY of the topics)",
+        help_text="Optional topics from a conference-specific controlled vocabulary. (Matches ANY of the topics)",
     )
     full_text_license = models.ForeignKey(
         License,
