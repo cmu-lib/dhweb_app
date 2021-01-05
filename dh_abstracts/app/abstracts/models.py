@@ -348,7 +348,7 @@ class Keyword(Tag):
 
 class Language(Tag):
     model_description = "Languages in which works are written"
-    pass
+    code = models.CharField(blank=True, null=True, max_length=3, unique=True)
 
 
 class Topic(Tag):

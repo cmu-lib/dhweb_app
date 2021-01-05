@@ -1251,7 +1251,10 @@ class FullWorkList(ListView):
                 result_set = (
                     result_set.filter(search_text=text_query)
                     .annotate(
-                        rank=SearchRank(F("search_text"), text_query,),
+                        rank=SearchRank(
+                            F("search_text"),
+                            text_query,
+                        ),
                         # Does the search text show up only in the full text?
                         search_in_ft_only=ExpressionWrapper(
                             ~Q(title__icontains=text_res), output_field=BooleanField()
@@ -2429,7 +2432,7 @@ class LanguageCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         "form_title": "Create language",
         "cancel_view": "full_language_list",
     }
-    fields = ["title"]
+    fields = ["title", "code"]
     success_message = "Language '%(title)s' created"
     success_url = reverse_lazy("full_language_list")
 
@@ -2458,7 +2461,7 @@ class LanguageEdit(StaffRequiredMixin, SuccessMessageMixin, UpdateView):
         "merge_view": "language_merge",
         "delete_view": "language_delete",
     }
-    fields = ["title"]
+    fields = ["title", "code"]
     success_message = "Language '%(title)s' updated"
     success_url = reverse_lazy("full_language_list")
 

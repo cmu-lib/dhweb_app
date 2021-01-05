@@ -18,6 +18,140 @@
   }
 },
 {
+  "model": "abstracts.conference",
+  "pk": 1,
+  "fields": {
+    "year": 2000,
+    "short_title": "New York",
+    "notes": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. Donec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi,",
+    "url": "https://example.com",
+    "theme_title": "",
+    "start_date": null,
+    "end_date": null,
+    "city": "",
+    "state_province_region": "",
+    "country": null,
+    "references": "",
+    "contributors": "",
+    "attendance": "",
+    "entry_status": "n",
+    "editing_user": null,
+    "program_available": false,
+    "abstracts_available": false,
+    "search_text": "2000 New York  Test Series TSC Tesco Conferences TeCo",
+    "hosting_institutions": []
+  }
+},
+{
+  "model": "abstracts.conference",
+  "pk": 2,
+  "fields": {
+    "year": 2003,
+    "short_title": "University of Toronto",
+    "notes": "• Lorem ipsum dolor\r\n• Sit amet, consectetur\r\n• Adipisicing elit, sed\r\n• Do eiusmod tempor\r\n• Incididunt ut labore\r\n• Et dolore magna\r\n• Aliqua. Ut enim\r\n• Ad minim veniam,\r\n• Quis nostrud exercitation\r\n• Ullamco laboris nisi\r\n• Ut aliquip ex\r\n• Ea commodo consequat.",
+    "url": "",
+    "theme_title": "",
+    "start_date": null,
+    "end_date": null,
+    "city": "",
+    "state_province_region": "",
+    "country": null,
+    "references": "",
+    "contributors": "",
+    "attendance": "",
+    "entry_status": "n",
+    "editing_user": null,
+    "program_available": false,
+    "abstracts_available": false,
+    "search_text": "2003 University of Toronto  Test Series TSC Tesco Conferences TeCo",
+    "hosting_institutions": []
+  }
+},
+{
+  "model": "abstracts.conference",
+  "pk": 3,
+  "fields": {
+    "year": 2019,
+    "short_title": "Los Angeles",
+    "notes": "",
+    "url": "",
+    "theme_title": "",
+    "start_date": "2019-01-04",
+    "end_date": "2019-01-07",
+    "city": "Los Angeles",
+    "state_province_region": "Calilfornia",
+    "country": 1,
+    "references": "",
+    "contributors": "",
+    "attendance": "",
+    "entry_status": "n",
+    "editing_user": null,
+    "program_available": false,
+    "abstracts_available": false,
+    "search_text": "2019 Los Angeles Los Angeles Stanford University Wood's Hole Institute College Art Association Annual Conference CAA College Art Association CAA",
+    "hosting_institutions": [
+      2,
+      1
+    ]
+  }
+},
+{
+  "model": "abstracts.conference",
+  "pk": 4,
+  "fields": {
+    "year": 1968,
+    "short_title": "Computers and Their Potential Applications in Museums: A Conference (Metropolitan Museum of Art)",
+    "notes": "Computers and Their Potential Applications in Museums: A Conference",
+    "url": "",
+    "theme_title": "",
+    "start_date": null,
+    "end_date": null,
+    "city": "",
+    "state_province_region": "",
+    "country": null,
+    "references": "",
+    "contributors": "",
+    "attendance": "",
+    "entry_status": "n",
+    "editing_user": null,
+    "program_available": false,
+    "abstracts_available": false,
+    "search_text": "1968 Computers and Their Potential Applications in Museums: A Conference (Metropolitan Museum of Art) ",
+    "hosting_institutions": []
+  }
+},
+{
+  "model": "abstracts.organizer",
+  "pk": 1,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.635Z",
+    "user_last_updated": null,
+    "name": "Tesco Conferences",
+    "abbreviation": "TeCo",
+    "notes": "Lorem Ipsum Dolor Sit Amet\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \r\n\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. \r\n\r\nDonec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi, facilisis sit amet eleifend nec, pharetra ut augue. Integer quam nunc, consequat nec egestas ac, volutpat ac nisi. \r\n\r\nSed consectetur dignissim dignissim. Donec pretium est sit amet ipsum fringilla feugiat. Aliquam erat volutpat. Maecenas scelerisque, orci sit amet cursus tincidunt, libero nisl eleifend tortor, vitae cursus risus mauris vitae nisi. Cras laoreet ultrices ligula eget tempus. \r\n\r\nAenean metus purus, iaculis ut imperdiet eget, sodales et massa. Duis pellentesque nisl vel massa dapibus non lacinia velit volutpat. Maecenas accumsan interdum sodales. In hac habitasse platea dictumst. Pellentesque ornare blandit orci, eget tristique risus convallis ut. Vivamus a sapien neque. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetu",
+    "url": "https://tesco.com",
+    "conferences_organized": [
+      2,
+      1
+    ]
+  }
+},
+{
+  "model": "abstracts.organizer",
+  "pk": 2,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.635Z",
+    "user_last_updated": null,
+    "name": "College Art Association",
+    "abbreviation": "CAA",
+    "notes": "",
+    "url": "",
+    "conferences_organized": [
+      3
+    ]
+  }
+},
+{
   "model": "abstracts.seriesmembership",
   "pk": 1,
   "fields": {
@@ -83,14 +217,32 @@
   "model": "abstracts.language",
   "pk": 1,
   "fields": {
-    "title": "Dutch"
+    "title": "Dutch",
+    "code": "nl"
   }
 },
 {
   "model": "abstracts.language",
   "pk": 2,
   "fields": {
-    "title": "German"
+    "title": "German",
+    "code": "de"
+  }
+},
+{
+  "model": "abstracts.language",
+  "pk": 3,
+  "fields": {
+    "title": "English",
+    "code": "en"
+  }
+},
+{
+  "model": "abstracts.language",
+  "pk": 4,
+  "fields": {
+    "title": "Japanese",
+    "code": "jp"
   }
 },
 {
@@ -150,7 +302,7 @@
   "pk": 1,
   "fields": {
     "title": "Attribution-NonCommercial 4.0 International",
-    "full_text": "By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial 4.0 International Public License (\"Public License\"). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.\r\n\r\nSection 1 \u2013 Definitions.\r\n\r\n    Adapted Material means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.\r\n    Adapter's License means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.\r\n    Copyright and Similar Rights means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.\r\n    Effective Technological Measures means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.\r\n    Exceptions and Limitations means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.\r\n    Licensed Material means the artistic or literary work, database, or other material to which the Licensor applied this Public License.\r\n    Licensed Rights means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.\r\n    Licensor means the individual(s) or entity(ies) granting rights under this Public License.\r\n    NonCommercial means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.\r\n    Share means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.\r\n    Sui Generis Database Rights means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.\r\n    You means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.\r\n\r\nSection 2 \u2013 Scope.\r\n\r\n    License grant.\r\n        Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:\r\n            reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and\r\n            produce, reproduce, and Share Adapted Material for NonCommercial purposes only.\r\n        Exceptions and Limitations. For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.\r\n        Term. The term of this Public License is specified in Section 6(a).\r\n        Media and formats; technical modifications allowed. The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.\r\n        Downstream recipients.\r\n            Offer from the Licensor \u2013 Licensed Material. Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.\r\n            No downstream restrictions. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.\r\n        No endorsement. Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).\r\n\r\n    Other rights.\r\n        Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.\r\n        Patent and trademark rights are not licensed under this Public License.\r\n        To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.\r\n\r\nSection 3 \u2013 License Conditions.\r\n\r\nYour exercise of the Licensed Rights is expressly made subject to the following conditions.\r\n\r\n    Attribution.\r\n\r\n        If You Share the Licensed Material (including in modified form), You must:\r\n            retain the following if it is supplied by the Licensor with the Licensed Material:\r\n                identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);\r\n                a copyright notice;\r\n                a notice that refers to this Public License;\r\n                a notice that refers to the disclaimer of warranties;\r\n                a URI or hyperlink to the Licensed Material to the extent reasonably practicable;\r\n            indicate if You modified the Licensed Material and retain an indication of any previous modifications; and\r\n            indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.\r\n        You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.\r\n        If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.\r\n        If You Share Adapted Material You produce, the Adapter's License You apply must not prevent recipients of the Adapted Material from complying with this Public License.\r\n\r\nSection 4 \u2013 Sui Generis Database Rights.\r\n\r\nWhere the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:\r\n\r\n    for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;\r\n    if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material; and\r\n    You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.\r\n\r\nFor the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.\r\n\r\nSection 5 \u2013 Disclaimer of Warranties and Limitation of Liability.\r\n\r\n    Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.\r\n    To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.\r\n\r\n    The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.\r\n\r\nSection 6 \u2013 Term and Termination.\r\n\r\n    This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.\r\n\r\n    Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:\r\n        automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or\r\n        upon express reinstatement by the Licensor.\r\n    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.\r\n    For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.\r\n    Sections 1, 5, 6, 7, and 8 survive termination of this Public License.\r\n\r\nSection 7 \u2013 Other Terms and Conditions.\r\n\r\n    The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.\r\n    Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.\r\n\r\nSection 8 \u2013 Interpretation.\r\n\r\n    For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.\r\n    To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.\r\n    No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.\r\n    Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.",
+    "full_text": "By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial 4.0 International Public License (\"Public License\"). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.\r\n\r\nSection 1 – Definitions.\r\n\r\n    Adapted Material means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.\r\n    Adapter's License means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.\r\n    Copyright and Similar Rights means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.\r\n    Effective Technological Measures means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.\r\n    Exceptions and Limitations means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.\r\n    Licensed Material means the artistic or literary work, database, or other material to which the Licensor applied this Public License.\r\n    Licensed Rights means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.\r\n    Licensor means the individual(s) or entity(ies) granting rights under this Public License.\r\n    NonCommercial means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.\r\n    Share means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.\r\n    Sui Generis Database Rights means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.\r\n    You means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.\r\n\r\nSection 2 – Scope.\r\n\r\n    License grant.\r\n        Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:\r\n            reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and\r\n            produce, reproduce, and Share Adapted Material for NonCommercial purposes only.\r\n        Exceptions and Limitations. For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.\r\n        Term. The term of this Public License is specified in Section 6(a).\r\n        Media and formats; technical modifications allowed. The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.\r\n        Downstream recipients.\r\n            Offer from the Licensor – Licensed Material. Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.\r\n            No downstream restrictions. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.\r\n        No endorsement. Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).\r\n\r\n    Other rights.\r\n        Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.\r\n        Patent and trademark rights are not licensed under this Public License.\r\n        To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.\r\n\r\nSection 3 – License Conditions.\r\n\r\nYour exercise of the Licensed Rights is expressly made subject to the following conditions.\r\n\r\n    Attribution.\r\n\r\n        If You Share the Licensed Material (including in modified form), You must:\r\n            retain the following if it is supplied by the Licensor with the Licensed Material:\r\n                identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);\r\n                a copyright notice;\r\n                a notice that refers to this Public License;\r\n                a notice that refers to the disclaimer of warranties;\r\n                a URI or hyperlink to the Licensed Material to the extent reasonably practicable;\r\n            indicate if You modified the Licensed Material and retain an indication of any previous modifications; and\r\n            indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.\r\n        You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.\r\n        If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.\r\n        If You Share Adapted Material You produce, the Adapter's License You apply must not prevent recipients of the Adapted Material from complying with this Public License.\r\n\r\nSection 4 – Sui Generis Database Rights.\r\n\r\nWhere the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:\r\n\r\n    for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;\r\n    if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material; and\r\n    You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.\r\n\r\nFor the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.\r\n\r\nSection 5 – Disclaimer of Warranties and Limitation of Liability.\r\n\r\n    Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.\r\n    To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.\r\n\r\n    The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.\r\n\r\nSection 6 – Term and Termination.\r\n\r\n    This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.\r\n\r\n    Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:\r\n        automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or\r\n        upon express reinstatement by the Licensor.\r\n    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.\r\n    For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.\r\n    Sections 1, 5, 6, 7, and 8 survive termination of this Public License.\r\n\r\nSection 7 – Other Terms and Conditions.\r\n\r\n    The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.\r\n    Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.\r\n\r\nSection 8 – Interpretation.\r\n\r\n    For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.\r\n    To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.\r\n    No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.\r\n    Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.",
     "display_abbreviation": "CC BY-NC 4.0",
     "url": "https://creativecommons.org/licenses/by-nc/4.0/",
     "default": false
@@ -165,6 +317,143 @@
     "display_abbreviation": "This text is republished here with permission from the original rights holder.",
     "url": null,
     "default": true
+  }
+},
+{
+  "model": "abstracts.work",
+  "pk": 1,
+  "fields": {
+    "last_updated": "2020-04-20T15:42:37.254Z",
+    "user_last_updated": 1,
+    "search_text": "'ac':120B,122B,262B,288B,292B 'accumsan':183B,217B,362B 'ad':32B,398B 'adip':327B 'adipi':438B 'adipis':17B,383B 'adipisc':242B,289B 'aenean':162B 'aliqua':29B,395B 'aliquam':136B,273B,320B,354B,429B 'aliquet':281B,319B 'aliquip':42B 'amet':9B,15B,108B,132B,143B,241B,325B,352B,356B,364B,381B,411B,436B 'anim':76B 'arcu':330B 'auctor':257B,287B 'augu':113B 'aut':48B 'bibendum':367B 'blandit':193B,259B 'cillum':57B 'commodo':45B,271B 'condimentum':91B 'congu':334B 'consec':10B 'consectetur':16B,125B,234B,326B,382B,412B,437B 'consequat':46B,85B,117B 'conval':198B,275B 'cras':156B,328B 'culpa':71B 'cupidatat':66B 'cursus':144B,151B 'dapibus':98B,177B,365B 'deserunt':74B 'diam':344B 'dictum':249B 'dictumst':190B 'dignissim':126B,127B,251B 'dolor':7B,13B,27B,50B,58B,89B,206B,323B,379B,393B,409B,420B,434B 'donec':80B,87B,128B,254B,274B 'dui':47B,172B,239B,286B 'ea':44B 'egesta':119B,227B,346B 'eget':160B,168B,195B,218B,260B 'eiusmod':21B,387B 'eleifend':86B,109B,148B,280B 'elementum':81B 'elit':18B,384B 'enim':31B,243B,397B,416B 'erat':90B,137B,221B,297B,430B 'ero':266B,282B 'ess':56B 'est':78B,130B,285B 'et':26B,102B,170B,226B,232B,392B 'eu':59B,83B,250B,302B 'euismod':421B 'ex':43B 'excepteur':63B 'exercit':37B,403B 'facilisi':106B,291B,299B,309B,419B 'far':4A 'feli':300B 'feugiat':135B,279B 'foo':2A 'fringilla':134B,237B,347B 'fugiat':60B 'gravida':101B,311B,423B 'habitass':188B 'hac':187B 'iaculi':165B,253B,296B 'id':77B,368B 'imperdiet':167B 'incididunt':23B,389B 'integ':103B,114B 'interdum':184B,333B 'ipsum':6B,12B,100B,133B,205B,322B,378B,408B,433B 'irur':49B 'justo':246B,369B 'labor':25B,391B 'labori':39B,405B 'laborum':79B 'lacinia':179B 'lacus':332B 'laoreet':157B,342B 'lectus':104B,263B,268B,307B 'leo':231B,272B,373B 'libero':146B,252B,276B 'ligula':82B,159B,213B,376B 'loborti':215B,261B 'lorem':5B,11B,204B,238B,321B,377B,407B,432B 'luctus':245B,338B 'maecena':139B,182B,414B 'magna':28B,256B,293B,340B,394B 'malesuada':312B,424B 'massa':171B,176B,372B 'matti':219B 'mauri':153B,294B,345B 'metus':163B,358B 'minim':33B,399B 'molli':313B 'mollit':75B 'nam':208B 'nec':88B,110B,118B,216B,236B,371B 'nequ':203B,353B 'nibh':278B 'nisi':40B,105B,123B,155B,406B 'nisl':147B,174B 'non':67B,178B,306B,317B,331B,426B 'nostrud':36B,402B 'nulla':61B,318B,361B 'nunc':116B,228B,337B,425B 'occaecat':65B 'odio':224B 'officia':73B 'orci':141B,194B,211B,233B,305B,316B,428B 'ornar':192B,308B 'pariatur':62B 'pellentesqu':173B,191B,222B 'pharetra':111B 'phasellus':212B,303B 'platea':189B 'porttitor':95B,96B,235B 'potenti':336B 'praesent':94B,264B,314B 'pretium':129B 'proident':68B 'proin':343B 'pulvinar':348B,350B,375B 'purus':164B 'quam':115B,225B 'qui':35B,72B,209B,230B,267B,401B 'quisqu':284B 'reprehenderit':52B 'rhoncus':265B 'risus':97B,152B,197B,248B,357B 'rutrum':99B,315B 'sagitti':92B 'sapien':84B,202B 'scelerisqu':140B,329B 'sed':19B,124B,229B,247B,298B,370B,385B 'sem':93B,210B,417B,427B 'semper':295B 'si':207B 'sint':64B 'sit':8B,14B,107B,131B,142B,240B,324B,351B,355B,363B,380B,410B,435B 'sodal':169B,185B 'sunt':69B 'suspendiss':244B,310B,335B 'tellus':214B 'tempor':22B,269B,388B 'tempus':161B 'tincidunt':145B 'tortor':149B 'tristiqu':196B 'turpi':422B 'ullamco':38B,404B 'ullamcorp':258B,339B 'ultric':158B,301B 'urna':360B 'ut':24B,30B,41B,112B,166B,199B,304B,359B,390B,396B 'vehicula':283B 'vel':175B,366B 'velit':55B,180B,255B 'veniam':34B,400B 'vita':150B,154B,349B 'vivamus':200B,418B 'volupt':54B 'volutpat':121B,138B,181B,431B",
+    "conference": 1,
+    "title": "A Foo Too Far",
+    "work_type": 1,
+    "full_text": "Lorem Ipsum Dolor Sit Amet Consec\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \r\n\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. \r\n\r\nDonec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi, facilisis sit amet eleifend nec, pharetra ut augue. Integer quam nunc, consequat nec egestas ac, volutpat ac nisi. \r\n\r\nSed consectetur dignissim dignissim. Donec pretium est sit amet ipsum fringilla feugiat. Aliquam erat volutpat. Maecenas scelerisque, orci sit amet cursus tincidunt, libero nisl eleifend tortor, vitae cursus risus mauris vitae nisi. Cras laoreet ultrices ligula eget tempus. \r\n\r\nAenean metus purus, iaculis ut imperdiet eget, sodales et massa. Duis pellentesque nisl vel massa dapibus non lacinia velit volutpat. Maecenas accumsan interdum sodales. In hac habitasse platea dictumst. Pellentesque ornare blandit orci, eget tristique risus convallis ut. Vivamus a sapien neque. \r\n\r\nLorem Ipsum Dolor Si\r\n\r\nNam quis sem orci. Phasellus ligula tellus, lobortis nec accumsan eget, mattis at erat. \r\n\r\nPellentesque at odio quam, et egestas nunc. Sed quis leo et orci consectetur porttitor nec fringilla lorem. Duis sit amet adipiscing enim. \r\n\r\nSuspendisse luctus justo sed risus dictum eu dignissim libero iaculis. Donec velit magna, auctor ullamcorper blandit eget, lobortis ac lectus. Praesent rhoncus eros quis lectus tempor a commodo leo aliquam. Donec convallis libero in nibh feugiat eleifend aliquet eros vehicula. \r\n\r\nQuisque est dui, auctor ac adipiscing at, facilisis ac magna. Mauris semper iaculis erat, sed facilisis felis ultrices eu. Phasellus ut orci non lectus ornare facilisis. Suspendisse gravida malesuada mollis. Praesent rutrum orci non nulla aliquet aliquam. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetur Adip\r\n\r\nCras scelerisque arcu non lacus interdum congue. Suspendisse potenti. Nunc luctus ullamcorper magna in laoreet. Proin diam mauris, egestas fringilla pulvinar vitae, pulvinar sit amet neque. Aliquam sit amet risus metus. Ut urna nulla, accumsan sit amet dapibus vel, bibendum id justo. Sed nec massa leo, at pulvinar ligula. \r\n\r\n• Lorem ipsum dolor\r\n• Sit amet, consectetur\r\n• Adipisicing elit, sed\r\n• Do eiusmod tempor\r\n• Incididunt ut labore\r\n• Et dolore magna\r\n• Aliqua. Ut enim\r\n• Ad minim veniam,\r\n• Quis nostrud exercitation\r\n• Ullamco laboris nisi\r\nLorem Ipsum Dolor Sit Amet Consectetur A\r\n\r\nMaecenas a enim sem. Vivamus facilisis dolor euismod turpis gravida malesuada. Nunc non sem orci. Aliquam erat volutpat. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetur Adipi",
+    "full_text_type": "txt",
+    "full_text_license": 1,
+    "url": "",
+    "parent_session": 6,
+    "keywords": [
+      2,
+      1
+    ],
+    "languages": [
+      1
+    ],
+    "topics": [
+      1
+    ]
+  }
+},
+{
+  "model": "abstracts.work",
+  "pk": 3,
+  "fields": {
+    "last_updated": "2020-04-01T13:47:59.254Z",
+    "user_last_updated": null,
+    "search_text": null,
+    "conference": 2,
+    "title": "Arma Virumque Cano",
+    "work_type": 2,
+    "full_text": "Lorem Ipsum Dolor Sit Amet Consectetur Ad\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \r\n\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. \r\n\r\nDonec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi, facilisis sit amet eleifend nec, pharetra ut augue. Integer quam nunc, consequat nec egestas ac, volutpat ac nisi. \r\n\r\nSed consectetur dignissim dignissim. Donec pretium est sit amet ipsum fringilla feugiat. Aliquam erat volutpat. Maecenas scelerisque, orci sit amet cursus tincidunt, libero nisl eleifend tortor, vitae cursus risus mauris vitae nisi. Cras laoreet ultrices ligula eget tempus. \r\n\r\nAenean metus purus, iaculis ut imperdiet eget, sodales et massa. Duis pellentesque nisl vel massa dapibus non lacinia velit volutpat. Maecenas accumsan interdum sodales. In hac habitasse platea dictumst. Pellentesque ornare blandit orci, eget tristique risus convallis ut. Vivamus a sapien neque. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetur\r\n\r\nNam quis sem orci. Phasellus ligula tellus, lobortis nec accumsan eget, mattis at erat. \r\n\r\nPellentesque at odio quam, et egestas nunc. Sed quis leo et orci consectetur porttitor nec fringilla lorem. Duis sit amet adipiscing enim. \r\n\r\nSuspendisse luctus justo sed risus dictum eu dignissim libero iaculis. Donec velit magna, auctor ullamcorper blandit eget, lobortis ac lectus. Praesent rhoncus eros quis lectus tempor a commodo leo aliquam. Donec convallis libero in nibh feugiat eleifend aliquet eros vehicula. \r\n\r\nQuisque est dui, auctor ac adipiscing at, facilisis ac magna. Mauris semper iaculis erat, sed facilisis felis ultrices eu. Phasellus ut orci non lectus ornare facilisis. Suspendisse gravida malesuada mollis. Praesent rutrum orci non nulla aliquet aliquam. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetur A",
+    "full_text_type": "txt",
+    "full_text_license": null,
+    "url": "http://example.com",
+    "parent_session": null,
+    "keywords": [
+      3
+    ],
+    "languages": [],
+    "topics": [
+      2,
+      3,
+      4
+    ]
+  }
+},
+{
+  "model": "abstracts.work",
+  "pk": 5,
+  "fields": {
+    "last_updated": "2021-01-05T16:45:08.387Z",
+    "user_last_updated": null,
+    "search_text": "'art':2A 'comput':1A",
+    "conference": 4,
+    "title": "Computer Art",
+    "work_type": 1,
+    "full_text": "",
+    "full_text_type": "txt",
+    "full_text_license": null,
+    "url": "",
+    "parent_session": null,
+    "keywords": [
+      3
+    ],
+    "languages": [
+      3
+    ],
+    "topics": []
+  }
+},
+{
+  "model": "abstracts.work",
+  "pk": 6,
+  "fields": {
+    "last_updated": "2020-04-20T15:33:55.852Z",
+    "user_last_updated": 1,
+    "search_text": "'big':2A 'panel':3A 'session':4A",
+    "conference": 1,
+    "title": "A big panel session",
+    "work_type": 3,
+    "full_text": "",
+    "full_text_type": "",
+    "full_text_license": 2,
+    "url": "",
+    "parent_session": null,
+    "keywords": [],
+    "languages": [],
+    "topics": []
+  }
+},
+{
+  "model": "abstracts.work",
+  "pk": 7,
+  "fields": {
+    "last_updated": "2020-04-20T16:12:42.735Z",
+    "user_last_updated": 1,
+    "search_text": "'far':6A 'foo':4A 'respons':1A",
+    "conference": 1,
+    "title": "Response to a Foo too Far",
+    "work_type": 2,
+    "full_text": "",
+    "full_text_type": "",
+    "full_text_license": 2,
+    "url": "",
+    "parent_session": 6,
+    "keywords": [],
+    "languages": [],
+    "topics": []
+  }
+},
+{
+  "model": "abstracts.work",
+  "pk": 8,
+  "fields": {
+    "last_updated": "2020-04-20T16:15:39.563Z",
+    "user_last_updated": 1,
+    "search_text": "'art':4A 'histori':5A 'session':2A",
+    "conference": 4,
+    "title": "A session on art history",
+    "work_type": 3,
+    "full_text": "",
+    "full_text_type": "",
+    "full_text_license": null,
+    "url": "",
+    "parent_session": null,
+    "keywords": [],
+    "languages": [],
+    "topics": []
   }
 },
 {
@@ -256,6 +545,54 @@
   }
 },
 {
+  "model": "abstracts.institution",
+  "pk": 1,
+  "fields": {
+    "last_updated": "2020-05-13T20:08:14.542Z",
+    "user_last_updated": 1,
+    "name": "Wood's Hole Institute",
+    "city": "Smithtown",
+    "state_province_region": "New York",
+    "country": 1
+  }
+},
+{
+  "model": "abstracts.institution",
+  "pk": 2,
+  "fields": {
+    "last_updated": "2020-05-13T20:05:48.388Z",
+    "user_last_updated": 1,
+    "name": "Stanford University",
+    "city": "Palo Alto",
+    "state_province_region": "California",
+    "country": 1
+  }
+},
+{
+  "model": "abstracts.institution",
+  "pk": 3,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.606Z",
+    "user_last_updated": null,
+    "name": "University of Maryland",
+    "city": "College Park",
+    "state_province_region": "",
+    "country": 1
+  }
+},
+{
+  "model": "abstracts.institution",
+  "pk": 4,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.606Z",
+    "user_last_updated": null,
+    "name": "Abandoned Institution",
+    "city": "Essex",
+    "state_province_region": "",
+    "country": 2
+  }
+},
+{
   "model": "abstracts.affiliation",
   "pk": 1,
   "fields": {
@@ -288,47 +625,48 @@
   }
 },
 {
-  "model": "auth.user",
+  "model": "abstracts.author",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$180000$tPj49fsbZxwZ$0acMULPg7LIKk4wcMuTgXfTRloYaMStvda8CXpk080I=",
-    "last_login": "2020-05-13T20:03:08.678Z",
-    "is_superuser": true,
-    "username": "root",
-    "first_name": "",
-    "last_name": "",
-    "email": "root@dh-abstracts.com",
-    "is_staff": true,
-    "is_active": true,
-    "date_joined": "2019-04-28T02:03:30.475Z",
-    "groups": [],
-    "user_permissions": []
+    "last_updated": "2020-04-27T15:22:04.779Z",
+    "user_last_updated": 1,
+    "appellations_index": "Rosalind Franklin Rosalind Krauss"
   }
 },
 {
-  "model": "auth.user",
+  "model": "abstracts.author",
   "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$180000$pW5prafdN86K$amwfL+k69pELBt/Vk8k8CNlSDr6JGF51vLbRHEps4Fo=",
-    "last_login": "2020-04-08T20:16:46.989Z",
-    "is_superuser": false,
-    "username": "student",
-    "first_name": "",
-    "last_name": "",
-    "email": "",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2020-04-08T19:51:27.846Z",
-    "groups": [],
-    "user_permissions": []
+    "last_updated": "2020-04-03T19:23:27.582Z",
+    "user_last_updated": null,
+    "appellations_index": "John Watson"
   }
 },
 {
-  "model": "sites.site",
-  "pk": 1,
+  "model": "abstracts.author",
+  "pk": 3,
   "fields": {
-    "domain": "example.com",
-    "name": "example.com"
+    "last_updated": "2020-04-27T15:22:04.933Z",
+    "user_last_updated": 1,
+    "appellations_index": "Jackie Fiddle"
+  }
+},
+{
+  "model": "abstracts.author",
+  "pk": 4,
+  "fields": {
+    "last_updated": "2020-04-03T19:23:27.582Z",
+    "user_last_updated": null,
+    "appellations_index": ""
+  }
+},
+{
+  "model": "abstracts.author",
+  "pk": 5,
+  "fields": {
+    "last_updated": "2020-04-20T16:12:49.220Z",
+    "user_last_updated": 1,
+    "appellations_index": "Hotshot Session-Chair"
   }
 },
 {
@@ -449,365 +787,47 @@
   }
 },
 {
-  "model": "abstracts.author",
+  "model": "auth.user",
   "pk": 1,
   "fields": {
-    "last_updated": "2020-04-27T15:22:04.779Z",
-    "user_last_updated": 1,
-    "appellations_index": "Rosalind Franklin Rosalind Krauss"
+    "password": "pbkdf2_sha256$216000$2NF3ibN8911y$8ioN9J67zTXev7QsvRunU7vV0TMs50JpMqLfXx3tnVQ=",
+    "last_login": "2021-01-05T16:44:20.551Z",
+    "is_superuser": true,
+    "username": "root",
+    "first_name": "",
+    "last_name": "",
+    "email": "root@dh-abstracts.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2019-04-28T02:03:30.475Z",
+    "groups": [],
+    "user_permissions": []
   }
 },
 {
-  "model": "abstracts.author",
+  "model": "auth.user",
   "pk": 2,
   "fields": {
-    "last_updated": "2020-04-03T19:23:27.582Z",
-    "user_last_updated": null,
-    "appellations_index": "John Watson"
+    "password": "pbkdf2_sha256$180000$pW5prafdN86K$amwfL+k69pELBt/Vk8k8CNlSDr6JGF51vLbRHEps4Fo=",
+    "last_login": "2020-04-08T20:16:46.989Z",
+    "is_superuser": false,
+    "username": "student",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2020-04-08T19:51:27.846Z",
+    "groups": [],
+    "user_permissions": []
   }
 },
 {
-  "model": "abstracts.author",
-  "pk": 3,
-  "fields": {
-    "last_updated": "2020-04-27T15:22:04.933Z",
-    "user_last_updated": 1,
-    "appellations_index": "Jackie Fiddle"
-  }
-},
-{
-  "model": "abstracts.author",
-  "pk": 4,
-  "fields": {
-    "last_updated": "2020-04-03T19:23:27.582Z",
-    "user_last_updated": null,
-    "appellations_index": ""
-  }
-},
-{
-  "model": "abstracts.author",
-  "pk": 5,
-  "fields": {
-    "last_updated": "2020-04-20T16:12:49.220Z",
-    "user_last_updated": 1,
-    "appellations_index": "Hotshot Session-Chair"
-  }
-},
-{
-  "model": "abstracts.institution",
+  "model": "sites.site",
   "pk": 1,
   "fields": {
-    "last_updated": "2020-05-13T20:08:14.542Z",
-    "user_last_updated": 1,
-    "name": "Wood's Hole Institute",
-    "city": "Smithtown",
-    "state_province_region": "New York",
-    "country": 1
-  }
-},
-{
-  "model": "abstracts.institution",
-  "pk": 2,
-  "fields": {
-    "last_updated": "2020-05-13T20:05:48.388Z",
-    "user_last_updated": 1,
-    "name": "Stanford University",
-    "city": "Palo Alto",
-    "state_province_region": "California",
-    "country": 1
-  }
-},
-{
-  "model": "abstracts.institution",
-  "pk": 3,
-  "fields": {
-    "last_updated": "2020-04-03T19:23:27.606Z",
-    "user_last_updated": null,
-    "name": "University of Maryland",
-    "city": "College Park",
-    "state_province_region": "",
-    "country": 1
-  }
-},
-{
-  "model": "abstracts.institution",
-  "pk": 4,
-  "fields": {
-    "last_updated": "2020-04-03T19:23:27.606Z",
-    "user_last_updated": null,
-    "name": "Abandoned Institution",
-    "city": "Essex",
-    "state_province_region": "",
-    "country": 2
-  }
-},
-{
-  "model": "abstracts.work",
-  "pk": 1,
-  "fields": {
-    "last_updated": "2020-04-20T15:42:37.254Z",
-    "user_last_updated": 1,
-    "search_text": "'ac':120B,122B,262B,288B,292B 'accumsan':183B,217B,362B 'ad':32B,398B 'adip':327B 'adipi':438B 'adipis':17B,383B 'adipisc':242B,289B 'aenean':162B 'aliqua':29B,395B 'aliquam':136B,273B,320B,354B,429B 'aliquet':281B,319B 'aliquip':42B 'amet':9B,15B,108B,132B,143B,241B,325B,352B,356B,364B,381B,411B,436B 'anim':76B 'arcu':330B 'auctor':257B,287B 'augu':113B 'aut':48B 'bibendum':367B 'blandit':193B,259B 'cillum':57B 'commodo':45B,271B 'condimentum':91B 'congu':334B 'consec':10B 'consectetur':16B,125B,234B,326B,382B,412B,437B 'consequat':46B,85B,117B 'conval':198B,275B 'cras':156B,328B 'culpa':71B 'cupidatat':66B 'cursus':144B,151B 'dapibus':98B,177B,365B 'deserunt':74B 'diam':344B 'dictum':249B 'dictumst':190B 'dignissim':126B,127B,251B 'dolor':7B,13B,27B,50B,58B,89B,206B,323B,379B,393B,409B,420B,434B 'donec':80B,87B,128B,254B,274B 'dui':47B,172B,239B,286B 'ea':44B 'egesta':119B,227B,346B 'eget':160B,168B,195B,218B,260B 'eiusmod':21B,387B 'eleifend':86B,109B,148B,280B 'elementum':81B 'elit':18B,384B 'enim':31B,243B,397B,416B 'erat':90B,137B,221B,297B,430B 'ero':266B,282B 'ess':56B 'est':78B,130B,285B 'et':26B,102B,170B,226B,232B,392B 'eu':59B,83B,250B,302B 'euismod':421B 'ex':43B 'excepteur':63B 'exercit':37B,403B 'facilisi':106B,291B,299B,309B,419B 'far':4A 'feli':300B 'feugiat':135B,279B 'foo':2A 'fringilla':134B,237B,347B 'fugiat':60B 'gravida':101B,311B,423B 'habitass':188B 'hac':187B 'iaculi':165B,253B,296B 'id':77B,368B 'imperdiet':167B 'incididunt':23B,389B 'integ':103B,114B 'interdum':184B,333B 'ipsum':6B,12B,100B,133B,205B,322B,378B,408B,433B 'irur':49B 'justo':246B,369B 'labor':25B,391B 'labori':39B,405B 'laborum':79B 'lacinia':179B 'lacus':332B 'laoreet':157B,342B 'lectus':104B,263B,268B,307B 'leo':231B,272B,373B 'libero':146B,252B,276B 'ligula':82B,159B,213B,376B 'loborti':215B,261B 'lorem':5B,11B,204B,238B,321B,377B,407B,432B 'luctus':245B,338B 'maecena':139B,182B,414B 'magna':28B,256B,293B,340B,394B 'malesuada':312B,424B 'massa':171B,176B,372B 'matti':219B 'mauri':153B,294B,345B 'metus':163B,358B 'minim':33B,399B 'molli':313B 'mollit':75B 'nam':208B 'nec':88B,110B,118B,216B,236B,371B 'nequ':203B,353B 'nibh':278B 'nisi':40B,105B,123B,155B,406B 'nisl':147B,174B 'non':67B,178B,306B,317B,331B,426B 'nostrud':36B,402B 'nulla':61B,318B,361B 'nunc':116B,228B,337B,425B 'occaecat':65B 'odio':224B 'officia':73B 'orci':141B,194B,211B,233B,305B,316B,428B 'ornar':192B,308B 'pariatur':62B 'pellentesqu':173B,191B,222B 'pharetra':111B 'phasellus':212B,303B 'platea':189B 'porttitor':95B,96B,235B 'potenti':336B 'praesent':94B,264B,314B 'pretium':129B 'proident':68B 'proin':343B 'pulvinar':348B,350B,375B 'purus':164B 'quam':115B,225B 'qui':35B,72B,209B,230B,267B,401B 'quisqu':284B 'reprehenderit':52B 'rhoncus':265B 'risus':97B,152B,197B,248B,357B 'rutrum':99B,315B 'sagitti':92B 'sapien':84B,202B 'scelerisqu':140B,329B 'sed':19B,124B,229B,247B,298B,370B,385B 'sem':93B,210B,417B,427B 'semper':295B 'si':207B 'sint':64B 'sit':8B,14B,107B,131B,142B,240B,324B,351B,355B,363B,380B,410B,435B 'sodal':169B,185B 'sunt':69B 'suspendiss':244B,310B,335B 'tellus':214B 'tempor':22B,269B,388B 'tempus':161B 'tincidunt':145B 'tortor':149B 'tristiqu':196B 'turpi':422B 'ullamco':38B,404B 'ullamcorp':258B,339B 'ultric':158B,301B 'urna':360B 'ut':24B,30B,41B,112B,166B,199B,304B,359B,390B,396B 'vehicula':283B 'vel':175B,366B 'velit':55B,180B,255B 'veniam':34B,400B 'vita':150B,154B,349B 'vivamus':200B,418B 'volupt':54B 'volutpat':121B,138B,181B,431B",
-    "conference": 1,
-    "title": "A Foo Too Far",
-    "work_type": 1,
-    "full_text": "Lorem Ipsum Dolor Sit Amet Consec\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \r\n\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. \r\n\r\nDonec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi, facilisis sit amet eleifend nec, pharetra ut augue. Integer quam nunc, consequat nec egestas ac, volutpat ac nisi. \r\n\r\nSed consectetur dignissim dignissim. Donec pretium est sit amet ipsum fringilla feugiat. Aliquam erat volutpat. Maecenas scelerisque, orci sit amet cursus tincidunt, libero nisl eleifend tortor, vitae cursus risus mauris vitae nisi. Cras laoreet ultrices ligula eget tempus. \r\n\r\nAenean metus purus, iaculis ut imperdiet eget, sodales et massa. Duis pellentesque nisl vel massa dapibus non lacinia velit volutpat. Maecenas accumsan interdum sodales. In hac habitasse platea dictumst. Pellentesque ornare blandit orci, eget tristique risus convallis ut. Vivamus a sapien neque. \r\n\r\nLorem Ipsum Dolor Si\r\n\r\nNam quis sem orci. Phasellus ligula tellus, lobortis nec accumsan eget, mattis at erat. \r\n\r\nPellentesque at odio quam, et egestas nunc. Sed quis leo et orci consectetur porttitor nec fringilla lorem. Duis sit amet adipiscing enim. \r\n\r\nSuspendisse luctus justo sed risus dictum eu dignissim libero iaculis. Donec velit magna, auctor ullamcorper blandit eget, lobortis ac lectus. Praesent rhoncus eros quis lectus tempor a commodo leo aliquam. Donec convallis libero in nibh feugiat eleifend aliquet eros vehicula. \r\n\r\nQuisque est dui, auctor ac adipiscing at, facilisis ac magna. Mauris semper iaculis erat, sed facilisis felis ultrices eu. Phasellus ut orci non lectus ornare facilisis. Suspendisse gravida malesuada mollis. Praesent rutrum orci non nulla aliquet aliquam. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetur Adip\r\n\r\nCras scelerisque arcu non lacus interdum congue. Suspendisse potenti. Nunc luctus ullamcorper magna in laoreet. Proin diam mauris, egestas fringilla pulvinar vitae, pulvinar sit amet neque. Aliquam sit amet risus metus. Ut urna nulla, accumsan sit amet dapibus vel, bibendum id justo. Sed nec massa leo, at pulvinar ligula. \r\n\r\n\u2022 Lorem ipsum dolor\r\n\u2022 Sit amet, consectetur\r\n\u2022 Adipisicing elit, sed\r\n\u2022 Do eiusmod tempor\r\n\u2022 Incididunt ut labore\r\n\u2022 Et dolore magna\r\n\u2022 Aliqua. Ut enim\r\n\u2022 Ad minim veniam,\r\n\u2022 Quis nostrud exercitation\r\n\u2022 Ullamco laboris nisi\r\nLorem Ipsum Dolor Sit Amet Consectetur A\r\n\r\nMaecenas a enim sem. Vivamus facilisis dolor euismod turpis gravida malesuada. Nunc non sem orci. Aliquam erat volutpat. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetur Adipi",
-    "full_text_type": "txt",
-    "full_text_license": 1,
-    "url": "",
-    "parent_session": 6,
-    "keywords": [
-      2,
-      1
-    ],
-    "languages": [
-      1
-    ],
-    "topics": [
-      1
-    ]
-  }
-},
-{
-  "model": "abstracts.work",
-  "pk": 3,
-  "fields": {
-    "last_updated": "2020-04-01T13:47:59.254Z",
-    "user_last_updated": null,
-    "search_text": null,
-    "conference": 2,
-    "title": "Arma Virumque Cano",
-    "work_type": 2,
-    "full_text": "Lorem Ipsum Dolor Sit Amet Consectetur Ad\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \r\n\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. \r\n\r\nDonec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi, facilisis sit amet eleifend nec, pharetra ut augue. Integer quam nunc, consequat nec egestas ac, volutpat ac nisi. \r\n\r\nSed consectetur dignissim dignissim. Donec pretium est sit amet ipsum fringilla feugiat. Aliquam erat volutpat. Maecenas scelerisque, orci sit amet cursus tincidunt, libero nisl eleifend tortor, vitae cursus risus mauris vitae nisi. Cras laoreet ultrices ligula eget tempus. \r\n\r\nAenean metus purus, iaculis ut imperdiet eget, sodales et massa. Duis pellentesque nisl vel massa dapibus non lacinia velit volutpat. Maecenas accumsan interdum sodales. In hac habitasse platea dictumst. Pellentesque ornare blandit orci, eget tristique risus convallis ut. Vivamus a sapien neque. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetur\r\n\r\nNam quis sem orci. Phasellus ligula tellus, lobortis nec accumsan eget, mattis at erat. \r\n\r\nPellentesque at odio quam, et egestas nunc. Sed quis leo et orci consectetur porttitor nec fringilla lorem. Duis sit amet adipiscing enim. \r\n\r\nSuspendisse luctus justo sed risus dictum eu dignissim libero iaculis. Donec velit magna, auctor ullamcorper blandit eget, lobortis ac lectus. Praesent rhoncus eros quis lectus tempor a commodo leo aliquam. Donec convallis libero in nibh feugiat eleifend aliquet eros vehicula. \r\n\r\nQuisque est dui, auctor ac adipiscing at, facilisis ac magna. Mauris semper iaculis erat, sed facilisis felis ultrices eu. Phasellus ut orci non lectus ornare facilisis. Suspendisse gravida malesuada mollis. Praesent rutrum orci non nulla aliquet aliquam. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetur A",
-    "full_text_type": "txt",
-    "full_text_license": null,
-    "url": "http://example.com",
-    "parent_session": null,
-    "keywords": [
-      3
-    ],
-    "languages": [],
-    "topics": [
-      2,
-      3,
-      4
-    ]
-  }
-},
-{
-  "model": "abstracts.work",
-  "pk": 5,
-  "fields": {
-    "last_updated": "2020-04-01T13:47:59.254Z",
-    "user_last_updated": null,
-    "search_text": null,
-    "conference": 4,
-    "title": "Computer Art",
-    "work_type": 1,
-    "full_text": "",
-    "full_text_type": "txt",
-    "full_text_license": null,
-    "url": "",
-    "parent_session": null,
-    "keywords": [
-      3
-    ],
-    "languages": [],
-    "topics": []
-  }
-},
-{
-  "model": "abstracts.work",
-  "pk": 6,
-  "fields": {
-    "last_updated": "2020-04-20T15:33:55.852Z",
-    "user_last_updated": 1,
-    "search_text": "'big':2A 'panel':3A 'session':4A",
-    "conference": 1,
-    "title": "A big panel session",
-    "work_type": 3,
-    "full_text": "",
-    "full_text_type": "",
-    "full_text_license": 2,
-    "url": "",
-    "parent_session": null,
-    "keywords": [],
-    "languages": [],
-    "topics": []
-  }
-},
-{
-  "model": "abstracts.work",
-  "pk": 7,
-  "fields": {
-    "last_updated": "2020-04-20T16:12:42.735Z",
-    "user_last_updated": 1,
-    "search_text": "'far':6A 'foo':4A 'respons':1A",
-    "conference": 1,
-    "title": "Response to a Foo too Far",
-    "work_type": 2,
-    "full_text": "",
-    "full_text_type": "",
-    "full_text_license": 2,
-    "url": "",
-    "parent_session": 6,
-    "keywords": [],
-    "languages": [],
-    "topics": []
-  }
-},
-{
-  "model": "abstracts.work",
-  "pk": 8,
-  "fields": {
-    "last_updated": "2020-04-20T16:15:39.563Z",
-    "user_last_updated": 1,
-    "search_text": "'art':4A 'histori':5A 'session':2A",
-    "conference": 4,
-    "title": "A session on art history",
-    "work_type": 3,
-    "full_text": "",
-    "full_text_type": "",
-    "full_text_license": null,
-    "url": "",
-    "parent_session": null,
-    "keywords": [],
-    "languages": [],
-    "topics": []
-  }
-},
-{
-  "model": "abstracts.organizer",
-  "pk": 1,
-  "fields": {
-    "last_updated": "2020-04-03T19:23:27.635Z",
-    "user_last_updated": null,
-    "name": "Tesco Conferences",
-    "abbreviation": "TeCo",
-    "notes": "Lorem Ipsum Dolor Sit Amet\r\n\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \r\n\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. \r\n\r\nDonec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi, facilisis sit amet eleifend nec, pharetra ut augue. Integer quam nunc, consequat nec egestas ac, volutpat ac nisi. \r\n\r\nSed consectetur dignissim dignissim. Donec pretium est sit amet ipsum fringilla feugiat. Aliquam erat volutpat. Maecenas scelerisque, orci sit amet cursus tincidunt, libero nisl eleifend tortor, vitae cursus risus mauris vitae nisi. Cras laoreet ultrices ligula eget tempus. \r\n\r\nAenean metus purus, iaculis ut imperdiet eget, sodales et massa. Duis pellentesque nisl vel massa dapibus non lacinia velit volutpat. Maecenas accumsan interdum sodales. In hac habitasse platea dictumst. Pellentesque ornare blandit orci, eget tristique risus convallis ut. Vivamus a sapien neque. \r\n\r\nLorem Ipsum Dolor Sit Amet Consectetu",
-    "url": "https://tesco.com",
-    "conferences_organized": [
-      2,
-      1
-    ]
-  }
-},
-{
-  "model": "abstracts.organizer",
-  "pk": 2,
-  "fields": {
-    "last_updated": "2020-04-03T19:23:27.635Z",
-    "user_last_updated": null,
-    "name": "College Art Association",
-    "abbreviation": "CAA",
-    "notes": "",
-    "url": "",
-    "conferences_organized": [
-      3
-    ]
-  }
-},
-{
-  "model": "abstracts.conference",
-  "pk": 1,
-  "fields": {
-    "year": 2000,
-    "short_title": "New York",
-    "notes": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Donec elementum ligula eu sapien consequat eleifend. Donec nec dolor erat, condimentum sagittis sem. Praesent porttitor porttitor risus, dapibus rutrum ipsum gravida et. Integer lectus nisi,",
-    "url": "https://example.com",
-    "theme_title": "",
-    "start_date": null,
-    "end_date": null,
-    "city": "",
-    "state_province_region": "",
-    "country": null,
-    "references": "",
-    "contributors": "",
-    "attendance": "",
-    "entry_status": "n",
-    "editing_user": null,
-    "program_available": false,
-    "abstracts_available": false,
-    "search_text": "2000 New York  Test Series TSC Tesco Conferences TeCo",
-    "hosting_institutions": []
-  }
-},
-{
-  "model": "abstracts.conference",
-  "pk": 2,
-  "fields": {
-    "year": 2003,
-    "short_title": "University of Toronto",
-    "notes": "\u2022 Lorem ipsum dolor\r\n\u2022 Sit amet, consectetur\r\n\u2022 Adipisicing elit, sed\r\n\u2022 Do eiusmod tempor\r\n\u2022 Incididunt ut labore\r\n\u2022 Et dolore magna\r\n\u2022 Aliqua. Ut enim\r\n\u2022 Ad minim veniam,\r\n\u2022 Quis nostrud exercitation\r\n\u2022 Ullamco laboris nisi\r\n\u2022 Ut aliquip ex\r\n\u2022 Ea commodo consequat.",
-    "url": "",
-    "theme_title": "",
-    "start_date": null,
-    "end_date": null,
-    "city": "",
-    "state_province_region": "",
-    "country": null,
-    "references": "",
-    "contributors": "",
-    "attendance": "",
-    "entry_status": "n",
-    "editing_user": null,
-    "program_available": false,
-    "abstracts_available": false,
-    "search_text": "2003 University of Toronto  Test Series TSC Tesco Conferences TeCo",
-    "hosting_institutions": []
-  }
-},
-{
-  "model": "abstracts.conference",
-  "pk": 3,
-  "fields": {
-    "year": 2019,
-    "short_title": "Los Angeles",
-    "notes": "",
-    "url": "",
-    "theme_title": "",
-    "start_date": "2019-01-04",
-    "end_date": "2019-01-07",
-    "city": "Los Angeles",
-    "state_province_region": "Calilfornia",
-    "country": 1,
-    "references": "",
-    "contributors": "",
-    "attendance": "",
-    "entry_status": "n",
-    "editing_user": null,
-    "program_available": false,
-    "abstracts_available": false,
-    "search_text": "2019 Los Angeles Los Angeles Stanford University Wood's Hole Institute College Art Association Annual Conference CAA College Art Association CAA",
-    "hosting_institutions": [
-      2,
-      1
-    ]
-  }
-},
-{
-  "model": "abstracts.conference",
-  "pk": 4,
-  "fields": {
-    "year": 1968,
-    "short_title": "Computers and Their Potential Applications in Museums: A Conference (Metropolitan Museum of Art)",
-    "notes": "Computers and Their Potential Applications in Museums: A Conference",
-    "url": "",
-    "theme_title": "",
-    "start_date": null,
-    "end_date": null,
-    "city": "",
-    "state_province_region": "",
-    "country": null,
-    "references": "",
-    "contributors": "",
-    "attendance": "",
-    "entry_status": "n",
-    "editing_user": null,
-    "program_available": false,
-    "abstracts_available": false,
-    "search_text": "1968 Computers and Their Potential Applications in Museums: A Conference (Metropolitan Museum of Art) ",
-    "hosting_institutions": []
+    "domain": "example.com",
+    "name": "example.com"
   }
 }
 ]
