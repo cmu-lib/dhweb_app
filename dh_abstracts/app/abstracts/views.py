@@ -194,7 +194,9 @@ class LanguageAutocomplete(ItemLabelAutocomplete):
     raise_exception = True
 
     def get_queryset(self):
-        qs = Language.objects.annotate(n_works=Count("works")).order_by("-n_works")
+        qs = Language.objects.annotate(n_works=Count("works")).order_by(
+            "-n_works", "title"
+        )
 
         if self.q:
             qs = qs.filter(title__icontains=self.q).all()
