@@ -34,11 +34,11 @@ class ConferenceXMLImportTest(TestCase):
         self.assertTrue(
             Work.objects.filter(title__icontains="Archivos digitales").exists()
         )
-
         created_work = Work.objects.filter(
             title__icontains="Archivos digitales"
         ).first()
         self.assertEqual(created_work.conference, conference)
+        self.assertIn(Language.objects.get(code="es"), created_work.languages.all())
         self.assertTrue(Appellation.objects.filter(first_name="Maria Jose").exists())
         self.assertEqual(created_work.authorships.count(), 2)
         self.assertTrue(
@@ -54,5 +54,22 @@ class ConferenceXMLImportTest(TestCase):
         self.assertTrue(
             Affiliation.objects.filter(
                 department="Berkman Klein Center for Internet and Society"
+            ).exists()
+        )
+
+
+class ConferenceXMLDirectoryImportTest(TestCase):
+    fixtures = ["test.json"]
+
+    def test_load_directory(self):
+        conference = Conference.objects.first()
+
+        conference.import_xml_directory("/vol/static_files/files")
+        self.assertTrue(
+            Work.objects.filter(title__icontains="Archivos digitales").exists()
+        )
+        self.assertTrue(
+            Work.objects.filter(
+                title__icontains="The Index of Digital Humanities Conferences"
             ).exists()
         )

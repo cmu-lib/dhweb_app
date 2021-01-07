@@ -249,12 +249,9 @@ class Conference(models.Model):
         return reverse("conference_edit", kwargs={"pk": self.pk})
 
     def import_xml_directory(self, dirpath):
-        all_files = glob(f"{options['filepath'][0]}/**/*.xml", recursive=True)
+        all_files = glob(f"{dirpath}/**/*.xml", recursive=True)
         for f in all_files:
-            try:
-                self.import_xml_file(self, f)
-            except:
-                continue
+            self.import_xml_file(f)
 
     def import_xml_file(self, filepath):
         with open(filepath, "r") as xmlpath:
@@ -283,6 +280,8 @@ class Conference(models.Model):
             topics = xml.xpath(
                 "//keywords[@n='topics']/term/text() | //keywords[@n='topic']/term/text()"
             ).getall()
+            language_code = xml.xpath("//text").attrib["lang"]
+            language = Language.objects.get(code=language_code)
 
             new_work = Work.objects.get_or_create(
                 conference=self,
@@ -291,6 +290,8 @@ class Conference(models.Model):
                 full_text=work_full_text,
                 full_text_type="xml",
             )[0]
+
+            new_work.languages.add(language)
 
             for kw in keywords:
                 for kkw in re.split("[;,]", kw):

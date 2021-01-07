@@ -246,6 +246,14 @@
   }
 },
 {
+  "model": "abstracts.language",
+  "pk": 5,
+  "fields": {
+    "title": "Spanish",
+    "code": "es"
+  }
+},
+{
   "model": "abstracts.topic",
   "pk": 1,
   "fields": {
