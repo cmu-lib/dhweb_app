@@ -569,6 +569,10 @@ class ConferenceForm(forms.ModelForm):
             )
 
 
+class ConferenceXMLUploadForm(forms.Form):
+    file = forms.FileField()
+
+
 class ConferenceSeriesInline(forms.Form):
     series = forms.ModelChoiceField(
         queryset=ConferenceSeries.objects.all(), required=True

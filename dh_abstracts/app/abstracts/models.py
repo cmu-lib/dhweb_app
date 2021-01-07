@@ -250,20 +250,28 @@ class Conference(models.Model):
 
     def import_xml_directory(self, dirpath):
         all_files = glob(f"{dirpath}/**/*.xml", recursive=True)
-        for f in all_files:
-            self.import_xml_file(f)
+        successful_files = []
+        failed_files = []
+        for filepath in all_files:
+            try:
+                self.import_xml_file(filepath)
+                successful_files.append(filepath)
+            except Exception as e:
+                failed_files.append({"filepath": filepath, "error": e})
+                continue
+
+        return {"successful_files": successful_files, "failed_files": failed_files}
 
     def import_xml_file(self, filepath):
+        fn = FileImport.objects.get_or_create(path=filepath)
+        attempt = FileImportTries(file_name=fn[0], conference=self)
+        attempt.save()
         with open(filepath, "r") as xmlpath:
-            fn = FileImport.objects.get_or_create(path=filepath)
-            attempt = FileImportTries(file_name=fn[0], conference=self)
-            attempt.save()
-
             xml = Selector(text=xmlpath.read())
 
             # For now, skip over teicorpora
             if xml.xpath("//teicorpus").get() is not None:
-                err = f"{f} contained a <teicorpus> and is not valid."
+                err = f"{filepath} contained a <teicorpus> and is not valid."
                 attempt.add_message(err, warning=True)
                 raise err
 
@@ -410,6 +418,8 @@ class Conference(models.Model):
                 new_authorship = new_authorship[0]
                 for target_affiliation in final_affiliation_list:
                     new_authorship.affiliations.add(target_affiliation)
+
+        return filepath
 
 
 class ConferenceDocument(models.Model):

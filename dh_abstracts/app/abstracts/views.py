@@ -42,7 +42,8 @@ from datetime import datetime
 import csv
 import sys
 from operator import attrgetter
-
+from tempfile import NamedTemporaryFile, TemporaryDirectory
+import zipfile
 from . import models
 
 from .models import (
@@ -87,6 +88,7 @@ from .forms import (
     WorkTypeMergeForm,
     InstitutionMultiMergeForm,
     TopicMultiMergeForm,
+    ConferenceXMLUploadForm,
 )
 
 
@@ -1935,6 +1937,66 @@ class ConferenceDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         return super(ConferenceDelete, self).delete(request, *args, **kwargs)
+
+
+class ConferenceXMLLoad(StaffRequiredMixin, DetailView):
+    model = Conference
+    template_name = "conference_xml_load.html"
+    context_object_name = "conference"
+    extra_context = {"form": ConferenceXMLUploadForm()}
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        raw_form = ConferenceXMLUploadForm(request.POST, request.FILES)
+        conference = self.get_object()
+        if raw_form.is_valid():
+            with TemporaryDirectory() as upload_dir:
+
+                # Write uploaded zip to tempdir
+                with NamedTemporaryFile(dir=upload_dir, suffix=".zip") as tei_zip:
+                    with open(tei_zip.name, "wb") as upload_zip:
+                        for chunk in request.FILES["file"]:
+                            upload_zip.write(chunk)
+
+                    if not zipfile.is_zipfile(tei_zip.name):
+                        messages.error(request, "That is not a valid zipfile.")
+                        return render(
+                            request,
+                            "conference_xml_load.html",
+                            {
+                                "conference": self.get_object(),
+                                "form": ConferenceXMLUploadForm(),
+                            },
+                        )
+
+                    # Extract all the files within
+                    with zipfile.ZipFile(tei_zip.name) as zip_ref:
+                        zip_ref.extractall(upload_dir)
+
+                    # Import all XML
+                    import_results = conference.import_xml_directory(upload_dir)
+                    messages.info(
+                        request,
+                        f"{len(import_results['successful_files'])} files valid.",
+                    )
+                    for err in import_results["failed_files"]:
+                        messages.error(request, "")
+                    if len(import_results["failed_files"]) == 0:
+                        messages.success(request, "All files imported successfully.")
+
+            return render(
+                request,
+                "conference_xml_load.html",
+                {"conference": self.get_object(), "form": ConferenceXMLUploadForm()},
+            )
+        else:
+            for f, e in raw_form.errors.items():
+                messages.error(request, f"{f}: {e}")
+            return render(
+                request,
+                "conference_xml_load.html",
+                {"conference": self.get_object(), "form": ConferenceXMLUploadForm()},
+            )
 
 
 @login_required

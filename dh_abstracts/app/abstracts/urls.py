@@ -46,6 +46,11 @@ urlpatterns = [
         views.conference_checkout,
         name="conference_checkout",
     ),
+    path(
+        "conference/<int:pk>/import_xml",
+        views.ConferenceXMLLoad.as_view(),
+        name="conference_xml_load",
+    ),
     path("downloads", views.cache_for_anon(views.download_data), name="download_data"),
     path(
         "keyword-autocomplete",
