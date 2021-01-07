@@ -6,5 +6,6 @@
   <a href="{% url 'conference_delete' conference.id %}" role="button" class="btn btn-danger btn-sm mx-2">Delete</a>
   <a href="{% url 'work_create' %}?conference={{ conference.id }}" role="button" class="btn btn-primary btn-sm mx-2">New
     work</a>
+  <a href="{% url 'conference_xml_load' conference.id %}" role="button" class="btn btn-primary btn-sm mx-2">Load XML</a>
 </div>
 {% endif %}
