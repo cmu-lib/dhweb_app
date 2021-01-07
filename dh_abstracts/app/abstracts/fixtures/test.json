@@ -521,6 +521,14 @@
   }
 },
 {
+  "model": "abstracts.country",
+  "pk": 3,
+  "fields": {
+    "tgn_id": "https://vocab.getty.edu/tgn/1000050",
+    "pref_name": "Colombia"
+  }
+},
+{
   "model": "abstracts.countrylabel",
   "pk": 1,
   "fields": {
@@ -542,6 +550,14 @@
   "fields": {
     "name": "United States of America",
     "country": 1
+  }
+},
+{
+  "model": "abstracts.countrylabel",
+  "pk": 4,
+  "fields": {
+    "name": "Colombia",
+    "country": 3
   }
 },
 {
@@ -791,7 +807,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$216000$2NF3ibN8911y$8ioN9J67zTXev7QsvRunU7vV0TMs50JpMqLfXx3tnVQ=",
-    "last_login": "2021-01-05T16:44:20.551Z",
+    "last_login": "2021-01-07T15:02:25.972Z",
     "is_superuser": true,
     "username": "root",
     "first_name": "",

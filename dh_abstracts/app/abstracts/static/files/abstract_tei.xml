@@ -18,13 +18,17 @@ This example TEI-XML file is based on the format accepted by the Alliance for Di
             <forename>Maria Jose</forename>
           </persName>
           <affiliation>
-            <orgName type="department">Departamento de Historia</orgName>
-            <orgName>Universidad de los Andes</orgName>
+            <orgName>
+              <name type="sub">Departamento de Historia</name>
+              <name type="main">Universidad de los Andes</name>
+            </orgName>
             <district>Bogotá</district>
             <country>Colombia</country>
           </affiliation>
           <affiliation>
-            <orgName>Fundación Histórica Neogranadina</orgName>
+            <orgName>
+              <name type="main">Fundación Histórica Neogranadina</name>
+            </orgName>
             <country>Colombia</country>
           </affiliation>
           <email>mj.afanador28@uniandes.edu.co</email>
