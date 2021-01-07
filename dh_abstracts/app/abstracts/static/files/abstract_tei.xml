@@ -39,8 +39,10 @@ This example TEI-XML file is based on the format accepted by the Alliance for Di
             <forename>Andres</forename>
           </persName>
           <affiliation>
-            <orgName type="department">Berkman Klein Center for Internet and Society</orgName>
-            <orgName>Harvard University</orgName>
+            <orgName>
+              <name type="sub">Berkman Klein Center for Internet and Society</name>
+              <name type="main">Harvard University</name>
+            </orgName>
             <district>Cambridge</district>
             <country>United States of America</country>
           </affiliation>

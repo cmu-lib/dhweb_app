@@ -1,5 +1,4 @@
 import datetime
-
 from django.db import models
 from django.db.models import Max, Count
 from django.utils import timezone
@@ -11,6 +10,9 @@ from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.contrib.auth.models import User
 from filer.fields.file import FilerFileField
 from os.path import basename
+from glob import glob
+from parsel import Selector
+import re
 
 
 class ChangeTrackedModel(models.Model):
@@ -245,6 +247,168 @@ class Conference(models.Model):
 
     def get_absolute_url(self):
         return reverse("conference_edit", kwargs={"pk": self.pk})
+
+    def import_xml_directory(self, dirpath):
+        all_files = glob(f"{options['filepath'][0]}/**/*.xml", recursive=True)
+        for f in all_files:
+            try:
+                self.import_xml_file(self, f)
+            except:
+                continue
+
+    def import_xml_file(self, filepath):
+        with open(filepath, "r") as xmlpath:
+            fn = FileImport.objects.get_or_create(path=filepath)
+            attempt = FileImportTries(file_name=fn[0], conference=self)
+            attempt.save()
+
+            xml = Selector(text=xmlpath.read())
+
+            # For now, skip over teicorpora
+            if xml.xpath("//teicorpus").get() is not None:
+                err = f"{f} contained a <teicorpus> and is not valid."
+                attempt.add_message(err, warning=True)
+                raise err
+
+            work_type = xml.xpath("//keywords[@n='subcategory']/term/text()").get()
+            if work_type is None:
+                work_type = xml.xpath("//keywords[@n='category']/term/text()").get()
+            work_type = work_type.lower()
+            # titles + subtitles will result in multiple possible title nodes. We just concatenate them here.
+            work_title = " ".join(
+                xml.xpath("//titlestmt//title/text()").getall()
+            ).strip()
+            work_full_text = xml.xpath("//text").get()
+            keywords = xml.xpath("//keywords[@n='keywords']/term/text()").getall()
+            topics = xml.xpath(
+                "//keywords[@n='topics']/term/text() | //keywords[@n='topic']/term/text()"
+            ).getall()
+
+            new_work = Work.objects.get_or_create(
+                conference=self,
+                title=work_title,
+                work_type=WorkType.objects.get_or_create(title=work_type)[0],
+                full_text=work_full_text,
+                full_text_type="xml",
+            )[0]
+
+            for kw in keywords:
+                for kkw in re.split("[;,]", kw):
+                    target_kw = Keyword.objects.get_or_create(title=kkw.strip().lower())
+                    attempt.add_get_or_create_response(target_kw)
+                    new_work.keywords.add(target_kw[0])
+
+            for tp in topics:
+                for ttp in re.split("[;,]", tp):
+                    target_tp = Topic.objects.get_or_create(title=ttp.lower())
+                    attempt.add_get_or_create_response(target_tp)
+                    new_work.topics.add(target_tp[0])
+
+            """
+            Authors
+            """
+
+            n_authors = len(xml.xpath("//filedesc//author"))
+            for idx in range(n_authors):
+                first_name = xml.xpath(f"//author[{idx+1}]//forename/text()").get()
+                last_name = xml.xpath(f"//author[{idx+1}]//surname/text()").get()
+
+                if first_name is None:
+                    first_name = ""
+                if last_name is None:
+                    last_name = ""
+
+                target_app = Appellation.objects.get_or_create(
+                    first_name=first_name, last_name=last_name
+                )
+                attempt.add_get_or_create_response(target_app)
+                target_app = target_app[0]
+
+                possible_authors = Author.objects.filter(
+                    appellations=target_app
+                ).distinct()
+
+                if possible_authors.count() == 0:
+                    target_author = Author()
+                    target_author.save()
+                    attempt.add_create_response(target_author)
+                else:
+                    target_author = possible_authors.first()
+                    attempt.add_create_response(target_author)
+
+                all_affiliations = affiliation = xml.xpath(
+                    f"//author[{idx+1}]/affiliation"
+                )
+                final_affiliation_list = []
+                for aff_idx in range(len(all_affiliations)):
+
+                    # Get affiliation name if present
+                    affiliation_name = xml.xpath(
+                        f"//author[{idx+1}]/affiliation[{aff_idx + 1}]/orgname/name[@type='sub']/text()"
+                    ).get()
+
+                    if affiliation_name is None:
+                        affiliation_name = ""
+
+                    # Match institution if possible
+                    institution_name = xml.xpath(
+                        f"//author[{idx+1}]/affiliation[{aff_idx + 1}]/orgname/name[@type='main']/text()"
+                    ).get()
+
+                    if institution_name is None:
+                        institution_name = ""
+                    top_institution = Institution.objects.filter(
+                        name__icontains=institution_name
+                    ).first()
+                    if top_institution is None:
+                        # Try to find country, then create the institution
+                        city_name = xml.xpath(
+                            f"//author[{idx+1}]/affiliation[{aff_idx + 1}]/district/text()"
+                        ).get()
+                        if city_name is None:
+                            city_name = ""
+
+                        country_name = xml.xpath(
+                            f"//author[{idx+1}]/affiliation[{aff_idx + 1}]/orgname/name[@type='main']/text()"
+                        ).get()
+                        if country_name is None:
+                            country_name = ""
+
+                        top_country = (
+                            Country.objects.filter(names__name=country_name)
+                            .annotate(
+                                n_institutions=Count("institutions", distinct=True)
+                            )
+                            .order_by("-n_institutions")
+                            .first()
+                        )
+                        top_institution = Institution.objects.get_or_create(
+                            name=institution_name,
+                            city=city_name,
+                            country=top_country,
+                        )
+                        attempt.add_get_or_create_response(top_institution)
+                        top_institution = top_institution[0]
+
+                    # Create an affiliation
+
+                    top_affiliation = Affiliation.objects.get_or_create(
+                        department=affiliation_name,
+                        institution=top_institution,
+                    )
+                    attempt.add_get_or_create_response(top_affiliation)
+                    final_affiliation_list.append(top_affiliation[0])
+
+                new_authorship = Authorship.objects.get_or_create(
+                    work=new_work,
+                    author=target_author,
+                    appellation=target_app,
+                    authorship_order=idx + 1,
+                )
+                attempt.add_get_or_create_response(new_authorship)
+                new_authorship = new_authorship[0]
+                for target_affiliation in final_affiliation_list:
+                    new_authorship.affiliations.add(target_affiliation)
 
 
 class ConferenceDocument(models.Model):
@@ -933,10 +1097,35 @@ class FileImportTries(models.Model):
     def __str__(self):
         return f"{self.file_name} - {self.started}"
 
+    def add_message(self, message, addition_type, warning=False):
+        FileImportMessgaes.objects.create(
+            attempt=self, message=message, addition_type=addition_type, warning=warning
+        )
+
+    def add_create_response(self, create_response):
+        self.add_message(
+            message=f"Created new {type(create_response)} {create_response}",
+            addition_type="new",
+        )
+
+    def add_get_or_create_response(self, get_or_create_response):
+        actual = get_or_create_response[0]
+
+        if get_or_create_response[1]:
+            self.add_message(
+                message=f"Created new {type(actual)} {actual}",
+                addition_type="new",
+            )
+        else:
+            self.add_message(
+                message=f"Matched with {type(actual)} {actual}",
+                addition_type="mat",
+            )
+
 
 class FileImportMessgaes(models.Model):
     attempt = models.ForeignKey(FileImportTries, on_delete=models.CASCADE)
-    message = models.CharField(max_length=1000)
+    message = models.CharField(max_length=10000)
     addition_type = models.CharField(
         choices=(("mat", "matched existing"), ("new", "newly created"), ("non", "NA")),
         max_length=3,

@@ -34,3 +34,25 @@ class ConferenceXMLImportTest(TestCase):
         self.assertTrue(
             Work.objects.filter(title__icontains="Archivos digitales").exists()
         )
+
+        created_work = Work.objects.filter(
+            title__icontains="Archivos digitales"
+        ).first()
+        self.assertEqual(created_work.conference, conference)
+        self.assertTrue(Appellation.objects.filter(first_name="Maria Jose").exists())
+        self.assertEqual(created_work.authorships.count(), 2)
+        self.assertTrue(
+            Institution.objects.filter(name="Universidad de los Andes").exists()
+        )
+        self.assertTrue(
+            Institution.objects.filter(name="Fundación Histórica Neogranadina").exists()
+        )
+        self.assertTrue(Institution.objects.filter(name="Harvard University").exists())
+        self.assertTrue(
+            Affiliation.objects.filter(department="Departamento de Historia").exists()
+        )
+        self.assertTrue(
+            Affiliation.objects.filter(
+                department="Berkman Klein Center for Internet and Society"
+            ).exists()
+        )
