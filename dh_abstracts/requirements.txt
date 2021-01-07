@@ -20,11 +20,11 @@ django-libsass==0.8       # via -r requirements.in
 django-markdownify==0.8.1  # via -r requirements.in
 django-mptt==0.11.0       # via django-filer
 django-polymorphic==3.0.0  # via django-filer
-django==3.1.5
+django==3.1.5             # via -r requirements.in, django-appconf, django-debug-toolbar, django-filer, django-markdownify, django-mptt, django-polymorphic, easy-thumbnails
 easy-thumbnails==2.7      # via django-filer
 gunicorn==20.0.4          # via -r requirements.in
 libsass==0.20.1           # via django-libsass
-lxml==4.5.2               # via parsel
+lxml==4.6.2               # via parsel
 markdown==3.2.2           # via django-markdownify
 packaging==20.4           # via bleach
 parsel==1.6.0             # via -r requirements.in
