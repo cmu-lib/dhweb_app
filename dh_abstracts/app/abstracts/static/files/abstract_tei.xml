@@ -1,11 +1,3 @@
-<!--
-
-Example  TEI-XML file for the Index of Digital Humanities Conferences database (https://dh-abstracts.library.cmu.edu)
-
-This example TEI-XML file is based on the format accepted by the Alliance for Digital Humanities Organizations TEI Convalidator Tool. Bulk submissions of works for any other conference to the IDHC should provide one XML file per work.
-
--->
-
 <?xml version="1.0" encoding="UTF-8"?>
 <TEI xmlns="http://www.tei-c.org/ns/1.0">
   <teiHeader>

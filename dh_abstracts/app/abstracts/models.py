@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from filer.fields.file import FilerFileField
 from os.path import basename
 from glob import glob
-from parsel import Selector
+from lxml import etree
 import re
 
 
@@ -266,158 +266,195 @@ class Conference(models.Model):
         fn = FileImport.objects.get_or_create(path=filepath)
         attempt = FileImportTries(file_name=fn[0], conference=self)
         attempt.save()
-        with open(filepath, "r") as xmlpath:
-            xml = Selector(text=xmlpath.read())
+        xml = etree.parse(filepath)
+        ns = {"tei": "http://www.tei-c.org/ns/1.0"}
 
-            # For now, skip over teicorpora
-            if xml.xpath("//teicorpus").get() is not None:
-                err = f"{filepath} contained a <teicorpus> and is not valid."
-                attempt.add_message(err, warning=True)
-                raise err
+        # For now, skip over teicorpora
+        if len(xml.xpath("//tei:teicorpus", namespaces=ns)) > 0:
+            err = f"{filepath} contained a <teicorpus> and is not valid."
+            attempt.add_message(err, warning=True)
+            raise Exception(err)
 
-            work_type = xml.xpath("//keywords[@n='subcategory']/term/text()").get()
-            if work_type is None:
-                work_type = xml.xpath("//keywords[@n='category']/term/text()").get()
-            work_type = work_type.lower()
-            # titles + subtitles will result in multiple possible title nodes. We just concatenate them here.
-            work_title = " ".join(
-                xml.xpath("//titlestmt//title/text()").getall()
-            ).strip()
-            work_full_text = xml.xpath("//text").get()
-            keywords = xml.xpath("//keywords[@n='keywords']/term/text()").getall()
-            topics = xml.xpath(
-                "//keywords[@n='topics']/term/text() | //keywords[@n='topic']/term/text()"
-            ).getall()
-            language_code = xml.xpath("//text").attrib["lang"]
-            language = Language.objects.get(code=language_code)
-
-            new_work = Work.objects.get_or_create(
-                conference=self,
-                title=work_title,
-                work_type=WorkType.objects.get_or_create(title=work_type)[0],
-                full_text=work_full_text,
-                full_text_type="xml",
-            )[0]
-
-            new_work.languages.add(language)
-
-            for kw in keywords:
-                for kkw in re.split("[;,]", kw):
-                    target_kw = Keyword.objects.get_or_create(title=kkw.strip().lower())
-                    attempt.add_get_or_create_response(target_kw)
-                    new_work.keywords.add(target_kw[0])
-
-            for tp in topics:
-                for ttp in re.split("[;,]", tp):
-                    target_tp = Topic.objects.get_or_create(title=ttp.lower())
-                    attempt.add_get_or_create_response(target_tp)
-                    new_work.topics.add(target_tp[0])
-
-            """
-            Authors
-            """
-
-            n_authors = len(xml.xpath("//filedesc//author"))
-            for idx in range(n_authors):
-                first_name = xml.xpath(f"//author[{idx+1}]//forename/text()").get()
-                last_name = xml.xpath(f"//author[{idx+1}]//surname/text()").get()
-
-                if first_name is None:
-                    first_name = ""
-                if last_name is None:
-                    last_name = ""
-
-                target_app = Appellation.objects.get_or_create(
-                    first_name=first_name, last_name=last_name
+        work_type = xml.xpath(
+            "//tei:keywords[@n='subcategory']/tei:term/text()", namespaces=ns
+        )
+        if len(work_type) == 0:
+            work_type = xml.xpath(
+                "//keywords[@n='category']/term/text()", namespaces=ns
+            )
+            if len(work_type) == 0:
+                raise Exception(
+                    "Worktype not stated as either <keyword type='category'> or <keyword type='subcategory'>"
                 )
-                attempt.add_get_or_create_response(target_app)
-                target_app = target_app[0]
+        work_type = work_type[0].lower()
+        # titles + subtitles will result in multiple possible title nodes. We just concatenate them here.
+        work_title = " ".join(
+            xml.xpath("//tei:titleStmt//tei:title/text()", namespaces=ns)
+        ).strip()
+        work_full_text = " ".join(xml.xpath("/tei:TEI/tei:text//text()", namespaces=ns))
+        keywords = xml.xpath(
+            "//tei:keywords[@n='keywords']/tei:term/text()", namespaces=ns
+        )
+        topics = xml.xpath(
+            "//tei:keywords[@n='topics']/tei:term/text() | //tei:keywords[@n='topic']/tei:term/text()",
+            namespaces=ns,
+        )
+        language_code = xml.xpath("/tei:TEI/tei:text/@lang", namespaces=ns)
+        if len(language_code) == 0:
+            raise Exception("<text> element does not have a 'lang' attribute")
+        language = Language.objects.get(code=language_code[0])
 
-                possible_authors = Author.objects.filter(
-                    appellations=target_app
-                ).distinct()
+        new_work = Work.objects.get_or_create(
+            conference=self,
+            title=work_title,
+            work_type=WorkType.objects.get_or_create(title=work_type)[0],
+            full_text=work_full_text,
+            full_text_type="xml",
+        )[0]
 
-                if possible_authors.count() == 0:
-                    target_author = Author()
-                    target_author.save()
-                    attempt.add_create_response(target_author)
+        new_work.languages.add(language)
+
+        for kw in keywords:
+            for kkw in re.split("[;,]", kw):
+                target_kw = Keyword.objects.get_or_create(title=kkw.strip().lower())
+                attempt.add_get_or_create_response(target_kw)
+                new_work.keywords.add(target_kw[0])
+
+        for tp in topics:
+            for ttp in re.split("[;,]", tp):
+                target_tp = Topic.objects.get_or_create(title=ttp.lower())
+                attempt.add_get_or_create_response(target_tp)
+                new_work.topics.add(target_tp[0])
+
+        """
+        Authors
+        """
+
+        n_authors = len(
+            xml.xpath(
+                "/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author",
+                namespaces=ns,
+            )
+        )
+        for idx in range(n_authors):
+            first_name = xml.xpath(
+                f"/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author[{idx+1}]/tei:persName/tei:forename/text()",
+                namespaces=ns,
+            )
+            last_name = xml.xpath(
+                f"/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author[{idx+1}]/tei:persName/tei:surname/text()",
+                namespaces=ns,
+            )
+
+            if len(first_name) == 0:
+                first_name = ""
+            else:
+                first_name = first_name[0]
+            if len(last_name) == 0:
+                last_name = ""
+            else:
+                last_name = last_name[0]
+
+            target_app = Appellation.objects.get_or_create(
+                first_name=first_name, last_name=last_name
+            )
+            attempt.add_get_or_create_response(target_app)
+            target_app = target_app[0]
+
+            possible_authors = Author.objects.filter(appellations=target_app).distinct()
+
+            if possible_authors.count() == 0:
+                target_author = Author()
+                target_author.save()
+                attempt.add_create_response(target_author)
+            else:
+                target_author = possible_authors.first()
+                attempt.add_create_response(target_author)
+
+            all_affiliations = xml.xpath(
+                f"/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author[{idx+1}]/tei:affiliation",
+                namespaces=ns,
+            )
+            final_affiliation_list = []
+            for aff_idx in range(len(all_affiliations)):
+
+                # Get affiliation name if present
+                affiliation_name = xml.xpath(
+                    f"/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author[{idx+1}]/tei:affiliation[{aff_idx + 1}]/tei:orgName/tei:name[@type='sub']/text()",
+                    namespaces=ns,
+                )
+
+                if len(affiliation_name) == 0:
+                    affiliation_name = ""
                 else:
-                    target_author = possible_authors.first()
-                    attempt.add_create_response(target_author)
+                    affiliation_name = affiliation_name[0]
 
-                all_affiliations = affiliation = xml.xpath(
-                    f"//author[{idx+1}]/affiliation"
+                # Match institution if possible
+                institution_name = xml.xpath(
+                    f"/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author[{idx+1}]/tei:affiliation[{aff_idx + 1}]/tei:orgName/tei:name[@type='main']/text()",
+                    namespaces=ns,
                 )
-                final_affiliation_list = []
-                for aff_idx in range(len(all_affiliations)):
 
-                    # Get affiliation name if present
-                    affiliation_name = xml.xpath(
-                        f"//author[{idx+1}]/affiliation[{aff_idx + 1}]/orgname/name[@type='sub']/text()"
-                    ).get()
-
-                    if affiliation_name is None:
-                        affiliation_name = ""
-
-                    # Match institution if possible
-                    institution_name = xml.xpath(
-                        f"//author[{idx+1}]/affiliation[{aff_idx + 1}]/orgname/name[@type='main']/text()"
-                    ).get()
-
-                    if institution_name is None:
-                        institution_name = ""
-                    top_institution = Institution.objects.filter(
-                        name__icontains=institution_name
-                    ).first()
-                    if top_institution is None:
-                        # Try to find country, then create the institution
-                        city_name = xml.xpath(
-                            f"//author[{idx+1}]/affiliation[{aff_idx + 1}]/district/text()"
-                        ).get()
-                        if city_name is None:
-                            city_name = ""
-
-                        country_name = xml.xpath(
-                            f"//author[{idx+1}]/affiliation[{aff_idx + 1}]/orgname/name[@type='main']/text()"
-                        ).get()
-                        if country_name is None:
-                            country_name = ""
-
-                        top_country = (
-                            Country.objects.filter(names__name=country_name)
-                            .annotate(
-                                n_institutions=Count("institutions", distinct=True)
-                            )
-                            .order_by("-n_institutions")
-                            .first()
-                        )
-                        top_institution = Institution.objects.get_or_create(
-                            name=institution_name,
-                            city=city_name,
-                            country=top_country,
-                        )
-                        attempt.add_get_or_create_response(top_institution)
-                        top_institution = top_institution[0]
-
-                    # Create an affiliation
-
-                    top_affiliation = Affiliation.objects.get_or_create(
-                        department=affiliation_name,
-                        institution=top_institution,
+                if len(institution_name) == 0:
+                    institution_name = ""
+                else:
+                    institution_name = institution_name[0]
+                top_institution = Institution.objects.filter(
+                    name__icontains=institution_name
+                ).first()
+                if top_institution is None:
+                    # Try to find country, then create the institution
+                    city_name = xml.xpath(
+                        f"/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author[{idx+1}]/tei:affiliation[{aff_idx + 1}]/tei:district/text()",
+                        namespaces=ns,
                     )
-                    attempt.add_get_or_create_response(top_affiliation)
-                    final_affiliation_list.append(top_affiliation[0])
+                    if len(city_name) == 0:
+                        city_name = ""
+                    else:
+                        city_name = city_name[0]
 
-                new_authorship = Authorship.objects.get_or_create(
-                    work=new_work,
-                    author=target_author,
-                    appellation=target_app,
-                    authorship_order=idx + 1,
+                    country_name = xml.xpath(
+                        f"/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author[{idx+1}]/tei:affiliation[{aff_idx + 1}]/tei:country/text()",
+                        namespaces=ns,
+                    )
+                    if len(country_name) == 0:
+                        country_name = ""
+                    else:
+                        country_name = country_name[0]
+
+                    top_country = (
+                        Country.objects.filter(names__name=country_name)
+                        .annotate(n_institutions=Count("institutions", distinct=True))
+                        .order_by("-n_institutions")
+                        .first()
+                    )
+                    top_institution = Institution.objects.get_or_create(
+                        name=institution_name,
+                        city=city_name,
+                        country=top_country,
+                    )
+                    attempt.add_get_or_create_response(top_institution)
+                    top_institution = top_institution[0]
+
+                # Create an affiliation
+
+                top_affiliation = Affiliation.objects.get_or_create(
+                    department=affiliation_name,
+                    institution=top_institution,
                 )
-                attempt.add_get_or_create_response(new_authorship)
-                new_authorship = new_authorship[0]
-                for target_affiliation in final_affiliation_list:
-                    new_authorship.affiliations.add(target_affiliation)
+                attempt.add_get_or_create_response(top_affiliation)
+                final_affiliation_list.append(top_affiliation[0])
+
+            new_authorship = Authorship.objects.get_or_create(
+                work=new_work,
+                author=target_author,
+                appellation=target_app,
+                authorship_order=idx + 1,
+            )
+            attempt.add_get_or_create_response(new_authorship)
+            new_authorship = new_authorship[0]
+            for target_affiliation in final_affiliation_list:
+                new_authorship.affiliations.add(target_affiliation)
 
         return filepath
 
