@@ -3,7 +3,7 @@
   <teiHeader>
     <fileDesc>
       <titleStmt>
-        <title lang="es">Archivos digitales, cultura participativa y nuevos alfabetismos: La catalogación colaborativa del Archivo Histórico Regional de Boyacá (Colombia)</title>
+        <title xml:lang="es">Archivos digitales, cultura participativa y nuevos alfabetismos: La catalogación colaborativa del Archivo Histórico Regional de Boyacá (Colombia)</title>
         <author>
           <persName>
             <surname>Afanador-Llach</surname>
@@ -106,7 +106,7 @@
       </textClass>
     </profileDesc>
   </teiHeader>
-  <text lang="es">
+  <text xml:lang="es">
     <!-- Abstract text must be wrapped in <body></body> elements. Additional valid XML within these tags is allowed, however if abstract formatting is not available, plain text within <body></body> tags is sufficient. -->
     <body>
       <p rend="normal">Este artículo explora las prácticas colaborativas de catalogación y creación de metadatos en archivos localizados en contextos de escasa conectividad, acceso tecnológico limitado, e incipiente desarrollo de nuevos alfabetismos. Tomando como ejemplo el proyecto de Catalogación Colaborativa del Fondo Notaría Segunda del Archivo Histórico Regional de Boyacá en la ciudad de Tunja, Colombia, analizamos cómo una plataforma digital y una comunidad de práctica pueden suplir las necesidades de acceso a tecnología, información y conocimiento a través de la “producción entre pares” o “

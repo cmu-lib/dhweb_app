@@ -306,7 +306,7 @@ class Conference(models.Model):
             "//tei:keywords[@n='topics']/tei:term/text() | //tei:keywords[@n='topic']/tei:term/text()",
             namespaces=ns,
         )
-        language_code = xml.xpath("/tei:TEI/tei:text/@lang", namespaces=ns)
+        language_code = xml.xpath("/tei:TEI/tei:text/@xml:lang", namespaces=ns)
         if len(language_code) == 0:
             raise Exception("<text> element does not have a 'lang' attribute")
         language = Language.objects.get(code=language_code[0])
