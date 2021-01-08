@@ -1942,7 +1942,6 @@ class ConferenceDelete(StaffRequiredMixin, SuccessMessageMixin, DeleteView):
 class ConferenceXMLLoad(StaffRequiredMixin, DetailView):
     model = Conference
     template_name = "conference_xml_load.html"
-    context_object_name = "conference"
     extra_context = {"form": ConferenceXMLUploadForm()}
 
     @transaction.atomic
@@ -1964,7 +1963,7 @@ class ConferenceXMLLoad(StaffRequiredMixin, DetailView):
                             request,
                             "conference_xml_load.html",
                             {
-                                "conference": self.get_object(),
+                                "object": self.get_object(),
                                 "form": ConferenceXMLUploadForm(),
                             },
                         )
@@ -1996,7 +1995,7 @@ class ConferenceXMLLoad(StaffRequiredMixin, DetailView):
             return render(
                 request,
                 "conference_xml_load.html",
-                {"conference": self.get_object(), "form": ConferenceXMLUploadForm()},
+                {"object": self.get_object(), "form": ConferenceXMLUploadForm()},
             )
         else:
             for f, e in raw_form.errors.items():
@@ -2004,7 +2003,7 @@ class ConferenceXMLLoad(StaffRequiredMixin, DetailView):
             return render(
                 request,
                 "conference_xml_load.html",
-                {"conference": self.get_object(), "form": ConferenceXMLUploadForm()},
+                {"object": self.get_object(), "form": ConferenceXMLUploadForm()},
             )
 
 
