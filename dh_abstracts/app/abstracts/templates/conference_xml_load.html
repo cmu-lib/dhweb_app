@@ -15,8 +15,8 @@
 <p><strong>All TEI files must be valid</strong> in order for the import to go forward. If any files cannot be correctly
   ingested, errors will be displayed alongside the associated filenames, and you will be prompted to modify the affected
   files before re-uploading the entire ZIP.</p>
-<p>Try not to upload more than 100 XML files at a time, since properly matching named
-  entities can take up to a full second for files with many authors, affiliations, and keywords. If you get a
+<p>Try not to upload more than 500 XML files at a time, since properly matching named
+  entities can take many milliseconds for files with many authors, affiliations, and keywords. If you get a
   <code>504: Gateway Timeout</code> error, try
   uploading fewer
   files at once.
@@ -26,7 +26,7 @@
   {% csrf_token %}
   {{ form | crispy }}
   <button type="submit" class="btn btn-primary mb-2">Upload</button>
-  <a class="btn btn-secondary mb-2" href="{% url 'work_list' %}?conference={{ object.id }}" role="button">Return to
+  <a class="btn btn-secondary mb-2" href="{% url 'work_list' %}?conference={{ object.pk }}" role="button">Return to
     conference</a>
 </form>
 

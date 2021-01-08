@@ -1,5 +1,5 @@
 import datetime
-from django.db import models
+from django.db import models, DatabaseError, transaction
 from django.db.models import Max, Count
 from django.utils import timezone
 from django.urls import reverse
@@ -252,15 +252,22 @@ class Conference(models.Model):
         all_files = glob(f"{dirpath}/**/*.xml", recursive=True)
         successful_files = []
         failed_files = []
-        for filepath in all_files:
-            try:
-                self.import_xml_file(filepath)
-                successful_files.append(filepath)
-            except Exception as e:
-                failed_files.append({"filepath": filepath, "error": repr(e)})
-                continue
-
-        return {"successful_files": successful_files, "failed_files": failed_files}
+        try:
+            # Run the entire loop inside a transaction block, catching per-file errors as they happen. At the end of the loop, if there are any failed files, raise an exception that will roll back all of the imports
+            with transaction.atomic():
+                for filepath in all_files:
+                    try:
+                        self.import_xml_file(filepath)
+                        successful_files.append(filepath)
+                    except Exception as e:
+                        failed_files.append({"filepath": filepath, "error": repr(e)})
+                        continue
+                if len(failed_files) > 0:
+                    raise DatabaseError("Errors found. Rolling back all files")
+        except:
+            pass
+        finally:
+            return {"successful_files": successful_files, "failed_files": failed_files}
 
     def import_xml_file(self, filepath):
         fn = FileImport.objects.get_or_create(path=filepath)

@@ -31,7 +31,7 @@ class ConferenceXMLImportTest(TestCase):
     def test_load_file(self):
         conference = Conference.objects.first()
 
-        conference.import_xml_file("/vol/static_files/files/abstract_tei.xml")
+        conference.import_xml_file("/vol/static_files/files/valid_tei/abstract_tei.xml")
         self.assertTrue(
             Work.objects.filter(title__icontains="Archivos digitales").exists()
         )
@@ -64,7 +64,7 @@ class ConferenceXMLImportTest(TestCase):
         self.assertRaises(
             XMLSyntaxError,
             conference.import_xml_file,
-            filepath="/vol/static_files/files/bad_tei.xml",
+            filepath="/vol/static_files/files/invalid_tei/bad_tei.xml",
         )
 
 
@@ -74,7 +74,9 @@ class ConferenceXMLDirectoryImportTest(TestCase):
     def test_load_directory(self):
         conference = Conference.objects.first()
 
-        conference.import_xml_directory("/vol/static_files/files")
+        import_response = conference.import_xml_directory(
+            "/vol/static_files/files/valid_tei"
+        )
         self.assertTrue(
             Work.objects.filter(title__icontains="Archivos digitales").exists()
         )
@@ -83,3 +85,22 @@ class ConferenceXMLDirectoryImportTest(TestCase):
                 title__icontains="The Index of Digital Humanities Conferences"
             ).exists()
         )
+        self.assertGreater(len(import_response["successful_files"]), 0)
+        self.assertEqual(len(import_response["failed_files"]), 0)
+
+    def test_load_bad_directory(self):
+        conference = Conference.objects.first()
+
+        import_response = conference.import_xml_directory(
+            "/vol/static_files/files/invalid_tei"
+        )
+        self.assertFalse(
+            Work.objects.filter(title__icontains="Archivos digitales").exists()
+        )
+        self.assertFalse(
+            Work.objects.filter(
+                title__icontains="The Index of Digital Humanities Conferences"
+            ).exists()
+        )
+        self.assertGreater(len(import_response["failed_files"]), 0)
+        self.assertGreater(len(import_response["successful_files"]), 0)
