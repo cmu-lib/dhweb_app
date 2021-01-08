@@ -9,12 +9,25 @@
 
 <h1>{{ form_title }}{% if object %}{{ object }}{% endif %}</h1>
 
-<p>Upload a .zip file of .xml files to attach to this conference:</p>
+<p>Upload a .zip file of TEI-XML documents, each encoding a single work. <a
+    href="{% static '/files/abstract_tei.xml' %}">View an example TEI-XML file
+    here.</a></p>
+<p><strong>All TEI files must be valid</strong> in order for the import to go forward. If any files cannot be correctly
+  ingested, errors will be displayed alongside the associated filenames, and you will be prompted to modify the affected
+  files before re-uploading the entire ZIP.</p>
+<p>Try not to upload more than 100 XML files at a time, since properly matching named
+  entities can take up to a full second for files with many authors, affiliations, and keywords. If you get a
+  <code>504: Gateway Timeout</code> error, try
+  uploading fewer
+  files at once.
+</p>
 
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form | crispy }}
   <button type="submit" class="btn btn-primary mb-2">Upload</button>
+  <a class="btn btn-secondary mb-2" href="{% url 'work_list' %}?conference={{ object.id }}" role="button">Return to
+    conference</a>
 </form>
 
 {% block js %}

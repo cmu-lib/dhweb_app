@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title lang="en">The Index of Digital Humanities Conferences</title>
+        <author>
+          <persName>
+            <surname>Lincoln</surname>
+            <forename>Matthew</forename>
+          </persName>
+          <affiliation>
+            <orgName>
+              <name type="sub">University Libraries</name>
+              <name type="main">Carnegie Mellon University</name>
+            </orgName>
+            <district>Pittsburgh</district>
+            <country>United States of America</country>
+
+            <addrLine>Country</addrLine>
+            <addrLine>Name</addrLine>
+          </address>
+        </publicationStmt>
+        <!-- <editionStmt> ignored -->
+        <sourceDesc>
+          <p>sourceDesc from a Word document</p>
+        </sourceDesc>
+      </fileDesc>
+      <!-- <encodingDesc> ignored -->
+      <encodingDesc>
+        <appInfo>
+          <application ident="DHCONVALIDATOR" version="1.22">
+            <label>DHConvalidator</label>
+          </application>
+        </appInfo>
+      </encodingDesc>
+      <profileDesc>
+        <textClass>
+          <!-- IDHC will first try to match work_type on <keywords n="category">/<term>, followed by <keywords n="subcategory">/<term>. All terms are converted to lowercase. -->
+          <keywords scheme="ConfTool" n="category">
+            <term>Paper</term>
+          </keywords>
+          <keywords scheme="ConfTool" n="subcategory">
+            <term>Short Paper</term>
+          </keywords>
+          <!-- IDHC will add author-supplied "keywords" based on <keywords n="keywords">/<term>. All terms are converted to lowercase. -->
+          <keywords scheme="ConfTool" n="keywords">
+            <term>digital humanities</term>
+          </keywords>
+          <!-- IDHC will add ADHO-managed "topics" based on <keywords n="keywords">/<term>. All terms are converted to lowercase. -->
+          <keywords scheme="ConfTool" n="topics">
+            <term>applications</term>
+          </keywords>
+        </textClass>
+      </profileDesc>
+    </teiHeader>
+    <text lang="es">
+      <!-- Abstract text must be wrapped in <body></body> elements. Additional valid XML within these tags is allowed, however if abstract formatting is not available, plain text within <body></body> tags is sufficient. -->
+      <body>
+        <p>Enim est pariatur eiusmod enim ullamco aute eiusmod amet. Cupidatat culpa culpa quis reprehenderit eu cillum adipisicing ex ea do voluptate. Occaecat eu sint non elit exercitation reprehenderit culpa ullamco duis ad anim tempor Lorem. Pariatur consectetur occaecat culpa eu fugiat enim in reprehenderit excepteur magna in. Enim dolor est veniam consectetur nulla dolor consectetur nulla anim mollit.</p>
+      </body>
+    </text>
+  </TEI>

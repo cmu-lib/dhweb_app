@@ -22,6 +22,7 @@ from abstracts.models import (
     FileImportTries,
     License,
 )
+from lxml.etree import XMLSyntaxError
 
 
 class ConferenceXMLImportTest(TestCase):
@@ -55,6 +56,15 @@ class ConferenceXMLImportTest(TestCase):
             Affiliation.objects.filter(
                 department="Berkman Klein Center for Internet and Society"
             ).exists()
+        )
+
+    def test_bad_file(self):
+        conference = Conference.objects.first()
+
+        self.assertRaises(
+            XMLSyntaxError,
+            conference.import_xml_file,
+            filepath="/vol/static_files/files/bad_tei.xml",
         )
 
 

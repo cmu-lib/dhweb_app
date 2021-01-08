@@ -257,7 +257,7 @@ class Conference(models.Model):
                 self.import_xml_file(filepath)
                 successful_files.append(filepath)
             except Exception as e:
-                failed_files.append({"filepath": filepath, "error": e})
+                failed_files.append({"filepath": filepath, "error": repr(e)})
                 continue
 
         return {"successful_files": successful_files, "failed_files": failed_files}

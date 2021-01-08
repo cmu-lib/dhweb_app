@@ -1975,14 +1975,23 @@ class ConferenceXMLLoad(StaffRequiredMixin, DetailView):
 
                     # Import all XML
                     import_results = conference.import_xml_directory(upload_dir)
+                    n_success = len(import_results["successful_files"])
+                    n_failed = len(import_results["failed_files"])
                     messages.info(
                         request,
-                        f"{len(import_results['successful_files'])} files valid.",
+                        f"{n_success} of {n_success + n_failed} files valid.",
                     )
                     for err in import_results["failed_files"]:
-                        messages.error(request, "")
-                    if len(import_results["failed_files"]) == 0:
-                        messages.success(request, "All files imported successfully.")
+                        messages.error(
+                            request, f"{basename(err['filepath'])}: {err['error']}"
+                        )
+                    if n_failed == 0:
+                        messages.success(request, f"All files imported successfully.")
+                    else:
+                        messages.info(
+                            request,
+                            "Please fix errors or remove malformed files, and re-upload zip. All TEI documents must be valid in order to complete the import.",
+                        )
 
             return render(
                 request,
