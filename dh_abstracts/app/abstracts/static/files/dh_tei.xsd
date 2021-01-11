@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.tei-c.org/ns/1.0" xmlns:ns1="http://www.tei-c.org/ns/1.0">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd" />
+  <xs:element name="TEI">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:teiHeader" />
+        <xs:element ref="ns1:text" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="teiHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:fileDesc" />
+        <xs:element ref="ns1:profileDesc" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fileDesc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:titleStmt" />
+        <xs:element ref="ns1:editionStmt" />
+        <xs:element ref="ns1:publicationStmt" />
+        <xs:element ref="ns1:sourceDesc" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="titleStmt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:title" />
+        <xs:element maxOccurs="1" ref="ns1:author" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="title">
+    <xs:complexType mixed="true">
+      <xs:attribute ref="xml:lang" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="author">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:persName" />
+        <xs:element maxOccurs="unbounded" ref="ns1:affiliation" />
+        <xs:element ref="ns1:email" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="persName">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:surname" />
+        <xs:element ref="ns1:forename" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="surname" type="xs:NCName" />
+  <xs:element name="forename" type="xs:string" />
+  <xs:element name="affiliation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:orgName" />
+        <xs:element minOccurs="0" ref="ns1:district" />
+        <xs:element ref="ns1:country" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orgName">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ns1:name" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="name">
+    <xs:complexType mixed="true">
+      <xs:attribute name="type" use="required" type="xs:NCName" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="district" type="xs:NCName" />
+  <xs:element name="country" type="xs:string" />
+  <xs:element name="email" type="xs:string" />
+  <xs:element name="editionStmt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:edition" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="edition">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:date" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="date" type="xs:NMTOKEN" />
+  <xs:element name="publicationStmt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:publisher" />
+        <xs:element ref="ns1:address" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="publisher" type="xs:string" />
+  <xs:element name="address">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ns1:addrLine" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addrLine" type="xs:NCName" />
+  <xs:element name="sourceDesc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:p" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="p" type="xs:string" />
+
+  <xs:element name="profileDesc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:textClass" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="textClass">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ns1:keywords" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="keywords">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ns1:term" />
+      </xs:sequence>
+      <xs:attribute name="n" use="required" type="xs:NCName" />
+      <xs:attribute name="scheme" use="required" type="xs:NCName" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="term" type="xs:string" />
+  <xs:element name="text">
+    <xs:complexType>
+      <xs:attribute ref="xml:lang" use="required" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
