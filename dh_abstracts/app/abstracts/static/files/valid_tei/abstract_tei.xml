@@ -9,16 +9,22 @@
             <surname>Afanador-Llach</surname>
             <forename>Maria Jose</forename>
           </persName>
+          <!-- Muliple affiliaitons allowed for each author -->
           <affiliation>
             <orgName>
+              <!-- An optional department name -->
               <name type="sub">Departamento de Historia</name>
+              <!-- Required "main" name of the parent institution of the affiliation  -->
               <name type="main">Universidad de los Andes</name>
             </orgName>
+            <!-- Optional city/district of the institition -->
             <district>Bogotá</district>
+            <!-- Optional country of the institution -->
             <country>Colombia</country>
           </affiliation>
           <affiliation>
             <orgName>
+              <!-- Required "main" name of the parent institution of the affiliation  -->
               <name type="main">Fundación Histórica Neogranadina</name>
             </orgName>
             <country>Colombia</country>
