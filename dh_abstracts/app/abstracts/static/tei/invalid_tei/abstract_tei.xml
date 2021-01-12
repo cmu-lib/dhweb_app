@@ -11,8 +11,8 @@
           </persName>
           <affiliation>
             <orgName>
-              <name type="main">Universidad de los Andes</name>
               <name type="sub">Departamento de Historia</name>
+              <name type="main">Universidad de los Andes</name>
             </orgName>
             <district>Bogotá</district>
             <country>Colombia</country>
@@ -32,8 +32,8 @@
           </persName>
           <affiliation>
             <orgName>
-              <name type="main">Harvard University</name>
               <name type="sub">Berkman Klein Center for Internet and Society</name>
+              <name type="main">Harvard University</name>
             </orgName>
             <district>Cambridge</district>
             <country>United States of America</country>

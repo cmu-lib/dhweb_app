@@ -22,7 +22,7 @@ from abstracts.models import (
     FileImportTries,
     License,
 )
-from lxml.etree import XMLSyntaxError
+from lxml.etree import XMLSyntaxError, DocumentInvalid
 
 
 class ConferenceXMLImportTest(TestCase):
@@ -31,7 +31,7 @@ class ConferenceXMLImportTest(TestCase):
     def test_load_file(self):
         conference = Conference.objects.first()
 
-        conference.import_xml_file("/vol/static_files/tei/valid_tei/abstract_tei.xml")
+        conference.import_xml_file("abstracts/static/tei/valid_tei/abstract_tei.xml")
         self.assertTrue(
             Work.objects.filter(title__icontains="Archivos digitales").exists()
         )
@@ -60,11 +60,18 @@ class ConferenceXMLImportTest(TestCase):
 
     def test_bad_file(self):
         conference = Conference.objects.first()
-
         self.assertRaises(
             XMLSyntaxError,
             conference.import_xml_file,
-            filepath="/vol/static_files/tei/invalid_tei/bad_tei.xml",
+            filepath="abstracts/static/tei/invalid_tei/bad_tei.xml",
+        )
+
+    def test_invalid_tei(self):
+        conference = Conference.objects.first()
+        self.assertRaises(
+            DocumentInvalid,
+            conference.import_xml_file,
+            filepath="abstracts/static/tei/invalid_tei/abstract_tei.xml",
         )
 
 
@@ -75,7 +82,7 @@ class ConferenceXMLDirectoryImportTest(TestCase):
         conference = Conference.objects.first()
 
         import_response = conference.import_xml_directory(
-            "/vol/static_files/tei/valid_tei"
+            "abstracts/static/tei/valid_tei"
         )
         self.assertTrue(
             Work.objects.filter(title__icontains="Archivos digitales").exists()
@@ -92,7 +99,7 @@ class ConferenceXMLDirectoryImportTest(TestCase):
         conference = Conference.objects.first()
 
         import_response = conference.import_xml_directory(
-            "/vol/static_files/tei/invalid_tei"
+            "abstracts/static/tei/invalid_tei"
         )
         self.assertFalse(
             Work.objects.filter(title__icontains="Archivos digitales").exists()

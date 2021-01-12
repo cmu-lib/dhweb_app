@@ -274,13 +274,11 @@ class Conference(models.Model):
         attempt = FileImportTries(file_name=fn[0], conference=self)
         attempt.save()
         xml = etree.parse(filepath)
+        xmlschema = etree.XMLSchema(
+            etree.parse("abstracts/static/tei/schema/dh_tei.xsd")
+        )
         ns = {"tei": "http://www.tei-c.org/ns/1.0"}
-
-        # For now, skip over teicorpora
-        if len(xml.xpath("//tei:teicorpus", namespaces=ns)) > 0:
-            err = f"{filepath} contained a <teicorpus> and is not valid."
-            attempt.add_message(err, warning=True)
-            raise Exception(err)
+        xmlschema.assertValid(xml)
 
         work_type = xml.xpath(
             "//tei:keywords[@n='subcategory']/tei:term/text()", namespaces=ns
