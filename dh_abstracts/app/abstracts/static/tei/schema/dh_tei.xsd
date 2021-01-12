@@ -1,114 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.tei-c.org/ns/1.0" xmlns:ns1="http://www.tei-c.org/ns/1.0">
   <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd" />
+  <xs:simpleType name="keyword_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="category" />
+      <xs:enumeration value="subcategory" />
+      <xs:enumeration value="keywords" />
+      <xs:enumeration value="topics" />
+    </xs:restriction>
+  </xs:simpleType>
   <xs:element name="TEI">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="ns1:teiHeader" />
-        <xs:element ref="ns1:text" />
+        <xs:element name="teiHeader">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="fileDesc">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="titleStmt">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="title">
+                            <xs:complexType mixed="true">
+                              <xs:attribute ref="xml:lang" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="author" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="persName">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="surname" minOccurs="0" type="xs:string" />
+                                      <xs:element name="forename" minOccurs="0" type="xs:string" />
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="affiliation" minOccurs="0" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="orgName">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="name">
+                                              <xs:complexType>
+                                                <xs:simpleContent>
+                                                  <xs:extension base="xs:string">
+                                                    <xs:attribute name="type" fixed="main" />
+                                                  </xs:extension>
+                                                </xs:simpleContent>
+                                              </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="name" minOccurs="0">
+                                              <xs:complexType>
+                                                <xs:simpleContent>
+                                                  <xs:extension base="xs:string">
+                                                    <xs:attribute name="type" fixed="sub" />
+                                                  </xs:extension>
+                                                </xs:simpleContent>
+                                              </xs:complexType>
+                                            </xs:element>
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                      <xs:element name="district" minOccurs="0" type="xs:string" />
+                                      <xs:element name="country" minOccurs="0" type="xs:string" />
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="email" minOccurs="0" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
+              <xs:element name="profileDesc">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="textClass">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="keywords" minOccurs="4" maxOccurs="4">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="term" type="xs:string" maxOccurs="unbounded" />
+                              </xs:sequence>
+                              <xs:attribute name="n" use="required" type="ns1:keyword_type" />
+                              <xs:attribute name="scheme" fixed="ConfTool" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="text">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
+            </xs:sequence>
+            <xs:attribute ref="xml:lang" use="required" />
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="teiHeader">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="ns1:fileDesc" minOccurs="1" maxOccurs="1" />
-        <xs:any minOccurs="0" maxOccurs="unbounded" />
-        <xs:element ref="ns1:profileDesc" minOccurs="1" maxOccurs="1" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="fileDesc">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="ns1:titleStmt" minOccurs="1" maxOccurs="1" />
-        <xs:any minOccurs="0" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="titleStmt">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="ns1:title" />
-        <xs:element maxOccurs="unbounded" ref="ns1:author" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="title">
-    <xs:complexType mixed="true">
-      <xs:attribute ref="xml:lang" use="required" />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="author">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="ns1:persName" />
-        <xs:element maxOccurs="unbounded" ref="ns1:affiliation" />
-        <xs:element ref="ns1:email" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="persName">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="ns1:surname" />
-        <xs:element ref="ns1:forename" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="surname" type="xs:NCName" />
-  <xs:element name="forename" type="xs:string" />
-  <xs:element name="affiliation">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="ns1:orgName" />
-        <xs:element minOccurs="0" ref="ns1:district" />
-        <xs:element ref="ns1:country" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="orgName">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="ns1:name" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="name">
-    <xs:complexType mixed="true">
-      <xs:attribute name="type" use="required" type="xs:NCName" />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="district" type="xs:NCName" />
-  <xs:element name="country" type="xs:string" />
-  <xs:element name="email" type="xs:string" />
-  <xs:element name="profileDesc">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="ns1:textClass" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="textClass">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="ns1:keywords" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="keywords">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="ns1:term" />
-      </xs:sequence>
-      <xs:attribute name="n" use="required" type="xs:NCName" />
-      <xs:attribute name="scheme" use="required" type="xs:NCName" />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="term" type="xs:string" />
-  <xs:element name="text">
-    <xs:complexType>
-      <xs:attribute ref="xml:lang" use="required" />
     </xs:complexType>
   </xs:element>
 </xs:schema>
