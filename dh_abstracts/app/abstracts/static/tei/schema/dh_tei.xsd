@@ -32,8 +32,8 @@
                                 <xs:element name="persName">
                                   <xs:complexType>
                                     <xs:sequence>
-                                      <xs:element name="surname" minOccurs="0" type="xs:string" />
-                                      <xs:element name="forename" minOccurs="0" type="xs:string" />
+                                      <xs:element name="surname" type="xs:string" />
+                                      <xs:element name="forename" type="xs:string" />
                                     </xs:sequence>
                                   </xs:complexType>
                                 </xs:element>
