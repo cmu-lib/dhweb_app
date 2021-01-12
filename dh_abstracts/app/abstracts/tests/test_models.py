@@ -31,7 +31,7 @@ class ConferenceXMLImportTest(TestCase):
     def test_load_file(self):
         conference = Conference.objects.first()
 
-        conference.import_xml_file("/vol/static_files/files/valid_tei/abstract_tei.xml")
+        conference.import_xml_file("/vol/static_files/tei/valid_tei/abstract_tei.xml")
         self.assertTrue(
             Work.objects.filter(title__icontains="Archivos digitales").exists()
         )
@@ -64,7 +64,7 @@ class ConferenceXMLImportTest(TestCase):
         self.assertRaises(
             XMLSyntaxError,
             conference.import_xml_file,
-            filepath="/vol/static_files/files/invalid_tei/bad_tei.xml",
+            filepath="/vol/static_files/tei/invalid_tei/bad_tei.xml",
         )
 
 
@@ -75,7 +75,7 @@ class ConferenceXMLDirectoryImportTest(TestCase):
         conference = Conference.objects.first()
 
         import_response = conference.import_xml_directory(
-            "/vol/static_files/files/valid_tei"
+            "/vol/static_files/tei/valid_tei"
         )
         self.assertTrue(
             Work.objects.filter(title__icontains="Archivos digitales").exists()
@@ -92,7 +92,7 @@ class ConferenceXMLDirectoryImportTest(TestCase):
         conference = Conference.objects.first()
 
         import_response = conference.import_xml_directory(
-            "/vol/static_files/files/invalid_tei"
+            "/vol/static_files/tei/invalid_tei"
         )
         self.assertFalse(
             Work.objects.filter(title__icontains="Archivos digitales").exists()
