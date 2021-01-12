@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.tei-c.org/ns/1.0" xmlns:ns1="http://www.tei-c.org/ns/1.0">
   <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd" />
-  <xs:simpleType name="keyword_type">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="category" />
-      <xs:enumeration value="subcategory" />
-      <xs:enumeration value="keywords" />
-      <xs:enumeration value="topics" />
-    </xs:restriction>
-  </xs:simpleType>
   <xs:element name="TEI">
     <xs:complexType>
       <xs:sequence>
@@ -87,13 +79,31 @@
                     <xs:element name="textClass">
                       <xs:complexType>
                         <xs:sequence>
-                          <xs:element name="keywords" minOccurs="4" maxOccurs="4">
+                          <xs:element name="keywords">
                             <xs:complexType>
                               <xs:sequence>
                                 <xs:element name="term" type="xs:string" maxOccurs="unbounded" />
                               </xs:sequence>
-                              <xs:attribute name="n" use="required" type="ns1:keyword_type" />
-                              <xs:attribute name="scheme" fixed="ConfTool" type="xs:string" />
+                              <xs:attribute name="n" fixed="category" />
+                              <xs:anyAttribute processContents="lax" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="keywords">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="term" type="xs:string" maxOccurs="unbounded" />
+                              </xs:sequence>
+                              <xs:attribute name="n" fixed="keywords" />
+                              <xs:anyAttribute processContents="lax" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="keywords">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="term" type="xs:string" maxOccurs="unbounded" />
+                              </xs:sequence>
+                              <xs:attribute name="n" fixed="topics" />
+                              <xs:anyAttribute processContents="lax" />
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
