@@ -281,16 +281,10 @@ class Conference(models.Model):
         xmlschema.assertValid(xml)
 
         work_type = xml.xpath(
-            "//tei:keywords[@n='subcategory']/tei:term/text()", namespaces=ns
+            "//tei:keywords[@n='category']/tei:term/text()", namespaces=ns
         )
         if len(work_type) == 0:
-            work_type = xml.xpath(
-                "//keywords[@n='category']/term/text()", namespaces=ns
-            )
-            if len(work_type) == 0:
-                raise Exception(
-                    "Worktype not stated as either <keyword type='category'> or <keyword type='subcategory'>"
-                )
+            raise Exception("Worktype not given as <keyword type='category'>")
         work_type = work_type[0].lower()
         # titles + subtitles will result in multiple possible title nodes. We just concatenate them here.
         work_title = " ".join(
