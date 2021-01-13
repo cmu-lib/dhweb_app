@@ -290,12 +290,14 @@ class Conference(models.Model):
         work_title = " ".join(
             xml.xpath("//tei:titleStmt//tei:title/text()", namespaces=ns)
         ).strip()
-        work_full_text = " ".join(xml.xpath("/tei:TEI/tei:text//text()", namespaces=ns))
+        work_full_text = etree.tostring(
+            xml.xpath("/tei:TEI/tei:text", namespaces=ns)[0], pretty_print=True
+        )
         keywords = xml.xpath(
             "//tei:keywords[@n='keywords']/tei:term/text()", namespaces=ns
         )
         topics = xml.xpath(
-            "//tei:keywords[@n='topics']/tei:term/text() | //tei:keywords[@n='topic']/tei:term/text()",
+            "//tei:keywords[@n='topics']/tei:term/text()",
             namespaces=ns,
         )
         language_code = xml.xpath("/tei:TEI/tei:text/@xml:lang", namespaces=ns)
