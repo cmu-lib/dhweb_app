@@ -3,13 +3,16 @@
   <teiHeader>
     <fileDesc>
       <titleStmt>
+        <!-- Required title, with a language declaration -->
         <title xml:lang="es">Archivos digitales, cultura participativa y nuevos alfabetismos: La catalogación colaborativa del Archivo Histórico Regional de Boyacá (Colombia)</title>
+        <!-- 1-unbounded authors allowed for each abstract -->
         <author>
+          <!-- 1 name allowed per author -->
           <persName>
             <surname>Afanador-Llach</surname>
             <forename>Maria Jose</forename>
           </persName>
-          <!-- Muliple affiliaitons allowed for each author -->
+          <!-- 0-unbounded affiliaitons allowed for each author. -->
           <affiliation>
             <orgName>
               <!-- Required "main" name of the parent institution of the affiliation  -->
@@ -27,9 +30,9 @@
               <!-- Required "main" name of the parent institution of the affiliation  -->
               <name type="main">Fundación Histórica Neogranadina</name>
             </orgName>
+            <!-- Optional country of the institution -->
             <country>Colombia</country>
           </affiliation>
-          <email>mj.afanador28@uniandes.edu.co</email>
         </author>
         <author>
           <persName>
@@ -44,14 +47,14 @@
             <district>Cambridge</district>
             <country>United States of America</country>
           </affiliation>
-          <email>alombana@cyber.law.harvard.edu</email>
         </author>
       </titleStmt>
     </fileDesc>
     <profileDesc>
       <textClass>
-        <!-- Work type such as paper, keynote, poster, etc. -->
+        <!-- All 3 <keyword> elements must be included. Only the "category" element requires exactly one <term> to be provided. For the others, 0-unbounded <term> elements are allowed. -->
         <keywords n="category">
+          <!-- 1 required work type such as paper, keynote, poster, etc. -->
           <term>Short Paper</term>
         </keywords>
         <!-- Optional author-supplied "keywords". All terms are converted to lowercase. -->
@@ -82,7 +85,7 @@
     </profileDesc>
   </teiHeader>
   <text xml:lang="es">
-    <!-- Abstract text must be wrapped in <body></body> elements. Additional valid XML within these tags is allowed, however if abstract formatting is not available, plain text within <body></body> tags is sufficient. -->
+    <!-- Abstract content may either be supplied inside this <text> element as TEI-XML, or plain text if that is all that is available. -->
     <body>
       <p rend="normal">
         Este artículo explora las prácticas colaborativas de catalogación y creación de metadatos en archivos localizados en contextos de escasa conectividad, acceso tecnológico limitado, e incipiente desarrollo de nuevos alfabetismos. Tomando como ejemplo el proyecto de Catalogación Colaborativa del Fondo Notaría Segunda del Archivo Histórico Regional de Boyacá en la ciudad de Tunja, Colombia, analizamos cómo una plataforma digital y una comunidad de práctica pueden suplir las necesidades de acceso a tecnología, información y conocimiento a través de la “producción entre pares” o “

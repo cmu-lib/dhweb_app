@@ -82,7 +82,7 @@
                           <xs:element name="keywords">
                             <xs:complexType>
                               <xs:sequence>
-                                <xs:element name="term" type="xs:string" maxOccurs="unbounded" />
+                                <xs:element name="term" type="xs:string" />
                               </xs:sequence>
                               <xs:attribute name="n" fixed="category" />
                               <xs:anyAttribute processContents="lax" />
