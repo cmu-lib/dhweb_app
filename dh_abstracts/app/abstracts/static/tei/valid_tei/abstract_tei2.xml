@@ -50,9 +50,6 @@
       <textClass>
         <!-- IDHC will first try to match work_type on <keywords n="category">/<term>, followed by <keywords n="subcategory">/<term>. All terms are converted to lowercase. -->
         <keywords scheme="ConfTool" n="category">
-          <term>Paper</term>
-        </keywords>
-        <keywords scheme="ConfTool" n="subcategory">
           <term>Short Paper</term>
         </keywords>
         <!-- IDHC will add author-supplied "keywords" based on <keywords n="keywords">/<term>. All terms are converted to lowercase. -->

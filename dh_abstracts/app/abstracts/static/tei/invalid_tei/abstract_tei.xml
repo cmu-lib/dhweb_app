@@ -9,16 +9,22 @@
             <surname>Afanador-Llach</surname>
             <forename>Maria Jose</forename>
           </persName>
+          <!-- Muliple affiliaitons allowed for each author -->
           <affiliation>
             <orgName>
-              <name type="sub">Departamento de Historia</name>
+              <!-- Required "main" name of the parent institution of the affiliation  -->
               <name type="main">Universidad de los Andes</name>
+              <!-- An optional department name -->
+              <name type="sub">Departamento de Historia</name>
             </orgName>
+            <!-- Optional city/district of the institition -->
             <district>Bogotá</district>
+            <!-- Optional country of the institution -->
             <country>Colombia</country>
           </affiliation>
           <affiliation>
             <orgName>
+              <!-- Required "main" name of the parent institution of the affiliation  -->
               <name type="main">Fundación Histórica Neogranadina</name>
             </orgName>
             <country>Colombia</country>
@@ -32,8 +38,8 @@
           </persName>
           <affiliation>
             <orgName>
-              <name type="sub">Berkman Klein Center for Internet and Society</name>
               <name type="main">Harvard University</name>
+              <name type="sub">Berkman Klein Center for Internet and Society</name>
             </orgName>
             <district>Cambridge</district>
             <country>United States of America</country>
@@ -41,46 +47,15 @@
           <email>alombana@cyber.law.harvard.edu</email>
         </author>
       </titleStmt>
-      <!-- <editionStmt> ignored -->
-      <editionStmt>
-        <edition>
-          <date>2014-12-19T13:50:00Z</date>
-        </edition>
-      </editionStmt>
-      <!-- <publicationStmt> ignored -->
-      <publicationStmt>
-        <publisher>Name, Institution</publisher>
-        <address>
-          <addrLine>Street</addrLine>
-          <addrLine>City</addrLine>
-          <addrLine>Country</addrLine>
-          <addrLine>Name</addrLine>
-        </address>
-      </publicationStmt>
-      <!-- <editionStmt> ignored -->
-      <sourceDesc>
-        <p>sourceDesc from a Word document</p>
-      </sourceDesc>
     </fileDesc>
-    <!-- <encodingDesc> ignored -->
-    <encodingDesc>
-      <appInfo>
-        <application ident="DHCONVALIDATOR" version="1.22">
-          <label>DHConvalidator</label>
-        </application>
-      </appInfo>
-    </encodingDesc>
     <profileDesc>
       <textClass>
-        <!-- IDHC will first try to match work_type on <keywords n="category">/<term>, followed by <keywords n="subcategory">/<term>. All terms are converted to lowercase. -->
-        <keywords scheme="ConfTool" n="category">
-          <term>Paper</term>
-        </keywords>
-        <keywords scheme="ConfTool" n="subcategory">
+        <!-- Work type such as paper, keynote, poster, etc. -->
+        <keywords n="category">
           <term>Short Paper</term>
         </keywords>
-        <!-- IDHC will add author-supplied "keywords" based on <keywords n="keywords">/<term>. All terms are converted to lowercase. -->
-        <keywords scheme="ConfTool" n="keywords">
+        <!-- Optional author-supplied "keywords". All terms are converted to lowercase. -->
+        <keywords n="keywords">
           <term>Nuevos alfabetismos</term>
           <term>Producción de pares</term>
           <term>humanidades digitales</term>
@@ -88,8 +63,8 @@
           <term>cultura participativa</term>
           <term>archivos digitales</term>
         </keywords>
-        <!-- IDHC will add ADHO-managed "topics" based on <keywords n="keywords">/<term>. All terms are converted to lowercase. -->
-        <keywords scheme="ConfTool" n="topics">
+        <!-- Optional conference-supplied topics from the conference's controlled vocabulary -->
+        <keywords n="topics">
           <term>archives</term>
           <term>repositories</term>
           <term>sustainability and preservation</term>

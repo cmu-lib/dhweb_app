@@ -71,7 +71,7 @@ class ConferenceXMLImportTest(TestCase):
         self.assertRaises(
             DocumentInvalid,
             conference.import_xml_file,
-            filepath="abstracts/static/tei/invalid_tei/abstract_tei.xml",
+            filepath="abstracts/static/tei/invalid_tei/abstract_tei2.xml",
         )
 
 
