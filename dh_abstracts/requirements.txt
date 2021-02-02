@@ -6,7 +6,7 @@
 #
 asgiref==3.3.1
     # via django
-bleach==3.2.1
+bleach==3.3.0
     # via django-markdownify
 coverage==5.3.1
     # via django-coverage-plugin
