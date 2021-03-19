@@ -251,7 +251,6 @@ PUBLIC_DATA_TABLE_CONFIG = {
                 "search_text",
                 "full_text",
                 "full_text_type",
-                "full_text_license",
                 "last_updated",
                 "user_last_updated",
             ],
@@ -340,6 +339,7 @@ PUBLIC_DATA_TABLE_CONFIG = {
             "manual_model_description": "Many-to-many relationships between works and languages",
         },
         {"model": "WorkType", "exclude_fields": [], "csv_name": "work_types"},
+        {"model": "License", "exclude_fields": [], "csv_name": "licenses"},
     ],
     "DATA_ZIP_NAME": "dh_conferences_tables.zip",
 }
