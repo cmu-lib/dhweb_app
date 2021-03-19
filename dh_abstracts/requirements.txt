@@ -58,7 +58,7 @@ markdown==3.3.3
     # via django-markdownify
 packaging==20.8
     # via bleach
-pillow==8.1.0
+pillow==8.1.1
     # via easy-thumbnails
 progress==1.5
     # via -r requirements.in
