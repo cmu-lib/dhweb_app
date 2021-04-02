@@ -52,7 +52,7 @@ gunicorn==20.0.4
     # via -r requirements.in
 libsass==0.20.1
     # via django-libsass
-lxml==4.6.2
+lxml==4.6.3
     # via -r requirements.in
 markdown==3.3.3
     # via django-markdownify
