@@ -1,11 +1,11 @@
-django
+django==3.1.8
 django-libsass
 django-coverage-plugin
 django-debug-toolbar
-django-crispy-forms
+django-crispy-forms==1.10.0
 django-filer
 django-markdownify
-django-autocomplete-light
+django-autocomplete-light==3.5.1
 gunicorn
 cssselect
 progress
