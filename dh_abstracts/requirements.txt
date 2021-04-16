@@ -22,7 +22,7 @@ django-coverage-plugin==1.8.0
     # via -r requirements.in
 django-crispy-forms==1.10.0
     # via -r requirements.in
-django-debug-toolbar==3.2
+django-debug-toolbar==3.2.1
     # via -r requirements.in
 django-filer==2.0.2
     # via -r requirements.in
