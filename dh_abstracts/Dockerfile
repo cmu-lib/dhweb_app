@@ -1,4 +1,4 @@
-FROM python:3.8.6
+FROM python:3.8.10
 WORKDIR /vol/dh
 ADD requirements.txt /vol/dh
 RUN pip install -r requirements.txt

@@ -16,13 +16,13 @@ django-appconf==1.0.4
     # via django-compressor
 django-autocomplete-light==3.5.1
     # via -r requirements.in
-django-compressor==2.4
+django-compressor==2.4.1
     # via django-libsass
 django-coverage-plugin==1.8.0
     # via -r requirements.in
-django-crispy-forms==1.10.0
+django-crispy-forms==1.11.2
     # via -r requirements.in
-django-debug-toolbar==3.2
+django-debug-toolbar==3.2.1
     # via -r requirements.in
 django-filer==2.0.2
     # via -r requirements.in
@@ -36,7 +36,7 @@ django-mptt==0.12.0
     # via django-filer
 django-polymorphic==3.0.0
     # via django-filer
-django==3.1.8
+django==3.1.10
     # via
     #   -r requirements.in
     #   django-appconf
@@ -74,7 +74,7 @@ rcssmin==1.0.6
     # via django-compressor
 rjsmin==1.1.0
     # via django-compressor
-six==1.15.0
+six==1.16.0
     # via
     #   bleach
     #   django-autocomplete-light
