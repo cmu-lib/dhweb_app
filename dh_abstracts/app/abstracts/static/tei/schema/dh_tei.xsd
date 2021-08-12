@@ -124,6 +124,7 @@
           </xs:complexType>
         </xs:element>
       </xs:sequence>
+      <xs:anyAttribute processContents="skip" />
     </xs:complexType>
   </xs:element>
 </xs:schema>
