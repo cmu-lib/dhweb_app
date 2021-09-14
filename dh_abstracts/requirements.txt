@@ -12,6 +12,16 @@ coverage==5.5
     # via django-coverage-plugin
 cssselect==1.1.0
     # via -r requirements.in
+django==3.1.12
+    # via
+    #   -r requirements.in
+    #   django-appconf
+    #   django-debug-toolbar
+    #   django-filer
+    #   django-markdownify
+    #   django-mptt
+    #   django-polymorphic
+    #   easy-thumbnails
 django-appconf==1.0.4
     # via django-compressor
 django-autocomplete-light==3.5.1
@@ -36,16 +46,6 @@ django-mptt==0.12.0
     # via django-filer
 django-polymorphic==3.0.0
     # via django-filer
-django==3.1.12
-    # via
-    #   -r requirements.in
-    #   django-appconf
-    #   django-debug-toolbar
-    #   django-filer
-    #   django-markdownify
-    #   django-mptt
-    #   django-polymorphic
-    #   easy-thumbnails
 easy-thumbnails==2.7.1
     # via django-filer
 gunicorn==20.1.0
@@ -83,7 +83,7 @@ six==1.16.0
     #   libsass
     #   python-memcached
     #   w3lib
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via
     #   django
     #   django-debug-toolbar
