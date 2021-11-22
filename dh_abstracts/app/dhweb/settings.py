@@ -515,3 +515,5 @@ MARKDOWNIFY_MARKDOWN_EXTENSIONS = [
     "markdown.extensions.extra",
     "markdown.extensions.toc",
 ]
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
