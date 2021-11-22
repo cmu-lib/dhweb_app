@@ -1779,17 +1779,17 @@ def affiliation_multi_merge(request):
 @transaction.atomic
 def wipe_unused(request):
     deletion_dict = {
-        "Author": Author.objects.exclude(authorships__isnull=False).distinct(),
+        "Author": Author.objects.exclude(authorships__isnull=False),
         "Affiliation": Affiliation.objects.exclude(
             asserted_by__isnull=False
-        ).distinct(),
+        ),
         "Institution": Institution.objects.exclude(
             Q(affiliations__asserted_by__isnull=False) | Q(conferences__isnull=False)
-        ).distinct(),
-        "Keyword": Keyword.objects.exclude(works__isnull=False).distinct(),
+        ),
+        "Keyword": Keyword.objects.exclude(works__isnull=False),
         "Appellation": Appellation.objects.exclude(
             asserted_by__isnull=False
-        ).distinct(),
+        ),
     }
 
     if request.method == "POST":
