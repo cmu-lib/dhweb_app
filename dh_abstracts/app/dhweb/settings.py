@@ -481,39 +481,41 @@ EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", 25)
 DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_ADDRESS")
 
-MARKDOWNIFY_WHITELIST_TAGS = [
-    "a",
-    "abbr",
-    "acronym",
-    "b",
-    "blockquote",
-    "em",
-    "i",
-    "li",
-    "ol",
-    "p",
-    "strong",
-    "ul",
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6",
-    "pre",
-    "code",
-    "img",
-    "svg",
-    "figure",
-    "figcaption",
-]
-
-MARKDOWNIFY_WHITELIST_ATTRS = ["href", "src", "alt", "id"]
-
-MARKDOWNIFY_MARKDOWN_EXTENSIONS = [
-    "markdown.extensions.fenced_code",
-    "markdown.extensions.extra",
-    "markdown.extensions.toc",
-]
+MARKDOWNIFY = {
+    "default": {
+        "WHITELIST_TAGS": [
+            "a",
+            "abbr",
+            "acronym",
+            "b",
+            "blockquote",
+            "em",
+            "i",
+            "li",
+            "ol",
+            "p",
+            "strong",
+            "ul",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "pre",
+            "code",
+            "img",
+            "svg",
+            "figure",
+            "figcaption",
+        ],
+        "WHITELIST_ATTRS": ["href", "src", "alt", "id"],
+        "MARKDOWN_EXTENSIONS": [
+            "markdown.extensions.fenced_code",
+            "markdown.extensions.extra",
+            "markdown.extensions.toc",
+        ],
+    }
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
