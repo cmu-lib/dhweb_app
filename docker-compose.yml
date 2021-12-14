@@ -37,7 +37,7 @@ services:
     command: "${MEMCACHED_COMMAND}"
 
   nginx:
-    image: nginx:1.19.1
+    image: nginx:1.20.2
     restart: always
     volumes:
       - ./nginx:/etc/nginx/conf.d/.
