@@ -1,4 +1,4 @@
-django==3.2.9
+django==3.2.10
 django-libsass
 django-coverage-plugin
 django-debug-toolbar
