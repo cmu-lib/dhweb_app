@@ -61,7 +61,7 @@ markdown==3.3.6
     # via django-markdownify
 packaging==21.3
     # via bleach
-pillow==8.4.0
+pillow==9.0.0
     # via
     #   easy-thumbnails
     #   reportlab
