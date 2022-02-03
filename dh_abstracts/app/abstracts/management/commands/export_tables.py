@@ -21,7 +21,7 @@ class Command(BaseCommand):
         else:
             return None
 
-    def write_model_csv(self, qs, filename, exclude_fields=[], include_string=False):
+    def write_model_csv(self, qs, filename, exclude_fields=[], include_string=False, censor_works=False):
         model = qs.model
         all_model_fields = [
             {"name": f.name, "relation": f.is_relation}
@@ -41,13 +41,16 @@ class Command(BaseCommand):
                 headernames.append("label")
             writer.writerow(headernames)
             for obj in qs.order_by("id"):
+                if censor_works and hasattr(obj, "full_text"):
+                    if obj.full_text_license is None:
+                        obj.full_text = ""
                 row = [self.get_obj_field(obj, f) for f in censored_fields]
                 if include_string:
                     row.append(str(obj))
                 writer.writerow(row)
         return filename
 
-    def write_csvs(self, dt_config, tdir):
+    def write_csvs(self, dt_config, tdir, censor_works=False):
         zip_path = f"{tdir}/{dt_config['DATA_ZIP_NAME']}"
         with zipfile.ZipFile(
             zip_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9
@@ -60,7 +63,8 @@ class Command(BaseCommand):
                         qs=attrgetter(export_conf["model"])(models).objects.all(),
                         filename=f"{tdir}/{tempfile.TemporaryFile()}",
                         exclude_fields=export_conf["exclude_fields"],
-                        include_string=export_conf.get("include_string", False),
+                        include_string=export_conf.get("include_string", False)
+                        censor_works=censor_works,
                     ),
                     arcname=f"dh_conferences_data/{final_csvname}.csv",
                 )
@@ -79,7 +83,7 @@ class Command(BaseCommand):
         print("Writing Denormalized CSV")
         all_works = (
             models.Work.objects.order_by("id")
-            .select_related("conference__country")
+            .select_related("conference__country", "full_text_license")
             .prefetch_related(
                 "conference",
                 "conference__series",
@@ -110,6 +114,8 @@ class Command(BaseCommand):
                         parent_session_id = w.parent_session.id
                     except:
                         parent_session_id = None
+
+                    fulltext = None if w.full_text_license is None else w.full_text
                     row_data = [
                         w.pk,
                         str(w.conference),
@@ -129,6 +135,8 @@ class Command(BaseCommand):
                         w.url,
                         ";".join([str(a.appellation) for a in w.authorships.all()]),
                         w.work_type,
+                        fulltext,
+                        w.license.title,
                         parent_session_id,
                         ";".join([str(k) for k in w.keywords.all()]),
                         ";".join([str(k) for k in w.languages.all()]),

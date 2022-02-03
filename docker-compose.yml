@@ -30,7 +30,7 @@ services:
       - memcached
 
   memcached:
-    image: memcached:1.6.6
+    image: memcached:1.6.12
     restart: always
     expose:
       - 11211

@@ -222,6 +222,16 @@ DENORMALIZED_HEADERS = [
         "required": True,
     },
     {
+        "name": "full_text",
+        "description": "The full text of the work, when indexed and licensed for republication. If the full text of the work has not yet been indexed into this system, OR if the text is not licensed for republication, this field will be blank.",
+        "required": False,
+    },
+    {
+        "name": "full_text_type",
+        "description": "Work full text will either be available as plain text (txt) or as TEI (xml). When full text is not available to be shared, this field will be blank.",
+        "required": False,
+    },
+    {
         "name": "parent_work_id",
         "description": "ID of a multipaper session or panel session that this work belongs to",
         "required": False,
@@ -249,8 +259,6 @@ PUBLIC_DATA_TABLE_CONFIG = {
             "model": "Work",
             "exclude_fields": [
                 "search_text",
-                "full_text",
-                "full_text_type",
                 "last_updated",
                 "user_last_updated",
             ],
