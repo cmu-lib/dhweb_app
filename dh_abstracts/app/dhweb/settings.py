@@ -232,6 +232,11 @@ DENORMALIZED_HEADERS = [
         "required": False,
     },
     {
+        "name": "full_text_license",
+        "description": "License of this full text, when it is known.",
+        "required": False,
+    },
+    {
         "name": "parent_work_id",
         "description": "ID of a multipaper session or panel session that this work belongs to",
         "required": False,

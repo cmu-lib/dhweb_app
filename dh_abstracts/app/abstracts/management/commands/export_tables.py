@@ -21,7 +21,9 @@ class Command(BaseCommand):
         else:
             return None
 
-    def write_model_csv(self, qs, filename, exclude_fields=[], include_string=False, censor_works=False):
+    def write_model_csv(
+        self, qs, filename, exclude_fields=[], include_string=False, censor_works=False
+    ):
         model = qs.model
         all_model_fields = [
             {"name": f.name, "relation": f.is_relation}
@@ -41,7 +43,7 @@ class Command(BaseCommand):
                 headernames.append("label")
             writer.writerow(headernames)
             for obj in qs.order_by("id"):
-                if censor_works and hasattr(obj, "full_text"):
+                if censor_works and isinstance(obj, models.Work):
                     if obj.full_text_license is None:
                         obj.full_text = ""
                 row = [self.get_obj_field(obj, f) for f in censored_fields]
@@ -63,7 +65,7 @@ class Command(BaseCommand):
                         qs=attrgetter(export_conf["model"])(models).objects.all(),
                         filename=f"{tdir}/{tempfile.TemporaryFile()}",
                         exclude_fields=export_conf["exclude_fields"],
-                        include_string=export_conf.get("include_string", False)
+                        include_string=export_conf.get("include_string", False),
                         censor_works=censor_works,
                     ),
                     arcname=f"dh_conferences_data/{final_csvname}.csv",
@@ -73,7 +75,9 @@ class Command(BaseCommand):
 
     def write_public_csvs(self, tdir):
         print("Writing public CSVs")
-        return self.write_csvs(settings.PUBLIC_DATA_TABLE_CONFIG, tdir)
+        return self.write_csvs(
+            settings.PUBLIC_DATA_TABLE_CONFIG, tdir, censor_works=True
+        )
 
     def write_private_csvs(self, tdir):
         print("Writing private CSVs")
@@ -115,7 +119,8 @@ class Command(BaseCommand):
                     except:
                         parent_session_id = None
 
-                    fulltext = None if w.full_text_license is None else w.full_text
+                    # Include the fulltext if it is licensed, otherwise leave blank
+                    fulltext = "" if w.full_text_license is None else w.full_text
                     row_data = [
                         w.pk,
                         str(w.conference),
@@ -136,7 +141,8 @@ class Command(BaseCommand):
                         ";".join([str(a.appellation) for a in w.authorships.all()]),
                         w.work_type,
                         fulltext,
-                        w.license.title,
+                        w.full_text_type,
+                        w.full_text_license,
                         parent_session_id,
                         ";".join([str(k) for k in w.keywords.all()]),
                         ";".join([str(k) for k in w.languages.all()]),
