@@ -12,6 +12,7 @@ from filer.fields.file import FilerFileField
 from os.path import basename
 from glob import glob
 from lxml import etree
+import html
 import re
 
 
@@ -290,9 +291,9 @@ class Conference(models.Model):
         work_title = " ".join(
             xml.xpath("//tei:titleStmt//tei:title/text()", namespaces=ns)
         ).strip()
-        work_full_text = etree.tostring(
+        work_full_text = html.unescape(etree.tostring(
             xml.xpath("/tei:TEI/tei:text", namespaces=ns)[0], pretty_print=True
-        )
+        ).decode("utf-8"))
         keywords = xml.xpath(
             "//tei:keywords[@n='keywords']/tei:term/text()", namespaces=ns
         )
