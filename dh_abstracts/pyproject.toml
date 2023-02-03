@@ -6,7 +6,7 @@ version = "0.1.0"
 
 [tool.poetry.dependencies]
 cssselect = "~1.1.0"
-django = "~3.2.14"
+django = "~3.2.17"
 django-autocomplete-light = "3.5.1"
 django-coverage-plugin = "~2.0.2"
 django-crispy-forms = "~1.11"
